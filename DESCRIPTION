@@ -1,0 +1,19 @@
+Package: chromo
+Title: Headless Chromium Web Browser
+Version: 0.0.0.9000
+Authors@R: 
+    person("Winston", "Chang", role = c("aut", "cre"), email = "winston@rstudio.com")
+Description: Headless Chromium web browser
+License: What license it uses
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    jsonlite,
+    websocket,
+    processx,
+    R6,
+    rlang,
+    httpuv
+Remotes:
+    rstudio/websocket
+RoxygenNote: 6.1.1
