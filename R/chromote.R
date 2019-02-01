@@ -17,7 +17,10 @@ Chromote <- R6Class(
         chrome_info$webSocketDebuggerUrl,
         autoConnect = FALSE
       )
-      private$ws$onMessage(private$onMessage)
+
+      private$on_message_callbacks <- new.env(parent = emptyenv())
+
+      private$ws$onMessage(private$on_message)
       private$ws$connect()
 
       # Populate methods
@@ -34,16 +37,33 @@ Chromote <- R6Class(
     process = NULL,
     port = NULL,
     ws = NULL,
-    msg_id = 0,
+    last_msg_id = 0,
+    on_message_callbacks = NULL,
 
-    send = function(msg) {
-      msg$id <- private$msg_id
-      private$msg_id <- private$msg_id + 1
+    send = function(msg, callback = NULL) {
+      private$last_msg_id <- private$last_msg_id + 1
+      msg$id <- private$last_msg_id
 
       private$ws$send(toJSON(msg, auto_unbox = TRUE))
+
+      if (!is.null(callback)) {
+        private$add_on_message_callback(msg$id, callback)
+      }
     },
-    onMessage = function(msg) {
-      on_message(msg)
+
+    add_on_message_callback = function(id, callback) {
+      id <- as.character(id)
+      private$on_message_callbacks[[id]] <- callback
+    },
+    on_message = function(msg) {
+      data <- fromJSON(msg$data)
+      id <- as.character(data$id)
+      if (length(id) == 0 || id == "") return()
+
+      callback <- private$on_message_callbacks[[id]]
+      if (is.function(callback)) {
+        callback(data)
+      }
     },
 
     url = function(path = NULL) {

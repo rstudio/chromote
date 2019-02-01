@@ -46,6 +46,7 @@ gen_args <- function(params) {
   })
 
   names(args) <- fetch_key_c(params, "name")
+  args <- c(args, cb_ = list(NULL))
   args
 }
 
@@ -77,6 +78,6 @@ gen_body <- function(method_name, params) {
       method = !!method_name,
       params = drop_nulls(list(!!!param_list))
     )
-    private$send(msg)
+    private$send(msg, callback = cb_)
   })
 }
