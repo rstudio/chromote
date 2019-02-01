@@ -1,8 +1,8 @@
 #' @importFrom websocket WebSocket
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom R6 R6Class
-Chromo <- R6Class(
-  "Chromo",
+Chromote <- R6Class(
+  "Chromote",
   lock_objects = FALSE,
   public = list(
 
