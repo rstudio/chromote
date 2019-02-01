@@ -22,59 +22,56 @@ ensure_browser_running <- function() {
 
   exe <- find_chromium()
 
-  host <- "127.0.0.1"
-  port <- random_open_port()
-
-  args <- c(
-    "--headless",
-    paste0("--remote-debugging-port=", port)
-  )
-
-  p <- process$new(
-    command = exe, args = args, supervise = TRUE,
+  globals$process <- process$new(
+    command = exe,
+    args = c("--headless", "--remote-debugging-port=0"),
+    supervise = TRUE,
     stdout = tempfile("chromium-stdout-", fileext = ".log"),
     stderr = tempfile("chromium-stderr-", fileext = ".log")
   )
 
-  if (!p$is_alive()) {
+  if (!globals$process$is_alive()) {
     stop(
       "Failed to start chromium. Error: ",
       strwrap(p$read_error_lines())
     )
   }
 
-  # TODO: In the future, move this so it doesn't block?
-  # Poll for the debugging port to be open.
   connected <- FALSE
   end <- Sys.time() + 10
   while (!connected && Sys.time() < end) {
     tryCatch(
       {
+        # Find port number from output
+        output <- readLines(globals$process$get_error_file())
+        output <- output[grepl("^DevTools listening on ws://", output)]
+        if (length(output) != 1) stop() # Just break out of the tryCatch
+
+        port <- sub("^DevTools listening on ws://[0-9\\.]+:(\\d+)/.*", "\\1", output)
+        port <- as.integer(port)
+        if (is.na(port)) stop()
+
         con <- url(paste0("http://127.0.0.1:", port, "/json/protocol"), "rb")
-        if (isOpen(con)) {
-          connected <- TRUE
-          close(con)
-          break
-        }
+        if (!isOpen(con)) stop()
+
+        connected <- TRUE
+        close(con)
       },
       warning = function(e) {},
       error = function(e) {}
     )
 
-    cat(".")
-    Sys.sleep(0.2)
+    Sys.sleep(0.1)
   }
 
   if (!connected) {
     stop("Chromium debugging port not open after 10 seconds.")
   }
 
-
-  globals$process <- p
   globals$port <- port
 
   list(
-    process = p,
-    port = port
+    process = globals$process,
+    port = globals$port
   )
 }

@@ -12,8 +12,7 @@ Imports:
     websocket,
     processx,
     R6,
-    rlang,
-    httpuv
+    rlang
 Remotes:
     rstudio/websocket
 RoxygenNote: 6.1.1
