@@ -52,7 +52,7 @@ ensure_browser_running <- function() {
         if (is.na(port)) stop()
 
         con <- url(paste0("http://127.0.0.1:", port, "/json/protocol"), "rb")
-        if (!isOpen(con)) stop()
+        if (!isOpen(con)) break  # Failed to connect
 
         connected <- TRUE
         close(con)
