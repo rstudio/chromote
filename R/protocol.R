@@ -8,27 +8,34 @@ process_protocol <- function(protocol, env = parent.frame()) {
   domains <- protocol$domains
   names(domains) <- vapply(domains, function(d) d$domain, "")
   domains <- lapply(domains, function(domain) {
-    commands <- get_commands(domain)
-    lapply(commands, command_to_function, domain_name = domain$domain, env = env)
+    commands <- get_items(domain, "commands")
+    commands <- lapply(commands, command_to_function, domain_name = domain$domain, env = env)
+
+    events <- get_items(domain, "events")
+    events <- lapply(events, event_to_function, domain_name = domain$domain, env = env)
+
+    c(commands, events)
   })
 
   domains
 }
 
-get_commands <- function(domain) {
-  commands <- domain$commands
-  if (is.null(commands)) {
+# Returns commands or events for a given domain
+get_items <- function(domain, type = c("commands", "events")) {
+  type <- match.arg(type)
+  methods <- domain[[type]]
+  if (is.null(methods)) {
     return(list())
   } else {
-    names(commands) <- fetch_key_c(commands, "name")
-    commands
+    names(methods) <- fetch_key_c(methods, "name")
+    methods
   }
 }
 
 command_to_function <- function(command, domain_name, env) {
   rlang::new_function(
-    args = gen_args(command$parameters),
-    body = gen_body(paste0(domain_name, ".", command$name), command$parameters),
+    args = gen_command_args(command$parameters),
+    body = gen_command_body(paste0(domain_name, ".", command$name), command$parameters),
     env  = env
   )
   # TODO:
@@ -36,7 +43,7 @@ command_to_function <- function(command, domain_name, env) {
   # * Cross-reference types for type checking
 }
 
-gen_args <- function(params) {
+gen_command_args <- function(params) {
   args <- lapply(params, function(param) {
     if (!isTRUE(param$optional)) {
       missing_arg()
@@ -51,9 +58,9 @@ gen_args <- function(params) {
 }
 
 
-# Returns a function body.
+# Returns a function body for a command.
 # method_name is something like "Browser.getVersion"
-gen_body <- function(method_name, params) {
+gen_command_body <- function(method_name, params) {
 
   # Construct expressions for checking missing args
   required_params <- params[!fetch_key_l(params, "optional", default = FALSE)]
@@ -79,5 +86,25 @@ gen_body <- function(method_name, params) {
       params = drop_nulls(list(!!!param_list))
     )
     private$send(msg, callback = cb_)
+  })
+}
+
+
+
+event_to_function <- function(event, domain_name, env) {
+  rlang::new_function(
+    args = list(callback = missing_arg()),
+    body = gen_event_body(paste0(domain_name, ".", event$name), event$parameters),
+    env  = env
+  )
+}
+
+# Returns a function body for registering an event callback.
+# method_name is something like "Page.loadEventFired".
+# params is a list of parameters that the callback must take.
+gen_event_body <- function(method_name, params) {
+  # TODO: Add validation
+  expr({
+    private$add_event_callback(!!method_name, callback)
   })
 }

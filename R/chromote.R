@@ -18,7 +18,8 @@ Chromote <- R6Class(
         autoConnect = FALSE
       )
 
-      private$on_message_callbacks <- new.env(parent = emptyenv())
+      private$message_callbacks <- new.env(parent = emptyenv())
+      private$event_callbacks   <- new.env(parent = emptyenv())
 
       private$ws$onMessage(private$on_message)
       private$ws$connect()
@@ -56,7 +57,8 @@ Chromote <- R6Class(
     port = NULL,
     ws = NULL,
     last_msg_id = 0,
-    on_message_callbacks = NULL,
+    message_callbacks = NULL,
+    event_callbacks = NULL,
 
     send = function(msg, callback = NULL) {
       private$last_msg_id <- private$last_msg_id + 1
@@ -65,22 +67,39 @@ Chromote <- R6Class(
       private$ws$send(toJSON(msg, auto_unbox = TRUE))
 
       if (!is.null(callback)) {
-        private$add_on_message_callback(msg$id, callback)
+        private$add_message_callback(msg$id, callback)
       }
     },
 
-    add_on_message_callback = function(id, callback) {
+    add_message_callback = function(id, callback) {
       id <- as.character(id)
-      private$on_message_callbacks[[id]] <- callback
+      private$message_callbacks[[id]] <- callback
     },
+
+    add_event_callback = function(event, callback) {
+      private$event_callbacks[[event]] <- callback
+    },
+
     on_message = function(msg) {
       data <- fromJSON(msg$data)
-      id <- as.character(data$id)
-      if (length(id) == 0 || id == "") return()
 
-      callback <- private$on_message_callbacks[[id]]
-      if (is.function(callback)) {
-        callback(data)
+      if (!is.null(data$method)) {
+        method <- data$method
+        callback <- private$event_callbacks[[method]]
+        if (!is.null(callback)) {
+          callback(data)
+        }
+
+      } else if (!is.null(data$id)) {
+        id <- as.character(data$id)
+        if (length(id) == 0 || id == "") return()
+
+        callback <- private$message_callbacks[[id]]
+        # Deregister callback
+        private$message_callbacks[[id]] <- NULL
+        if (is.function(callback)) {
+          callback(data$result)
+        }
       }
     },
 
