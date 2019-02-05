@@ -29,23 +29,7 @@ Chromote <- R6Class(
       p <- process_protocol(protocol, self$.__enclos_env__)
       list2env(p, self)
 
-      # Wait up to 5 seconds for websocket connection to be open.
-      connected <- FALSE
-      end <- Sys.time() + 5
-      while (!connected && Sys.time() < end) {
-        # Need to run the event loop for websocket to complete connection.
-        later::run_now(0)
-        ready_state <- private$ws$readyState()
-        if (ready_state == 0L) {
-          Sys.sleep(0.1)
-        } else if (ready_state == 1L) {
-          connected <- TRUE
-          break
-        } else {
-          warning("Websocket connection to browser closed for some reason.")
-          break
-        }
-      }
+      ws_poll_until_connected(private$ws)
     },
 
     view = function() {
