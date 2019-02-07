@@ -93,7 +93,7 @@ gen_command_body <- function(method_name, params) {
 
 event_to_function <- function(event, domain_name, env) {
   rlang::new_function(
-    args = list(callback = missing_arg()),
+    args = list(callback = NULL),
     body = gen_event_body(paste0(domain_name, ".", event$name), event$parameters),
     env  = env
   )
@@ -105,6 +105,14 @@ event_to_function <- function(event, domain_name, env) {
 gen_event_body <- function(method_name, params) {
   # TODO: Add validation
   expr({
-    private$add_event_callback(!!method_name, callback)
+    p <- promise(function(resolve, reject) {
+      private$add_event_callback(!!method_name, resolve)
+    })
+
+    if (!is.null(callback)) {
+      p <- then(p, function(value) { callback(value) } )
+    }
+
+    invisible(p)
   })
 }

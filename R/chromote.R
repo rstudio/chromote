@@ -71,7 +71,7 @@ Chromote <- R6Class(
     },
 
     on_message = function(msg) {
-      data <- fromJSON(msg$data)
+      data <- fromJSON(msg$data, simplifyVector = FALSE)
 
       if (!is.null(data$method)) {
         method <- data$method
