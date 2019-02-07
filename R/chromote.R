@@ -1,7 +1,7 @@
 #' @importFrom websocket WebSocket
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom R6 R6Class
-#' @import promises
+#' @import promises later
 Chromote <- R6Class(
   "Chromote",
   lock_objects = FALSE,
@@ -74,13 +74,21 @@ Chromote <- R6Class(
       data <- fromJSON(msg$data, simplifyVector = FALSE)
 
       if (!is.null(data$method)) {
-        method <- data$method
-        callback <- private$event_callbacks[[method]]
-        if (!is.null(callback)) {
-          callback(data)
-        }
+        # This path handles event notifications.
+        #
+        # The reason that the callback is wrapped in later() is to prevent a
+        # possible race when a command response and an event notification arrive
+        # in the same tick. See issue #1.
+        later(function() {
+          method <- data$method
+          callback <- private$event_callbacks[[method]]
+          if (!is.null(callback)) {
+            callback(data)
+          }
+        })
 
       } else if (!is.null(data$id)) {
+        # This path handles responses to commands.
         id <- as.character(data$id)
         if (length(id) == 0 || id == "") return()
 
