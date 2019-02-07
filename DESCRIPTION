@@ -12,6 +12,7 @@ Imports:
     websocket,
     processx,
     R6,
+    promises,
     rlang
 Remotes:
     rstudio/websocket

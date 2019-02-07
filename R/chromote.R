@@ -1,6 +1,7 @@
 #' @importFrom websocket WebSocket
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom R6 R6Class
+#' @import promises
 Chromote <- R6Class(
   "Chromote",
   lock_objects = FALSE,
@@ -48,11 +49,16 @@ Chromote <- R6Class(
       private$last_msg_id <- private$last_msg_id + 1
       msg$id <- private$last_msg_id
 
-      private$ws$send(toJSON(msg, auto_unbox = TRUE))
+      p <- promise(function(resolve, reject) {
+        private$ws$send(toJSON(msg, auto_unbox = TRUE))
+        private$add_message_callback(msg$id, resolve)
+      })
 
       if (!is.null(callback)) {
-        private$add_message_callback(msg$id, callback)
+        p <- then(p, function(value) { callback(value) } )
       }
+
+      invisible(p)
     },
 
     add_message_callback = function(id, callback) {
