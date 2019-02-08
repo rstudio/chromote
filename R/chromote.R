@@ -67,7 +67,8 @@ Chromote <- R6Class(
     },
 
     add_event_callback = function(event, callback) {
-      private$event_callbacks[[event]] <- callback
+      # This appends callback to a list, creating list if it doesn't exist.
+      private$event_callbacks[[event]] <- c(private$event_callbacks[[event]], callback)
     },
 
     on_message = function(msg) {
@@ -80,11 +81,21 @@ Chromote <- R6Class(
         # possible race when a command response and an event notification arrive
         # in the same tick. See issue #1.
         later(function() {
+          # Fetch the set of callbacks, execute them, and clear the callbacks.
           method <- data$method
-          callback <- private$event_callbacks[[method]]
-          if (!is.null(callback)) {
-            callback(data)
+          # private$event_callbacks can be list, empty list, or NULL.
+          for (callback in private$event_callbacks[[method]]) {
+            tryCatch(
+              callback(data),
+              error = function(e) {
+                message(
+                  "Error when executing callback for ", method, ":\n  ",
+                  e$message
+                )
+              }
+            )
           }
+          private$event_callbacks[[method]] <- NULL
         })
 
       } else if (!is.null(data$id)) {
