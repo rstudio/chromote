@@ -100,7 +100,7 @@ Chromote <- R6Class(
           # private$event_callbacks can be list, empty list, or NULL.
           for (callback in private$event_callbacks[[method]]) {
             tryCatch(
-              callback(data),
+              callback(data$params),
               error = function(e) {
                 message(
                   "Error when executing callback for ", method, ":\n  ",
