@@ -85,7 +85,7 @@ gen_command_body <- function(method_name, params) {
       method = !!method_name,
       params = drop_nulls(list(!!!param_list))
     )
-    private$send(msg, callback = cb_)
+    private$send_command(msg, callback = cb_)
   })
 }
 
@@ -93,26 +93,16 @@ gen_command_body <- function(method_name, params) {
 
 event_to_function <- function(event, domain_name, env) {
   rlang::new_function(
-    args = list(callback = NULL),
-    body = gen_event_body(paste0(domain_name, ".", event$name), event$parameters),
+    args = list(cb_ = NULL),
+    body = gen_event_body(paste0(domain_name, ".", event$name)),
     env  = env
   )
 }
 
 # Returns a function body for registering an event callback.
 # method_name is something like "Page.loadEventFired".
-# params is a list of parameters that the callback must take.
-gen_event_body <- function(method_name, params) {
-  # TODO: Add validation
+gen_event_body <- function(method_name) {
   expr({
-    p <- promise(function(resolve, reject) {
-      private$add_event_callback(!!method_name, resolve)
-    })
-
-    if (!is.null(callback)) {
-      p <- then(p, function(value) { callback(value) } )
-    }
-
-    invisible(p)
+    private$register_event_listener(!!method_name, cb_)
   })
 }

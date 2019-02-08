@@ -45,7 +45,7 @@ Chromote <- R6Class(
     message_callbacks = NULL,
     event_callbacks = NULL,
 
-    send = function(msg, callback = NULL) {
+    send_command = function(msg, callback = NULL) {
       private$last_msg_id <- private$last_msg_id + 1
       msg$id <- private$last_msg_id
 
@@ -55,7 +55,20 @@ Chromote <- R6Class(
       })
 
       if (!is.null(callback)) {
-        p <- then(p, function(value) { callback(value) } )
+        p <- then(p, callback)
+      }
+
+      invisible(p)
+    },
+
+
+    register_event_listener = function(method_name, callback = NULL) {
+      p <- promise(function(resolve, reject) {
+        private$add_event_callback(method_name, resolve)
+      })
+
+      if (!is.null(callback)) {
+        p <- then(p, callback)
       }
 
       invisible(p)
