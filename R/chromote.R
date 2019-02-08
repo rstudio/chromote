@@ -2,6 +2,7 @@
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom R6 R6Class
 #' @import promises later
+#' @export
 Chromote <- R6Class(
   "Chromote",
   lock_objects = FALSE,
