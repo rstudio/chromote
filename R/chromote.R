@@ -20,7 +20,7 @@ Chromote <- R6Class(
         autoConnect = FALSE
       )
 
-      private$message_callbacks <- new.env(parent = emptyenv())
+      private$command_callbacks <- new.env(parent = emptyenv())
       private$event_callbacks   <- new.env(parent = emptyenv())
 
       private$ws$onMessage(private$on_message)
@@ -43,7 +43,7 @@ Chromote <- R6Class(
     port = NULL,
     ws = NULL,
     last_msg_id = 0,
-    message_callbacks = NULL,
+    command_callbacks = NULL,
     event_callbacks = NULL,
 
     send_command = function(msg, callback = NULL) {
@@ -52,7 +52,7 @@ Chromote <- R6Class(
 
       p <- promise(function(resolve, reject) {
         private$ws$send(toJSON(msg, auto_unbox = TRUE))
-        private$add_message_callback(msg$id, resolve)
+        private$add_command_callback(msg$id, resolve)
       })
 
       if (!is.null(callback)) {
@@ -75,14 +75,25 @@ Chromote <- R6Class(
       invisible(p)
     },
 
-    add_message_callback = function(id, callback) {
+    add_command_callback = function(id, callback) {
       id <- as.character(id)
-      private$message_callbacks[[id]] <- callback
+      private$command_callbacks[[id]] <- callback
+    },
+
+    remove_command_callback = function(id) {
+      id <- as.character(id)
+      private$command_callbacks[[id]] <- NULL
     },
 
     add_event_callback = function(event, callback) {
       # This appends callback to a list, creating list if it doesn't exist.
       private$event_callbacks[[event]] <- c(private$event_callbacks[[event]], callback)
+    },
+
+    remove_event_callbacks = function(event) {
+      # Removes ALL callbacks for a given event. In the future it might be
+      # useful to implement finer control.
+      private$event_callbacks[[event]] <- NULL
     },
 
     on_message = function(msg) {
@@ -109,7 +120,7 @@ Chromote <- R6Class(
               }
             )
           }
-          private$event_callbacks[[method]] <- NULL
+          private$remove_event_callbacks(method)
         })
 
       } else if (!is.null(data$id)) {
@@ -117,9 +128,8 @@ Chromote <- R6Class(
         id <- as.character(data$id)
         if (length(id) == 0 || id == "") return()
 
-        callback <- private$message_callbacks[[id]]
-        # Deregister callback
-        private$message_callbacks[[id]] <- NULL
+        callback <- private$command_callbacks[[id]]
+        private$remove_command_callback(id)
         if (is.function(callback)) {
           callback(data$result)
         }
