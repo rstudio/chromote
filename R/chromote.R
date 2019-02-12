@@ -8,10 +8,8 @@ Chromote <- R6Class(
   lock_objects = FALSE,
   public = list(
 
-    initialize = function() {
-      res <- ensure_browser_running()
-      private$process <- res$process
-      private$port    <- res$port
+    initialize = function(browser = chrome()) {
+      private$browser <- browser
 
       chrome_info <- fromJSON(private$url("/json"))
 
@@ -41,8 +39,7 @@ Chromote <- R6Class(
     default_timeout = 10
   ),
   private = list(
-    process = NULL,
-    port = NULL,
+    browser = NULL,
     ws = NULL,
     last_msg_id = 0,
     command_callbacks = NULL,
@@ -159,7 +156,7 @@ Chromote <- R6Class(
       if (!is.null(path) && substr(path, 1, 1) != "/") {
         stop('path must be NULL or a string that starts with "/"')
       }
-      paste0("http://127.0.0.1:", private$port, path)
+      paste0("http://127.0.0.1:", private$browser$get_port(), path)
     }
   )
 )

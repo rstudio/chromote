@@ -1,9 +1,33 @@
-globals <- new.env()
+globals$chrome <- NULL
 
-globals$process <- NULL
-globals$port <- NULL
+#' Return a Chrome object
+#'
+#' This will start a Chrome process if necessary. If one is already running,
+#' the object representing that process will be returned.
+#'
+#' @export
+chrome <- function() {
+  if (is.null(globals$chrome) || !globals$chrome$is_alive()) {
+    globals$chrome <- Chrome$new()
+  }
 
-find_chromium <- function() {
+  globals$chrome
+}
+
+
+Chrome <- R6Class("Chrome",
+  inherit = Browser,
+  public = list(
+    initialize = function() {
+      res <- launch_chrome()
+      private$process <- res$process
+      private$port <- res$port
+    }
+  )
+)
+
+
+find_chrome <- function() {
   if (is_mac()) {
     "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
   } else {
@@ -11,28 +35,21 @@ find_chromium <- function() {
   }
 }
 
-#' @importFrom processx process
-ensure_browser_running <- function() {
-  if (!is.null(globals$process) && globals$process$is_alive()) {
-    return(list(
-      process = globals$process,
-      port = globals$port
-    ))
-  }
 
-  exe <- find_chromium()
+launch_chrome <- function() {
+  exe <- find_chrome()
 
-  globals$process <- process$new(
+  p <- process$new(
     command = exe,
     args = c("--headless", "--remote-debugging-port=0"),
     supervise = TRUE,
-    stdout = tempfile("chromium-stdout-", fileext = ".log"),
-    stderr = tempfile("chromium-stderr-", fileext = ".log")
+    stdout = tempfile("chrome-stdout-", fileext = ".log"),
+    stderr = tempfile("chrome-stderr-", fileext = ".log")
   )
 
-  if (!globals$process$is_alive()) {
+  if (!p$is_alive()) {
     stop(
-      "Failed to start chromium. Error: ",
+      "Failed to start chrome. Error: ",
       strwrap(p$read_error_lines())
     )
   }
@@ -43,7 +60,7 @@ ensure_browser_running <- function() {
     tryCatch(
       {
         # Find port number from output
-        output <- readLines(globals$process$get_error_file())
+        output <- readLines(p$get_error_file())
         output <- output[grepl("^DevTools listening on ws://", output)]
         if (length(output) != 1) stop() # Just break out of the tryCatch
 
@@ -65,13 +82,11 @@ ensure_browser_running <- function() {
   }
 
   if (!connected) {
-    stop("Chromium debugging port not open after 10 seconds.")
+    stop("Chrome debugging port not open after 10 seconds.")
   }
 
-  globals$port <- port
-
   list(
-    process = globals$process,
-    port = globals$port
+    process = p,
+    port    = port
   )
 }
