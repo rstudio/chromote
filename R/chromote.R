@@ -36,7 +36,9 @@ Chromote <- R6Class(
 
     view = function() {
       browseURL(private$url())
-    }
+    },
+
+    default_timeout = 10
   ),
   private = list(
     process = NULL,
@@ -46,11 +48,21 @@ Chromote <- R6Class(
     command_callbacks = NULL,
     event_callbacks = NULL,
 
-    send_command = function(msg, callback = NULL) {
+    send_command = function(msg, callback = NULL, timeout = NULL) {
       private$last_msg_id <- private$last_msg_id + 1
       msg$id <- private$last_msg_id
 
       p <- promise(function(resolve, reject) {
+        if (!is.null(timeout) && !is.infinite(timeout)) {
+          # TODO: Save the return value and clear it on resolve, to free up
+          # memory earlier? Otherwise this callback will hang around in the
+          # later queue, so a reference to `reject` (and therefore the promise)
+          # will persist, preventing a GC of the promise.
+          later(function() {
+            reject(paste0("Chromote: timed out waiting for response to command ", msg$method))
+          }, timeout)
+        }
+
         private$ws$send(toJSON(msg, auto_unbox = TRUE))
         private$add_command_callback(msg$id, resolve)
       })
@@ -63,8 +75,15 @@ Chromote <- R6Class(
     },
 
 
-    register_event_listener = function(method_name, callback = NULL) {
+    register_event_listener = function(method_name, callback = NULL, timeout = NULL) {
       p <- promise(function(resolve, reject) {
+        if (!is.null(timeout) && !is.infinite(timeout)) {
+          # TODO: Save return value and clear it on resolve?
+          later(function() {
+            reject(paste0("Chromote: timed out waiting for event ", method_name))
+          }, timeout)
+        }
+
         private$add_event_callback(method_name, resolve)
       })
 

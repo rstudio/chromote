@@ -53,7 +53,7 @@ gen_command_args <- function(params) {
   })
 
   names(args) <- fetch_key_c(params, "name")
-  args <- c(args, cb_ = list(NULL))
+  args <- c(args, callback_ = list(NULL), timeout_ = quote(self$default_timeout))
   args
 }
 
@@ -85,7 +85,7 @@ gen_command_body <- function(method_name, params) {
       method = !!method_name,
       params = drop_nulls(list(!!!param_list))
     )
-    private$send_command(msg, callback = cb_)
+    private$send_command(msg, callback = callback_, timeout = timeout_)
   })
 }
 
@@ -93,7 +93,7 @@ gen_command_body <- function(method_name, params) {
 
 event_to_function <- function(event, domain_name, env) {
   rlang::new_function(
-    args = list(cb_ = NULL),
+    args = list(callback_ = NULL, timeout_ = quote(self$default_timeout)),
     body = gen_event_body(paste0(domain_name, ".", event$name)),
     env  = env
   )
@@ -103,6 +103,6 @@ event_to_function <- function(event, domain_name, env) {
 # method_name is something like "Page.loadEventFired".
 gen_event_body <- function(method_name) {
   expr({
-    private$register_event_listener(!!method_name, cb_)
+    private$register_event_listener(!!method_name, callback_, timeout_)
   })
 }
