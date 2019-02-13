@@ -13,27 +13,51 @@ Chromote <- R6Class(
 
       chrome_info <- fromJSON(private$url("/json"))
 
-      private$ws <- WebSocket$new(
-        chrome_info$webSocketDebuggerUrl,
-        autoConnect = FALSE
-      )
-
       private$command_callbacks <- new.env(parent = emptyenv())
       private$event_callbacks   <- new.env(parent = emptyenv())
 
-      private$ws$onMessage(private$on_message)
-      private$ws$connect()
+      private$parent_loop <- current_loop()
 
-      # Populate methods while the connection is being established.
-      protocol <- jsonlite::fromJSON(private$url("/json/protocol"), simplifyVector = FALSE)
-      p <- process_protocol(protocol, self$.__enclos_env__)
-      list2env(p, self)
+      # Initialize the websocket with a private event loop
+      with_private_loop({
+        private$child_loop <- current_loop()
 
-      ws_poll_until_connected(private$ws)
+        private$ws <- WebSocket$new(
+          chrome_info$webSocketDebuggerUrl,
+          autoConnect = FALSE
+        )
+
+        private$ws$onMessage(private$on_message)
+        private$ws$connect()
+
+        # Populate methods while the connection is being established.
+        protocol <- jsonlite::fromJSON(private$url("/json/protocol"), simplifyVector = FALSE)
+        p <- process_protocol(protocol, self$.__enclos_env__)
+        list2env(p, self)
+
+        ws_poll_until_connected(private$ws)
+        private$schedule_child_loop()
+      })
     },
 
     view = function() {
       browseURL(private$url())
+    },
+
+    sync_mode = function(mode = NULL) {
+      if (is.null(mode)) {
+        return(private$sync_mode_)
+      }
+      if (! (identical(mode, TRUE) || identical(mode, FALSE))) {
+        stop("mode must be TRUE or FALSE.")
+      }
+
+      if (mode && !private$sync_mode_) {
+        # Switching from async to sync
+        # Maybe flush any commands that are waiting? What about events?
+      }
+
+      private$sync_mode_ <- mode
     },
 
     default_timeout = 10
@@ -41,6 +65,10 @@ Chromote <- R6Class(
   private = list(
     browser = NULL,
     ws = NULL,
+
+    # =========================================================================
+    # Communication with browser and callbacks
+    # =========================================================================
     last_msg_id = 0,
     command_callbacks = NULL,
     event_callbacks = NULL,
@@ -68,7 +96,18 @@ Chromote <- R6Class(
         p <- then(p, callback)
       }
 
-      invisible(p)
+      # If synchronous mode, wait for the promise to resolve and return the
+      # value. If async mode, return the promise immediately.
+      if (private$sync_mode_) {
+        return_value <- NULL
+        p <- then(p, function(value) { return_value <<- value })
+        # Error handling?
+        private$run_child_loop_until_resolved(p)
+        return(return_value)
+
+      } else {
+        return(invisible(p))
+      }
     },
 
 
@@ -77,8 +116,11 @@ Chromote <- R6Class(
         if (!is.null(timeout) && !is.infinite(timeout)) {
           # TODO: Save return value and clear it on resolve?
           later(function() {
-            reject(paste0("Chromote: timed out waiting for event ", method_name))
-          }, timeout)
+              reject(paste0("Chromote: timed out waiting for event ", method_name))
+            },
+            delay = timeout,
+            loop = private$child_loop
+          )
         }
 
         private$add_event_callback(method_name, resolve)
@@ -88,7 +130,18 @@ Chromote <- R6Class(
         p <- then(p, callback)
       }
 
-      invisible(p)
+      # If synchronous mode, wait for the promise to resolve and return the
+      # value. If async mode, return the promise immediately.
+      if (private$sync_mode_) {
+        return_value <- NULL
+        p <- then(p, function(value) { return_value <<- value })
+        # Error handling?
+        private$run_child_loop_until_resolved(p)
+        return(return_value)
+
+      } else {
+        return(invisible(p))
+      }
     },
 
     add_command_callback = function(id, callback) {
@@ -152,6 +205,57 @@ Chromote <- R6Class(
       }
     },
 
+    # =========================================================================
+    # Event loop for the websocket and the parent event loop
+    # =========================================================================
+    child_loop = NULL,
+    parent_loop = NULL,
+    sync_mode_ = TRUE,
+    child_loop_is_scheduled = FALSE,
+
+    schedule_child_loop = function() {
+      # Make sure that if this function is called multiple times, there aren't
+      # multiple streams of overlapping callbacks.
+      if (private$child_loop_is_scheduled)
+        return()
+
+      # This tells the parent loop to schedule one run of the child
+      # (private) loop.
+      later(private$run_child_loop, loop = private$parent_loop)
+
+      private$child_loop_is_scheduled <- TRUE
+    },
+
+    run_child_loop = function() {
+      private$child_loop_is_scheduled <- FALSE
+
+      tryCatch(
+        run_now(loop = private$child_loop),
+        finally = {
+          private$schedule_child_loop()
+        }
+      )
+    },
+
+    run_child_loop_until_resolved = function(p) {
+      # Chain another promise that sets a flag when p is resolved.
+      p_is_resolved <- FALSE
+      p <- then(p, function(value) p_is_resolved <<- TRUE)
+
+      err <- NULL
+      catch(p, function(e) err <<- e)
+
+      while (!p_is_resolved && is.null(err) && !loop_empty(loop = private$child_loop)) {
+        run_now(loop = private$child_loop)
+      }
+
+      if (!is.null(err))
+        stop(err)
+    },
+
+    # =========================================================================
+    # Misc utility functions
+    # =========================================================================
     url = function(path = NULL) {
       if (!is.null(path) && substr(path, 1, 1) != "/") {
         stop('path must be NULL or a string that starts with "/"')

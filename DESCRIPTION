@@ -13,7 +13,9 @@ Imports:
     processx,
     R6,
     promises,
-    rlang
+    rlang,
+    later (>= 0.8.0.9001)
 Remotes:
-    rstudio/websocket
+    rstudio/websocket,
+    r-lib/later@joe/feature/private-event-loops2
 RoxygenNote: 6.1.1
