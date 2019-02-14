@@ -110,8 +110,30 @@ Chromote <- R6Class(
       }
     },
 
+    add_command_callback = function(id, callback) {
+      id <- as.character(id)
+      private$command_callbacks[[id]] <- callback
+    },
+
+    invoke_command_callback = function(id, value) {
+      id <- as.character(id)
+
+      if (!exists(id, envir = private$command_callbacks, inherits = FALSE))
+        return()
+
+      callback <- private$command_callbacks[[id]]
+      rm(list = id, envir = private$command_callbacks)
+      callback(value)
+    },
+
 
     register_event_listener = function(method_name, callback = NULL, timeout = NULL) {
+      # Note: If callback is specified, then timeout is ignored
+      if (!is.null(callback)) {
+        deregister_callback_fn <- private$add_event_callback(method_name, callback, once = FALSE)
+        return(invisible(deregister_callback_fn))
+      }
+
       p <- promise(function(resolve, reject) {
         if (!is.null(timeout) && !is.infinite(timeout)) {
           # TODO: Save return value and clear it on resolve?
@@ -123,19 +145,14 @@ Chromote <- R6Class(
           )
         }
 
-        private$add_event_callback(method_name, resolve)
+        private$add_event_callback(method_name, resolve, once = TRUE)
       })
-
-      if (!is.null(callback)) {
-        p <- then(p, callback)
-      }
 
       # If synchronous mode, wait for the promise to resolve and return the
       # value. If async mode, return the promise immediately.
       if (private$sync_mode_) {
         return_value <- NULL
-        p <- then(p, function(value) { return_value <<- value })
-        # Error handling?
+        p <- then(p, function(value) return_value <<- value)
         private$run_child_loop_until_resolved(p)
         return(return_value)
 
@@ -144,19 +161,23 @@ Chromote <- R6Class(
       }
     },
 
-    add_command_callback = function(id, callback) {
-      id <- as.character(id)
-      private$command_callbacks[[id]] <- callback
-    },
+    add_event_callback = function(event, callback, once) {
+      if (is.null(private$event_callbacks[[event]])) {
+        private$event_callbacks[[event]] <- Callbacks$new()
+      }
 
-    remove_command_callback = function(id) {
-      id <- as.character(id)
-      private$command_callbacks[[id]] <- NULL
-    },
+      if (once) {
+        orig_callback <- callback
+        callback <- function(...) {
+          tryCatch(
+            orig_callback(...),
+            finally = deregister_fn()
+          )
+        }
+      }
 
-    add_event_callback = function(event, callback) {
-      # This appends callback to a list, creating list if it doesn't exist.
-      private$event_callbacks[[event]] <- c(private$event_callbacks[[event]], callback)
+      deregister_fn <- private$event_callbacks[[event]]$add(callback)
+      deregister_fn
     },
 
     remove_event_callbacks = function(event) {
@@ -165,43 +186,30 @@ Chromote <- R6Class(
       private$event_callbacks[[event]] <- NULL
     },
 
+    invoke_event_callbacks = function(event, params) {
+      callbacks <- private$event_callbacks[[event]]
+      if (is.null(callbacks) || callbacks$size() == 0)
+        return()
+
+      callbacks$invoke(params)
+    },
+
     on_message = function(msg) {
       data <- fromJSON(msg$data, simplifyVector = FALSE)
 
       if (!is.null(data$method)) {
-        # This path handles event notifications.
+        # This is an event notification.
         #
         # The reason that the callback is wrapped in later() is to prevent a
         # possible race when a command response and an event notification arrive
         # in the same tick. See issue #1.
         later(function() {
-          # Fetch the set of callbacks, execute them, and clear the callbacks.
-          method <- data$method
-          # private$event_callbacks can be list, empty list, or NULL.
-          for (callback in private$event_callbacks[[method]]) {
-            tryCatch(
-              callback(data$params),
-              error = function(e) {
-                message(
-                  "Error when executing callback for ", method, ":\n  ",
-                  e$message
-                )
-              }
-            )
-          }
-          private$remove_event_callbacks(method)
+          private$invoke_event_callbacks(data$method, data$params)
         })
 
       } else if (!is.null(data$id)) {
-        # This path handles responses to commands.
-        id <- as.character(data$id)
-        if (length(id) == 0 || id == "") return()
-
-        callback <- private$command_callbacks[[id]]
-        private$remove_command_callback(id)
-        if (is.function(callback)) {
-          callback(data$result)
-        }
+        # This is a response to a command.
+        private$invoke_command_callback(data$id, data$result)
       }
     },
 
