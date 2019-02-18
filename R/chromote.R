@@ -227,6 +227,12 @@ Chromote <- R6Class(
       if (private$child_loop_is_scheduled)
         return()
 
+      # If browser process has stopped, or if websocket has closed, there's no
+      # reason to run the child loop anymore.
+      if (!private$browser$is_alive() || private$ws$readyState() == 3) {
+        return()
+      }
+
       # This tells the parent loop to schedule one run of the child
       # (private) loop.
       later(private$run_child_loop, loop = private$parent_loop)
