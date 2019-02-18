@@ -28,15 +28,25 @@ Chromote <- R6Class(
         )
 
         private$ws$onMessage(private$on_message)
+
+        p <- promise(function(resolve, reject) {
+          private$ws$onOpen(resolve)
+
+          # Allow up to 10 seconds to connect to browser.
+          later(function() {
+            reject(paste0("Chromote: timed out waiting for WebSocket connection to browser."))
+          }, 10)
+        })
+
         private$ws$connect()
 
         # Populate methods while the connection is being established.
         protocol <- jsonlite::fromJSON(private$url("/json/protocol"), simplifyVector = FALSE)
-        p <- process_protocol(protocol, self$.__enclos_env__)
-        list2env(p, self)
+        proto <- process_protocol(protocol, self$.__enclos_env__)
+        list2env(proto, self)
 
-        ws_poll_until_connected(private$ws)
         private$schedule_child_loop()
+        private$run_child_loop_until_resolved(p)
       })
     },
 
