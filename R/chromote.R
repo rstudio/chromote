@@ -88,19 +88,15 @@ Chromote <- R6Class(
       msg$id <- private$last_msg_id
 
       p <- promise(function(resolve, reject) {
-        if (!is.null(timeout) && !is.infinite(timeout)) {
-          # TODO: Save the return value and clear it on resolve, to free up
-          # memory earlier? Otherwise this callback will hang around in the
-          # later queue, so a reference to `reject` (and therefore the promise)
-          # will persist, preventing a GC of the promise.
-          later(function() {
-            reject(paste0("Chromote: timed out waiting for response to command ", msg$method))
-          }, timeout)
-        }
-
         private$ws$send(toJSON(msg, auto_unbox = TRUE))
         private$add_command_callback(msg$id, resolve)
       })
+
+      if (!is.null(timeout) && !is.infinite(timeout)) {
+        p <- promise_timeout(p, timeout, loop = private$child_loop,
+          timeout_message = paste0("Chromote: timed out waiting for response to command ", msg$method)
+        )
+      }
 
       if (!is.null(callback)) {
         p <- then(p, callback)
@@ -145,18 +141,14 @@ Chromote <- R6Class(
       }
 
       p <- promise(function(resolve, reject) {
-        if (!is.null(timeout) && !is.infinite(timeout)) {
-          # TODO: Save return value and clear it on resolve?
-          later(function() {
-              reject(paste0("Chromote: timed out waiting for event ", method_name))
-            },
-            delay = timeout,
-            loop = private$child_loop
-          )
-        }
-
         private$add_event_callback(method_name, resolve, once = TRUE)
       })
+
+      if (!is.null(timeout) && !is.infinite(timeout)) {
+        p <- promise_timeout(p, timeout, loop = private$child_loop,
+          timeout_message = paste0("Chromote: timed out waiting for event ", method_name)
+        )
+      }
 
       # If synchronous mode, wait for the promise to resolve and return the
       # value. If async mode, return the promise immediately.
