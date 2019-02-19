@@ -64,7 +64,16 @@ Chromote <- R6Class(
 
       if (mode && !private$sync_mode_) {
         # Switching from async to sync
-        # Maybe flush any commands that are waiting? What about events?
+        #
+        # This waits until any commands that have been sent receive their
+        # reply.
+        #
+        # TODO: Need to wait for any _promise_ event listeners to resolve or
+        # timeout. But repeating callbacks do not need this. Also, make sure
+        # any downstream promises in the chain are also resolved.
+        while (length(ls(private$command_callbacks)) != 0) {
+          run_now(loop = private$child_loop)
+        }
       }
 
       private$sync_mode_ <- mode
