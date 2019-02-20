@@ -30,6 +30,18 @@ Chrome <- R6Class("Chrome",
 find_chrome <- function() {
   if (is_mac()) {
     "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+
+  } else if (is_windows()) {
+    path <- NULL
+    tryCatch(
+      {
+        path <- readRegistry("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe\\")
+        path <- path[["(Default)"]]
+      },
+      error = function(e) { }
+    )
+    path
+
   } else {
     stop("Platform currently not supported")
   }
