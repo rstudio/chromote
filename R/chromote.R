@@ -108,14 +108,14 @@ Chromote <- R6Class(
       }
 
       if (!is.null(callback)) {
-        p <- then(p, callback)
+        p <- p$then(callback)
       }
 
       # If synchronous mode, wait for the promise to resolve and return the
       # value. If async mode, return the promise immediately.
       if (private$sync_mode_) {
         return_value <- NULL
-        p <- then(p, function(value) { return_value <<- value })
+        p <- p$then(function(value) { return_value <<- value })
         # Error handling?
         private$run_child_loop_until_resolved(p)
         return(return_value)
@@ -163,7 +163,7 @@ Chromote <- R6Class(
       # value. If async mode, return the promise immediately.
       if (private$sync_mode_) {
         return_value <- NULL
-        p <- then(p, function(value) return_value <<- value)
+        p <- p$then(function(value) return_value <<- value)
         private$run_child_loop_until_resolved(p)
         return(return_value)
 
@@ -265,10 +265,10 @@ Chromote <- R6Class(
     run_child_loop_until_resolved = function(p) {
       # Chain another promise that sets a flag when p is resolved.
       p_is_resolved <- FALSE
-      p <- then(p, function(value) p_is_resolved <<- TRUE)
+      p <- p$then(function(value) p_is_resolved <<- TRUE)
 
       err <- NULL
-      catch(p, function(e) err <<- e)
+      p$catch(function(e) err <<- e)
 
       while (!p_is_resolved && is.null(err) && !loop_empty(loop = private$child_loop)) {
         run_now(loop = private$child_loop)

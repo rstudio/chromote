@@ -1,5 +1,5 @@
 promise_timeout <- function(p, timeout, loop = current_loop(),
-                            timeout_message = NULL) 
+                            timeout_message = NULL)
 {
   promise(function(resolve, reject) {
     timer <- later(function() {
@@ -9,8 +9,8 @@ promise_timeout <- function(p, timeout, loop = current_loop(),
 
       reject(timeout_message)
     }, timeout, loop = loop)
-    
-    then(p,
+
+    p$then(
       onFulfilled = function(value) {
         # TODO: Clear timer to free memory. Will require changes to later.
         resolve(value)
