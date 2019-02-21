@@ -21,6 +21,9 @@ Browser <- R6Class("Browser",
   ),
   private = list(
     process = NULL,
-    port = NULL
+    port = NULL,
+    finalize = function(e) {
+      self$close()
+    }
   )
 )
