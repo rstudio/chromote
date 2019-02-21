@@ -8,7 +8,7 @@ Chromote <- R6Class(
   lock_objects = FALSE,
   public = list(
 
-    initialize = function(browser = chrome()) {
+    initialize = function(browser = default_browser()) {
       private$browser <- browser
 
       chrome_info <- fromJSON(private$url("/json"))
@@ -238,9 +238,9 @@ Chromote <- R6Class(
       if (private$child_loop_is_scheduled)
         return()
 
-      # If browser process has stopped, or if websocket has closed, there's no
-      # reason to run the child loop anymore.
-      if (!private$browser$is_alive() || private$ws$readyState() == 3) {
+      # If the websocket has closed, there's no reason to run the child loop
+      # anymore.
+      if (private$ws$readyState() == 3) {
         return()
       }
 
@@ -285,7 +285,7 @@ Chromote <- R6Class(
       if (!is.null(path) && substr(path, 1, 1) != "/") {
         stop('path must be NULL or a string that starts with "/"')
       }
-      paste0("http://127.0.0.1:", private$browser$get_port(), path)
+      paste0("http://", private$browser$get_host(), ":", private$browser$get_port(), path)
     }
   )
 )

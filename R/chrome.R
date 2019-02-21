@@ -5,6 +5,9 @@ globals$chrome <- NULL
 #' This will start a Chrome process if necessary. If one is already running,
 #' the object representing that process will be returned.
 #'
+#' The path to the Chrome binary can be specified by setting the
+#' environment variable \code{CHROMOTE_CHROME}.
+#'
 #' @export
 chrome <- function() {
   if (is.null(globals$chrome) || !globals$chrome$is_alive()) {
@@ -15,11 +18,15 @@ chrome <- function() {
 }
 
 
+#' Class representing a local Chrome process
+#'
+#' @export
 Chrome <- R6Class("Chrome",
   inherit = Browser,
   public = list(
     initialize = function(path = find_chrome()) {
       res <- launch_chrome(path)
+      private$host <- "127.0.0.1"
       private$process <- res$process
       private$port <- res$port
     }
@@ -28,6 +35,10 @@ Chrome <- R6Class("Chrome",
 
 
 find_chrome <- function() {
+  if (Sys.getenv("CHROMOTE_CHROME") != "") {
+    return(Sys.getenv("CHROMOTE_CHROME"))
+  }
+
   if (is_mac()) {
     "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 
@@ -103,3 +114,17 @@ launch_chrome <- function(path = find_chrome()) {
     port    = port
   )
 }
+
+
+#' Class representing a remote Chrome process
+#'
+#' @export
+ChromeRemote <- R6Class("ChromeRemote",
+  inherit = Browser,
+  public = list(
+    initialize = function(host, port) {
+      private$host <- host
+      private$port <- port
+    }
+  )
+)
