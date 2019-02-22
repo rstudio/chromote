@@ -46,7 +46,7 @@ Chromote <- R6Class(
         list2env(proto, self)
 
         private$schedule_child_loop()
-        private$run_child_loop_until_resolved(p)
+        self$wait_for(p)
       })
     },
 
@@ -63,6 +63,24 @@ Chromote <- R6Class(
       }
 
       private$sync_mode_ <- mode
+    },
+
+
+    # This runs the child loop until the promise is resolved.
+    wait_for = function(p) {
+      # Chain another promise that sets a flag when p is resolved.
+      p_is_resolved <- FALSE
+      p <- p$then(function(value) p_is_resolved <<- TRUE)
+
+      err <- NULL
+      p$catch(function(e) err <<- e)
+
+      while (!p_is_resolved && is.null(err) && !loop_empty(loop = private$child_loop)) {
+        run_now(loop = private$child_loop)
+      }
+
+      if (!is.null(err))
+        stop(err)
     },
 
     default_timeout = 10
@@ -103,7 +121,7 @@ Chromote <- R6Class(
         return_value <- NULL
         p <- p$then(function(value) { return_value <<- value })
         # Error handling?
-        private$run_child_loop_until_resolved(p)
+        self$wait_for(p)
         return(return_value)
 
       } else {
@@ -150,7 +168,7 @@ Chromote <- R6Class(
       if (private$sync_mode_) {
         return_value <- NULL
         p <- p$then(function(value) return_value <<- value)
-        private$run_child_loop_until_resolved(p)
+        self$wait_for(p)
         return(return_value)
 
       } else {
@@ -246,22 +264,6 @@ Chromote <- R6Class(
           private$schedule_child_loop()
         }
       )
-    },
-
-    run_child_loop_until_resolved = function(p) {
-      # Chain another promise that sets a flag when p is resolved.
-      p_is_resolved <- FALSE
-      p <- p$then(function(value) p_is_resolved <<- TRUE)
-
-      err <- NULL
-      p$catch(function(e) err <<- e)
-
-      while (!p_is_resolved && is.null(err) && !loop_empty(loop = private$child_loop)) {
-        run_now(loop = private$child_loop)
-      }
-
-      if (!is.null(err))
-        stop(err)
     },
 
     # =========================================================================

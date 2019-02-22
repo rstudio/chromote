@@ -178,6 +178,19 @@ b$DOM$getDocument() %...>%
   str()
 ```
 
+There may be times where the Chromote object is in async mode and you want to wait for a promise to resolve before continuing. This can be useful when you are switching from async mode to synchronous mode -- you may want to make sure some work is completed before switching modes. To do this, you can use the `wait_for()` method.
+
+```R
+# A promise chain
+p <- b$DOM$getDocument() %...>%
+  { b$DOM$querySelector(.$root$nodeId, ".sidebar") } %...>%
+  { b$DOM$getBoxModel(.$nodeId) } %...>%
+  str()
+
+b$wait_for(p)
+```
+
+
 **Technical note about the event loop**: In async mode, the R process will run callbacks and promises using an event loop provided by the [later](https://github.com/r-lib/later) package. This event loop is very similar to the one used in JavaScript, which is explained in depth by [this article](https://blog.sessionstack.com/how-javascript-works-event-loop-and-the-rise-of-async-programming-5-ways-to-better-coding-with-2f077c4438b5). One important difference between JavaScript's event loop and the one provided by **later**'s is that in JavaScript, the event loop only runs when the call stack is empty (essentially, when the JS runtime is idle); with **later** the event loop similarly runs when the call stack is empty (when the console is idle), but it can also be run at any point by calling `later::run_now()`.
 
 
