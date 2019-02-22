@@ -10,7 +10,9 @@ globals$chrome <- NULL
 #'
 #' @export
 chrome <- function() {
-  if (is.null(globals$chrome) || !globals$chrome$is_alive()) {
+  if (is.null(globals$chrome) ||
+      (globals$chrome$is_local() && !globals$chrome$get_process()$is_alive()))
+  {
     globals$chrome <- Chrome$new()
   }
 
