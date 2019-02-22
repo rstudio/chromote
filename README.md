@@ -1,6 +1,8 @@
 Chromote: Headless Chromium Remote Interface
 ============================================
 
+**Please note that Chromote is in development and the API is subject to change**
+
 ## Installation
 
 ```R
