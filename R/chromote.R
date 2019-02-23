@@ -83,6 +83,46 @@ Chromote <- R6Class(
         stop(err)
     },
 
+    screenshot = function(selector = "body", filename = "screenshot.png") {
+      hybrid_chain(
+        self$DOM$getDocument(),
+        function(value) {
+          self$DOM$querySelector(value$root$nodeId, selector)
+        },
+        function(value) {
+          if (value$nodeId == 0) {
+            stop("Selector failed")
+          }
+          self$DOM$getBoxModel(value$nodeId)
+        },
+        function(value) {
+          if (is.null(value)) {
+            stop("Selector failed")
+          }
+          xmin <- value$model$margin[[1]]
+          xmax <- value$model$margin[[3]]
+          ymin <- value$model$margin[[2]]
+          ymax <- value$model$margin[[6]]
+          self$Page$captureScreenshot(clip = list(
+            x = xmin,
+            y = ymin,
+            width  = xmax - xmin,
+            height = ymax - ymin,
+            scale = 1
+          ))
+        },
+        function(value) {
+          writeBin(jsonlite::base64_dec(value$data), filename)
+          message("Screenshot saved to ", filename)
+          showimage::show_image(filename)
+          browseURL(filename)
+        },
+        catch = function(err) {
+          warning("An error occurred: ", err)
+        }
+      )
+    },
+
     default_timeout = 10
   ),
   private = list(
