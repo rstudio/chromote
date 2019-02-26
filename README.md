@@ -220,6 +220,35 @@ TODO: Add async events
 TODO: Add way to print out all events
 
 
+## Chrome on remote hosts
+
+Chromote can control a browser running on a remote host. To start the browser, open a terminal on the remote host and run:
+
+```
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
+```
+
+(The path to Chrome is for Mac. On Windows or Linux, it will be different.)
+
+Then, in your local R session, create a Chromote object with the `host` and `port`. Once it's created, you can control it the same as usual:
+
+```R
+r <- Chromote$new(
+  browser = ChromeRemote$new(host = "10.0.0.5", port = 9222)
+)
+
+r$Browser$getVersion()
+r$view()
+r$Page$navigate("https://www.whatismybrowser.com/")
+b$Page$loadEventFired()
+r$screenshot()
+r$screenshot(".string-major")
+```
+
+When you use `$view()` on the remote browser, your local browser may block scripts for security reasons, which means that you won't be able to view the remote browser. If your local browser is Chrome, there will be a shield-shaped icon in the location bar that you can click in order to enable loading the scripts. (Note: I haven't been able to get other local browsers to work at all.)
+
+Note: There seem to be some timing issues with remote browsers. In the example above, the browser may finish navigating to the web site before the R process gets the response message for `$navigate()`, and therefore before it starts waiting for `Page.loadEventFired`. We'll work on smoothing this over.
+
 *****
 
 ## Examples
@@ -227,10 +256,19 @@ TODO: Add way to print out all events
 Take a screenshot of the viewport and display it using the [showimage](https://github.com/r-lib/showimage#readme) package.
 
 ```R
-b$Page$captureScreenshot() %...>% (function(msg) {
-  writeBin(jsonlite::base64_dec(msg$data), "screenshot.png")
-  message("Screenshot saved to ", "screenshot.png")
-  showimage::show_image("screenshot.png")
-})
-```
+b <- Chromote$new()
+b$Page$enable()
 
+b$Page$navigate("https://www.r-project.org/")
+b$Page$loadEventFired()
+b$screenshot()  # Saves to screenshot.png and displays in viewer
+
+
+# Using CSS selectors, choosing the region, and using scaling
+b$Page$navigate("https://www.reddit.com")
+b$Page$loadEventFired()
+b$screenshot('#header-search-bar', region = 'content')
+b$screenshot('#header-search-bar', region = 'padding')
+b$screenshot('#header-search-bar', region = 'border')
+b$screenshot('#header-search-bar', region = 'border', scale = 2)
+```
