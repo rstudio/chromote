@@ -52,6 +52,12 @@ b$Page$navigate("https://www.r-project.org/")
 In the official Chrome DevTools Protocol documentation, this is the [`Page.navigate`](https://chromedevtools.github.io/devtools-protocol/1-3/Page#method-navigate) command.
 
 
+After the page has loaded, you can take a screenshot. (See the Examples section below for more information.)
+
+```R
+b$screenshot()  # Saves to screenshot.png and displays in viewer
+```
+
 This will get the dimensions of a DOM element given a CSS selector:
 
 ```R
