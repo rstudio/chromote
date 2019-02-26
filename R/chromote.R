@@ -136,13 +136,20 @@ Chromote <- R6Class(
     command_callbacks = NULL,
     event_callbacks = NULL,
 
-    send_command = function(msg, callback = NULL, timeout = NULL) {
+    send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
       private$last_msg_id <- private$last_msg_id + 1
       msg$id <- private$last_msg_id
 
       p <- promise(function(resolve, reject) {
         private$ws$send(toJSON(msg, auto_unbox = TRUE))
-        private$add_command_callback(msg$id, resolve)
+        private$add_command_callback(msg$id, resolve, reject)
+      })
+
+      p <- p$catch(function(e) {
+        stop("code: ", e$code,
+             "\n  message: ", e$message,
+             if (!is.null(e$data)) paste0("\n  data: ", e$data)
+        )
       })
 
       if (!is.null(timeout) && !is.infinite(timeout)) {
@@ -152,7 +159,7 @@ Chromote <- R6Class(
       }
 
       if (!is.null(callback)) {
-        p <- p$then(callback)
+        p <- p$then(onFulfilled = callback, onRejected = error)
       }
 
       # If synchronous mode, wait for the promise to resolve and return the
@@ -169,22 +176,30 @@ Chromote <- R6Class(
       }
     },
 
-    add_command_callback = function(id, callback) {
+    add_command_callback = function(id, callback, error) {
       id <- as.character(id)
-      private$command_callbacks[[id]] <- callback
+      private$command_callbacks[[id]] <- list(
+        callback = callback,
+        error = error
+      )
     },
 
-    invoke_command_callback = function(id, value) {
+    invoke_command_callback = function(id, value, error) {
       id <- as.character(id)
 
       if (!exists(id, envir = private$command_callbacks, inherits = FALSE))
         return()
 
-      callback <- private$command_callbacks[[id]]
+      handlers <- private$command_callbacks[[id]]
       rm(list = id, envir = private$command_callbacks)
-      callback(value)
-    },
 
+      if (!is.null(error)) {
+        handlers$error(error)
+
+      } else if (!is.null(value)) {
+        handlers$callback(value)
+      }
+    },
 
     register_event_listener = function(method_name, callback = NULL, timeout = NULL) {
       # Note: If callback is specified, then timeout is ignored
@@ -264,7 +279,10 @@ Chromote <- R6Class(
 
       } else if (!is.null(data$id)) {
         # This is a response to a command.
-        private$invoke_command_callback(data$id, data$result)
+        private$invoke_command_callback(data$id, data$result, data$error)
+
+      } else {
+        message("Don't know how to handle message: ", msg$data)
       }
     },
 

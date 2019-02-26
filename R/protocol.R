@@ -53,7 +53,8 @@ gen_command_args <- function(params) {
   })
 
   names(args) <- fetch_key_c(params, "name")
-  args <- c(args, callback_ = list(NULL), timeout_ = quote(self$default_timeout))
+  args <- c(args, callback_ = list(NULL), error_ = list(NULL),
+            timeout_ = quote(self$default_timeout))
   args
 }
 
@@ -85,7 +86,7 @@ gen_command_body <- function(method_name, params) {
       method = !!method_name,
       params = drop_nulls(list(!!!param_list))
     )
-    private$send_command(msg, callback = callback_, timeout = timeout_)
+    private$send_command(msg, callback = callback_, error = error_, timeout = timeout_)
   })
 }
 
