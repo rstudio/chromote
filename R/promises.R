@@ -48,17 +48,22 @@ hybrid_chain <- function(expr, ..., catch = NULL, finally = NULL) {
   runFinally <- TRUE
   tryCatch(
     {
-      result <- force(expr)
+      result <- withVisible(force(expr))
 
-      if (promises::is.promising(result)) {
-        p <- promise_chain(result, ..., catch = catch, finally = finally)
+      if (promises::is.promising(result$value)) {
+        p <- promise_chain(setVisible(result), ..., catch = catch, finally = finally)
         runFinally <- FALSE
         invisible(p)
 
       } else {
         for (fn in list(...)) {
-          result <- fn(result)
+          if (".visible" %in% names(formals(fn))) {
+            result <- withVisible(fn(result$value, .visible = result$visible))
+          } else {
+            result <- withVisible(fn(result$value))
+          }
         }
+        setVisible(result)
       }
     },
     error = function(e) {
@@ -71,4 +76,22 @@ hybrid_chain <- function(expr, ..., catch = NULL, finally = NULL) {
       if (runFinally && !is.null(finally)) finally()
     }
   )
+}
+
+# Returns `value` with either `invisible()` applied or not, depending on the
+# value of `visible`.
+#
+# If the `visible` is missing, then `value` should be a list as returned from
+# `withVisible()`, and that visibility will be applied.
+setVisible <- function(value, visible) {
+  if (missing(visible)) {
+    visible <- value$visible
+    value <- value$value
+  }
+
+  if (!visible) {
+    invisible(value)
+  } else {
+    value
+  }
 }
