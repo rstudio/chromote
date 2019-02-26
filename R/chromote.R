@@ -83,7 +83,13 @@ Chromote <- R6Class(
         stop(err)
     },
 
-    screenshot = function(selector = "body", filename = "screenshot.png") {
+    screenshot = function(selector = "body", filename = "screenshot.png",
+      show = interactive())
+    {
+      if (length(filename) == 0 && !show) {
+        stop("Cannot have empty filename and show=FALSE")
+      }
+
       hybrid_chain(
         self$DOM$getDocument(),
         function(value) {
@@ -112,10 +118,23 @@ Chromote <- R6Class(
           ))
         },
         function(value) {
+          temp_output <- FALSE
+          if (is.null(filename)) {
+            temp_output <- TRUE
+            filename <- tempfile("chromote-screenshot-", fileext = ".png")
+            on.exit(unlink(filename))
+          }
+
           writeBin(jsonlite::base64_dec(value$data), filename)
-          message("Screenshot saved to ", filename)
-          showimage::show_image(filename)
-          browseURL(filename)
+          if (show) {
+            showimage::show_image(filename)
+          }
+
+          if (temp_output) {
+            invisible()
+          } else {
+            invisible(filename)
+          }
         },
         catch = function(err) {
           warning("An error occurred: ", err)
