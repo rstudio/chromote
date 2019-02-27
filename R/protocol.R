@@ -2,6 +2,11 @@
 
 globalVariables("private")
 
+# Returns a list of domains of the Devtools Protocol (like Browser, Page,
+# Runtime). Each domain has a function for each command and event (like
+# Browser$getVersion, Page$navigate, etc). The `protocol` input is the
+# protocol object from the browser, translated from JSON to an R object, and
+# the `env` is the desired enclosing environment for the generated functions.
 process_protocol <- function(protocol, env = parent.frame()) {
   message("Protocol version: ", protocol$version$major, ".", protocol$version$minor)
 
