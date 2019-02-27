@@ -146,6 +146,19 @@ Chromote <- R6Class(
       )
     },
 
+    # Enable or disable message debugging. If enabled, R will print out the
+    # JSON messages that are sent and received. If called with no value, this
+    # method will print out the current debugging state.
+    debug_messages = function(value = NULL) {
+      if (is.null(value))
+        return(private$debug_messages_)
+
+      if (!(identical(value, TRUE) || identical(value, FALSE)))
+        stop("value must be TRUE or FALSE")
+
+      private$debug_messages_ <- value
+    },
+
     default_timeout = 10
   ),
   private = list(
@@ -163,7 +176,11 @@ Chromote <- R6Class(
       msg$id <- private$last_msg_id
 
       p <- promise(function(resolve, reject) {
-        private$ws$send(toJSON(msg, auto_unbox = TRUE))
+        msg_json <- toJSON(msg, auto_unbox = TRUE)
+        private$ws$send(msg_json)
+        if (private$debug_messages_) {
+          message("SEND ", msg_json)
+        }
         private$add_command_callback(msg$id, resolve, reject)
       })
 
@@ -295,7 +312,12 @@ Chromote <- R6Class(
     # =========================================================================
     # Message handling and dispatch
     # =========================================================================
+    debug_messages_ = FALSE,
+
     on_message = function(msg) {
+      if (private$debug_messages_) {
+        message("RECV ", msg$data)
+      }
       data <- fromJSON(msg$data, simplifyVector = FALSE)
 
       if (!is.null(data$method)) {
