@@ -1,3 +1,28 @@
+#' @importFrom promises %...>%
+#' @export
+promises::"%...>%"
+
+#' @importFrom promises %...!%
+#' @export
+promises::"%...!%"
+
+#' @importFrom promises %...T>%
+#' @export
+promises::"%...T>%"
+
+#' @importFrom promises %...T!%
+#' @export
+promises::"%...T!%"
+
+#' @importFrom magrittr %>%
+#' @export
+magrittr::"%>%"
+
+#' @importFrom magrittr %T>%
+#' @export
+magrittr::"%T>%"
+
+
 promise_timeout <- function(p, timeout, loop = current_loop(),
                             timeout_message = NULL)
 {
