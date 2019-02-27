@@ -84,6 +84,16 @@ gen_command_body <- function(method_name, params) {
   names(param_list) <- fetch_key_c(params, "name")
 
   expr({
+    if (!is.null(callback_) && !is.function(callback_))
+      stop("`callback_` must be a function.")
+
+    if (!is.null(error_) && !is.function(error_))
+      stop("`error_` must be a function.")
+
+    if (!is.null(timeout_) && !is.numeric(timeout_))
+      stop("`timeout_` must be a number.")
+
+
     # Check for missing non-optional args
     !!!check_missing_exprs
 
@@ -109,6 +119,12 @@ event_to_function <- function(event, domain_name, env) {
 # method_name is something like "Page.loadEventFired".
 gen_event_body <- function(method_name) {
   expr({
+    if (!is.null(callback_) && !is.function(callback_))
+      stop("`callback_` must be a function.")
+
+    if (!is.null(timeout_) && !is.numeric(timeout_))
+      stop("`timeout_` must be a number.")
+
     private$register_event_listener(!!method_name, callback_, timeout_)
   })
 }
