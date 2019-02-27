@@ -153,11 +153,10 @@ Chromote <- R6Class(
     ws = NULL,
 
     # =========================================================================
-    # Communication with browser and callbacks
+    # Browser commands
     # =========================================================================
     last_msg_id = 0,
     command_callbacks = NULL,
-    event_callbacks = NULL,
 
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
       private$last_msg_id <- private$last_msg_id + 1
@@ -224,6 +223,12 @@ Chromote <- R6Class(
       }
     },
 
+
+    # =========================================================================
+    # Browser events
+    # =========================================================================
+    event_callbacks = NULL,
+
     register_event_listener = function(method_name, callback = NULL, timeout = NULL) {
       # Note: If callback is specified, then timeout is ignored
       if (!is.null(callback)) {
@@ -287,6 +292,9 @@ Chromote <- R6Class(
       callbacks$invoke(params)
     },
 
+    # =========================================================================
+    # Message handling and dispatch
+    # =========================================================================
     on_message = function(msg) {
       data <- fromJSON(msg$data, simplifyVector = FALSE)
 
@@ -308,6 +316,7 @@ Chromote <- R6Class(
         message("Don't know how to handle message: ", msg$data)
       }
     },
+
 
     # =========================================================================
     # Event loop for the websocket and the parent event loop
