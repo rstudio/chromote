@@ -56,7 +56,7 @@ find_chrome <- function() {
     path
 
   } else if (is_linux()) {
-    "/usr/bin/chrome"
+    Sys.which("chrome")
 
   } else {
     stop("Platform currently not supported")
