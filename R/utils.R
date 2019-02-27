@@ -1,9 +1,16 @@
+# =============================================================================
+# System
+# =============================================================================
+
 is_windows <- function() .Platform$OS.type == "windows"
 
 is_mac     <- function() Sys.info()[['sysname']] == 'Darwin'
 
 is_linux   <- function() Sys.info()[['sysname']] == 'Linux'
 
+# =============================================================================
+# Vectors
+# =============================================================================
 
 get_key <- function(x, key, default = stop("Key not present")) {
   if (key %in% names(x)) {
