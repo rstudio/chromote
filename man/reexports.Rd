@@ -9,6 +9,10 @@
 \alias{\%...T!\%}
 \alias{\%>\%}
 \alias{\%T>\%}
+\alias{promise}
+\alias{then}
+\alias{catch}
+\alias{finally}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -18,6 +22,6 @@ below to see their documentation.
 \describe{
   \item{magrittr}{\code{\link[magrittr]{\%>\%}}, \code{\link[magrittr]{\%T>\%}}}
 
-  \item{promises}{\code{\link[promises]{\%...>\%}}, \code{\link[promises]{\%...!\%}}, \code{\link[promises]{\%...T>\%}}, \code{\link[promises]{\%...T!\%}}}
+  \item{promises}{\code{\link[promises]{\%...>\%}}, \code{\link[promises]{\%...!\%}}, \code{\link[promises]{\%...T>\%}}, \code{\link[promises]{\%...T!\%}}, \code{\link[promises]{promise}}, \code{\link[promises]{then}}, \code{\link[promises]{catch}}, \code{\link[promises]{finally}}}
 }}
 

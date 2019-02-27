@@ -23,6 +23,23 @@ magrittr::"%>%"
 magrittr::"%T>%"
 
 
+
+#' @importFrom promises promise
+#' @export
+promises::promise
+
+#' @importFrom promises then
+#' @export
+promises::then
+
+#' @importFrom promises catch
+#' @export
+promises::catch
+
+#' @importFrom promises finally
+#' @export
+promises::finally
+
 promise_timeout <- function(p, timeout, loop = current_loop(),
                             timeout_message = NULL)
 {
