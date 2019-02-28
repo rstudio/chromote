@@ -181,7 +181,7 @@ Chromote <- R6Class(
         msg_json <- toJSON(msg, auto_unbox = TRUE)
         private$ws$send(msg_json)
         if (private$debug_messages_) {
-          message("SEND ", msg_json)
+          message("SEND ", truncate(msg_json, private$debug_message_max_length))
         }
         private$add_command_callback(msg$id, resolve, reject)
       })
@@ -378,10 +378,11 @@ Chromote <- R6Class(
     # Message handling and dispatch
     # =========================================================================
     debug_messages_ = FALSE,
+    debug_message_max_length = 1000,
 
     on_message = function(msg) {
       if (private$debug_messages_) {
-        message("RECV ", msg$data)
+        message("RECV ", truncate(msg$data, private$debug_message_max_length))
       }
       data <- fromJSON(msg$data, simplifyVector = FALSE)
 
