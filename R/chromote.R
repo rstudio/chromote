@@ -180,9 +180,7 @@ Chromote <- R6Class(
       p <- promise(function(resolve, reject) {
         msg_json <- toJSON(msg, auto_unbox = TRUE)
         private$ws$send(msg_json)
-        if (private$debug_messages_) {
-          message("SEND ", truncate(msg_json, private$debug_message_max_length))
-        }
+        private$debug_log("SEND ", msg_json)
         private$add_command_callback(msg$id, resolve, reject)
       })
 
@@ -334,12 +332,12 @@ Chromote <- R6Class(
 
       private$event_callback_counts[[domain]] <- private$event_callback_counts[[domain]] + 1
 
-      message("Callbacks for ", domain, "++: ", private$event_callback_counts[[domain]])
+      private$debug_log("Callbacks for ", domain, "++: ", private$event_callback_counts[[domain]])
 
       # If we're doing auto events and we're going from 0 to 1, enable events
       # for this domain.
       if (private$auto_events && private$event_callback_counts[[domain]] == 1) {
-        message("Enabling events for ", domain, ".")
+        private$debug_log("Enabling events for ", domain)
         self[[domain]]$enable()
       }
 
@@ -349,11 +347,11 @@ Chromote <- R6Class(
     dec_event_callback_count = function(domain) {
       private$event_callback_counts[[domain]] <- private$event_callback_counts[[domain]] - 1
 
-      message("Callbacks for ", domain, "--: ", private$event_callback_counts[[domain]])
+      private$debug_log("Callbacks for ", domain, "--: ", private$event_callback_counts[[domain]])
       # If we're doing auto events and we're going from 1 to 0, disable
       # enable events for this domain.
       if (private$auto_events && private$event_callback_counts[[domain]] == 0) {
-        message("Disabling events for ", domain, ".")
+        private$debug_log("Disabling events for ", domain)
         self[[domain]]$disable()
       }
 
@@ -381,9 +379,7 @@ Chromote <- R6Class(
     debug_message_max_length = 1000,
 
     on_message = function(msg) {
-      if (private$debug_messages_) {
-        message("RECV ", truncate(msg$data, private$debug_message_max_length))
-      }
+      private$debug_log("RECV ", msg$data)
       data <- fromJSON(msg$data, simplifyVector = FALSE)
 
       if (!is.null(data$method)) {
@@ -447,11 +443,19 @@ Chromote <- R6Class(
     # =========================================================================
     # Misc utility functions
     # =========================================================================
+
     url = function(path = NULL) {
       if (!is.null(path) && substr(path, 1, 1) != "/") {
         stop('path must be NULL or a string that starts with "/"')
       }
       paste0("http://", private$browser$get_host(), ":", private$browser$get_port(), path)
+    },
+
+    debug_log = function(...) {
+      txt <- paste0(..., collapse = "")
+      if (private$debug_messages_) {
+        message(txt)
+      }
     }
   )
 )
