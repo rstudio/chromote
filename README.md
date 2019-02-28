@@ -211,19 +211,16 @@ As an example, it can be a bit tricky to find out when to take a screenshot. Whe
 ```R
 b <- Chromote$new()
 
-# Tell browser to send event notifications for the Page domain
-b$Page$enable()
-
-
 # Navigate and wait for Page.loadEventFired.
-# Note: these lines must be run without any delay in between
+# Note: these lines must be run without any delay in between.
 b$Page$navigate("https://www.r-project.org/")
 b$Page$loadEventFired()
 ```
 
+
 TODO: Add async events
 
-TODO: Add way to print out all events
+**Note:** The Chrome Devtools Protocol itself does not automatically enable event notifications. Normally, you would have to call the `Page.enable` method to turn on event notifications for the Page domain. However, Chromote saves you from needing to do this step by keeping track of how many callbacks there are for each domain. When the number of event callbacks for a domain goes from 0 to 1, Chromote automatically calls `$enable()` for that domain, and when it goes from 1 to 0, it it calls `$disable()`.
 
 
 ## Chrome on remote hosts
@@ -255,6 +252,12 @@ When you use `$view()` on the remote browser, your local browser may block scrip
 
 Note: There seem to be some timing issues with remote browsers. In the example above, the browser may finish navigating to the web site before the R process gets the response message for `$navigate()`, and therefore before it starts waiting for `Page.loadEventFired`. We'll work on smoothing this over.
 
+
+## Debugging
+
+Calling `b$debug_messages(TRUE)` will enable the printing of all the JSON messages sent between R and Chrome.
+
+
 *****
 
 ## Examples
@@ -263,7 +266,6 @@ Take a screenshot of the viewport and display it using the [showimage](https://g
 
 ```R
 b <- Chromote$new()
-b$Page$enable()
 
 b$Page$navigate("https://www.r-project.org/")
 b$Page$loadEventFired()
