@@ -44,3 +44,13 @@ fetch_key_l <- function(x, key, default = stop("Key not present")) {
 drop_nulls <- function(x) {
   x[!vapply(x, is.null, TRUE)]
 }
+
+
+# =============================================================================
+# Protocol-related stuff
+# =============================================================================
+
+# Given an event name, return the domain: "Page.loadEventFired" -> "Page"
+find_domain <- function(event) {
+  sub("\\.[^.]+", "", event)
+}

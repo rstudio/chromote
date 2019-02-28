@@ -8,8 +8,9 @@ Chromote <- R6Class(
   lock_objects = FALSE,
   public = list(
 
-    initialize = function(browser = default_browser()) {
+    initialize = function(browser = default_browser(), auto_events = TRUE) {
       private$browser <- browser
+      private$auto_events <- auto_events
 
       chrome_info <- fromJSON(private$url("/json"))
 
@@ -161,6 +162,7 @@ Chromote <- R6Class(
 
     default_timeout = 10
   ),
+
   private = list(
     browser = NULL,
     ws = NULL,
@@ -245,33 +247,45 @@ Chromote <- R6Class(
     # Browser events
     # =========================================================================
     event_callbacks = NULL,
+    # For keeping count of the number of callbacks for each domain; if
+    # auto_events is TRUE, then when the count goes from 0 to 1 or 1 to 0 for
+    # a given domain, it will automatically enable or disable events for that
+    # domain.
+    event_callback_counts = list(),
+    auto_events = NULL,
 
-    register_event_listener = function(method_name, callback = NULL, timeout = NULL) {
+    register_event_listener = function(event, callback = NULL, timeout = NULL) {
+      domain <- find_domain(event)
+
       # Note: If callback is specified, then timeout is ignored
       if (!is.null(callback)) {
-        deregister_callback_fn <- private$add_event_callback(method_name, callback, once = FALSE)
+        deregister_callback_fn <- private$add_event_callback(event, callback, once = FALSE)
         return(invisible(deregister_callback_fn))
       }
 
+      deregister_callback_fn <- NULL
       p <- promise(function(resolve, reject) {
-        private$add_event_callback(method_name, resolve, once = TRUE)
+        deregister_callback_fn <<- private$add_event_callback(event, resolve, once = TRUE)
       })
 
       if (!is.null(timeout) && !is.infinite(timeout)) {
         p <- promise_timeout(p, timeout, loop = private$child_loop,
-          timeout_message = paste0("Chromote: timed out waiting for event ", method_name)
+          timeout_message = paste0("Chromote: timed out waiting for event ", event)
         )
       }
 
       # If synchronous mode, wait for the promise to resolve and return the
       # value. If async mode, return the promise immediately.
       if (private$sync_mode_) {
+        on.exit(deregister_callback_fn(), add = TRUE)
+
         return_value <- NULL
         p <- p$then(function(value) return_value <<- value)
         self$wait_for(p)
         return(return_value)
 
       } else {
+        p <- p$finally(deregister_callback_fn)
         return(invisible(p))
       }
     },
@@ -286,13 +300,64 @@ Chromote <- R6Class(
         callback <- function(...) {
           tryCatch(
             orig_callback(...),
-            finally = deregister_fn()
+            finally = deregister_and_dec()
           )
         }
       }
 
-      deregister_fn <- private$event_callbacks[[event]]$add(callback)
-      deregister_fn
+      deregister_callback <- private$event_callbacks[[event]]$add(callback)
+
+      domain <- find_domain(event)
+      private$inc_event_callback_count(domain)
+
+      # We'll wrap deregister_callback in another function which also keeps
+      # count to the number of callbacks for the domain.
+      deregister_called <- FALSE
+      deregister_and_dec <- function() {
+        # Make sure that if this is called multiple times that it doesn't keep
+        # having effects.
+        if (deregister_called)
+          return()
+        deregister_called <<- TRUE
+
+        deregister_callback()
+        private$dec_event_callback_count(domain)
+      }
+
+      deregister_and_dec
+    },
+
+    inc_event_callback_count = function(domain) {
+      if (is.null(private$event_callback_counts[[domain]])) {
+        private$event_callback_counts[[domain]] <- 0
+      }
+
+      private$event_callback_counts[[domain]] <- private$event_callback_counts[[domain]] + 1
+
+      message("Callbacks for ", domain, "++: ", private$event_callback_counts[[domain]])
+
+      # If we're doing auto events and we're going from 0 to 1, enable events
+      # for this domain.
+      if (private$auto_events && private$event_callback_counts[[domain]] == 1) {
+        message("Enabling events for ", domain, ".")
+        self[[domain]]$enable()
+      }
+
+      invisible(private$event_callback_counts[[domain]])
+    },
+
+    dec_event_callback_count = function(domain) {
+      private$event_callback_counts[[domain]] <- private$event_callback_counts[[domain]] - 1
+
+      message("Callbacks for ", domain, "--: ", private$event_callback_counts[[domain]])
+      # If we're doing auto events and we're going from 1 to 0, disable
+      # enable events for this domain.
+      if (private$auto_events && private$event_callback_counts[[domain]] == 0) {
+        message("Disabling events for ", domain, ".")
+        self[[domain]]$disable()
+      }
+
+      invisible(private$event_callback_counts[[domain]])
     },
 
     remove_event_callbacks = function(event) {
