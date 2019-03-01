@@ -43,8 +43,15 @@ Chromote <- R6Class(
 
         # Populate methods while the connection is being established.
         protocol <- jsonlite::fromJSON(private$url("/json/protocol"), simplifyVector = FALSE)
-        proto <- process_protocol(protocol, self$.__enclos_env__)
-        list2env(proto, self)
+        protocol_objs <- process_protocol(protocol, self$.__enclos_env__)
+        list2env(protocol_objs, self)
+
+        # Find out which domains require the <domain>.enable command to enable
+        # event notifications.
+        private$event_enable_domains <- lapply(protocol_objs, function(domain) {
+          is.function(domain$enable)
+        })
+
 
         private$schedule_child_loop()
         self$wait_for(p)
@@ -252,6 +259,10 @@ Chromote <- R6Class(
     event_callback_counts = list(),
     auto_events = NULL,
 
+    # Some domains require a <domain>.event command to enable event
+    # notifications, others do not. (Not really sure why.)
+    event_enable_domains = NULL,
+
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
       domain <- find_domain(event)
 
@@ -335,8 +346,12 @@ Chromote <- R6Class(
       private$debug_log("Callbacks for ", domain, "++: ", private$event_callback_counts[[domain]])
 
       # If we're doing auto events and we're going from 0 to 1, enable events
-      # for this domain.
-      if (private$auto_events && private$event_callback_counts[[domain]] == 1) {
+      # for this domain. (Some domains do not require or have an .enable
+      # method.)
+      if (private$auto_events &&
+          private$event_callback_counts[[domain]] == 1 &&
+          isTRUE(private$event_enable_domains[[domain]]))
+      {
         private$debug_log("Enabling events for ", domain)
         self[[domain]]$enable()
       }
@@ -350,7 +365,10 @@ Chromote <- R6Class(
       private$debug_log("Callbacks for ", domain, "--: ", private$event_callback_counts[[domain]])
       # If we're doing auto events and we're going from 1 to 0, disable
       # enable events for this domain.
-      if (private$auto_events && private$event_callback_counts[[domain]] == 0) {
+      if (private$auto_events &&
+          private$event_callback_counts[[domain]] == 0 &&
+          isTRUE(private$event_enable_domains[[domain]]))
+      {
         private$debug_log("Disabling events for ", domain)
         self[[domain]]$disable()
       }
