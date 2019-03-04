@@ -8,11 +8,19 @@ Chromote <- R6Class(
   lock_objects = FALSE,
   public = list(
 
-    initialize = function(browser = default_browser(), auto_events = TRUE) {
-      private$browser <- browser
-      private$auto_events <- auto_events
+    initialize = function(browser = default_browser(),
+      multi_session = TRUE,
+      auto_events = TRUE
+    ) {
+      private$browser       <- browser
+      private$auto_events   <- auto_events
+      private$multi_session <- multi_session
 
-      chrome_info <- fromJSON(private$url("/json"))
+      if (multi_session) {
+        chrome_info <- fromJSON(private$url("/json/version"))
+      } else {
+        chrome_info <- fromJSON(private$url("/json"))
+      }
 
       private$command_callbacks <- new.env(parent = emptyenv())
       private$event_callbacks   <- new.env(parent = emptyenv())
@@ -52,9 +60,15 @@ Chromote <- R6Class(
           is.function(domain$enable)
         })
 
-
         private$schedule_child_loop()
         self$wait_for(p)
+
+        if (multi_session) {
+          targets <- self$Target$getTargets()
+          tid <- targets$targetInfos[[1]]$targetId
+          session_info <- self$Target$attachToTarget(tid, flatten = TRUE)
+          private$session_id <- session_info$sessionId
+        }
       })
     },
 
@@ -183,6 +197,10 @@ Chromote <- R6Class(
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
       private$last_msg_id <- private$last_msg_id + 1
       msg$id <- private$last_msg_id
+
+      if (private$multi_session) {
+        msg$sessionId <- private$session_id
+      }
 
       p <- promise(function(resolve, reject) {
         msg_json <- toJSON(msg, auto_unbox = TRUE)
@@ -419,6 +437,11 @@ Chromote <- R6Class(
       }
     },
 
+    # =========================================================================
+    # Sessions
+    # =========================================================================
+    multi_session = NULL,
+    session_id = NULL,
 
     # =========================================================================
     # Event loop for the websocket and the parent event loop
