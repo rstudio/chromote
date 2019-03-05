@@ -27,26 +27,37 @@ ChromoteSession <- R6Class("ChromoteSession",
 wrap_protocol <- function(protocol, env) {
   domain_names <- names(protocol)
   protocol_wrapped <- mapply(
-    FUN = wrap_domain,
-    domain = protocol,
+    FUN         = wrap_domain,
+    domain      = protocol,
     domain_name = domain_names,
-    MoreArgs = list(env = env)
+    MoreArgs    = list(env = env)
   )
 }
 
 
 wrap_domain <- function(domain, domain_name, env) {
   method_names <- setNames(names(domain), names(domain))
-  lapply(method_names, wrap_method, domain_name = domain_name, env = env)
+  mapply(
+    FUN         = wrap_method,
+    method      = domain,
+    method_name = method_names,
+    MoreArgs    = list(
+      domain_name = domain_name,
+      env         = env
+    )
+  )
 }
 
 
-wrap_method <- function(method_name, domain_name, env) {
-  fn <- function(...) {
-    method_name(..., sessionId_ = private$session_id)
-  }
+wrap_method <- function(method, method_name, domain_name, env) {
 
-  body(fn) <- expr({
+  # Get the args from the parent method, but disallow sessionId_ because we'll
+  # provide our own.
+  args <- formals(method)
+  args$sessionId_ <- NULL
+  arg_symbols <- lapply(names(args), as.symbol)
+
+  body <- expr({
     # Equivalent to:
     # private$parent$protocol$(!!domain_name)$(!!method_name)(..., sessionId_ = private$session_id)
     # except that the syntax above isn't valid -- we need to write in the
@@ -58,10 +69,8 @@ wrap_method <- function(method_name, domain_name, env) {
         !!domain_name
       ),
       !!method_name
-    )(..., sessionId_ = private$session_id)
+    )(!!!arg_symbols, sessionId_ = private$session_id)
   })
 
-  environment(fn) <- env
-
-  fn
+  new_function(args, body, env)
 }
