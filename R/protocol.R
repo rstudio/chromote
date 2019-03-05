@@ -42,15 +42,11 @@ get_items <- function(domain, type = c("commands", "events")) {
 }
 
 command_to_function <- function(command, domain_name, env) {
-  fn <- new_function(
+  new_function(
     args = gen_command_args(command$parameters),
     body = gen_command_body(paste0(domain_name, ".", command$name), command$parameters),
     env  = env
   )
-
-  attr(fn, "type") <- "command"
-
-  fn
   # TODO:
   # * Add type-checking
   # * Cross-reference types for type checking
