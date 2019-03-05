@@ -113,20 +113,26 @@ Chromote <- R6Class(
         stop(err)
     },
 
-    create_session = function(p, default = FALSE) {
-      target       <- self$protocol$Target$createTarget("about:blank")
-      tid          <- target$targetId
-      session_info <- self$protocol$Target$attachToTarget(tid, flatten = TRUE)
-      session_id   <- session_info$sessionId
+    create_session = function(default = FALSE) {
+      hybrid_chain(
+        self$protocol$Target$createTarget("about:blank"),
+        function(target) {
+          tid <- target$targetId
+          self$protocol$Target$attachToTarget(tid, flatten = TRUE)
+        },
+        function(session_info) {
+          session_id   <- session_info$sessionId
+          session <- ChromoteSession$new(self, self$protocol, session_id)
+          private$sessions[[session_id]] <- session
 
-      session <- ChromoteSession$new(self, self$protocol, session_id)
-      private$sessions[[session_id]] <- session
+          # TODO: This isn't safe in async mode
+          if (default) {
+            self$default_session_id(session_id)
+          }
 
-      if (default) {
-        self$default_session_id(session_id)
-      }
-
-      session
+          session
+        }
+      )
     },
 
     get_sessions = function() {
