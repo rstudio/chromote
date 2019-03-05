@@ -58,8 +58,13 @@ gen_command_args <- function(params) {
   })
 
   names(args) <- fetch_key_c(params, "name")
-  args <- c(args, callback_ = list(NULL), error_ = list(NULL),
-            timeout_ = quote(self$default_timeout))
+  args <- c(
+    args,
+    callback_ = list(NULL),
+    error_ = list(NULL),
+    timeout_ = quote(self$default_timeout),
+    sessionId_ = list(NULL)
+  )
   args
 }
 
@@ -85,13 +90,16 @@ gen_command_body <- function(method_name, params) {
 
   expr({
     if (!is.null(callback_) && !is.function(callback_))
-      stop("`callback_` must be a function.")
+      stop("`callback_` must be a function or NULL.")
 
     if (!is.null(error_) && !is.function(error_))
-      stop("`error_` must be a function.")
+      stop("`error_` must be a function or NULL.")
 
     if (!is.null(timeout_) && !is.numeric(timeout_))
-      stop("`timeout_` must be a number.")
+      stop("`timeout_` must be a number or NULL.")
+
+    if (!is.null(sessionId_) && !is.character(sessionId_))
+      stop("`sessionId_` must be a string or NULL.")
 
 
     # Check for missing non-optional args
@@ -101,7 +109,13 @@ gen_command_body <- function(method_name, params) {
       method = !!method_name,
       params = drop_nulls(list(!!!param_list))
     )
-    private$send_command(msg, callback = callback_, error = error_, timeout = timeout_)
+    private$send_command(
+      msg,
+      callback = callback_,
+      error = error_,
+      timeout = timeout_,
+      sessionId = sessionId_
+    )
   })
 }
 
@@ -109,7 +123,7 @@ gen_command_body <- function(method_name, params) {
 
 event_to_function <- function(event, domain_name, env) {
   rlang::new_function(
-    args = list(callback_ = NULL, timeout_ = quote(self$default_timeout)),
+    args = list(callback_ = NULL, timeout_ = quote(self$default_timeout), sessionId_ = NULL),
     body = gen_event_body(paste0(domain_name, ".", event$name)),
     env  = env
   )
@@ -125,6 +139,9 @@ gen_event_body <- function(method_name) {
     if (!is.null(timeout_) && !is.numeric(timeout_))
       stop("`timeout_` must be a number.")
 
-    private$register_event_listener(!!method_name, callback_, timeout_)
+    if (!is.null(sessionId_) && !is.character(sessionId_))
+      stop("`sessionId_` must be a string or NULL.")
+
+    private$register_event_listener(!!method_name, callback_, timeout_, sessionId_)
   })
 }

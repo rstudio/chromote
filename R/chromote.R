@@ -50,13 +50,15 @@ Chromote <- R6Class(
         private$ws$connect()
 
         # Populate methods while the connection is being established.
-        protocol <- jsonlite::fromJSON(private$url("/json/protocol"), simplifyVector = FALSE)
-        protocol_objs <- process_protocol(protocol, self$.__enclos_env__)
-        list2env(protocol_objs, self)
+        protocol_spec <- jsonlite::fromJSON(private$url("/json/protocol"), simplifyVector = FALSE)
+        self$protocol <- process_protocol(protocol_spec, self$.__enclos_env__)
+        # self$protocol is a list of domains, each of which is a list of
+        # methods. Graft the entries from self$protocol onto self
+        list2env(self$protocol, self)
 
         # Find out which domains require the <domain>.enable command to enable
         # event notifications.
-        private$event_enable_domains <- lapply(protocol_objs, function(domain) {
+        private$event_enable_domains <- lapply(self$protocol, function(domain) {
           is.function(domain$enable)
         })
 
@@ -64,10 +66,16 @@ Chromote <- R6Class(
         self$wait_for(p)
 
         if (multi_session) {
-          targets <- self$Target$getTargets()
-          tid <- targets$targetInfos[[1]]$targetId
-          session_info <- self$Target$attachToTarget(tid, flatten = TRUE)
-          private$session_id <- session_info$sessionId
+          # At this point we're in synchronous mode, so we can use straight-line code.
+          # Get the sessionId for the first (already existing) session.
+          targets      <- self$protocol$Target$getTargets()
+          tid          <- targets$targetInfos[[1]]$targetId
+          session_info <- self$protocol$Target$attachToTarget(tid, flatten = TRUE)
+          session_id   <- session_info$sessionId
+
+          session <- ChromoteSession$new(self, self$protocol, session_id)
+          private$sessions[[session_id]] <- session
+          self$default_session_id(session_id)
         }
       })
     },
@@ -103,6 +111,56 @@ Chromote <- R6Class(
 
       if (!is.null(err))
         stop(err)
+    },
+
+    create_session = function(p, default = FALSE) {
+      target       <- self$protocol$Target$createTarget("about:blank")
+      tid          <- target$targetId
+      session_info <- self$protocol$Target$attachToTarget(tid, flatten = TRUE)
+      session_id   <- session_info$sessionId
+
+      session <- ChromoteSession$new(self, self$protocol, session_id)
+      private$sessions[[session_id]] <- session
+
+      if (default) {
+        self$set_default_session(session_id)
+      }
+
+      session
+    },
+
+    get_sessions = function() {
+      private$sessions
+
+    },
+
+    default_session_id = function(session_id = NULL) {
+      if (is.null(session_id)) {
+        return(private$default_session_id_)
+      }
+
+      if (is.null(private$sessions[[session_id]])) {
+        stop("No session found with ID ", session_id)
+      }
+
+      private$default_session_id_ <- session_id
+      list2env(private$sessions[[session_id]]$protocol, self)
+      invisible(self)
+    },
+
+    default_session = function(session = NULL) {
+      if (is.null(session)) {
+        return(private$sessions[[private$default_session_id_]])
+      }
+
+      matches <- Filter(function(s) identical(s, session), private$sessions)
+      if (length(matches) == 0) {
+        stop("Can't set input session as default because it is not found in the sessions list.")
+      }
+
+      private$default_session_id_ <- session$get_session_id()
+      list2env(private$sessions[[private$default_session_id_]]$protocol, self)
+      invisible(self)
     },
 
     screenshot = function(selector = "body",
@@ -181,7 +239,8 @@ Chromote <- R6Class(
       private$debug_messages_ <- value
     },
 
-    default_timeout = 10
+    default_timeout = 10,
+    protocol = NULL
   ),
 
   private = list(
@@ -194,12 +253,12 @@ Chromote <- R6Class(
     last_msg_id = 0,
     command_callbacks = NULL,
 
-    send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
+    send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
       private$last_msg_id <- private$last_msg_id + 1
       msg$id <- private$last_msg_id
 
-      if (private$multi_session) {
-        msg$sessionId <- private$session_id
+      if (!is.null(sessionId)) {
+        msg$sessionId <- sessionId
       }
 
       p <- promise(function(resolve, reject) {
@@ -441,7 +500,8 @@ Chromote <- R6Class(
     # Sessions
     # =========================================================================
     multi_session = NULL,
-    session_id = NULL,
+    sessions = list(),
+    default_session_id_ = NULL,
 
     # =========================================================================
     # Event loop for the websocket and the parent event loop
