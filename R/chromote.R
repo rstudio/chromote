@@ -123,7 +123,7 @@ Chromote <- R6Class(
       private$sessions[[session_id]] <- session
 
       if (default) {
-        self$set_default_session(session_id)
+        self$default_session_id(session_id)
       }
 
       session
