@@ -42,11 +42,15 @@ get_items <- function(domain, type = c("commands", "events")) {
 }
 
 command_to_function <- function(command, domain_name, env) {
-  new_function(
+  fn <- new_function(
     args = gen_command_args(command$parameters),
     body = gen_command_body(paste0(domain_name, ".", command$name), command$parameters),
     env  = env
   )
+
+  attr(fn, "type") <- "command"
+
+  fn
   # TODO:
   # * Add type-checking
   # * Cross-reference types for type checking
@@ -66,8 +70,7 @@ gen_command_args <- function(params) {
     args,
     callback_ = list(NULL),
     error_ = list(NULL),
-    timeout_ = quote(self$default_timeout),
-    sessionId_ = list(NULL)
+    timeout_ = quote(self$default_timeout)
   )
   args
 }
@@ -102,9 +105,6 @@ gen_command_body <- function(method_name, params) {
     if (!is.null(timeout_) && !is.numeric(timeout_))
       stop("`timeout_` must be a number or NULL.")
 
-    if (!is.null(sessionId_) && !is.character(sessionId_))
-      stop("`sessionId_` must be a string or NULL.")
-
 
     # Check for missing non-optional args
     !!!check_missing_exprs
@@ -113,12 +113,11 @@ gen_command_body <- function(method_name, params) {
       method = !!method_name,
       params = drop_nulls(list(!!!param_list))
     )
-    private$send_command(
+    self$send_command(
       msg,
       callback = callback_,
       error = error_,
-      timeout = timeout_,
-      sessionId = sessionId_
+      timeout = timeout_
     )
   })
 }
@@ -127,7 +126,10 @@ gen_command_body <- function(method_name, params) {
 
 event_to_function <- function(event, domain_name, env) {
   new_function(
-    args = list(callback_ = NULL, timeout_ = quote(self$default_timeout), sessionId_ = NULL),
+    args = list(
+      callback_ = NULL,
+      timeout_ = quote(self$default_timeout)
+    ),
     body = gen_event_body(paste0(domain_name, ".", event$name)),
     env  = env
   )
@@ -138,14 +140,23 @@ event_to_function <- function(event, domain_name, env) {
 gen_event_body <- function(method_name) {
   expr({
     if (!is.null(callback_) && !is.function(callback_))
-      stop("`callback_` must be a function.")
+      stop("`callback_` must be a function or NULL.")
 
     if (!is.null(timeout_) && !is.numeric(timeout_))
-      stop("`timeout_` must be a number.")
+      stop("`timeout_` must be a number or NULL.")
 
-    if (!is.null(sessionId_) && !is.character(sessionId_))
-      stop("`sessionId_` must be a string or NULL.")
+    private$register_event_listener(!!method_name, callback_, timeout_)
+  })
+}
 
-    private$register_event_listener(!!method_name, callback_, timeout_, sessionId_)
+
+
+# Given a protocol object, reassign the environment for all functions.
+protocol_reassign_envs <- function(protocol, env) {
+  lapply(protocol, function(domain) {
+    lapply(domain, function(method) {
+      environment(method) <- env
+      method
+    })
   })
 }

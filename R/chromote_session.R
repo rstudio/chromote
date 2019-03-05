@@ -1,17 +1,56 @@
 ChromoteSession <- R6Class("ChromoteSession",
   lock_objects = FALSE,
   public = list(
-    initialize = function(parent, protocol, session_id) {
-      private$parent     <- parent
-      private$session_id <- session_id
+    initialize = function(parent, session_id) {
+      private$parent        <- parent
+      private$session_id    <- session_id
 
-      self$protocol <- wrap_protocol(protocol, env = self$.__enclos_env__)
+      self$protocol <- protocol_reassign_envs(parent$protocol, env = self$.__enclos_env__)
+
       # Graft the entries from self$protocol onto self
       list2env(self$protocol, self)
+
+      private$event_manager <- EventManager$new(self)
+    },
+
+    send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
+      private$parent$send_command(msg, callback, error, timeout, sessionId = private$session_id)
+    },
+
+    get_parent = function() {
+      private$parent
     },
 
     get_session_id = function() {
       private$session_id
+    },
+
+    get_child_loop = function() {
+      private$parent$get_child_loop()
+    },
+
+    sync_mode = function(mode = NULL) {
+      if (!is.null(mode)) {
+        stop("Can't set sync mode from a ChromoteSession; it must be set on the parent Chromote object")
+      }
+
+      private$parent$sync_mode()
+    },
+
+    wait_for = function(p) {
+      private$parent$wait_for(p)
+    },
+
+    get_auto_events = function() {
+      private$parent$get_auto_events()
+    },
+
+    debug_log = function(...) {
+      private$parent$debug_log(...)
+    },
+
+    invoke_event_callbacks = function(event, params) {
+      private$event_manager$invoke_event_callbacks(event, params)
     },
 
     protocol = NULL
@@ -19,63 +58,11 @@ ChromoteSession <- R6Class("ChromoteSession",
 
   private = list(
     parent = NULL,
-    session_id = NULL
+    session_id = NULL,
+    event_manager = NULL,
+
+    register_event_listener = function(event, callback = NULL, timeout = NULL) {
+      private$event_manager$register_event_listener(event, callback, timeout)
+    }
   )
 )
-
-# Given a protocol object, return a "wrapped" protocol object that can be used
-# in a ChromoteSession object. All the methods are wrapped so that they
-# automatically pass in the session_id from the ChromoteSession object. `env`
-# is the enclosing environment for the ChromoteSession -- all the wrapper
-# methods are assigned that environment so that they can find the correct
-# `self` and `private` objects.
-wrap_protocol <- function(protocol, env) {
-  domain_names <- names(protocol)
-  protocol_wrapped <- mapply(
-    FUN         = wrap_domain,
-    domain      = protocol,
-    domain_name = domain_names,
-    MoreArgs    = list(env = env)
-  )
-}
-
-
-wrap_domain <- function(domain, domain_name, env) {
-  method_names <- setNames(names(domain), names(domain))
-  mapply(
-    FUN         = wrap_method,
-    method      = domain,
-    method_name = method_names,
-    MoreArgs    = list(
-      domain_name = domain_name,
-      env         = env
-    )
-  )
-}
-
-
-wrap_method <- function(method, method_name, domain_name, env) {
-
-  # Get the args from the parent method, but disallow sessionId_ because we'll
-  # provide our own.
-  args <- formals(method)
-  args$sessionId_ <- NULL
-  arg_symbols <- lapply(names(args), as.symbol)
-
-  body <- expr({
-    # Equivalent to:
-    # private$parent$protocol$(!!domain_name)$(!!method_name)(..., sessionId_ = private$session_id)
-    # except that the syntax above isn't valid -- we need to write in the
-    # verbose way with `$`(). When printed at the console, it'll be shown in
-    # the nicer format.
-    `$`(
-      `$`(
-        private$parent$protocol,
-        !!domain_name
-      ),
-      !!method_name
-    )(!!!arg_symbols, sessionId_ = private$session_id)
-  })
-
-  new_function(args, body, env)
-}

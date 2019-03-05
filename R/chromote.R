@@ -56,11 +56,7 @@ Chromote <- R6Class(
         # methods. Graft the entries from self$protocol onto self
         list2env(self$protocol, self)
 
-        # Find out which domains require the <domain>.enable command to enable
-        # event notifications.
-        private$event_enable_domains <- lapply(self$protocol, function(domain) {
-          is.function(domain$enable)
-        })
+        private$event_manager <- EventManager$new(self)
 
         private$schedule_child_loop()
         self$wait_for(p)
@@ -73,7 +69,7 @@ Chromote <- R6Class(
           session_info <- self$protocol$Target$attachToTarget(tid, flatten = TRUE)
           session_id   <- session_info$sessionId
 
-          session <- ChromoteSession$new(self, self$protocol, session_id)
+          session <- ChromoteSession$new(self, session_id)
           private$sessions[[session_id]] <- session
           self$default_session_id(session_id)
         }
@@ -95,6 +91,13 @@ Chromote <- R6Class(
       private$sync_mode_ <- mode
     },
 
+    get_child_loop = function() {
+      private$child_loop
+    },
+
+    get_auto_events = function() {
+      private$auto_events
+    },
 
     # This runs the child loop until the promise is resolved.
     wait_for = function(p) {
@@ -122,7 +125,7 @@ Chromote <- R6Class(
         },
         function(session_info) {
           session_id   <- session_info$sessionId
-          session <- ChromoteSession$new(self, self$protocol, session_id)
+          session <- ChromoteSession$new(self, session_id)
           private$sessions[[session_id]] <- session
 
           # TODO: This isn't safe in async mode
@@ -167,6 +170,56 @@ Chromote <- R6Class(
       private$default_session_id_ <- session$get_session_id()
       list2env(private$sessions[[private$default_session_id_]]$protocol, self)
       invisible(self)
+    },
+
+    send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
+      private$last_msg_id <- private$last_msg_id + 1
+      msg$id <- private$last_msg_id
+
+      if (!is.null(sessionId)) {
+        msg$sessionId <- sessionId
+      }
+
+      p <- promise(function(resolve, reject) {
+        msg_json <- toJSON(msg, auto_unbox = TRUE)
+        private$ws$send(msg_json)
+        self$debug_log("SEND ", msg_json)
+        private$add_command_callback(msg$id, resolve, reject)
+      })
+
+      p <- p$catch(function(e) {
+        stop("code: ", e$code,
+             "\n  message: ", e$message,
+             if (!is.null(e$data)) paste0("\n  data: ", e$data)
+        )
+      })
+
+      if (!is.null(timeout) && !is.infinite(timeout)) {
+        p <- promise_timeout(p, timeout, loop = private$child_loop,
+          timeout_message = paste0("Chromote: timed out waiting for response to command ", msg$method)
+        )
+      }
+
+      if (!is.null(callback)) {
+        p <- p$then(onFulfilled = callback, onRejected = error)
+      }
+
+      # If synchronous mode, wait for the promise to resolve and return the
+      # value. If async mode, return the promise immediately.
+      if (private$sync_mode_) {
+        return_value <- NULL
+        p <- p$then(function(value) return_value <<- value)
+        # Error handling?
+        self$wait_for(p)
+        return(return_value)
+
+      } else {
+        return(invisible(p))
+      }
+    },
+
+    invoke_event_callbacks = function(event, params) {
+      private$event_manager$invoke_event_callbacks(event, params)
     },
 
     screenshot = function(selector = "body",
@@ -245,6 +298,13 @@ Chromote <- R6Class(
       private$debug_messages_ <- value
     },
 
+    debug_log = function(...) {
+      txt <- paste0(..., collapse = "")
+      if (private$debug_messages_) {
+        message(txt)
+      }
+    },
+
     default_timeout = 10,
     protocol = NULL
   ),
@@ -258,52 +318,6 @@ Chromote <- R6Class(
     # =========================================================================
     last_msg_id = 0,
     command_callbacks = NULL,
-
-    send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
-      private$last_msg_id <- private$last_msg_id + 1
-      msg$id <- private$last_msg_id
-
-      if (!is.null(sessionId)) {
-        msg$sessionId <- sessionId
-      }
-
-      p <- promise(function(resolve, reject) {
-        msg_json <- toJSON(msg, auto_unbox = TRUE)
-        private$ws$send(msg_json)
-        private$debug_log("SEND ", msg_json)
-        private$add_command_callback(msg$id, resolve, reject)
-      })
-
-      p <- p$catch(function(e) {
-        stop("code: ", e$code,
-             "\n  message: ", e$message,
-             if (!is.null(e$data)) paste0("\n  data: ", e$data)
-        )
-      })
-
-      if (!is.null(timeout) && !is.infinite(timeout)) {
-        p <- promise_timeout(p, timeout, loop = private$child_loop,
-          timeout_message = paste0("Chromote: timed out waiting for response to command ", msg$method)
-        )
-      }
-
-      if (!is.null(callback)) {
-        p <- p$then(onFulfilled = callback, onRejected = error)
-      }
-
-      # If synchronous mode, wait for the promise to resolve and return the
-      # value. If async mode, return the promise immediately.
-      if (private$sync_mode_) {
-        return_value <- NULL
-        p <- p$then(function(value) { return_value <<- value })
-        # Error handling?
-        self$wait_for(p)
-        return(return_value)
-
-      } else {
-        return(invisible(p))
-      }
-    },
 
     add_command_callback = function(id, callback, error) {
       id <- as.character(id)
@@ -331,146 +345,13 @@ Chromote <- R6Class(
     },
 
 
-    # =========================================================================
-    # Browser events
-    # =========================================================================
-    event_callbacks = NULL,
-    # For keeping count of the number of callbacks for each domain; if
-    # auto_events is TRUE, then when the count goes from 0 to 1 or 1 to 0 for
-    # a given domain, it will automatically enable or disable events for that
-    # domain.
-    event_callback_counts = list(),
-    auto_events = NULL,
-
-    # Some domains require a <domain>.event command to enable event
-    # notifications, others do not. (Not really sure why.)
-    event_enable_domains = NULL,
+    # # =========================================================================
+    # # Browser events
+    # # =========================================================================
+    event_manager = NULL,
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
-      domain <- find_domain(event)
-
-      # Note: If callback is specified, then timeout is ignored
-      if (!is.null(callback)) {
-        deregister_callback_fn <- private$add_event_callback(event, callback, once = FALSE)
-        return(invisible(deregister_callback_fn))
-      }
-
-      deregister_callback_fn <- NULL
-      p <- promise(function(resolve, reject) {
-        deregister_callback_fn <<- private$add_event_callback(event, resolve, once = TRUE)
-      })
-
-      if (!is.null(timeout) && !is.infinite(timeout)) {
-        p <- promise_timeout(p, timeout, loop = private$child_loop,
-          timeout_message = paste0("Chromote: timed out waiting for event ", event)
-        )
-      }
-
-      # If synchronous mode, wait for the promise to resolve and return the
-      # value. If async mode, return the promise immediately.
-      if (private$sync_mode_) {
-        on.exit(deregister_callback_fn(), add = TRUE)
-
-        return_value <- NULL
-        p <- p$then(function(value) return_value <<- value)
-        self$wait_for(p)
-        return(return_value)
-
-      } else {
-        p <- p$finally(deregister_callback_fn)
-        return(invisible(p))
-      }
-    },
-
-    add_event_callback = function(event, callback, once) {
-      if (is.null(private$event_callbacks[[event]])) {
-        private$event_callbacks[[event]] <- Callbacks$new()
-      }
-
-      if (once) {
-        orig_callback <- callback
-        callback <- function(...) {
-          tryCatch(
-            orig_callback(...),
-            finally = deregister_and_dec()
-          )
-        }
-      }
-
-      deregister_callback <- private$event_callbacks[[event]]$add(callback)
-
-      domain <- find_domain(event)
-      private$inc_event_callback_count(domain)
-
-      # We'll wrap deregister_callback in another function which also keeps
-      # count to the number of callbacks for the domain.
-      deregister_called <- FALSE
-      deregister_and_dec <- function() {
-        # Make sure that if this is called multiple times that it doesn't keep
-        # having effects.
-        if (deregister_called)
-          return()
-        deregister_called <<- TRUE
-
-        deregister_callback()
-        private$dec_event_callback_count(domain)
-      }
-
-      deregister_and_dec
-    },
-
-    inc_event_callback_count = function(domain) {
-      if (is.null(private$event_callback_counts[[domain]])) {
-        private$event_callback_counts[[domain]] <- 0
-      }
-
-      private$event_callback_counts[[domain]] <- private$event_callback_counts[[domain]] + 1
-
-      private$debug_log("Callbacks for ", domain, "++: ", private$event_callback_counts[[domain]])
-
-      # If we're doing auto events and we're going from 0 to 1, enable events
-      # for this domain. (Some domains do not require or have an .enable
-      # method.)
-      if (private$auto_events &&
-          private$event_callback_counts[[domain]] == 1 &&
-          isTRUE(private$event_enable_domains[[domain]]))
-      {
-        private$debug_log("Enabling events for ", domain)
-        self[[domain]]$enable()
-      }
-
-      invisible(private$event_callback_counts[[domain]])
-    },
-
-    dec_event_callback_count = function(domain) {
-      private$event_callback_counts[[domain]] <- private$event_callback_counts[[domain]] - 1
-
-      private$debug_log("Callbacks for ", domain, "--: ", private$event_callback_counts[[domain]])
-      # If we're doing auto events and we're going from 1 to 0, disable
-      # enable events for this domain.
-      if (private$auto_events &&
-          private$event_callback_counts[[domain]] == 0 &&
-          isTRUE(private$event_enable_domains[[domain]]))
-      {
-        private$debug_log("Disabling events for ", domain)
-        self[[domain]]$disable()
-      }
-
-      invisible(private$event_callback_counts[[domain]])
-    },
-
-    remove_event_callbacks = function(event) {
-      # Removes ALL callbacks for a given event. In the future it might be
-      # useful to implement finer control.
-      private$event_callbacks[[event]] <- NULL
-    },
-
-    invoke_event_callbacks = function(event, params) {
-      callbacks <- private$event_callbacks[[event]]
-      if (is.null(callbacks) || callbacks$size() == 0)
-        return()
-
-      callbacks$invoke(params)
+      private$event_manager$register_event_listener(event, callback, timeout)
     },
 
     # =========================================================================
@@ -480,7 +361,7 @@ Chromote <- R6Class(
     debug_message_max_length = 1000,
 
     on_message = function(msg) {
-      private$debug_log("RECV ", msg$data)
+      self$debug_log("RECV ", msg$data)
       data <- fromJSON(msg$data, simplifyVector = FALSE)
 
       if (!is.null(data$method)) {
@@ -490,7 +371,13 @@ Chromote <- R6Class(
         # possible race when a command response and an event notification arrive
         # in the same tick. See issue #1.
         later(function() {
-          private$invoke_event_callbacks(data$method, data$params)
+          if (!is.null(data$sessionId)) {
+            session <- private$sessions[[data$sessionId]]
+          } else {
+            session <- self
+          }
+
+          session$invoke_event_callbacks(data$method, data$params)
         })
 
       } else if (!is.null(data$id)) {
@@ -556,13 +443,6 @@ Chromote <- R6Class(
         stop('path must be NULL or a string that starts with "/"')
       }
       paste0("http://", private$browser$get_host(), ":", private$browser$get_port(), path)
-    },
-
-    debug_log = function(...) {
-      txt <- paste0(..., collapse = "")
-      if (private$debug_messages_) {
-        message(txt)
-      }
     }
   )
 )
