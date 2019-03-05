@@ -23,7 +23,12 @@ ChromoteSession <- R6Class("ChromoteSession",
   )
 )
 
-
+# Given a protocol object, return a "wrapped" protocol object that can be used
+# in a ChromoteSession object. All the methods are wrapped so that they
+# automatically pass in the session_id from the ChromoteSession object. `env`
+# is the enclosing environment for the ChromoteSession -- all the wrapper
+# methods are assigned that environment so that they can find the correct
+# `self` and `private` objects.
 wrap_protocol <- function(protocol, env) {
   domain_names <- names(protocol)
   protocol_wrapped <- mapply(

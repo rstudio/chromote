@@ -2,12 +2,16 @@
 
 globalVariables("private")
 
-# Returns a list of domains of the Devtools Protocol (like Browser, Page,
-# Runtime). Each domain has a function for each command and event (like
-# Browser$getVersion, Page$navigate, etc). The `protocol` input is the
-# protocol object from the browser, translated from JSON to an R object, and
-# the `env` is the desired enclosing environment for the generated functions.
-process_protocol <- function(protocol, env = parent.frame()) {
+# Given a protocol spec (essentially, the Chrome Devtools Protocol JSON
+# converted to an R object), returns a list of domains of the Devtools
+# Protocol (like Browser, Page, Runtime). Each domain has a function for each
+# command and event (like Browser$getVersion, Page$navigate, etc). The
+# `protocol` input is the protocol object from the browser, translated from
+# JSON to an R object, and the `env` is the desired environment that is
+# assigned to the the generated functions -- it should be the Chromote
+# object's enclosing environment so that the functions can find `self` and
+# `private`.
+process_protocol <- function(protocol, env) {
   message("Protocol version: ", protocol$version$major, ".", protocol$version$minor)
 
   domains <- protocol$domains
