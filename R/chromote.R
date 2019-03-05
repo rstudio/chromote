@@ -57,6 +57,7 @@ Chromote <- R6Class(
         list2env(self$protocol, self)
 
         private$event_manager <- EventManager$new(self)
+        private$is_active_ <- TRUE
 
         private$schedule_child_loop()
         self$wait_for(p)
@@ -73,6 +74,8 @@ Chromote <- R6Class(
           private$sessions[[session_id]] <- session
           self$default_session_id(session_id)
         }
+
+        private$register_default_event_listeners()
       })
     },
 
@@ -173,6 +176,10 @@ Chromote <- R6Class(
     },
 
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
+      if (!private$is_active_) {
+        stop("Chromote object is closed.")
+      }
+
       private$last_msg_id <- private$last_msg_id + 1
       msg$id <- private$last_msg_id
 
@@ -312,6 +319,7 @@ Chromote <- R6Class(
   private = list(
     browser = NULL,
     ws = NULL,
+    is_active_ = NULL,
 
     # =========================================================================
     # Browser commands
@@ -345,13 +353,30 @@ Chromote <- R6Class(
     },
 
 
-    # # =========================================================================
-    # # Browser events
-    # # =========================================================================
+    # =========================================================================
+    # Browser events
+    # =========================================================================
     event_manager = NULL,
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
+      if (!private$is_active_) {
+        stop("Chromote object is closed.")
+      }
       private$event_manager$register_event_listener(event, callback, timeout)
+    },
+
+    register_default_event_listeners = function() {
+      # When a target is closed, mark the corresponding R session object as
+      # closed and remove it from the list of sessions.
+      self$protocol$Target$detachedFromTarget(function(msg) {
+        sid <- msg$sessionId
+        session <- private$sessions[[sid]]
+        if (is.null(session))
+          return()
+
+        private$sessions[[sid]] <- NULL
+        session$mark_closed()
+      })
     },
 
     # =========================================================================
@@ -413,6 +438,8 @@ Chromote <- R6Class(
       # If the websocket has closed, there's no reason to run the child loop
       # anymore.
       if (private$ws$readyState() == 3) {
+        self$debug_log("Websocket state is closed.")
+        private$is_active_ <- FALSE
         return()
       }
 
