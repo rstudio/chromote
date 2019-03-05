@@ -38,7 +38,7 @@ get_items <- function(domain, type = c("commands", "events")) {
 }
 
 command_to_function <- function(command, domain_name, env) {
-  rlang::new_function(
+  new_function(
     args = gen_command_args(command$parameters),
     body = gen_command_body(paste0(domain_name, ".", command$name), command$parameters),
     env  = env
@@ -122,7 +122,7 @@ gen_command_body <- function(method_name, params) {
 
 
 event_to_function <- function(event, domain_name, env) {
-  rlang::new_function(
+  new_function(
     args = list(callback_ = NULL, timeout_ = quote(self$default_timeout), sessionId_ = NULL),
     body = gen_event_body(paste0(domain_name, ".", event$name)),
     env  = env
