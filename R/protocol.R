@@ -1,6 +1,6 @@
 #' @import rlang
 
-globalVariables("private")
+globalVariables(c("self", "private"))
 
 # Given a protocol spec (essentially, the Chrome Devtools Protocol JSON
 # converted to an R object), returns a list of domains of the Devtools
@@ -65,8 +65,9 @@ gen_command_args <- function(params) {
   args <- c(
     args,
     callback_ = list(NULL),
-    error_ = list(NULL),
-    timeout_ = quote(self$default_timeout)
+    error_    = list(NULL),
+    timeout_  = quote(self$default_timeout),
+    sync_     = TRUE
   )
   args
 }
@@ -101,6 +102,8 @@ gen_command_body <- function(method_name, params) {
     if (!is.null(timeout_) && !is.numeric(timeout_))
       stop("`timeout_` must be a number or NULL.")
 
+    if (!identical(sync_, TRUE) && !identical(sync_, FALSE))
+      stop("`sync_` must be TRUE or FALSE.")
 
     # Check for missing non-optional args
     !!!check_missing_exprs
@@ -109,12 +112,18 @@ gen_command_body <- function(method_name, params) {
       method = !!method_name,
       params = drop_nulls(list(!!!param_list))
     )
-    self$send_command(
+    p <- self$send_command(
       msg,
       callback = callback_,
-      error = error_,
-      timeout = timeout_
+      error    = error_,
+      timeout  = timeout_
     )
+
+    if (sync_) {
+      self$wait_for(p)
+    } else {
+      p
+    }
   })
 }
 
@@ -124,7 +133,8 @@ event_to_function <- function(event, domain_name, env) {
   new_function(
     args = list(
       callback_ = NULL,
-      timeout_ = quote(self$default_timeout)
+      timeout_  = quote(self$default_timeout),
+      sync_     = TRUE
     ),
     body = gen_event_body(paste0(domain_name, ".", event$name)),
     env  = env
@@ -141,7 +151,23 @@ gen_event_body <- function(method_name) {
     if (!is.null(timeout_) && !is.numeric(timeout_))
       stop("`timeout_` must be a number or NULL.")
 
-    private$register_event_listener(!!method_name, callback_, timeout_)
+    if (!identical(sync_, TRUE) && !identical(sync_, FALSE))
+      stop("`sync_` must be TRUE or FALSE.")
+
+    p <- private$register_event_listener(!!method_name, callback_, timeout_)
+
+    # If callback_ was a function, then because the callback can fire multiple
+    # times, p is not a promise; it is a function for deregistering the
+    # callback.
+    if (!is.null(callback_)) {
+      return(invisible(p))
+    }
+
+    if (sync_) {
+      self$wait_for(p)
+    } else {
+      p
+    }
   })
 }
 

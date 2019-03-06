@@ -24,7 +24,6 @@ ChromoteMaster <- R6Class(
       }
 
       private$command_callbacks <- new.env(parent = emptyenv())
-      private$event_callbacks   <- new.env(parent = emptyenv())
 
       private$parent_loop <- current_loop()
 
@@ -63,35 +62,12 @@ ChromoteMaster <- R6Class(
         private$schedule_child_loop()
         self$wait_for(p)
 
-        if (multi_session) {
-          # At this point we're in synchronous mode, so we can use straight-line code.
-          # Get the sessionId for the first (already existing) session.
-          targets      <- self$protocol$Target$getTargets()
-          tid          <- targets$targetInfos[[1]]$targetId
-          session_info <- self$protocol$Target$attachToTarget(tid, flatten = TRUE)
-          session_id   <- session_info$sessionId
-
-          session <- Chromote$new(self, session_id)
-          private$sessions[[session_id]] <- session
-        }
-
         private$register_default_event_listeners()
       })
     },
 
     view = function() {
       browseURL(self$url())
-    },
-
-    sync_mode = function(mode = NULL) {
-      if (is.null(mode)) {
-        return(private$sync_mode_)
-      }
-      if (! (identical(mode, TRUE) || identical(mode, FALSE))) {
-        stop("mode must be TRUE or FALSE.")
-      }
-
-      private$sync_mode_ <- mode
     },
 
     get_child_loop = function() {
@@ -104,9 +80,14 @@ ChromoteMaster <- R6Class(
 
     # This runs the child loop until the promise is resolved.
     wait_for = function(p) {
-      # Chain another promise that sets a flag when p is resolved.
+      # Chain another promise that sets a flag when p is resolved, and
+      # captures the return value.
       p_is_resolved <- FALSE
-      p <- p$then(function(value) p_is_resolved <<- TRUE)
+      return_value <- NULL
+      p <- p$then(function(value) {
+        p_is_resolved <<- TRUE
+        return_value <<- value
+      })
 
       err <- NULL
       p$catch(function(e) err <<- e)
@@ -117,6 +98,8 @@ ChromoteMaster <- R6Class(
 
       if (!is.null(err))
         stop(err)
+
+      return_value
     },
 
     new_session = function() {
@@ -155,6 +138,8 @@ ChromoteMaster <- R6Class(
         msg_json <- toJSON(msg, auto_unbox = TRUE)
         private$ws$send(msg_json)
         self$debug_log("SEND ", msg_json)
+        # One of these callbacks will be invoked when a message arrives with a
+        # matching id.
         private$add_command_callback(msg$id, resolve, reject)
       })
 
@@ -175,18 +160,9 @@ ChromoteMaster <- R6Class(
         p <- p$then(onFulfilled = callback, onRejected = error)
       }
 
-      # If synchronous mode, wait for the promise to resolve and return the
-      # value. If async mode, return the promise immediately.
-      if (private$sync_mode_) {
-        return_value <- NULL
-        p <- p$then(function(value) return_value <<- value)
-        # Error handling?
-        self$wait_for(p)
-        return(return_value)
+      p <- p$finally(function() private$remove_command_callback(msg$id))
 
-      } else {
-        return(invisible(p))
-      }
+      p
     },
 
     invoke_event_callbacks = function(event, params) {
@@ -310,6 +286,7 @@ ChromoteMaster <- R6Class(
       )
     },
 
+    # Invoke the callback for a command (using id).
     invoke_command_callback = function(id, value, error) {
       id <- as.character(id)
 
@@ -317,7 +294,6 @@ ChromoteMaster <- R6Class(
         return()
 
       handlers <- private$command_callbacks[[id]]
-      rm(list = id, envir = private$command_callbacks)
 
       if (!is.null(error)) {
         handlers$error(error)
@@ -325,6 +301,10 @@ ChromoteMaster <- R6Class(
       } else if (!is.null(value)) {
         handlers$callback(value)
       }
+    },
+
+    remove_command_callback = function(id) {
+      rm(list = id, envir = private$command_callbacks)
     },
 
 

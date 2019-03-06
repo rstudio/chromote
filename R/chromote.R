@@ -19,8 +19,14 @@ Chromote <- R6Class("Chromote",
       private$parent <- parent
 
       if (is.null(session_id)) {
-        # Simply grab the first session from the ChromoteMaster
-        private$session_id <- names(parent$get_sessions())[1]
+        # Simply grab the first (already existing) session from the ChromoteMaster
+        targets      <- parent$protocol$Target$getTargets()
+        tid          <- targets$targetInfos[[1]]$targetId
+        session_info <- parent$protocol$Target$attachToTarget(tid, flatten = TRUE)
+        private$session_id <- session_info$sessionId
+
+        private$parent$.__enclos_env__$private$sessions[[private$session_id]] <- self
+
       } else {
         private$session_id <- session_id
       }
@@ -96,14 +102,6 @@ Chromote <- R6Class("Chromote",
 
     get_child_loop = function() {
       private$parent$get_child_loop()
-    },
-
-    sync_mode = function(mode = NULL) {
-      if (!is.null(mode)) {
-        stop("Can't set sync mode from a ChromoteSession; it must be set on the parent Chromote object.")
-      }
-
-      private$parent$sync_mode()
     },
 
     wait_for = function(p) {

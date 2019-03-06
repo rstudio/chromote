@@ -12,12 +12,15 @@ EventManager <- R6Class("EventManager",
       private$event_enable_domains <- lapply(session$protocol, function(domain) {
         is.function(domain$enable)
       })
+
+      private$event_callbacks <- new.env(parent = emptyenv())
     },
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
       domain <- find_domain(event)
 
-      # Note: If callback is specified, then timeout is ignored
+      # Note: If callback is specified, then timeout is ignored. Also, returns
+      # a function for deregistering the callback, instead of a promise.
       if (!is.null(callback)) {
         deregister_callback_fn <- private$add_event_callback(event, callback, once = FALSE)
         return(invisible(deregister_callback_fn))
@@ -35,20 +38,8 @@ EventManager <- R6Class("EventManager",
         )
       }
 
-      # If synchronous mode, wait for the promise to resolve and return the
-      # value. If async mode, return the promise immediately.
-      if (private$session$sync_mode()) {
-        on.exit(deregister_callback_fn(), add = TRUE)
-
-        return_value <- NULL
-        p <- p$then(function(value) return_value <<- value)
-        private$session$wait_for(p)
-        return(return_value)
-
-      } else {
-        p <- p$finally(deregister_callback_fn)
-        return(invisible(p))
-      }
+      p <- p$finally(deregister_callback_fn)
+      p
     },
 
     invoke_event_callbacks = function(event, params) {
@@ -69,8 +60,7 @@ EventManager <- R6Class("EventManager",
   private = list(
     # The ChromoteSession or Chromote object that owns this EventManager.
     session = NULL,
-
-    event_callbacks = NULL,
+    event_callbacks = list(),
     # For keeping count of the number of callbacks for each domain; if
     # auto_events is TRUE, then when the count goes from 0 to 1 or 1 to 0 for
     # a given domain, it will automatically enable or disable events for that
