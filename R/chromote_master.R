@@ -3,12 +3,13 @@
 #' @importFrom R6 R6Class
 #' @import promises later
 #' @export
-Chromote <- R6Class(
-  "Chromote",
+ChromoteMaster <- R6Class(
+  "ChromoteMaster",
   lock_objects = FALSE,
   public = list(
 
-    initialize = function(browser = default_browser(),
+    initialize = function(
+      browser = default_browser(),
       multi_session = TRUE,
       auto_events = TRUE
     ) {
@@ -17,9 +18,9 @@ Chromote <- R6Class(
       private$multi_session <- multi_session
 
       if (multi_session) {
-        chrome_info <- fromJSON(private$url("/json/version"))
+        chrome_info <- fromJSON(self$url("/json/version"))
       } else {
-        chrome_info <- fromJSON(private$url("/json"))
+        chrome_info <- fromJSON(self$url("/json"))
       }
 
       private$command_callbacks <- new.env(parent = emptyenv())
@@ -50,7 +51,7 @@ Chromote <- R6Class(
         private$ws$connect()
 
         # Populate methods while the connection is being established.
-        protocol_spec <- jsonlite::fromJSON(private$url("/json/protocol"), simplifyVector = FALSE)
+        protocol_spec <- jsonlite::fromJSON(self$url("/json/protocol"), simplifyVector = FALSE)
         self$protocol <- process_protocol(protocol_spec, self$.__enclos_env__)
         # self$protocol is a list of domains, each of which is a list of
         # methods. Graft the entries from self$protocol onto self
@@ -70,9 +71,8 @@ Chromote <- R6Class(
           session_info <- self$protocol$Target$attachToTarget(tid, flatten = TRUE)
           session_id   <- session_info$sessionId
 
-          session <- ChromoteSession$new(self, session_id)
+          session <- Chromote$new(self, session_id)
           private$sessions[[session_id]] <- session
-          self$default_session_id(session_id)
         }
 
         private$register_default_event_listeners()
@@ -80,7 +80,7 @@ Chromote <- R6Class(
     },
 
     view = function() {
-      browseURL(private$url())
+      browseURL(self$url())
     },
 
     sync_mode = function(mode = NULL) {
@@ -119,7 +119,7 @@ Chromote <- R6Class(
         stop(err)
     },
 
-    create_session = function(default = FALSE) {
+    new_session = function() {
       hybrid_chain(
         self$protocol$Target$createTarget("about:blank"),
         function(target) {
@@ -128,14 +128,8 @@ Chromote <- R6Class(
         },
         function(session_info) {
           session_id   <- session_info$sessionId
-          session <- ChromoteSession$new(self, session_id)
+          session <- Chromote$new(self, session_id)
           private$sessions[[session_id]] <- session
-
-          # TODO: This isn't safe in async mode
-          if (default) {
-            self$default_session_id(session_id)
-          }
-
           session
         }
       )
@@ -143,36 +137,6 @@ Chromote <- R6Class(
 
     get_sessions = function() {
       private$sessions
-
-    },
-
-    default_session_id = function(session_id = NULL) {
-      if (is.null(session_id)) {
-        return(private$default_session_id_)
-      }
-
-      if (is.null(private$sessions[[session_id]])) {
-        stop("No session found with ID ", session_id)
-      }
-
-      private$default_session_id_ <- session_id
-      list2env(private$sessions[[session_id]]$protocol, self)
-      invisible(self)
-    },
-
-    default_session = function(session = NULL) {
-      if (is.null(session)) {
-        return(private$sessions[[private$default_session_id_]])
-      }
-
-      matches <- Filter(function(s) identical(s, session), private$sessions)
-      if (length(matches) == 0) {
-        stop("Can't set input session as default because it is not found in the sessions list.")
-      }
-
-      private$default_session_id_ <- session$get_session_id()
-      list2env(private$sessions[[private$default_session_id_]]$protocol, self)
-      invisible(self)
     },
 
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
@@ -312,6 +276,17 @@ Chromote <- R6Class(
       }
     },
 
+    # =========================================================================
+    # Misc utility functions
+    # =========================================================================
+
+    url = function(path = NULL) {
+      if (!is.null(path) && substr(path, 1, 1) != "/") {
+        stop('path must be NULL or a string that starts with "/"')
+      }
+      paste0("http://", private$browser$get_host(), ":", private$browser$get_port(), path)
+    },
+
     default_timeout = 10,
     protocol = NULL
   ),
@@ -419,7 +394,6 @@ Chromote <- R6Class(
     # =========================================================================
     multi_session = NULL,
     sessions = list(),
-    default_session_id_ = NULL,
 
     # =========================================================================
     # Event loop for the websocket and the parent event loop
@@ -459,17 +433,6 @@ Chromote <- R6Class(
           private$schedule_child_loop()
         }
       )
-    },
-
-    # =========================================================================
-    # Misc utility functions
-    # =========================================================================
-
-    url = function(path = NULL) {
-      if (!is.null(path) && substr(path, 1, 1) != "/") {
-        stop('path must be NULL or a string that starts with "/"')
-      }
-      paste0("http://", private$browser$get_host(), ":", private$browser$get_port(), path)
     }
   )
 )

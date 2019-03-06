@@ -1,9 +1,29 @@
-ChromoteSession <- R6Class("ChromoteSession",
+# This represents one _session_ in a ChromoteMaster object. Note that in the
+# Chrome Devtools Protocol a session is a debugging interface connected to a
+# _target_; a target is a browser window/tab, or an iframe. A single target
+# can have more than one session connected to it.
+Chromote <- R6Class("Chromote",
   lock_objects = FALSE,
   public = list(
-    initialize = function(parent, session_id) {
-      private$parent        <- parent
-      private$session_id    <- session_id
+    initialize = function(
+      parent = ChromoteMaster$new(),
+      session_id = NULL
+    ) {
+      # There are two ways of initializing a Chromote object: one is by sipmly
+      # calling Chromote$new() (without a session_id), in which case a
+      # ChromoteMaster object is created, and it is queried for the first
+      # already-existing session. In this case, session_id will be NULL.
+      # Another is by having the ChromoteMaster create a new session and the
+      # Chromote object. In this case, the ChromoteMaster will pass itself as
+      # the parent and supply a session_id.
+      private$parent <- parent
+
+      if (is.null(session_id)) {
+        # Simply grab the first session from the ChromoteMaster
+        private$session_id <- names(parent$get_sessions())[1]
+      } else {
+        private$session_id <- session_id
+      }
 
       self$protocol <- protocol_reassign_envs(parent$protocol, env = self$.__enclos_env__)
 
@@ -12,6 +32,11 @@ ChromoteSession <- R6Class("ChromoteSession",
 
       private$event_manager <- EventManager$new(self)
       private$is_active_ <- TRUE
+
+      # Copy the ChromoteMaster object's screenshot method but reassign the
+      # env.
+      self$screenshot <- private$parent$screenshot
+      environment(self$screenshot) <- self$.__enclos_env__
     },
 
     close = function() {
@@ -33,8 +58,25 @@ ChromoteSession <- R6Class("ChromoteSession",
       )
     },
 
+    view = function() {
+      tid <- self$Target$getTargetInfo()$targetInfo$targetId
+
+      # A data frame of targets, one row per target.
+      info <- fromJSON(private$parent$url("/json"))
+      path <- info$devtoolsFrontendUrl[info$id == tid]
+      if (length(path) == 0) {
+        stop("Target info not found.")
+      }
+
+      browseURL(private$parent$url(path))
+    },
+
     is_active = function() {
       private$is_active_
+    },
+
+    new_session = function() {
+      private$parent$new_session()
     },
 
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
