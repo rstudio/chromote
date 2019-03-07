@@ -102,20 +102,24 @@ ChromoteMaster <- R6Class(
       return_value
     },
 
-    new_session = function() {
-      hybrid_chain(
-        self$protocol$Target$createTarget("about:blank"),
-        function(target) {
-          tid <- target$targetId
-          self$protocol$Target$attachToTarget(tid, flatten = TRUE)
-        },
-        function(session_info) {
-          session_id   <- session_info$sessionId
-          session <- Chromote$new(self, session_id)
-          private$sessions[[session_id]] <- session
-          session
-        }
-      )
+    new_session = function(sync_ = TRUE) {
+      p <- self$protocol$Target$createTarget("about:blank", sync_ = FALSE)
+      p <- p$then(function(target) {
+        tid <- target$targetId
+        self$protocol$Target$attachToTarget(tid, flatten = TRUE, sync_ = FALSE)
+      })
+      p <- p$then(function(session_info) {
+        session_id <- session_info$sessionId
+        session <- Chromote$new(self, session_id)
+        private$sessions[[session_id]] <- session
+        session
+      })
+
+      if (sync_) {
+        self$wait_for(p)
+      } else {
+        p
+      }
     },
 
     get_sessions = function() {

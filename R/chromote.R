@@ -81,8 +81,8 @@ Chromote <- R6Class("Chromote",
       private$is_active_
     },
 
-    new_session = function() {
-      private$parent$new_session()
+    new_session = function(sync_ = TRUE) {
+      private$parent$new_session(sync_)
     },
 
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
