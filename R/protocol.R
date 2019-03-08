@@ -12,10 +12,9 @@ globalVariables(c("self", "private"))
 # object's enclosing environment so that the functions can find `self` and
 # `private`.
 process_protocol <- function(protocol, env) {
-  message("Protocol version: ", protocol$version$major, ".", protocol$version$minor)
-
   domains <- protocol$domains
   names(domains) <- vapply(domains, function(d) d$domain, "")
+
   domains <- lapply(domains, function(domain) {
     commands <- get_items(domain, "commands")
     commands <- lapply(commands, command_to_function, domain_name = domain$domain, env = env)
