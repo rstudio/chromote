@@ -173,69 +173,6 @@ ChromoteMaster <- R6Class(
       private$event_manager$invoke_event_callbacks(event, params)
     },
 
-    screenshot = function(selector = "body",
-      filename = "screenshot.png",
-      region = c("content", "padding", "border", "margin"),
-      scale = 1,
-      show = interactive())
-    {
-      region = match.arg(region)
-      if (length(filename) == 0 && !show) {
-        stop("Cannot have empty filename and show=FALSE")
-      }
-
-      hybrid_chain(
-        self$DOM$getDocument(),
-        function(value) {
-          self$DOM$querySelector(value$root$nodeId, selector)
-        },
-        function(value) {
-          if (value$nodeId == 0) {
-            stop("Selector failed")
-          }
-          self$DOM$getBoxModel(value$nodeId)
-        },
-        function(value) {
-          if (is.null(value)) {
-            stop("Selector failed")
-          }
-          xmin <- value$model[[region]][[1]]
-          xmax <- value$model[[region]][[3]]
-          ymin <- value$model[[region]][[2]]
-          ymax <- value$model[[region]][[6]]
-          self$Page$captureScreenshot(clip = list(
-            x = xmin,
-            y = ymin,
-            width  = xmax - xmin,
-            height = ymax - ymin,
-            scale = scale
-          ))
-        },
-        function(value) {
-          temp_output <- FALSE
-          if (is.null(filename)) {
-            temp_output <- TRUE
-            filename <- tempfile("chromote-screenshot-", fileext = ".png")
-            on.exit(unlink(filename))
-          }
-
-          writeBin(jsonlite::base64_dec(value$data), filename)
-          if (show) {
-            showimage::show_image(filename)
-          }
-
-          if (temp_output) {
-            invisible()
-          } else {
-            invisible(filename)
-          }
-        },
-        catch = function(err) {
-          warning("An error occurred: ", err)
-        }
-      )
-    },
-
     # Enable or disable message debugging. If enabled, R will print out the
     # JSON messages that are sent and received. If called with no value, this
     # method will print out the current debugging state.

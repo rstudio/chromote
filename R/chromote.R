@@ -38,11 +38,6 @@ Chromote <- R6Class("Chromote",
 
       private$event_manager <- EventManager$new(self)
       private$is_active_ <- TRUE
-
-      # Copy the ChromoteMaster object's screenshot method but reassign the
-      # env.
-      self$screenshot <- private$parent$screenshot
-      environment(self$screenshot) <- self$.__enclos_env__
     },
 
     close = function() {
@@ -75,6 +70,70 @@ Chromote <- R6Class("Chromote",
       }
 
       browseURL(private$parent$url(path))
+    },
+
+    screenshot = function(
+      selector = "body",
+      filename = "screenshot.png",
+      region = c("content", "padding", "border", "margin"),
+      scale = 1,
+      show = interactive()
+    ) {
+      region = match.arg(region)
+      if (length(filename) == 0 && !show) {
+        stop("Cannot have empty filename and show=FALSE")
+      }
+
+      hybrid_chain(
+        self$DOM$getDocument(),
+        function(value) {
+          self$DOM$querySelector(value$root$nodeId, selector)
+        },
+        function(value) {
+          if (value$nodeId == 0) {
+            stop("Selector failed")
+          }
+          self$DOM$getBoxModel(value$nodeId)
+        },
+        function(value) {
+          if (is.null(value)) {
+            stop("Selector failed")
+          }
+          xmin <- value$model[[region]][[1]]
+          xmax <- value$model[[region]][[3]]
+          ymin <- value$model[[region]][[2]]
+          ymax <- value$model[[region]][[6]]
+          self$Page$captureScreenshot(clip = list(
+            x = xmin,
+            y = ymin,
+            width  = xmax - xmin,
+            height = ymax - ymin,
+            scale = scale
+          ))
+        },
+        function(value) {
+          temp_output <- FALSE
+          if (is.null(filename)) {
+            temp_output <- TRUE
+            filename <- tempfile("chromote-screenshot-", fileext = ".png")
+            on.exit(unlink(filename))
+          }
+
+          writeBin(jsonlite::base64_dec(value$data), filename)
+          if (show) {
+            showimage::show_image(filename)
+          }
+
+          if (temp_output) {
+            invisible()
+          } else {
+            invisible(filename)
+          }
+        },
+        catch = function(err) {
+          warning("An error occurred: ", err)
+        }
+      )
     },
 
     is_active = function() {
