@@ -4,6 +4,7 @@
 # can have more than one session connected to it.
 Chromote <- R6Class("Chromote",
   lock_objects = FALSE,
+  cloneable = FALSE,
   public = list(
     initialize = function(
       parent = ChromoteMaster$new(),

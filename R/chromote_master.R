@@ -6,6 +6,7 @@
 ChromoteMaster <- R6Class(
   "ChromoteMaster",
   lock_objects = FALSE,
+  cloneable = FALSE,
   public = list(
 
     initialize = function(
