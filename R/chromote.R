@@ -19,10 +19,11 @@ Chromote <- R6Class("Chromote",
       private$parent <- parent
 
       if (is.null(session_id)) {
-        # Simply grab the first (already existing) session from the ChromoteMaster
-        targets      <- parent$protocol$Target$getTargets()
-        tid          <- targets$targetInfos[[1]]$targetId
-        session_info <- parent$protocol$Target$attachToTarget(tid, flatten = TRUE)
+        # Create a session from the ChromoteMaster. Basically the same code as
+        # new_session(), but this is synchronous.
+        target <- parent$Target$createTarget("about:blank")
+        tid <- target$targetId
+        session_info <- parent$Target$attachToTarget(tid, flatten = TRUE)
         private$session_id <- session_info$sessionId
 
         private$parent$.__enclos_env__$private$sessions[[private$session_id]] <- self
