@@ -42,23 +42,28 @@ Chromote <- R6Class("Chromote",
       private$is_active_ <- TRUE
     },
 
-    close = function() {
-      hybrid_chain(
-        self$Target$getTargetInfo(),
-        function(target) {
-          tid <- target$targetInfo$targetId
-          # Even if this session calls Target.closeTarget, the response from
-          # the browser is sent without a sessionId. In order to wait for the
-          # correct browser response, we need to invoke this from the parent's
-          # browser-level methods.
-          private$parent$protocol$Target$closeTarget(tid)
-        },
-        function(value) {
-          if (isTRUE(value$success)) {
-            self$mark_closed()
-          }
+    close = function(sync_ = TRUE) {
+      p <- self$Target$getTargetInfo(sync_ = FALSE)
+      p <- p$then(function(target) {
+        tid <- target$targetInfo$targetId
+        # Even if this session calls Target.closeTarget, the response from
+        # the browser is sent without a sessionId. In order to wait for the
+        # correct browser response, we need to invoke this from the parent's
+        # browser-level methods.
+        private$parent$protocol$Target$closeTarget(tid, sync_ = FALSE)
+      })
+      p <- p$then(function(value) {
+        if (isTRUE(value$success)) {
+          self$mark_closed()
         }
-      )
+        invisible(value$success)
+      })
+
+      if (sync_) {
+        self$wait_for(p)
+      } else {
+        p
+      }
     },
 
     view = function() {
