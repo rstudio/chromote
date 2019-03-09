@@ -79,30 +79,31 @@ Chromote <- R6Class("Chromote",
       browseURL(private$parent$url(path))
     },
 
+    #TODO: Make async
     screenshot = function(
       selector = "body",
       filename = "screenshot.png",
       region = c("content", "padding", "border", "margin"),
       scale = 1,
-      show = interactive()
+      show = interactive(),
+      sync_ = TRUE
     ) {
       region = match.arg(region)
       if (length(filename) == 0 && !show) {
         stop("Cannot have empty filename and show=FALSE")
       }
 
-      hybrid_chain(
-        self$DOM$getDocument(),
-        function(value) {
-          self$DOM$querySelector(value$root$nodeId, selector)
-        },
-        function(value) {
+      p <- self$DOM$getDocument(sync_ = FALSE)$
+        then(function(value) {
+          self$DOM$querySelector(value$root$nodeId, selector, sync_ = FALSE)
+        })$
+        then(function(value) {
           if (value$nodeId == 0) {
             stop("Selector failed")
           }
-          self$DOM$getBoxModel(value$nodeId)
-        },
-        function(value) {
+          self$DOM$getBoxModel(value$nodeId, sync_ = FALSE)
+        })$
+        then(function(value) {
           if (is.null(value)) {
             stop("Selector failed")
           }
@@ -116,9 +117,9 @@ Chromote <- R6Class("Chromote",
             width  = xmax - xmin,
             height = ymax - ymin,
             scale = scale
-          ))
-        },
-        function(value) {
+          ), sync_ = FALSE)
+        })$
+        then(function(value) {
           temp_output <- FALSE
           if (is.null(filename)) {
             temp_output <- TRUE
@@ -136,11 +137,16 @@ Chromote <- R6Class("Chromote",
           } else {
             invisible(filename)
           }
-        },
-        catch = function(err) {
+        })$
+        catch(function(err) {
           warning("An error occurred: ", err)
-        }
-      )
+        })
+
+      if (sync_) {
+        self$wait_for(p)
+      } else {
+        p
+      }
     },
 
     is_active = function() {
