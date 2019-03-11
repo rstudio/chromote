@@ -2,6 +2,8 @@
 # Chrome Devtools Protocol a session is a debugging interface connected to a
 # _target_; a target is a browser window/tab, or an iframe. A single target
 # can have more than one session connected to it.
+
+#' @export
 Chromote <- R6Class("Chromote",
   lock_objects = FALSE,
   cloneable = FALSE,
