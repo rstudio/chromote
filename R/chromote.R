@@ -10,7 +10,9 @@ Chromote <- R6Class("Chromote",
   public = list(
     initialize = function(
       parent = ChromoteMaster$new(),
-      session_id = NULL
+      session_id = NULL,
+      width = 992,
+      height = 744
     ) {
       # There are two ways of initializing a Chromote object: one is by sipmly
       # calling Chromote$new() (without a session_id), in which case a
@@ -42,6 +44,15 @@ Chromote <- R6Class("Chromote",
 
       private$event_manager <- EventManager$new(self)
       private$is_active_ <- TRUE
+
+
+      # Set default size
+      if (!is.null(width) || !is.null(height)) {
+        info <- self$Browser$getWindowForTarget()
+        info$bounds$width <- width
+        info$bounds$height <- height
+        self$Browser$setWindowBounds(windowId = info$windowId, bounds = info$bounds)
+      }
     },
 
     close = function(sync_ = TRUE) {
