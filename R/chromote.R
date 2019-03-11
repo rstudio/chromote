@@ -94,7 +94,7 @@ Chromote <- R6Class("Chromote",
 
     #TODO: Make async
     screenshot = function(
-      selector = "body",
+      selector = "html",
       filename = "screenshot.png",
       region = c("content", "padding", "border", "margin"),
       scale = 1,
