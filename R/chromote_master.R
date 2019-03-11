@@ -81,19 +81,26 @@ ChromoteMaster <- R6Class(
 
     # This runs the child loop until the promise is resolved.
     wait_for = function(p) {
-      # Chain another promise that sets a flag when p is resolved, and
-      # captures the return value.
-      p_is_resolved <- FALSE
+      if (!is.promise(p)) {
+        stop("wait_for requires a promise object.")
+      }
+
+      p_is_done <- FALSE
+      p$finally(function() {
+        p_is_done <<- TRUE
+      })
+
       return_value <- NULL
       p <- p$then(function(value) {
-        p_is_resolved <<- TRUE
         return_value <<- value
       })
 
       err <- NULL
-      p$catch(function(e) err <<- e)
+      p <- p$catch(function(e) {
+        err <<- e
+      })
 
-      while (!p_is_resolved && is.null(err) && !loop_empty(loop = private$child_loop)) {
+      while (!p_is_done && !loop_empty(loop = private$child_loop)) {
         run_now(loop = private$child_loop)
       }
 
