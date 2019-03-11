@@ -280,3 +280,42 @@ b$screenshot('#header-search-bar', region = 'padding')
 b$screenshot('#header-search-bar', region = 'border')
 b$screenshot('#header-search-bar', region = 'border', scale = 2)
 ```
+
+
+### Setting custom headers
+
+Currently setting custom headers requires a little extra work because it requires `Network.enable` be called before using it. In the future we'll streamline things so that it will happen automatically.
+
+```R
+b <- Chromote$new()
+# Currently need to manually enable Network domain notifications. Calling
+# b$Network$enable() would do it, but calling it directly will bypass the
+# callback counting and the notifications could get automatically disabled by a
+# different Network event. We'll enable notifiactions for the Network domain by
+# listening for a particular event. We'll also store a callback that will
+# decrement the callback counter, so that we can disable notifications ater.
+disable_network_notifications <- b$Network$responseReceived(function (msg) NULL)
+b$Network$setExtraHTTPHeaders(headers = list(
+  foo = "bar",
+  header1 = "value1"
+))
+
+# Visit a web page that prints out the request headers
+b$Page$navigate("http://scooterlabs.com/echo")
+b$screenshot()
+
+
+# Unset extra headers. Note that `list(a=1)[0]` creates an empty _named_ list;
+# an empty unnamed list will cause an error because they're converted to JSON
+# differently. A named list becomes "{}", but an unnamed list becomes "[]".
+b$Network$setExtraHTTPHeaders(headers = list(a=1)[0])
+
+# Request again
+b$Page$navigate("http://scooterlabs.com/echo")
+b$screenshot()
+
+
+# Disable extra headers entirely, by decrementing Network callback counter,
+# which will disable Network notifications.
+disable_network_notifications()
+```
