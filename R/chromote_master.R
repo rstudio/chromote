@@ -188,7 +188,7 @@ ChromoteMaster <- R6Class(
     },
 
     debug_log = function(...) {
-      txt <- paste0(..., collapse = "")
+      txt <- truncate(paste0(..., collapse = ""), 1000)
       if (private$debug_messages_) {
         message(txt)
       }
