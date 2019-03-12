@@ -319,3 +319,34 @@ b$screenshot()
 # which will disable Network notifications.
 disable_network_notifications()
 ```
+
+### Screenshot without scrollbars
+
+The default width of the viewport is 992 pixels, but sometimes when you take a screenshot, the result will only 977 pixels wide, which is 15 pixels narrower. This is because if the content is longer than height of the viewport (which defaults to 744 pixels), then a 15-pixel-wide scrollbar will be display on the right side of the window, but that scrollbar will not become part of the screenshot.
+
+If you want the ensure that the screenshot will be the full width, you can do one of the following:
+
+* Hide scrollbars with before navigating to the page. Note that this will also hide any scrollbars in scrollable divs.
+    ```R
+    b$Emulation$setScrollbarsHidden(hidden = TRUE)
+    ```
+* Make the viewport very tall, so that the content will fit without a scrollbar. Note that some web pages automatically size content to fill the height of the viewport, and for this pages, this will result in a strange-looking screenshot.
+    ```R
+    # To make the viewport tall in a new Chromote session
+    b <- Chromote$new(height = 3000)
+
+    # To make the viewport tall in an existing Chromote session
+    info <- b$Browser$getWindowForTarget()
+    info$bounds$height <- 3000
+    b$Browser$setWindowBounds(windowId = info$windowId, bounds = info$bounds)
+    ```
+* Make the viewport 15 pixels wider.
+    ```R
+    # To make the viewport wider in a new Chromote session
+    b <- Chromote$new(width = 1007)
+
+    # To make the viewport wider by 15 pixels in an existing Chromote session
+    info <- b$Browser$getWindowForTarget()
+    info$bounds$width <- info$bounds$width + 15
+    b$Browser$setWindowBounds(windowId = info$windowId, bounds = info$bounds)
+    ```
