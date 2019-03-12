@@ -46,13 +46,16 @@ Chromote <- R6Class("Chromote",
       private$is_active_ <- TRUE
 
 
-      # Set default size
+      # Set starting size
       if (!is.null(width) || !is.null(height)) {
         info <- self$Browser$getWindowForTarget()
         info$bounds$width <- width
         info$bounds$height <- height
         self$Browser$setWindowBounds(windowId = info$windowId, bounds = info$bounds)
       }
+
+      # Find pixelRatio for screenshots
+      private$pixel_ratio <- self$Runtime$evaluate("window.devicePixelRatio")$result$value
     },
 
     close = function(sync_ = TRUE) {
@@ -129,7 +132,7 @@ Chromote <- R6Class("Chromote",
             y = ymin,
             width  = xmax - xmin,
             height = ymax - ymin,
-            scale = scale
+            scale = scale / private$pixel_ratio
           ), sync_ = FALSE)
         })$
         then(function(value) {
@@ -166,8 +169,8 @@ Chromote <- R6Class("Chromote",
       private$is_active_
     },
 
-    new_session = function(sync_ = TRUE) {
-      private$parent$new_session(sync_)
+    new_session = function(sync_ = TRUE, width = 992, height = 774) {
+      private$parent$new_session(sync_, width = width, height = height)
     },
 
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
@@ -217,6 +220,7 @@ Chromote <- R6Class("Chromote",
     session_id = NULL,
     is_active_ = NULL,
     event_manager = NULL,
+    pixel_ratio = NULL,
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
       if (!private$is_active_) {

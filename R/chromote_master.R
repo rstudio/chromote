@@ -110,7 +110,7 @@ ChromoteMaster <- R6Class(
       return_value
     },
 
-    new_session = function(sync_ = TRUE) {
+    new_session = function(sync_ = TRUE, width = 992, height = 774) {
       p <- self$protocol$Target$createTarget("about:blank", sync_ = FALSE)
       p <- p$then(function(target) {
         tid <- target$targetId
@@ -118,7 +118,7 @@ ChromoteMaster <- R6Class(
       })
       p <- p$then(function(session_info) {
         session_id <- session_info$sessionId
-        session <- Chromote$new(self, session_id)
+        session <- Chromote$new(self, session_id, width, height)
         private$sessions[[session_id]] <- session
         session
       })
