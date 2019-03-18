@@ -19,5 +19,5 @@ Suggests:
     showimage
 Remotes:
     rstudio/websocket,
-    r-lib/later@joe/feature/private-event-loops2
+    r-lib/later@joe/feature/private-event-loops2,
 RoxygenNote: 6.1.1

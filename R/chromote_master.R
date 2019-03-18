@@ -28,10 +28,10 @@ ChromoteMaster <- R6Class(
 
       private$parent_loop <- current_loop()
 
-      # Initialize the websocket with a private event loop
-      with_private_loop({
-        private$child_loop <- current_loop()
+      # Use a private event loop to drive the websocket
+      private$child_loop <- create_loop(autorun = FALSE)
 
+      with_loop(private$child_loop, {
         private$ws <- WebSocket$new(
           chrome_info$webSocketDebuggerUrl,
           autoConnect = FALSE
@@ -348,7 +348,9 @@ ChromoteMaster <- R6Class(
 
       # This tells the parent loop to schedule one run of the child
       # (private) loop.
-      later(private$run_child_loop, loop = private$parent_loop)
+      with_loop(private$parent_loop,
+        later(private$run_child_loop)
+      )
 
       private$child_loop_is_scheduled <- TRUE
     },
@@ -357,7 +359,9 @@ ChromoteMaster <- R6Class(
       private$child_loop_is_scheduled <- FALSE
 
       tryCatch(
-        run_now(loop = private$child_loop),
+        with_loop(private$child_loop,
+          run_now()
+        ),
         finally = {
           private$schedule_child_loop()
         }
