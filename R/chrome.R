@@ -26,8 +26,8 @@ chrome <- function() {
 Chrome <- R6Class("Chrome",
   inherit = Browser,
   public = list(
-    initialize = function(path = find_chrome()) {
-      res <- launch_chrome(path)
+    initialize = function(path = find_chrome(), args = character(0)) {
+      res <- launch_chrome(path, args)
       private$host <- "127.0.0.1"
       private$process <- res$process
       private$port <- res$port
@@ -64,10 +64,10 @@ find_chrome <- function() {
 }
 
 
-launch_chrome <- function(path = find_chrome()) {
+launch_chrome <- function(path = find_chrome(), args = character(0)) {
   p <- process$new(
     command = path,
-    args = c("--headless", "--remote-debugging-port=0"),
+    args = c("--headless", "--remote-debugging-port=0", args),
     supervise = TRUE,
     stdout = tempfile("chrome-stdout-", fileext = ".log"),
     stderr = tempfile("chrome-stderr-", fileext = ".log")
