@@ -109,7 +109,18 @@ Chromote <- R6Class("Chromote",
         stop("Cannot have empty filename and show=FALSE")
       }
 
-      p <- self$DOM$getDocument(sync_ = FALSE)$
+      # These vars are used to store information gathered from one step to use
+      # in a later step.
+      visual_viewport <- NULL
+      box_model       <- NULL
+      image_data      <- NULL
+
+      p <- self$Page$getLayoutMetrics(sync_ = FALSE)$
+        then(function(value) {
+          visual_viewport <<- value$visualViewport
+
+          self$DOM$getDocument(sync_ = FALSE)
+        })$
         then(function(value) {
           self$DOM$querySelector(value$root$nodeId, selector, sync_ = FALSE)
         })$
@@ -123,17 +134,46 @@ Chromote <- R6Class("Chromote",
           if (is.null(value)) {
             stop("Selector failed")
           }
-          xmin <- value$model[[region]][[1]]
-          xmax <- value$model[[region]][[3]]
-          ymin <- value$model[[region]][[2]]
-          ymax <- value$model[[region]][[6]]
-          self$Page$captureScreenshot(clip = list(
-            x = xmin,
-            y = ymin,
-            width  = xmax - xmin,
-            height = ymax - ymin,
-            scale = scale / private$pixel_ratio
-          ), sync_ = FALSE)
+
+          # Store for later step
+          box_model <<- value
+
+          # Make viewport the same size as content -- seems to be necessary on
+          # Chrome 75 for Mac, thought it wasn't necessary for 72. Without
+          # this, the screenshot will be the full height, but everything
+          # outside the viewport area will be blank white.
+          self$Emulation$setVisibleSize(
+            width = value$model$width,
+            height = value$model$height,
+            sync_ = FALSE
+          )
+        })$
+        then(function(value) {
+          xmin <- box_model$model[[region]][[1]]
+          xmax <- box_model$model[[region]][[3]]
+          ymin <- box_model$model[[region]][[2]]
+          ymax <- box_model$model[[region]][[6]]
+          self$Page$captureScreenshot(
+            clip = list(
+              x = xmin,
+              y = ymin,
+              width  = xmax - xmin,
+              height = ymax - ymin,
+              scale = scale / private$pixel_ratio
+            ),
+            fromSurface = TRUE,
+            sync_ = FALSE
+          )
+        })$
+        then(function(value) {
+          image_data <<- value
+
+          # Restore original viewport size
+          self$Emulation$setVisibleSize(
+            width = visual_viewport$clientWidth,
+            height = visual_viewport$clientHeight,
+            sync_ = FALSE
+          )
         })$
         then(function(value) {
           temp_output <- FALSE
@@ -143,7 +183,7 @@ Chromote <- R6Class("Chromote",
             on.exit(unlink(filename))
           }
 
-          writeBin(jsonlite::base64_dec(value$data), filename)
+          writeBin(jsonlite::base64_dec(image_data$data), filename)
           if (show) {
             showimage::show_image(filename)
           }
