@@ -1,23 +1,24 @@
 Package: chromote
 Title: Headless Chromium Web Browser
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R:
     person("Winston", "Chang", role = c("aut", "cre"), email = "winston@rstudio.com")
 Description: Headless Chromium web browser
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
-Imports: 
+Imports:
     jsonlite,
     websocket,
     processx,
     R6,
-    promises,
+    promises (>= 1.0.1.9001),
     rlang,
-    later (>= 0.8.0.9001)
+    later (>= 0.8.0.9002)
 Suggests:
     showimage
 Remotes:
     rstudio/websocket,
     r-lib/later@joe/feature/private-event-loops2,
+    rstudio/promises@joe/feature/domain-finally
 RoxygenNote: 6.1.1

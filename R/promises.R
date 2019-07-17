@@ -44,7 +44,7 @@ promise_timeout <- function(p, timeout, loop = current_loop(),
                             timeout_message = NULL)
 {
   promise(function(resolve, reject) {
-    timer <- later(function() {
+    cancel_timer <- later(function() {
       if (is.null(timeout_message)) {
         timeout_message <- "Promise timed out"
       }
@@ -54,11 +54,12 @@ promise_timeout <- function(p, timeout, loop = current_loop(),
 
     p$then(
       onFulfilled = function(value) {
-        # TODO: Clear timer to free memory. Will require changes to later.
+        # Timer is no longer needed, so we'll cancel it to free memory.
+        cancel_timer()
         resolve(value)
       },
       onRejected = function(err) {
-        # TODO: Clear timer to free memory
+        cancel_timer()
         reject(err)
       }
     )

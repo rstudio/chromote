@@ -85,29 +85,7 @@ ChromoteMaster <- R6Class(
         stop("wait_for requires a promise object.")
       }
 
-      p_is_done <- FALSE
-      p$finally(function() {
-        p_is_done <<- TRUE
-      })
-
-      return_value <- NULL
-      p <- p$then(function(value) {
-        return_value <<- value
-      })
-
-      err <- NULL
-      p <- p$catch(function(e) {
-        err <<- e
-      })
-
-      while (!p_is_done && !loop_empty(loop = private$child_loop)) {
-        run_now(loop = private$child_loop)
-      }
-
-      if (!is.null(err))
-        stop(err)
-
-      return_value
+      synchronize(p, loop = private$child_loop)
     },
 
     new_session = function(sync_ = TRUE, width = 992, height = 774) {
