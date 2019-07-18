@@ -2,6 +2,7 @@
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom R6 R6Class
 #' @import promises later
+#' @importFrom fastmap fastmap
 #' @export
 ChromoteMaster <- R6Class(
   "ChromoteMaster",
@@ -24,7 +25,7 @@ ChromoteMaster <- R6Class(
         chrome_info <- fromJSON(self$url("/json"))
       }
 
-      private$command_callbacks <- new.env(parent = emptyenv())
+      private$command_callbacks <- fastmap()
 
       private$parent_loop <- current_loop()
 
@@ -207,9 +208,11 @@ ChromoteMaster <- R6Class(
 
     add_command_callback = function(id, callback, error) {
       id <- as.character(id)
-      private$command_callbacks[[id]] <- list(
-        callback = callback,
-        error = error
+      private$command_callbacks$set(id,
+        list(
+          callback = callback,
+          error = error
+        )
       )
     },
 
@@ -217,10 +220,10 @@ ChromoteMaster <- R6Class(
     invoke_command_callback = function(id, value, error) {
       id <- as.character(id)
 
-      if (!exists(id, envir = private$command_callbacks, inherits = FALSE))
+      if (!private$command_callbacks$has(id))
         return()
 
-      handlers <- private$command_callbacks[[id]]
+      handlers <- private$command_callbacks$get(id)
 
       if (!is.null(error)) {
         handlers$error(error)
@@ -231,7 +234,7 @@ ChromoteMaster <- R6Class(
     },
 
     remove_command_callback = function(id) {
-      rm(list = id, envir = private$command_callbacks)
+      private$command_callbacks$remove(as.character(id))
     },
 
 

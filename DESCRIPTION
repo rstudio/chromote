@@ -14,11 +14,13 @@ Imports:
     R6,
     promises (>= 1.0.1.9001),
     rlang,
-    later (>= 0.8.0.9002)
+    later (>= 0.8.0.9002),
+    fastmap
 Suggests:
     showimage
 Remotes:
     rstudio/websocket,
     r-lib/later@joe/feature/private-event-loops2,
-    rstudio/promises@joe/feature/domain-finally
+    rstudio/promises@joe/feature/domain-finally,
+    r-lib/fastmap
 RoxygenNote: 6.1.1

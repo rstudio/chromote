@@ -13,7 +13,7 @@ EventManager <- R6Class("EventManager",
         is.function(domain$enable)
       })
 
-      private$event_callbacks <- new.env(parent = emptyenv())
+      private$event_callbacks <- fastmap()
     },
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
@@ -46,7 +46,7 @@ EventManager <- R6Class("EventManager",
     },
 
     invoke_event_callbacks = function(event, params) {
-      callbacks <- private$event_callbacks[[event]]
+      callbacks <- private$event_callbacks$get(event)
       if (is.null(callbacks) || callbacks$size() == 0)
         return()
 
@@ -56,14 +56,14 @@ EventManager <- R6Class("EventManager",
     remove_event_callbacks = function(event) {
       # Removes ALL callbacks for a given event. In the future it might be
       # useful to implement finer control.
-      private$event_callbacks[[event]] <- NULL
+      private$event_callbacks$remove(event)
     }
   ),
 
   private = list(
     # The ChromoteSession or Chromote object that owns this EventManager.
     session = NULL,
-    event_callbacks = list(),
+    event_callbacks = NULL,
     # For keeping count of the number of callbacks for each domain; if
     # auto_events is TRUE, then when the count goes from 0 to 1 or 1 to 0 for
     # a given domain, it will automatically enable or disable events for that
@@ -75,8 +75,8 @@ EventManager <- R6Class("EventManager",
     event_enable_domains = NULL,
 
     add_event_callback = function(event, callback, once) {
-      if (is.null(private$event_callbacks[[event]])) {
-        private$event_callbacks[[event]] <- Callbacks$new()
+      if (!private$event_callbacks$has(event)) {
+        private$event_callbacks$set(event, Callbacks$new())
       }
 
       if (once) {
@@ -89,7 +89,7 @@ EventManager <- R6Class("EventManager",
         }
       }
 
-      deregister_callback <- private$event_callbacks[[event]]$add(callback)
+      deregister_callback <- private$event_callbacks$get(event)$add(callback)
 
       domain <- find_domain(event)
       private$inc_event_callback_count(domain)

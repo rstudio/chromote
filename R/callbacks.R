@@ -11,27 +11,29 @@ Callbacks <- R6Class(
       # Use floating point because it has greater range than int while
       # maintaining precision of 1.0.
       private$nextId <- 1.0
-      private$callbacks <- new.env(parent = emptyenv())
+      private$callbacks <- fastmap()
     },
     add = function(callback) {
       if (!is.function(callback)) {
         stop("callback must be a function.")
       }
 
+      # Keys are formatted like "0000000000001", "0000000000002", etc., so
+      # that they can be easily sorted by numerical value.
       id <- sprintf("%013.f", private$nextId)
       private$nextId <- private$nextId + 1.0
-      private$callbacks[[id]] <- callback
+      private$callbacks$set(id, callback)
 
-      # Return function for unregistering the callback. Suppress warnings that
-      # could occur if the callback has already been unregistered.
+      # Return function for unregistering the callback.
       invisible(function() {
-        if (exists(id, envir = private$callbacks, inherits = FALSE))
-          rm(list = id, envir = private$callbacks, inherits = FALSE)
+        if (private$callbacks$has(id)) {
+          private$callbacks$remove(id)
+        }
       })
     },
     invoke = function(..., on_error = NULL) {
       # Ensure that calls are invoked in the order that they were registered
-      keys <- sort(ls(private$callbacks))
+      keys <- private$callbacks$keys(sort = TRUE)
 
       errors <- character()
       if (is.null(on_error)) {
@@ -41,7 +43,7 @@ Callbacks <- R6Class(
       }
 
       for (key in keys) {
-        callback <- private$callbacks[[key]]
+        callback <- private$callbacks$get(key)
         tryCatch(callback(...), error = on_error)
       }
 
@@ -53,10 +55,10 @@ Callbacks <- R6Class(
       }
     },
     clear = function() {
-      private$callbacks <- new.env(parent = emptyenv())
+      private$callbacks <- fastmap()
     },
     size = function() {
-      length(ls(private$callbacks, sorted = FALSE))
+      private$callbacks$size()
     }
   ),
   private = list(
