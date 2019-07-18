@@ -138,13 +138,16 @@ Chromote <- R6Class("Chromote",
           # Store for later step
           box_model <<- value
 
+          self$Emulation$setScrollbarsHidden(hidden = TRUE, sync_ = FALSE)
+        })$
+        then(function(value) {
           # Make viewport the same size as content -- seems to be necessary on
           # Chrome 75 for Mac, thought it wasn't necessary for 72. Without
           # this, the screenshot will be the full height, but everything
           # outside the viewport area will be blank white.
           self$Emulation$setVisibleSize(
-            width = value$model$width,
-            height = value$model$height,
+            width = box_model$model$width,
+            height = box_model$model$height,
             sync_ = FALSE
           )
         })$
@@ -174,6 +177,9 @@ Chromote <- R6Class("Chromote",
             height = visual_viewport$clientHeight,
             sync_ = FALSE
           )
+
+          # Un-hide scrollbars
+          self$Emulation$setScrollbarsHidden(hidden = FALSE, sync_ = FALSE)
         })$
         then(function(value) {
           temp_output <- FALSE
