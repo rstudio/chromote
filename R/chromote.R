@@ -98,6 +98,7 @@ Chromote <- R6Class("Chromote",
     #TODO: Make async
     screenshot = function(
       selector = "html",
+      cliprect = NULL,
       filename = "screenshot.png",
       region = c("content", "padding", "border", "margin"),
       scale = 1,
@@ -109,68 +110,102 @@ Chromote <- R6Class("Chromote",
         stop("Cannot have empty filename and show=FALSE")
       }
 
+      if (!is.null(cliprect) && !(is.numeric(cliprect) && length(cliprect) == 4)) {
+        stop("`cliprect` must be NULL or a numeric vector with 4 elements (for left, top, width, and height).")
+      }
+
       # These vars are used to store information gathered from one step to use
       # in a later step.
-      visual_viewport <- NULL
-      box_model       <- NULL
+      visual_viewport <- NULL  # Initial viewport dimensions
       image_data      <- NULL
+      root_node_id    <- NULL
 
-      p <- self$Page$getLayoutMetrics(sync_ = FALSE)$
+      # Setup stuff for both selector and cliprect code paths.
+      p <- self$Emulation$setScrollbarsHidden(hidden = TRUE, sync_ = FALSE)$
+        then(function(value) {
+          self$Page$getLayoutMetrics(sync_ = FALSE)
+        })$
         then(function(value) {
           visual_viewport <<- value$visualViewport
 
           self$DOM$getDocument(sync_ = FALSE)
         })$
         then(function(value) {
-          self$DOM$querySelector(value$root$nodeId, selector, sync_ = FALSE)
+          root_node_id <<- value$root$nodeId
+          self$DOM$querySelector(value$root$nodeId, "html", sync_ = FALSE)
         })$
         then(function(value) {
-          if (value$nodeId == 0) {
-            stop("Selector failed")
-          }
           self$DOM$getBoxModel(value$nodeId, sync_ = FALSE)
         })$
         then(function(value) {
-          if (is.null(value)) {
-            stop("Selector failed")
-          }
-
-          # Store for later step
-          box_model <<- value
-
-          self$Emulation$setScrollbarsHidden(hidden = TRUE, sync_ = FALSE)
-        })$
-        then(function(value) {
-          # Make viewport the same size as content -- seems to be necessary on
-          # Chrome 75 for Mac, thought it wasn't necessary for 72. Without
+          # Make viewport the same size as content -- seems to be necessary
+          # on Chrome 75 for Mac, though it wasn't necessary for 72. Without
           # this, the screenshot will be the full height, but everything
           # outside the viewport area will be blank white.
           self$Emulation$setVisibleSize(
-            width = box_model$model$width,
-            height = box_model$model$height,
+            width = value$model$width,
+            height = value$model$height,
             sync_ = FALSE
           )
-        })$
-        then(function(value) {
-          xmin <- box_model$model[[region]][[1]]
-          xmax <- box_model$model[[region]][[3]]
-          ymin <- box_model$model[[region]][[2]]
-          ymax <- box_model$model[[region]][[6]]
-          self$Page$captureScreenshot(
-            clip = list(
-              x = xmin,
-              y = ymin,
-              width  = xmax - xmin,
-              height = ymax - ymin,
-              scale = scale / private$pixel_ratio
-            ),
-            fromSurface = TRUE,
-            sync_ = FALSE
-          )
-        })$
-        then(function(value) {
-          image_data <<- value
+        })
 
+
+      if (is.null(cliprect)) {
+        # This code path uses the selector instead of cliprect.
+        p <- p$
+          then(function(value) {
+            self$DOM$querySelector(root_node_id, selector, sync_ = FALSE)
+          })$
+          then(function(value) {
+            if (value$nodeId == 0) {
+              stop("Selector failed: ", selector)
+            }
+            self$DOM$getBoxModel(value$nodeId, sync_ = FALSE)
+          })$
+          then(function(value) {
+            xmin <- value$model[[region]][[1]]
+            xmax <- value$model[[region]][[3]]
+            ymin <- value$model[[region]][[2]]
+            ymax <- value$model[[region]][[6]]
+            self$Page$captureScreenshot(
+              clip = list(
+                x = xmin,
+                y = ymin,
+                width  = xmax - xmin,
+                height = ymax - ymin,
+                scale = scale / private$pixel_ratio
+              ),
+              fromSurface = TRUE,
+              sync_ = FALSE
+            )
+          })$
+          then(function(value) {
+            image_data <<- value
+          })
+
+      } else {
+        # If cliprect was provided, use it instead of selector
+        p <- p$
+          then(function(value) {
+            self$Page$captureScreenshot(
+              clip = list(
+                x = cliprect[[1]],
+                y = cliprect[[2]],
+                width  = cliprect[[3]],
+                height = cliprect[[4]],
+                scale = scale / private$pixel_ratio
+              ),
+              fromSurface = TRUE,
+              sync_ = FALSE
+            )
+          })$
+          then(function(value) {
+            image_data <<- value
+          })
+      }
+
+      p <- p$
+        then(function(value) {
           # Restore original viewport size
           self$Emulation$setVisibleSize(
             width = visual_viewport$clientWidth,
