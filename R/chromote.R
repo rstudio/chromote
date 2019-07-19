@@ -101,6 +101,7 @@ Chromote <- R6Class("Chromote",
       cliprect = NULL,
       filename = "screenshot.png",
       region = c("content", "padding", "border", "margin"),
+      expand = NULL,
       scale = 1,
       show = interactive(),
       sync_ = TRUE
@@ -114,10 +115,24 @@ Chromote <- R6Class("Chromote",
         stop("`cliprect` must be NULL or a numeric vector with 4 elements (for left, top, width, and height).")
       }
 
+      if (is.null(expand)) {
+        expand <- 0
+      }
+      if (!is.numeric(expand) ||
+          !(length(expand) == 1 || length(expand) == 4)) {
+        stop("`expand` must be NULL, or a numeric vector with 1 or 4 elements (for top, right, bottom, left)")
+      }
+      if (length(expand) == 1) {
+        expand <- rep(expand, 4)
+      }
+
+
       # These vars are used to store information gathered from one step to use
       # in a later step.
       visual_viewport <- NULL  # Initial viewport dimensions
       image_data      <- NULL
+      overall_width   <- NULL
+      overall_height  <- NULL
       root_node_id    <- NULL
 
       # Setup stuff for both selector and cliprect code paths.
@@ -138,15 +153,22 @@ Chromote <- R6Class("Chromote",
           self$DOM$getBoxModel(value$nodeId, sync_ = FALSE)
         })$
         then(function(value) {
+          overall_width  <<- value$model$width
+          overall_height <<- value$model$height
+
           # Make viewport the same size as content -- seems to be necessary
           # on Chrome 75 for Mac, though it wasn't necessary for 72. Without
           # this, the screenshot will be the full height, but everything
           # outside the viewport area will be blank white.
           self$Emulation$setVisibleSize(
-            width = value$model$width,
-            height = value$model$height,
+            width = overall_width,
+            height = overall_height,
             sync_ = FALSE
           )
+
+          promise(function(resolve, reject) {
+            later(function() resolve(TRUE), 0.5)
+          })
         })
 
 
@@ -163,10 +185,19 @@ Chromote <- R6Class("Chromote",
             self$DOM$getBoxModel(value$nodeId, sync_ = FALSE)
           })$
           then(function(value) {
-            xmin <- value$model[[region]][[1]]
-            xmax <- value$model[[region]][[3]]
-            ymin <- value$model[[region]][[2]]
-            ymax <- value$model[[region]][[6]]
+            # Note: `expand` values are top, right, bottom, left.
+            xmin <- value$model[[region]][[1]] - expand[4]
+            xmax <- value$model[[region]][[3]] + expand[2]
+            ymin <- value$model[[region]][[2]] - expand[1]
+            ymax <- value$model[[region]][[6]] + expand[3]
+
+            # We need to make sure that we don't go beyond the bounds of the
+            # page.
+            xmin <- max(xmin, 0)
+            xmax <- min(xmax, overall_width)
+            ymin <- max(ymin, 0)
+            ymax <- min(ymax, overall_height)
+
             self$Page$captureScreenshot(
               clip = list(
                 x = xmin,
