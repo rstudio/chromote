@@ -95,7 +95,6 @@ Chromote <- R6Class("Chromote",
       browseURL(private$parent$url(path))
     },
 
-    #TODO: Make async
     screenshot = function(
       selector = "html",
       cliprect = NULL,
