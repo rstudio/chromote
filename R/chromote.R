@@ -276,6 +276,82 @@ Chromote <- R6Class("Chromote",
       }
     },
 
+    screenshot_pdf = function(
+      filename = "screenshot.pdf",
+      pagesize = "letter",
+      units = c("in", "cm"),
+      landscape = FALSE,
+      displayHeaderFooter = FALSE,
+      margins = c(0.5, 0.5, 0.5, 0.5),
+      printBackground = FALSE,
+      scale = 1,
+      sync_ = TRUE
+    ) {
+      page_sizes <- list(
+        letter  = c(8.5,   11),
+        legal   = c(8.5,   14),
+        tabloid = c(11,    17),
+        ledger  = c(17,    11),
+        a0      = c(33.1,  46.8),
+        a1      = c(23.4,  33.1),
+        a2      = c(16.54, 23.4),
+        a3      = c(11.7,  16.54),
+        a4      = c(8.27,  11.7),
+        a5      = c(5.83,  8.27),
+        a6      = c(4.13,  5.83)
+      )
+
+      units <- match.arg(units)
+
+      if (units == "cm") {
+        margins <- margins / 2.54
+      }
+
+      if (is.character(pagesize)) {
+        pagesize <- tolower(pagesize)
+        pagesize <- match.arg(pagesize, names(page_sizes))
+        pagesize <- page_sizes[[pagesize]]
+
+      } else if (is.numeric(pagesize) && length(pagesize) == 2) {
+        # User has passed in width and height values
+        if (units == "cm") {
+          pagesize <- pagesize / 2.54
+        }
+
+      } else {
+        stop('`pagesize` must be one of "', paste(names(page_sizes), collapse = '", "'),
+          '", or a two-element vector of width and height.')
+      }
+
+      if (length(margins) == 1) {
+        margins <- rep(margins, 4)
+      }
+
+      p <- self$Page$printToPDF(
+          landscape = landscape,
+          displayHeaderFooter = displayHeaderFooter,
+          printBackground = printBackground,
+          scale = scale,
+          paperWidth   = pagesize[[1]],
+          paperHeight  = pagesize[[2]],
+          marginTop    = margins[[1]],
+          marginBottom = margins[[3]],
+          marginLeft   = margins[[4]],
+          marginRight  = margins[[2]],
+          sync_ = FALSE
+        )$
+        then(function(value) {
+          writeBin(jsonlite::base64_dec(value$data), filename)
+          filename
+        })
+
+      if (sync_) {
+        invisible(self$wait_for(p))
+      } else {
+        p
+      }
+    },
+
     is_active = function() {
       private$is_active_
     },
