@@ -1,22 +1,39 @@
 promise_globals <- new.env(parent = emptyenv())
+promise_globals$interrupt_domains <- list()
 
-# TODO:
-# Maintain a current interrupt domain global variable (package level)
+push_interrupt_domain <- function(domain) {
+  n_domains <- length(promise_globals$interrupt_domains)
+  promise_globals$interrupt_domains[[n_domains + 1]] <- domain
+}
+
+pop_interrupt_domain <- function() {
+  n_domains <- length(promise_globals$interrupt_domains)
+  if (length(n_domains) == 0)
+    return(NULL)
+
+  domain <- promise_globals$interrupt_domains[[n_domains]]
+  promise_globals$interrupt_domains[[n_domains]] <- NULL
+
+  domain
+}
+
+current_interrupt_domain <- function() {
+  promise_globals$interrupt_domains[[length(promise_globals$interrupt_domains)]]
+}
+
 
 create_interrupt_domain <- function() {
   domain <- new_promise_domain(
     wrapOnFulfilled = function(onFulfilled) {
-      # message("wrapOnFulfilled")
       function(...) {
-        # TODO: store previous interrupt domain, set new interrupt domain, on
-        # exit restore previous.
-        # message("wrapOnFulfilled inner")
+        push_interrupt_domain(domain)
+        on.exit(pop_interrupt_domain(), add = TRUE)
+
         if (domain$interrupted) {
           stop("Operation was interrupted 1")
         }
         tryCatch(
           {
-            # message("wrapOnFulfilled inner tryCatch")
             onFulfilled(...)
           },
           interrupt = function(e) {
@@ -29,11 +46,10 @@ create_interrupt_domain <- function() {
       }
     },
     wrapOnRejected = function(onRejected) {
-      # message("wrapOnRejected")
       function(...) {
-        # TODO: store previous interrupt domain, set new interrupt domain, on
-        # exit restore previous.
-        # message("wrapOnRejected inner")
+        push_interrupt_domain(domain)
+        on.exit(pop_interrupt_domain(), add = TRUE)
+
         if (domain$interrupted) {
           stop("Operation was interrupted 3")
         }
@@ -47,11 +63,10 @@ create_interrupt_domain <- function() {
       }
     },
     wrapOnFinally = function(onFinally) {
-      # message("wrapOnFinally")
       function(...) {
-        # TODO: store previous interrupt domain, set new interrupt domain, on
-        # exit restore previous.
-        # message("wrapOnFinally inner")
+        push_interrupt_domain(domain)
+        on.exit(pop_interrupt_domain(), add = TRUE)
+
         tryCatch(
           onFinally(...),
           interrupt = function(e) {
@@ -62,9 +77,8 @@ create_interrupt_domain <- function() {
       }
     },
     wrapSync = function(expr) {
-      # TODO: store previous interrupt domain, set new interrupt domain, on
-      # exit restore previous.
-      # message("wrapSync")
+      push_interrupt_domain(domain)
+      on.exit(pop_interrupt_domain(), add = TRUE)
 
       # Counting is currently not used
       if (is.null(promise_globals$synchronized)) {
@@ -81,6 +95,12 @@ create_interrupt_domain <- function() {
   domain
 }
 
+
+# This function takes a promise and blocks until it is resolved. It runs the
+# promise's callbacks in the provided event loop. If the promise is
+# interrupted then this function tries to catch the interrupt, then runs the
+# loop until it's empty; then it throws a new interrupt. If the promise throws
+# an error, then also throws an error.
 synchronize <- function(expr, loop) {
   domain <- create_interrupt_domain()
 
@@ -121,19 +141,79 @@ synchronize <- function(expr, loop) {
         while (!loop_empty(loop = loop)) {
           run_now(loop = loop)
         }
-        # TODO: This needs to change to something that actually works (SIGINT?)
-        message("generateInterrupt")
         generateInterrupt()
-        message("generateInterrupt done")
       }
     )
   })
 }
 
+
+# A wrapper for later() which polls for interrupts. If an interrupt has
+# occurred either while running another callback, or when run_now() is
+# waiting, the interrupt will be detected and (1) the scheduled `func` will be
+# cancelled, and (2) the `on_interrupt` callback will be invoked.
+later_with_interrupt <- function(
+  func,
+  delay = 0,
+  loop = current_loop(),
+  on_interrupt = function() {},
+  interrupt_domain = current_interrupt_domain(),
+  poll_interval = 0.1
+) {
+  force(func)
+  force(loop)
+  force(interrupt_domain)
+  force(on_interrupt)
+
+  if (is.null(interrupt_domain)) {
+    return(later(func, delay, loop))
+  }
+
+  end_time <- as.numeric(Sys.time()) + delay
+  cancel <- NULL
+
+  nextTurn <- function(init = FALSE) {
+    if (isTRUE(interrupt_domain$interrupted)) {
+      on_interrupt()
+      return()
+    }
+
+    this_delay <- min(poll_interval, end_time - as.numeric(Sys.time()))
+    if (this_delay <= 0) {
+      # Time has expired. If we've never progressed to the next tick (i.e.
+      # init == TRUE) then don't invoke the callback yet, wait until the next
+      # tick. Otherwise, do invoke the callback.
+      if (!init) {
+        func()
+        return()
+      }
+      this_delay <- 0
+    }
+    cancel <<- later::later(nextTurn, this_delay, loop)
+  }
+  nextTurn(init = TRUE)
+
+  function() {
+    cancel()
+  }
+}
+# TODO
+#
+# The notion of cancellability should go into later package. Instead of this
+# function taking `interrupt_domain`, which is a promise-level object, we could
+# do something like the following:
+#
+# Add on_interrupt option to later(); if FALSE/NULL (the default) then interrupts
+#   don't affect scheduled callback. If TRUE, then interrupt cancels the later().
+#   If a function, then interrupt cancels the later() and calls the on_interrupt
+#   function.
+# Add later::interrupt() function, so that later can know that an interrupt
+#   happened.
+# Add option to later() to make the callback uninterruptable.
+
+
+
 generateInterrupt <- function() {
-  # TODO: Do something that actually works
   tools::pskill(Sys.getpid(), tools::SIGINT)
   Sys.sleep(1)
-
-  # stop(structure(list(), class = c("interrupt", "condition")))
 }

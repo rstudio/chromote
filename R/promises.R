@@ -43,14 +43,22 @@ promises::finally
 promise_timeout <- function(p, timeout, loop = current_loop(),
                             timeout_message = NULL)
 {
+  interrupt_domain <- current_interrupt_domain()
   promise(function(resolve, reject) {
-    cancel_timer <- later(function() {
-      if (is.null(timeout_message)) {
-        timeout_message <- "Promise timed out"
-      }
+    cancel_timer <- later_with_interrupt(
+      function() {
+        if (is.null(timeout_message)) {
+          timeout_message <- "Promise timed out"
+        }
 
-      reject(timeout_message)
-    }, timeout, loop = loop)
+        reject(timeout_message)
+      },
+      timeout,
+      loop = loop,
+      on_interrupt = function() {
+        reject("interrupted")
+      }
+    )
 
     p$then(
       onFulfilled = function(value) {
