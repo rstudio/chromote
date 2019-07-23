@@ -330,7 +330,7 @@ ChromoteMaster <- R6Class(
       # This tells the parent loop to schedule one run of the child
       # (private) loop.
       with_loop(private$parent_loop,
-        later(private$run_child_loop)
+        later(private$run_child_loop, 0.01)
       )
 
       private$child_loop_is_scheduled <- TRUE
