@@ -96,13 +96,13 @@ Chromote <- R6Class("Chromote",
     },
 
     screenshot = function(
+      filename = "screenshot.png",
       selector = "html",
       cliprect = NULL,
-      filename = "screenshot.png",
       region = c("content", "padding", "border", "margin"),
       expand = NULL,
       scale = 1,
-      show = interactive(),
+      show = FALSE,
       sync_ = TRUE
     ) {
       region = match.arg(region)
