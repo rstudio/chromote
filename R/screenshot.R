@@ -79,20 +79,14 @@ Chromote$set("public", "screenshot",
       # This code path uses the selector instead of cliprect.
       p <- p$
         then(function(value) {
-          self$DOM$querySelector(root_node_id, selector, sync_ = FALSE)
-        })$
-        then(function(value) {
-          if (value$nodeId == 0) {
-            stop("Selector failed: ", selector)
-          }
-          self$DOM$getBoxModel(value$nodeId, sync_ = FALSE)
+          find_selectors_bounds(self, root_node_id, selector)
         })$
         then(function(value) {
           # Note: `expand` values are top, right, bottom, left.
-          xmin <- value$model[[region]][[1]] - expand[4]
-          xmax <- value$model[[region]][[3]] + expand[2]
-          ymin <- value$model[[region]][[2]] - expand[1]
-          ymax <- value$model[[region]][[6]] + expand[3]
+          xmin <- value$xmin - expand[4]
+          xmax <- value$xmax + expand[2]
+          ymin <- value$ymin - expand[1]
+          ymax <- value$ymax + expand[3]
 
           # We need to make sure that we don't go beyond the bounds of the
           # page.
@@ -263,3 +257,56 @@ Chromote$set("public", "screenshot_pdf",
     }
   }
 )
+
+
+# Find a bounding box that contains the elements selected by any number of
+# selectors. Note that a selector can pick out more than one element.
+find_selectors_bounds <- function(cm, root_node_id, selectors, region = "content") {
+  ps <- lapply(selectors, function(selector) {
+    cm$DOM$querySelectorAll(root_node_id, selector, sync_ = FALSE)$
+      then(function(value) {
+        # There can be multiple nodes for a given selector, so we need to
+        # process all of them.
+        ps <- lapply(value$nodeIds, function(nodeId) {
+          cm$DOM$getBoxModel(nodeId, sync_ = FALSE)$
+            catch(function(value) {
+              # Can get an error, "Could not compute box model", if the element
+              # is not visible. In this case, just return an empty list (we
+              # would return NULL, but promise_all() doesn't handle NULLs
+              # correctly.)
+              list()
+            })
+        })
+
+        promise_all(.list = ps)
+      })$
+      then(function(values) {
+        # Could have gotten emtpy list for non-visible elements; remove them.
+        values <- Filter(function(x) length(x) != 0, values)
+
+        lapply(values, function(value) {
+          list(
+            xmin = value$model[[region]][[1]],
+            xmax = value$model[[region]][[3]],
+            ymin = value$model[[region]][[2]],
+            ymax = value$model[[region]][[6]]
+          )
+        })
+      })
+  })
+
+  promise_all(.list = ps)$
+    then(function(value) {
+      value <- unlist(value, recursive = FALSE)
+      if (length(value) == 0) {
+        stop("Unable to find any visible elements for selectors.")
+      }
+
+      list(
+        xmin = min(fetch_key_n(value, "xmin")),
+        xmax = max(fetch_key_n(value, "xmax")),
+        ymin = min(fetch_key_n(value, "ymin")),
+        ymax = max(fetch_key_n(value, "ymax"))
+      )
+    })
+}
