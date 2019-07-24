@@ -281,9 +281,9 @@ Chromote <- R6Class("Chromote",
       pagesize = "letter",
       units = c("in", "cm"),
       landscape = FALSE,
-      displayHeaderFooter = FALSE,
+      display_header_footer = FALSE,
       margins = c(0.5, 0.5, 0.5, 0.5),
-      printBackground = FALSE,
+      print_background = FALSE,
       scale = 1,
       sync_ = TRUE
     ) {
@@ -328,16 +328,16 @@ Chromote <- R6Class("Chromote",
       }
 
       p <- self$Page$printToPDF(
-          landscape = landscape,
-          displayHeaderFooter = displayHeaderFooter,
-          printBackground = printBackground,
-          scale = scale,
-          paperWidth   = pagesize[[1]],
-          paperHeight  = pagesize[[2]],
-          marginTop    = margins[[1]],
-          marginBottom = margins[[3]],
-          marginLeft   = margins[[4]],
-          marginRight  = margins[[2]],
+          landscape           = landscape,
+          displayHeaderFooter = display_header_footer,
+          printBackground     = print_background,
+          scale               = scale,
+          paperWidth          = pagesize[[1]],
+          paperHeight         = pagesize[[2]],
+          marginTop           = margins[[1]],
+          marginBottom        = margins[[3]],
+          marginLeft          = margins[[4]],
+          marginRight         = margins[[2]],
           sync_ = FALSE
         )$
         then(function(value) {
