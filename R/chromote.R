@@ -279,10 +279,10 @@ Chromote <- R6Class("Chromote",
     screenshot_pdf = function(
       filename = "screenshot.pdf",
       pagesize = "letter",
+      margins = 0.5,
       units = c("in", "cm"),
       landscape = FALSE,
       display_header_footer = FALSE,
-      margins = c(0.5, 0.5, 0.5, 0.5),
       print_background = FALSE,
       scale = 1,
       sync_ = TRUE
@@ -325,6 +325,10 @@ Chromote <- R6Class("Chromote",
 
       if (length(margins) == 1) {
         margins <- rep(margins, 4)
+      }
+      if (length(margins) != 4) {
+        stop('`margins` must be a single number, or a four-element numeric vector representing',
+          ' the margins for top, right, bottom, and left, respectively.')
       }
 
       p <- self$Page$printToPDF(
