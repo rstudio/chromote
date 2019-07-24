@@ -1,7 +1,7 @@
 
 # The data structure for storing callbacks is essentially a queue: items are
 # added to the end, and removed from the front. Occasionally a callback will
-# be removed from the middle of the queue. For each callback that's
+# be manually removed from the middle of the queue. For each callback that's
 # registered, we provide a function that can remove that callback from the
 # queue.
 Callbacks <- R6Class(
