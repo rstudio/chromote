@@ -4,8 +4,8 @@
 #' @import promises later
 #' @importFrom fastmap fastmap
 #' @export
-ChromoteMaster <- R6Class(
-  "ChromoteMaster",
+Chromote <- R6Class(
+  "Chromote",
   lock_objects = FALSE,
   cloneable = FALSE,
   public = list(
@@ -97,7 +97,7 @@ ChromoteMaster <- R6Class(
       })
       p <- p$then(function(session_info) {
         session_id <- session_info$sessionId
-        session <- Chromote$new(self, session_id, width, height)
+        session <- ChromoteSession$new(self, session_id, width, height)
         private$sessions[[session_id]] <- session
         session
       })

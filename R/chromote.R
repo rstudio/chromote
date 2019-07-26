@@ -1,30 +1,32 @@
-# This represents one _session_ in a ChromoteMaster object. Note that in the
-# Chrome Devtools Protocol a session is a debugging interface connected to a
+# This represents one _session_ in a Chromote object. Note that in the Chrome
+# Devtools Protocol a session is a debugging interface connected to a
 # _target_; a target is a browser window/tab, or an iframe. A single target
 # can have more than one session connected to it.
 
 #' @export
-Chromote <- R6Class("Chromote",
+ChromoteSession <- R6Class(
+  "ChromoteSession",
   lock_objects = FALSE,
   cloneable = FALSE,
   public = list(
     initialize = function(
-      parent = ChromoteMaster$new(),
+      # TODO: Switch to default_chromote_master()
+      parent = Chromote$new(),
       session_id = NULL,
       width = 992,
       height = 744
     ) {
-      # There are two ways of initializing a Chromote object: one is by sipmly
-      # calling Chromote$new() (without a session_id), in which case a
-      # ChromoteMaster object is created, and it is queried for the first
+      # There are two ways of initializing a ChromoteSession object: one is by
+      # sipmly calling ChromoteSession$new() (without a session_id), in which
+      # case a Chromote object is created, and it is queried for the first
       # already-existing session. In this case, session_id will be NULL.
-      # Another is by having the ChromoteMaster create a new session and the
-      # Chromote object. In this case, the ChromoteMaster will pass itself as
+      # Another is by having the Chromote create a new session and the
+      # ChromoteSession object. In this case, the Chromote will pass itself as
       # the parent and supply a session_id.
       private$parent <- parent
 
       if (is.null(session_id)) {
-        # Create a session from the ChromoteMaster. Basically the same code as
+        # Create a session from the Chromote. Basically the same code as
         # new_session(), but this is synchronous.
         target <- parent$Target$createTarget("about:blank")
         tid <- target$targetId
@@ -37,6 +39,10 @@ Chromote <- R6Class("Chromote",
         private$session_id <- session_id
       }
 
+      # Whenever a command method (like x$Page$navigate()) is executed, it calls
+      # x$send_command(). This object's send_command() method calls the parent's
+      # send_command() method with a sessionId -- that is how the command is
+      # scoped to this session.
       self$protocol <- protocol_reassign_envs(parent$protocol, env = self$.__enclos_env__)
 
       # Graft the entries from self$protocol onto self

@@ -1,4 +1,4 @@
-Chromote$set("public", "screenshot",
+ChromoteSession$set("public", "screenshot",
   function(
     filename = "screenshot.png",
     selector = "html",
@@ -176,7 +176,7 @@ Chromote$set("public", "screenshot",
 )
 
 
-Chromote$set("public", "screenshot_pdf",
+ChromoteSession$set("public", "screenshot_pdf",
   function(
     filename = "screenshot.pdf",
     pagesize = "letter",
