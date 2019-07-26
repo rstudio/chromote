@@ -23,6 +23,6 @@ Suggests:
 Remotes:
     rstudio/websocket,
     r-lib/later,
-    rstudio/promises@joe/feature/domain-finally,
+    rstudio/promises,
     r-lib/fastmap
 RoxygenNote: 6.1.1
