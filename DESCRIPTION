@@ -1,8 +1,10 @@
 Package: chromote
 Title: Headless Chromium Web Browser
 Version: 0.0.0.9000
-Authors@R:
-    person("Winston", "Chang", role = c("aut", "cre"), email = "winston@rstudio.com")
+Authors@R: c(
+    person("Winston", "Chang", role = c("aut", "cre"), email = "winston@rstudio.com"),
+    person(given = "RStudio", role = c("cph", "fnd"))
+    )
 Description: Headless Chromium web browser
 License: What license it uses
 Encoding: UTF-8
