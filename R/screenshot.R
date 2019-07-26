@@ -271,10 +271,8 @@ find_selectors_bounds <- function(cm, root_node_id, selectors, region = "content
           cm$DOM$getBoxModel(nodeId, sync_ = FALSE)$
             catch(function(value) {
               # Can get an error, "Could not compute box model", if the element
-              # is not visible. In this case, just return an empty list (we
-              # would return NULL, but promise_all() doesn't handle NULLs
-              # correctly.)
-              list()
+              # is not visible. Just return NULL in this case.
+              NULL
             })
         })
 
@@ -282,7 +280,7 @@ find_selectors_bounds <- function(cm, root_node_id, selectors, region = "content
       })$
       then(function(values) {
         # Could have gotten emtpy list for non-visible elements; remove them.
-        values <- Filter(function(x) length(x) != 0, values)
+        values <- drop_nulls(values)
 
         lapply(values, function(value) {
           list(
