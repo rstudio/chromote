@@ -22,7 +22,7 @@ Suggests:
     showimage
 Remotes:
     rstudio/websocket,
-    r-lib/later@joe/feature/private-event-loops2,
+    r-lib/later,
     rstudio/promises@joe/feature/domain-finally,
     r-lib/fastmap
 RoxygenNote: 6.1.1
