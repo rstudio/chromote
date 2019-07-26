@@ -1,84 +1,105 @@
-# This represents one _session_ in a Chromote object. Note that in the Chrome
-# Devtools Protocol a session is a debugging interface connected to a
-# _target_; a target is a browser window/tab, or an iframe. A single target
-# can have more than one session connected to it.
-
+#' @importFrom websocket WebSocket
+#' @importFrom jsonlite fromJSON toJSON
+#' @importFrom R6 R6Class
+#' @import promises later
+#' @importFrom fastmap fastmap
 #' @export
-ChromoteSession <- R6Class(
-  "ChromoteSession",
+Chromote <- R6Class(
+  "Chromote",
   lock_objects = FALSE,
   cloneable = FALSE,
   public = list(
+
     initialize = function(
-      # TODO: Switch to default_chromote_master()
-      parent = Chromote$new(),
-      session_id = NULL,
-      width = 992,
-      height = 744
+      browser = default_browser(),
+      multi_session = TRUE,
+      auto_events = TRUE
     ) {
-      # There are two ways of initializing a ChromoteSession object: one is by
-      # sipmly calling ChromoteSession$new() (without a session_id), in which
-      # case a Chromote object is created, and it is queried for the first
-      # already-existing session. In this case, session_id will be NULL.
-      # Another is by having the Chromote create a new session and the
-      # ChromoteSession object. In this case, the Chromote will pass itself as
-      # the parent and supply a session_id.
-      private$parent <- parent
+      private$browser       <- browser
+      private$auto_events   <- auto_events
+      private$multi_session <- multi_session
 
-      if (is.null(session_id)) {
-        # Create a session from the Chromote. Basically the same code as
-        # new_session(), but this is synchronous.
-        target <- parent$Target$createTarget("about:blank")
-        tid <- target$targetId
-        session_info <- parent$Target$attachToTarget(tid, flatten = TRUE)
-        private$session_id <- session_info$sessionId
-
-        private$parent$.__enclos_env__$private$sessions[[private$session_id]] <- self
-
+      if (multi_session) {
+        chrome_info <- fromJSON(self$url("/json/version"))
       } else {
-        private$session_id <- session_id
+        chrome_info <- fromJSON(self$url("/json"))
       }
 
-      # Whenever a command method (like x$Page$navigate()) is executed, it calls
-      # x$send_command(). This object's send_command() method calls the parent's
-      # send_command() method with a sessionId -- that is how the command is
-      # scoped to this session.
-      self$protocol <- protocol_reassign_envs(parent$protocol, env = self$.__enclos_env__)
+      private$command_callbacks <- fastmap()
 
-      # Graft the entries from self$protocol onto self
-      list2env(self$protocol, self)
+      private$parent_loop <- current_loop()
 
-      private$event_manager <- EventManager$new(self)
-      private$is_active_ <- TRUE
+      # Use a private event loop to drive the websocket
+      private$child_loop <- create_loop(autorun = FALSE)
 
+      with_loop(private$child_loop, {
+        private$ws <- WebSocket$new(
+          chrome_info$webSocketDebuggerUrl,
+          autoConnect = FALSE
+        )
 
-      # Set starting size
-      if (!is.null(width) || !is.null(height)) {
-        info <- self$Browser$getWindowForTarget()
-        info$bounds$width <- width
-        info$bounds$height <- height
-        self$Browser$setWindowBounds(windowId = info$windowId, bounds = info$bounds)
-      }
+        private$ws$onMessage(private$on_message)
 
-      # Find pixelRatio for screenshots
-      private$pixel_ratio <- self$Runtime$evaluate("window.devicePixelRatio")$result$value
+        p <- promise(function(resolve, reject) {
+          private$ws$onOpen(resolve)
+
+          # Allow up to 10 seconds to connect to browser.
+          later(function() {
+            reject(paste0("Chromote: timed out waiting for WebSocket connection to browser."))
+          }, 10)
+        })
+
+        private$ws$connect()
+
+        # Populate methods while the connection is being established.
+        protocol_spec <- jsonlite::fromJSON(self$url("/json/protocol"), simplifyVector = FALSE)
+        self$protocol <- process_protocol(protocol_spec, self$.__enclos_env__)
+        # self$protocol is a list of domains, each of which is a list of
+        # methods. Graft the entries from self$protocol onto self
+        list2env(self$protocol, self)
+
+        private$event_manager <- EventManager$new(self)
+        private$is_active_ <- TRUE
+
+        private$schedule_child_loop()
+        self$wait_for(p)
+
+        private$register_default_event_listeners()
+      })
     },
 
-    close = function(sync_ = TRUE) {
-      p <- self$Target$getTargetInfo(sync_ = FALSE)
+    view = function() {
+      browseURL(self$url())
+    },
+
+    get_child_loop = function() {
+      private$child_loop
+    },
+
+    get_auto_events = function() {
+      private$auto_events
+    },
+
+    # This runs the child loop until the promise is resolved.
+    wait_for = function(p) {
+      if (!is.promise(p)) {
+        stop("wait_for requires a promise object.")
+      }
+
+      synchronize(p, loop = private$child_loop)
+    },
+
+    new_session = function(sync_ = TRUE, width = 992, height = 774) {
+      p <- self$protocol$Target$createTarget("about:blank", sync_ = FALSE)
       p <- p$then(function(target) {
-        tid <- target$targetInfo$targetId
-        # Even if this session calls Target.closeTarget, the response from
-        # the browser is sent without a sessionId. In order to wait for the
-        # correct browser response, we need to invoke this from the parent's
-        # browser-level methods.
-        private$parent$protocol$Target$closeTarget(tid, sync_ = FALSE)
+        tid <- target$targetId
+        self$protocol$Target$attachToTarget(tid, flatten = TRUE, sync_ = FALSE)
       })
-      p <- p$then(function(value) {
-        if (isTRUE(value$success)) {
-          self$mark_closed()
-        }
-        invisible(value$success)
+      p <- p$then(function(session_info) {
+        session_id <- session_info$sessionId
+        session <- ChromoteSession$new(self, session_id, width, height)
+        private$sessions[[session_id]] <- session
+        session
       })
 
       if (sync_) {
@@ -88,81 +109,244 @@ ChromoteSession <- R6Class(
       }
     },
 
-    view = function() {
-      tid <- self$Target$getTargetInfo()$targetInfo$targetId
-
-      # A data frame of targets, one row per target.
-      info <- fromJSON(private$parent$url("/json"))
-      path <- info$devtoolsFrontendUrl[info$id == tid]
-      if (length(path) == 0) {
-        stop("Target info not found.")
-      }
-
-      browseURL(private$parent$url(path))
+    get_sessions = function() {
+      private$sessions
     },
 
-    is_active = function() {
-      private$is_active_
-    },
-
-    new_session = function(sync_ = TRUE, width = 992, height = 774) {
-      private$parent$new_session(sync_, width = width, height = height)
-    },
-
-    send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
+    send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
       if (!private$is_active_) {
-        stop("Session ", private$session_id, " is closed.")
+        stop("Chromote object is closed.")
       }
-      private$parent$send_command(msg, callback, error, timeout, sessionId = private$session_id)
-    },
 
-    get_parent = function() {
-      private$parent
-    },
+      private$last_msg_id <- private$last_msg_id + 1
+      msg$id <- private$last_msg_id
 
-    get_session_id = function() {
-      private$session_id
-    },
+      if (!is.null(sessionId)) {
+        msg$sessionId <- sessionId
+      }
 
-    get_child_loop = function() {
-      private$parent$get_child_loop()
-    },
+      p <- promise(function(resolve, reject) {
+        msg_json <- toJSON(msg, auto_unbox = TRUE)
+        private$ws$send(msg_json)
+        self$debug_log("SEND ", msg_json)
+        # One of these callbacks will be invoked when a message arrives with a
+        # matching id.
+        private$add_command_callback(msg$id, resolve, reject)
+      })
 
-    wait_for = function(p) {
-      private$parent$wait_for(p)
-    },
+      p <- p$catch(function(e) {
+        stop("code: ", e$code,
+             "\n  message: ", e$message,
+             if (!is.null(e$data)) paste0("\n  data: ", e$data)
+        )
+      })
 
-    get_auto_events = function() {
-      private$parent$get_auto_events()
-    },
+      if (!is.null(timeout) && !is.infinite(timeout)) {
+        p <- promise_timeout(p, timeout, loop = private$child_loop,
+          timeout_message = paste0("Chromote: timed out waiting for response to command ", msg$method)
+        )
+      }
 
-    debug_log = function(...) {
-      private$parent$debug_log(...)
+      if (!is.null(callback)) {
+        p <- p$then(onFulfilled = callback, onRejected = error)
+      }
+
+      p <- p$finally(function() private$remove_command_callback(msg$id))
+
+      p
     },
 
     invoke_event_callbacks = function(event, params) {
       private$event_manager$invoke_event_callbacks(event, params)
     },
 
-    mark_closed = function() {
-      private$is_active_ <- FALSE
+    # Enable or disable message debugging. If enabled, R will print out the
+    # JSON messages that are sent and received. If called with no value, this
+    # method will print out the current debugging state.
+    debug_messages = function(value = NULL) {
+      if (is.null(value))
+        return(private$debug_messages_)
+
+      if (!(identical(value, TRUE) || identical(value, FALSE)))
+        stop("value must be TRUE or FALSE")
+
+      private$debug_messages_ <- value
     },
 
+    debug_log = function(...) {
+      txt <- truncate(paste0(..., collapse = ""), 1000)
+      if (private$debug_messages_) {
+        message(txt)
+      }
+    },
+
+    # =========================================================================
+    # Misc utility functions
+    # =========================================================================
+
+    url = function(path = NULL) {
+      if (!is.null(path) && substr(path, 1, 1) != "/") {
+        stop('path must be NULL or a string that starts with "/"')
+      }
+      paste0("http://", private$browser$get_host(), ":", private$browser$get_port(), path)
+    },
+
+    default_timeout = 10,
     protocol = NULL
   ),
 
   private = list(
-    parent = NULL,
-    session_id = NULL,
+    browser = NULL,
+    ws = NULL,
     is_active_ = NULL,
+
+    # =========================================================================
+    # Browser commands
+    # =========================================================================
+    last_msg_id = 0,
+    command_callbacks = NULL,
+
+    add_command_callback = function(id, callback, error) {
+      id <- as.character(id)
+      private$command_callbacks$set(id,
+        list(
+          callback = callback,
+          error = error
+        )
+      )
+    },
+
+    # Invoke the callback for a command (using id).
+    invoke_command_callback = function(id, value, error) {
+      id <- as.character(id)
+
+      if (!private$command_callbacks$has(id))
+        return()
+
+      handlers <- private$command_callbacks$get(id)
+
+      if (!is.null(error)) {
+        handlers$error(error)
+
+      } else if (!is.null(value)) {
+        handlers$callback(value)
+      }
+    },
+
+    remove_command_callback = function(id) {
+      private$command_callbacks$remove(as.character(id))
+    },
+
+
+    # =========================================================================
+    # Browser events
+    # =========================================================================
     event_manager = NULL,
-    pixel_ratio = NULL,
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
       if (!private$is_active_) {
-        stop("Session ", private$session_id, " is closed.")
+        stop("Chromote object is closed.")
       }
       private$event_manager$register_event_listener(event, callback, timeout)
+    },
+
+    register_default_event_listeners = function() {
+      # When a target is closed, mark the corresponding R session object as
+      # closed and remove it from the list of sessions.
+      self$protocol$Target$detachedFromTarget(function(msg) {
+        sid <- msg$sessionId
+        session <- private$sessions[[sid]]
+        if (is.null(session))
+          return()
+
+        private$sessions[[sid]] <- NULL
+        session$mark_closed()
+      })
+    },
+
+    # =========================================================================
+    # Message handling and dispatch
+    # =========================================================================
+    debug_messages_ = FALSE,
+    debug_message_max_length = 1000,
+
+    on_message = function(msg) {
+      self$debug_log("RECV ", msg$data)
+      data <- fromJSON(msg$data, simplifyVector = FALSE)
+
+      if (!is.null(data$method)) {
+        # This is an event notification.
+        #
+        # The reason that the callback is wrapped in later() is to prevent a
+        # possible race when a command response and an event notification arrive
+        # in the same tick. See issue #1.
+        later(function() {
+          if (!is.null(data$sessionId)) {
+            session <- private$sessions[[data$sessionId]]
+          } else {
+            session <- self
+          }
+
+          session$invoke_event_callbacks(data$method, data$params)
+        })
+
+      } else if (!is.null(data$id)) {
+        # This is a response to a command.
+        private$invoke_command_callback(data$id, data$result, data$error)
+
+      } else {
+        message("Don't know how to handle message: ", msg$data)
+      }
+    },
+
+    # =========================================================================
+    # Sessions
+    # =========================================================================
+    multi_session = NULL,
+    sessions = list(),
+
+    # =========================================================================
+    # Event loop for the websocket and the parent event loop
+    # =========================================================================
+    child_loop = NULL,
+    parent_loop = NULL,
+    sync_mode_ = TRUE,
+    child_loop_is_scheduled = FALSE,
+
+    schedule_child_loop = function() {
+      # Make sure that if this function is called multiple times, there aren't
+      # multiple streams of overlapping callbacks.
+      if (private$child_loop_is_scheduled)
+        return()
+
+      # If the websocket has closed, there's no reason to run the child loop
+      # anymore.
+      if (private$ws$readyState() == 3) {
+        self$debug_log("Websocket state is closed.")
+        private$is_active_ <- FALSE
+        return()
+      }
+
+      # This tells the parent loop to schedule one run of the child
+      # (private) loop.
+      with_loop(private$parent_loop,
+        later(private$run_child_loop, 0.01)
+      )
+
+      private$child_loop_is_scheduled <- TRUE
+    },
+
+    run_child_loop = function() {
+      private$child_loop_is_scheduled <- FALSE
+
+      tryCatch(
+        with_loop(private$child_loop,
+          run_now()
+        ),
+        finally = {
+          private$schedule_child_loop()
+        }
+      )
     }
   )
 )
