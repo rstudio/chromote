@@ -21,8 +21,6 @@ Imports:
 Suggests:
     showimage
 Remotes:
-    rstudio/websocket,
     r-lib/later,
-    rstudio/promises,
-    r-lib/fastmap
+    rstudio/promises
 RoxygenNote: 6.1.1
