@@ -199,6 +199,10 @@ Chromote <- R6Class(
       private$browser
     },
 
+    stop = function() {
+      self$Browser$close()
+    },
+
     default_timeout = 10,
     protocol = NULL
   ),
