@@ -79,7 +79,7 @@ ChromoteSession$set("public", "screenshot",
       # This code path uses the selector instead of cliprect.
       p <- p$
         then(function(value) {
-          find_selectors_bounds(self, root_node_id, selector)
+          find_selectors_bounds(self, root_node_id, selector, region)
         })$
         then(function(value) {
           # Note: `expand` values are top, right, bottom, left.
