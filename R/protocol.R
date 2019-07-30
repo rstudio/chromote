@@ -1,6 +1,6 @@
 #' @import rlang
 
-globalVariables(c("self", "private"))
+globalVariables(c("self", "private", "callback_", "error_", "timeout_", "wait_"))
 
 # Given a protocol spec (essentially, the Chrome Devtools Protocol JSON
 # converted to an R object), returns a list of domains of the Devtools

@@ -3,6 +3,7 @@
 # _target_; a target is a browser window/tab, or an iframe. A single target
 # can have more than one session connected to it.
 
+#' ChromoteSession class
 #' @export
 ChromoteSession <- R6Class(
   "ChromoteSession",

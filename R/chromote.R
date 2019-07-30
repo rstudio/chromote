@@ -3,6 +3,11 @@
 #' @importFrom R6 R6Class
 #' @import promises later
 #' @importFrom fastmap fastmap
+#' @importFrom processx process
+NULL
+
+
+#' Chromote class
 #' @export
 Chromote <- R6Class(
   "Chromote",
