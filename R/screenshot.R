@@ -7,7 +7,7 @@ ChromoteSession$set("public", "screenshot",
     expand = NULL,
     scale = 1,
     show = FALSE,
-    sync_ = TRUE
+    wait_ = TRUE
   ) {
     region = match.arg(region)
     if (length(filename) == 0 && !show) {
@@ -39,21 +39,21 @@ ChromoteSession$set("public", "screenshot",
     root_node_id    <- NULL
 
     # Setup stuff for both selector and cliprect code paths.
-    p <- self$Emulation$setScrollbarsHidden(hidden = TRUE, sync_ = FALSE)$
+    p <- self$Emulation$setScrollbarsHidden(hidden = TRUE, wait_ = FALSE)$
       then(function(value) {
-        self$Page$getLayoutMetrics(sync_ = FALSE)
+        self$Page$getLayoutMetrics(wait_ = FALSE)
       })$
       then(function(value) {
         visual_viewport <<- value$visualViewport
 
-        self$DOM$getDocument(sync_ = FALSE)
+        self$DOM$getDocument(wait_ = FALSE)
       })$
       then(function(value) {
         root_node_id <<- value$root$nodeId
-        self$DOM$querySelector(value$root$nodeId, "html", sync_ = FALSE)
+        self$DOM$querySelector(value$root$nodeId, "html", wait_ = FALSE)
       })$
       then(function(value) {
-        self$DOM$getBoxModel(value$nodeId, sync_ = FALSE)
+        self$DOM$getBoxModel(value$nodeId, wait_ = FALSE)
       })$
       then(function(value) {
         overall_width  <<- value$model$width
@@ -66,7 +66,7 @@ ChromoteSession$set("public", "screenshot",
         self$Emulation$setVisibleSize(
           width = overall_width,
           height = overall_height,
-          sync_ = FALSE
+          wait_ = FALSE
         )
 
         promise(function(resolve, reject) {
@@ -106,7 +106,7 @@ ChromoteSession$set("public", "screenshot",
               scale = scale / private$pixel_ratio
             ),
             fromSurface = TRUE,
-            sync_ = FALSE
+            wait_ = FALSE
           )
         })$
         then(function(value) {
@@ -126,7 +126,7 @@ ChromoteSession$set("public", "screenshot",
               scale = scale / private$pixel_ratio
             ),
             fromSurface = TRUE,
-            sync_ = FALSE
+            wait_ = FALSE
           )
         })$
         then(function(value) {
@@ -140,11 +140,11 @@ ChromoteSession$set("public", "screenshot",
         self$Emulation$setVisibleSize(
           width = visual_viewport$clientWidth,
           height = visual_viewport$clientHeight,
-          sync_ = FALSE
+          wait_ = FALSE
         )
 
         # Un-hide scrollbars
-        self$Emulation$setScrollbarsHidden(hidden = FALSE, sync_ = FALSE)
+        self$Emulation$setScrollbarsHidden(hidden = FALSE, wait_ = FALSE)
       })$
       then(function(value) {
         temp_output <- FALSE
@@ -169,7 +169,7 @@ ChromoteSession$set("public", "screenshot",
         warning("An error occurred: ", err)
       })
 
-    if (sync_) {
+    if (wait_) {
       self$wait_for(p)
     } else {
       p
@@ -188,7 +188,7 @@ ChromoteSession$set("public", "screenshot_pdf",
     display_header_footer = FALSE,
     print_background = FALSE,
     scale = 1,
-    sync_ = TRUE
+    wait_ = TRUE
   ) {
     page_sizes <- list(
       letter  = c(8.5,   11),
@@ -245,14 +245,14 @@ ChromoteSession$set("public", "screenshot_pdf",
         marginBottom        = margins[[3]],
         marginLeft          = margins[[4]],
         marginRight         = margins[[2]],
-        sync_ = FALSE
+        wait_ = FALSE
       )$
       then(function(value) {
         writeBin(jsonlite::base64_dec(value$data), filename)
         filename
       })
 
-    if (sync_) {
+    if (wait_) {
       invisible(self$wait_for(p))
     } else {
       p
@@ -265,12 +265,12 @@ ChromoteSession$set("public", "screenshot_pdf",
 # selectors. Note that a selector can pick out more than one element.
 find_selectors_bounds <- function(cm, root_node_id, selectors, region = "content") {
   ps <- lapply(selectors, function(selector) {
-    cm$DOM$querySelectorAll(root_node_id, selector, sync_ = FALSE)$
+    cm$DOM$querySelectorAll(root_node_id, selector, wait_ = FALSE)$
       then(function(value) {
         # There can be multiple nodes for a given selector, so we need to
         # process all of them.
         ps <- lapply(value$nodeIds, function(nodeId) {
-          cm$DOM$getBoxModel(nodeId, sync_ = FALSE)$
+          cm$DOM$getBoxModel(nodeId, wait_ = FALSE)$
             catch(function(value) {
               # Can get an error, "Could not compute box model", if the element
               # is not visible. Just return NULL in this case.

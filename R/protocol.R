@@ -66,7 +66,7 @@ gen_command_args <- function(params) {
     callback_ = list(NULL),
     error_    = list(NULL),
     timeout_  = quote(self$default_timeout),
-    sync_     = TRUE
+    wait_     = TRUE
   )
   args
 }
@@ -101,8 +101,8 @@ gen_command_body <- function(method_name, params) {
     if (!is.null(timeout_) && !is.numeric(timeout_))
       stop("`timeout_` must be a number or NULL.")
 
-    if (!identical(sync_, TRUE) && !identical(sync_, FALSE))
-      stop("`sync_` must be TRUE or FALSE.")
+    if (!identical(wait_, TRUE) && !identical(wait_, FALSE))
+      stop("`wait_` must be TRUE or FALSE.")
 
     # Check for missing non-optional args
     !!!check_missing_exprs
@@ -118,7 +118,7 @@ gen_command_body <- function(method_name, params) {
       timeout  = timeout_
     )
 
-    if (sync_) {
+    if (wait_) {
       self$wait_for(p)
     } else {
       p
@@ -133,7 +133,7 @@ event_to_function <- function(event, domain_name, env) {
     args = list(
       callback_ = NULL,
       timeout_  = quote(self$default_timeout),
-      sync_     = TRUE
+      wait_     = TRUE
     ),
     body = gen_event_body(paste0(domain_name, ".", event$name)),
     env  = env
@@ -150,8 +150,8 @@ gen_event_body <- function(method_name) {
     if (!is.null(timeout_) && !is.numeric(timeout_))
       stop("`timeout_` must be a number or NULL.")
 
-    if (!identical(sync_, TRUE) && !identical(sync_, FALSE))
-      stop("`sync_` must be TRUE or FALSE.")
+    if (!identical(wait_, TRUE) && !identical(wait_, FALSE))
+      stop("`wait_` must be TRUE or FALSE.")
 
     p <- private$register_event_listener(!!method_name, callback_, timeout_)
 
@@ -162,7 +162,7 @@ gen_event_body <- function(method_name) {
       return(invisible(p))
     }
 
-    if (sync_) {
+    if (wait_) {
       self$wait_for(p)
     } else {
       p

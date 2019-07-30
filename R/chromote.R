@@ -89,11 +89,11 @@ Chromote <- R6Class(
       synchronize(p, loop = private$child_loop)
     },
 
-    new_session = function(sync_ = TRUE, width = 992, height = 774) {
-      p <- self$protocol$Target$createTarget("about:blank", sync_ = FALSE)
+    new_session = function(wait_ = TRUE, width = 992, height = 774) {
+      p <- self$protocol$Target$createTarget("about:blank", wait_ = FALSE)
       p <- p$then(function(target) {
         tid <- target$targetId
-        self$protocol$Target$attachToTarget(tid, flatten = TRUE, sync_ = FALSE)
+        self$protocol$Target$attachToTarget(tid, flatten = TRUE, wait_ = FALSE)
       })
       p <- p$then(function(session_info) {
         session_id <- session_info$sessionId
@@ -102,7 +102,7 @@ Chromote <- R6Class(
         session
       })
 
-      if (sync_) {
+      if (wait_) {
         self$wait_for(p)
       } else {
         p

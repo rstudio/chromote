@@ -63,15 +63,15 @@ ChromoteSession <- R6Class(
       private$pixel_ratio <- self$Runtime$evaluate("window.devicePixelRatio")$result$value
     },
 
-    close = function(sync_ = TRUE) {
-      p <- self$Target$getTargetInfo(sync_ = FALSE)
+    close = function(wait_ = TRUE) {
+      p <- self$Target$getTargetInfo(wait_ = FALSE)
       p <- p$then(function(target) {
         tid <- target$targetInfo$targetId
         # Even if this session calls Target.closeTarget, the response from
         # the browser is sent without a sessionId. In order to wait for the
         # correct browser response, we need to invoke this from the parent's
         # browser-level methods.
-        self$parent$protocol$Target$closeTarget(tid, sync_ = FALSE)
+        self$parent$protocol$Target$closeTarget(tid, wait_ = FALSE)
       })
       p <- p$then(function(value) {
         if (isTRUE(value$success)) {
@@ -80,7 +80,7 @@ ChromoteSession <- R6Class(
         invisible(value$success)
       })
 
-      if (sync_) {
+      if (wait_) {
         self$wait_for(p)
       } else {
         p
@@ -104,8 +104,8 @@ ChromoteSession <- R6Class(
       private$is_active_
     },
 
-    new_session = function(sync_ = TRUE, width = 992, height = 774) {
-      self$parent$new_session(sync_, width = width, height = height)
+    new_session = function(wait_ = TRUE, width = 992, height = 774) {
+      self$parent$new_session(wait_, width = width, height = height)
     },
 
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {

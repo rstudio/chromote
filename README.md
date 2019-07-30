@@ -271,7 +271,7 @@ In async mode, there are two ways to use the value that the browser sends to the
 
 ```R
 # Async with callback
-b$Browser$getVersion(sync_ = FALSE, callback_ = str)
+b$Browser$getVersion(wait_ = FALSE, callback_ = str)
 #> <Promise [pending]>
 # After a very, very short pause, prints:
 #> List of 5
@@ -288,7 +288,7 @@ If you run the command in a code block (or a function), the entire code block wi
 
 ```R
 {
-  b$Browser$getVersion(callback_ = str, sync_ = FALSE)
+  b$Browser$getVersion(callback_ = str, wait_ = FALSE)
   1+1
 }
 #> [1] 2
@@ -307,7 +307,7 @@ If you want to store the value from the browser, you can write a callback that s
 ```R
 # This will extract the product field
 product <- NULL
-b$Browser$getVersion(sync_ = FALSE, callback_ = function(msg) {
+b$Browser$getVersion(wait_ = FALSE, callback_ = function(msg) {
   product <<- msg$product
 })
 
@@ -318,13 +318,13 @@ product
 
 But to get the value, you need to wait for the callback to execute before you can use the value. Waiting for the value is not simple to do using ordinary straight-line coding, but we'll see how to do that later.
 
-The other way of using the value is to use _promises_. If `sync_=FALSE` and no `callback_` is passed to the command, then it will return a promise. Promises have many advantages over plain old callbacks: they are easier to chain, and they provide better error-handling capabilities.
+The other way of using the value is to use _promises_. If `wait_=FALSE` and no `callback_` is passed to the command, then it will return a promise. Promises have many advantages over plain old callbacks: they are easier to chain, and they provide better error-handling capabilities.
 
 Here's an example that uses promises to print out the version information. Note that the surrounding curly braces are there to indicate that this whole thing must be run as a block without any idle time in between the function calls -- if you were to run the code in the R console line-by-line, the browser would send back the message and the promise would resolve before you called `p$then()`, which is where you tell the promise what to do with the return value. (The curly braces aren't strictly necessary -- you could run the code inside the braces in a single paste operation and have the same effect.)
 
 ```R
 {
-  p <- b$Browser$getVersion(sync_ = FALSE)
+  p <- b$Browser$getVersion(wait_ = FALSE)
   p$then(function(value) {
     print(value$product)
   })
@@ -339,43 +339,43 @@ Here are some progressively more concise ways of achieving the same thing. As yo
 library(promises)
 
 # Regular function pipe to then()
-b$Browser$getVersion(sync_ = FALSE) %>% then(function(value) {
+b$Browser$getVersion(wait_ = FALSE) %>% then(function(value) {
   print(value$product)
 })
 
 # Promise-pipe to anonymous function
-b$Browser$getVersion(sync_ = FALSE) %...>% (function(value) {
+b$Browser$getVersion(wait_ = FALSE) %...>% (function(value) {
   print(value$product)
 })
 
 # Promise-pipe to an expression (which gets converted to a function with the first argument `.`)
-b$Browser$getVersion(sync_ = FALSE) %...>% { print(.$product) }
+b$Browser$getVersion(wait_ = FALSE) %...>% { print(.$product) }
 
 # Promise-pipe to a named function, with parentheses
 print_product <- function(msg) print(msg$product)
-b$Browser$getVersion(sync_ = FALSE) %...>% print_product()
+b$Browser$getVersion(wait_ = FALSE) %...>% print_product()
 
 # Promise-pipe to a named function, without parentheses
-b$Browser$getVersion(sync_ = FALSE) %...>% print_product
+b$Browser$getVersion(wait_ = FALSE) %...>% print_product
 ```
 
 
-The earlier example where we found the dimensions of a DOM element using CSS selectors can be done in async mode by switching from the regular pipe to the promise-pipe, and calling all the methods with `sync_ = FALSE`:
+The earlier example where we found the dimensions of a DOM element using CSS selectors can be done in async mode by switching from the regular pipe to the promise-pipe, and calling all the methods with `wait_ = FALSE`:
 
 ```R
-b$DOM$getDocument(sync_ = FALSE) %...>%
-  { b$DOM$querySelector(.$root$nodeId, ".sidebar", sync_ = FALSE) } %...>%
-  { b$DOM$getBoxModel(.$nodeId, sync_ = FALSE) } %...>%
+b$DOM$getDocument(wait_ = FALSE) %...>%
+  { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
+  { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) } %...>%
   str()
 
 
 # Or, more verbosely:
-b$DOM$getDocument(sync_ = FALSE)$
+b$DOM$getDocument(wait_ = FALSE)$
   then(function(value) {
-    b$DOM$querySelector(value$root$nodeId, ".sidebar", sync_ = FALSE)
+    b$DOM$querySelector(value$root$nodeId, ".sidebar", wait_ = FALSE)
   })$
   then(function(value) {
-    b$DOM$getBoxModel(value$nodeId, sync_ = FALSE)
+    b$DOM$getBoxModel(value$nodeId, wait_ = FALSE)
   })$
   then(function(value) {
     str(value)
@@ -391,9 +391,9 @@ There may be times where you want to wait for a promise to resolve before contin
 
 ```R
 # A promise chain
-p <- b$DOM$getDocument(sync_ = FALSE) %...>%
-  { b$DOM$querySelector(.$root$nodeId, ".sidebar", sync_ = FALSE) } %...>%
-  { b$DOM$getBoxModel(.$nodeId, sync_ = FALSE) } %...>%
+p <- b$DOM$getDocument(wait_ = FALSE) %...>%
+  { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
+  { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) } %...>%
   str()
 
 b$wait_for(p)
@@ -404,9 +404,9 @@ This documentation will refer to this technique as _synchronizing_ asynchronous 
 The `$wait_for()` method will return the value from the promise, so instead of putting the `str()` in the chain, you could do this:
 
 ```R
-p <- b$DOM$getDocument(sync_ = FALSE) %...>%
-  { b$DOM$querySelector(.$root$nodeId, ".sidebar", sync_ = FALSE) } %...>%
-  { b$DOM$getBoxModel(.$nodeId, sync_ = FALSE) }
+p <- b$DOM$getDocument(wait_ = FALSE) %...>%
+  { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
+  { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) }
 
 x <- b$wait_for(p)
 str(x)
@@ -414,15 +414,15 @@ str(x)
 
 There are some methods in Chromote and ChromoteSession objects which are written using asynchronous method calls, but conditionally use `wait_for()` so that they can be called either synchronously or asynchronously. The `$screenshot()` method works this way, for example.
 
-If you want to write a function that can be called in sync or async mode, you can use this basic structure: First, construct a promise chain by calling the methods with `sync_=FALSE`. Then, at the end, if the user used `sync_=TRUE`, wait for the promise to resolve; otherwise, simply return the promise.
+If you want to write a function that can be called in sync or async mode, you can use this basic structure: First, construct a promise chain by calling the methods with `wait_=FALSE`. Then, at the end, if the user used `wait_=TRUE`, wait for the promise to resolve; otherwise, simply return the promise.
 
 ```R
-getBoxModel <- function(b, selector = "html", sync_ = TRUE) {
-  p <- b$DOM$getDocument(sync_ = FALSE) %...>%
-    { b$DOM$querySelector(.$root$nodeId, selector, sync_ = FALSE) } %...>%
-    { b$DOM$getBoxModel(.$nodeId, sync_ = FALSE) }
+getBoxModel <- function(b, selector = "html", wait_ = TRUE) {
+  p <- b$DOM$getDocument(wait_ = FALSE) %...>%
+    { b$DOM$querySelector(.$root$nodeId, selector, wait_ = FALSE) } %...>%
+    { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) }
 
-  if (sync_) {
+  if (wait_) {
     b$wait_for(p)
   } else {
     p
@@ -433,7 +433,7 @@ getBoxModel <- function(b, selector = "html", sync_ = TRUE) {
 str(getBoxModel(b, ".sidebar"))
 
 # Asynchronous call
-getBoxModel(b, ".sidebar", sync_ = FALSE) %...>%
+getBoxModel(b, ".sidebar", wait_ = FALSE) %...>%
   str()
 ```
 
@@ -476,14 +476,14 @@ b <- ChromoteSession$new()
 With the synchronous API, the call to `b$Page$loadEventFired()` will block until Chromote receives a `Page.loadEventFired` message from the browser. However, with the async promise API, you would write it like this:
 
 ```R
-b$Page$navigate("https://www.r-project.org/", sync_ = FALSE) %...>%
-  { b$Page$loadEventFired(sync_ = FALSE) } %...>%
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE) %...>%
+  { b$Page$loadEventFired(wait_ = FALSE) } %...>%
   { str(.) }
 
 # Or, more verbosely:
-b$Page$navigate("https://www.r-project.org/", sync_ = FALSE)$
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)$
   then(function(value) {
-    b$Page$loadEventFired(sync_ = FALSE)
+    b$Page$loadEventFired(wait_ = FALSE)
   })$
   then(function(value) {
     str(value)
@@ -496,9 +496,9 @@ If you want to schedule a chain of promises and then wait for them to resolve, y
 
 
 ```R
-p <- b$Page$navigate("https://www.r-project.org/", sync_ = FALSE)$
+p <- b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)$
   then(function(value) {
-    b$Page$loadEventFired(sync_ = FALSE)
+    b$Page$loadEventFired(wait_ = FALSE)
   })
 
 # wait_for returns the last value in the chain, so we can call str() on it
@@ -509,8 +509,8 @@ This particular example has a twist to it: After sending the `Page.navigate` com
 
 ```R
 p <- promise(function(resolve, reject) {
-  b$Page$navigate("https://www.r-project.org/", sync_ = FALSE)
-  b$Page$loadEventFired(sync_ = FALSE)
+  b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
+  b$Page$loadEventFired(wait_ = FALSE)
 })
 
 str(b$wait_for(p))
@@ -521,15 +521,15 @@ Essentially, the `Page.navigate` command gets sent off and we don't want to wait
 And we can simplify it another step:
 
 ```R
-b$Page$navigate("https://www.r-project.org/", sync_ = FALSE)
-p <- b$Page$loadEventFired(sync_ = FALSE)
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
+p <- b$Page$loadEventFired(wait_ = FALSE)
 str(b$wait_for(p))
 ```
 
 And yet another step:
 
 ```R
-b$Page$navigate("https://www.r-project.org/", sync_ = FALSE)
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
 x <- b$Page$loadEventFired()
 str(x)
 ```
@@ -609,7 +609,7 @@ When you use `$view()` on the remote browser, your local browser may block scrip
 
 ```R
 {
-  b$Page$navigate("https://www.whatismybrowser.com/", sync_ = FALSE)
+  b$Page$navigate("https://www.whatismybrowser.com/", wait_ = FALSE)
   b$Page$loadEventFired()
 }
 b$screenshot("browser.png")
