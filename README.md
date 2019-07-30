@@ -130,10 +130,10 @@ This is different from shutting down the browser process. If you call `b$close()
 To shut down the process, call:
 
 ```R
-b$get_parent()$stop()
+b$parent$stop()
 ```
 
-The call to `b$get_parent()` returns an object which represents the browser as a whole. This is explained in the next section.
+`b$parent` is an object which represents the browser as a whole. This is explained in [The Chromote object model](#the-chromote-object-model).
 
 
 ### Commands and Events
@@ -188,6 +188,19 @@ b <- ChromoteSession$new()
 and it will automatically create a `Chromote` object if one has not already been created. The Chromote package will then designate that `Chromote` object as the _default_ Chromote object for the package, so that any future calls to `ChromoteSession$new()` will automatically use the same `Chromote`. This is so that it doesn't start a new browser for every `ChromoteSession` object that is created.
 
 In the Chrome Devtools Protocol, most commands can be sent to individual sessions using the `ChromoteSession` object, but there are some commands which can only be sent to the overall browser, using the `Chromote` object.
+
+To access the parent `Chromote` object from a `ChromoteSession`, you can simply use `$parent`:
+
+```R
+b <- ChromoteSession$new()
+m <- b$parent
+```
+
+With a `Chromote` object, you can get a list containing all the `ChromoteSession`s with `$get_sessions()`:
+
+```R
+m$get_sessions()
+```
 
 If you want to start a new browser process, you can manually create a `Chromote` object, then spawn a session from it; or you can pass the new `Chromote` object to ` ChromoteSession$new()`:
 
@@ -609,6 +622,16 @@ This tells it to fire off the `Page.navigate` command and _not_ wait for it, and
 
 Calling `b$debug_messages(TRUE)` will enable the printing of all the JSON messages sent between R and Chrome. This can be very helpful for understanding how the Chrome Devtools Protocol works.
 
+```R
+b <- ChromoteSession$new()
+b$parent$debug_messages(TRUE)
+b$Page$navigate("https://www.r-project.org/")
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},
+#>  "id":6,"sessionId":"5E7BCE653B813DB05D1EFFB2FB2920EC"}
+#> RECV {"id":6,"result":{"frameId":"7056B4136FE7D88AC335C649944F4122",
+#>  "loaderId":"DB7F918C0ED9A2921C06EE24DB4CFE9E"},
+#>  "sessionId": "5E7BCE653B813DB05D1EFFB2FB2920EC"}
+```
 
 *****
 

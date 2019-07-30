@@ -22,7 +22,7 @@ ChromoteSession <- R6Class(
       # Another is by having the Chromote create a new session and the
       # ChromoteSession object. In this case, the Chromote will pass itself as
       # the parent and supply a session_id.
-      private$parent <- parent
+      self$parent <- parent
 
       if (is.null(session_id)) {
         # Create a session from the Chromote. Basically the same code as
@@ -32,7 +32,7 @@ ChromoteSession <- R6Class(
         session_info <- parent$Target$attachToTarget(tid, flatten = TRUE)
         private$session_id <- session_info$sessionId
 
-        private$parent$.__enclos_env__$private$sessions[[private$session_id]] <- self
+        self$parent$.__enclos_env__$private$sessions[[private$session_id]] <- self
 
       } else {
         private$session_id <- session_id
@@ -71,7 +71,7 @@ ChromoteSession <- R6Class(
         # the browser is sent without a sessionId. In order to wait for the
         # correct browser response, we need to invoke this from the parent's
         # browser-level methods.
-        private$parent$protocol$Target$closeTarget(tid, sync_ = FALSE)
+        self$parent$protocol$Target$closeTarget(tid, sync_ = FALSE)
       })
       p <- p$then(function(value) {
         if (isTRUE(value$success)) {
@@ -91,13 +91,13 @@ ChromoteSession <- R6Class(
       tid <- self$Target$getTargetInfo()$targetInfo$targetId
 
       # A data frame of targets, one row per target.
-      info <- fromJSON(private$parent$url("/json"))
+      info <- fromJSON(self$parent$url("/json"))
       path <- info$devtoolsFrontendUrl[info$id == tid]
       if (length(path) == 0) {
         stop("Target info not found.")
       }
 
-      browseURL(private$parent$url(path))
+      browseURL(self$parent$url(path))
     },
 
     is_active = function() {
@@ -105,18 +105,18 @@ ChromoteSession <- R6Class(
     },
 
     new_session = function(sync_ = TRUE, width = 992, height = 774) {
-      private$parent$new_session(sync_, width = width, height = height)
+      self$parent$new_session(sync_, width = width, height = height)
     },
 
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
       if (!private$is_active_) {
         stop("Session ", private$session_id, " is closed.")
       }
-      private$parent$send_command(msg, callback, error, timeout, sessionId = private$session_id)
+      self$parent$send_command(msg, callback, error, timeout, sessionId = private$session_id)
     },
 
     get_parent = function() {
-      private$parent
+      self$parent
     },
 
     get_session_id = function() {
@@ -124,19 +124,19 @@ ChromoteSession <- R6Class(
     },
 
     get_child_loop = function() {
-      private$parent$get_child_loop()
+      self$parent$get_child_loop()
     },
 
     wait_for = function(p) {
-      private$parent$wait_for(p)
+      self$parent$wait_for(p)
     },
 
     get_auto_events = function() {
-      private$parent$get_auto_events()
+      self$parent$get_auto_events()
     },
 
     debug_log = function(...) {
-      private$parent$debug_log(...)
+      self$parent$debug_log(...)
     },
 
     invoke_event_callbacks = function(event, params) {
@@ -147,11 +147,11 @@ ChromoteSession <- R6Class(
       private$is_active_ <- FALSE
     },
 
+    parent = NULL,
     protocol = NULL
   ),
 
   private = list(
-    parent = NULL,
     session_id = NULL,
     is_active_ = NULL,
     event_manager = NULL,
