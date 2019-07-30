@@ -10,8 +10,7 @@ ChromoteSession <- R6Class(
   cloneable = FALSE,
   public = list(
     initialize = function(
-      # TODO: Switch to default_chromote_master()
-      parent = Chromote$new(),
+      parent = default_chromote_object(),
       session_id = NULL,
       width = 992,
       height = 744

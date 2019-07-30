@@ -1,25 +1,3 @@
-globals$chrome <- NULL
-
-#' Return a Chrome object
-#'
-#' This will start a Chrome process if necessary. If one is already running,
-#' the object representing that process will be returned.
-#'
-#' The path to the Chrome binary can be specified by setting the
-#' environment variable \code{CHROMOTE_CHROME}.
-#'
-#' @export
-chrome <- function() {
-  if (is.null(globals$chrome) ||
-      (globals$chrome$is_local() && !globals$chrome$get_process()$is_alive()))
-  {
-    globals$chrome <- Chrome$new()
-  }
-
-  globals$chrome
-}
-
-
 #' Class representing a local Chrome process
 #'
 #' @export

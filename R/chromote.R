@@ -11,7 +11,7 @@ Chromote <- R6Class(
   public = list(
 
     initialize = function(
-      browser = default_browser(),
+      browser = Chrome$new(),
       multi_session = TRUE,
       auto_events = TRUE
     ) {
@@ -350,3 +350,44 @@ Chromote <- R6Class(
     }
   )
 )
+
+
+globals$default_chromote <- NULL
+
+#' Default Chromote object
+#'
+#' Returns the Chromote package's default \code{\link{Chromote}} object. If
+#' there is not currently a default \code{Chromote} object that is active, then
+#' one will be created and set as the default.
+#'
+#' \code{\link{ChromoteSession}$new()} calls this function by default, if the
+#' \code{parent} is not specified. That means that when
+#' \code{\link{ChromoteSession}$new()} is called and there is not currently an
+#' active default \code{Chromote} object, then a new \code{Chromote} object will
+#' be created and set as the default.
+#' @export
+default_chromote_object <- function() {
+  if (!has_default_chromote_object()) {
+    set_default_chromote_object(Chromote$new())
+  }
+
+  globals$default_chromote
+}
+
+#' Returns TRUE if there's a default Chromote object and it is active, FALSE
+#' otherwise.
+#' @rdname default_chromote_object
+#' @export
+has_default_chromote_object <- function() {
+  !is.null(globals$default_chromote) && globals$default_chromote$is_active()
+}
+
+#' @param x A \code{\link{Chromote}} object.
+#' @rdname default_chromote_object
+#' @export
+set_default_chromote_object <- function(x) {
+  if (!inherits(x, "Chromote")) {
+    stop("x must be a Chromote object.")
+  }
+  globals$default_chromote <- x
+}
