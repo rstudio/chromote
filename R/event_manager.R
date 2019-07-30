@@ -39,7 +39,6 @@ EventManager <- R6Class("EventManager",
       }
 
       p <- p$finally(function() {
-        message("finally")
         deregister_callback_fn()
       })
       p
