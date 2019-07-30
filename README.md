@@ -3,6 +3,8 @@ Chromote: Headless Chromium Remote Interface
 
 **Please note that Chromote is in development and the API is subject to change**
 
+Chromote is an R implementation of the Chrome Devtools Protocol](https://chromedevtools.github.io/devtools-protocol/). It works with Chrome, Chromium, Opera, Vivaldi, and other browsers based on [Chromium](https://www.chromium.org/). By default it uses Google Chrome, which must already be installed on the system.
+
 ## Installation
 
 ```R
@@ -52,7 +54,7 @@ b$Page$navigate("https://www.r-project.org/")
 
 In the official Chrome DevTools Protocol (CDP) documentation, this is the [`Page.navigate`](https://chromedevtools.github.io/devtools-protocol/1-3/Page#method-navigate) command.
 
-In addition to full support of the Chrome Devtools Protocol, ChromoteSession objects also some convenience methods, like `$screenshot()`. (See the Examples section below for more information about screenshots.)
+In addition to full support of the CDP, ChromoteSession objects also some convenience methods, like `$screenshot()`. (See the Examples section below for more information about screenshots.)
 
 ```R
 # Saves to screenshot.png
@@ -61,6 +63,8 @@ b$screenshot()
 # Takes a screenshot of elements picked out by CSS selector
 b$screenshot(selector = ".sidebar"))
 ```
+
+**Note:** All members of `Chromote` and `ChromoteSession` objects which start with a captial letter (like `b$Page`, `b$DOM`, and `b$Browser`) correspond to domains from the Chrome Devtools Protocol. All members which start with a lower-case letter (like `b$screenshot` and `b$close`) are specific to `Chromote` and `ChromoteSession`.
 
 Here is an example of how to use Chromote to find the position of a DOM element.
 
@@ -568,6 +572,49 @@ When Chromote starts a Chrome process, it calls `Chrome$new()`. This launches th
 Additionally, the Chromote package will, by default, use a single Chrome process and a single `Chromote` object, and each time `ChromoteSession$new()` is called, it will spawn them from the `Chromote` object. See [The Chromote object model](#the-chromote-object-model) for more information.
 
 
+## Specifying which browser to use
+
+Chromote will look in specific places for the Chrome web browser, depending on platform. This is done by the `chromote:::find_chrome()` function.
+
+If you wish to use a different browser from the default, you can set the `CHROMOTE_CHROME` environment variable, either with `Sys.setenv(CHROMOTE_CHROME="/path/to/browser")`.
+
+```R
+Sys.setenv(CHROMOTE_CHROME = "/Applications/Chromium.app/Contents/MacOS/Chromium")
+
+b <- ChromoteSession$new()
+b$view()
+b$Page$navigate("https://www.whatismybrowser.com/")
+```
+
+Another way is create a `Chromote` object and explicitly specify the browser, then spawn `ChromoteSession`s from it.
+
+```R
+m <- Chromote$new(
+  browser = Chrome$new(path = "/Applications/Chromium.app/Contents/MacOS/Chromium")
+)
+
+# Spawn a ChromoteSession from the Chromote object
+b <- m$new_session()
+b$view()
+b$Page$navigate("https://www.whatismybrowser.com/")
+```
+
+Yet another way is to create a `Chromote` object with a specified browser, then set it as the default Chromote object.
+
+```R
+m <- Chromote$new(
+  browser = Chrome$new(path = "/Applications/Chromium.app/Contents/MacOS/Chromium")
+)
+
+# Set this Chromote object as the default. Then any
+# ChromoteSession$new() will be spawned from it.
+set_default_chromote_object(m)
+b <- ChromoteSession$new()
+b$view()
+b$Page$navigate("https://www.whatismybrowser.com/")
+```
+
+
 ## Chrome on remote hosts
 
 Chromote can control a browser running on a remote host. To start the browser, open a terminal on the remote host and run one of the following, depending on your platform:
@@ -701,6 +748,89 @@ b$Network$setUserAgentOverride(userAgent = "My fake browser")
 
 b$Page$navigate("http://scooterlabs.com/echo")
 b$screenshot(show = TRUE)
+```
+
+
+### Websites that require authentication
+
+For websites that require authentication, you can use Chromote to get screenshots by doing the following:
+
+1. Log in interactively and navigate to the page.
+1. Capture cookies from the page and save them.
+1. In a later R session, load the cookies.
+1. Use the cookies in Chromote and navigate to the page.
+1. Take a screenshot.
+
+There are two ways to capture the cookies.
+
+
+**Method 1:** The first method uses the headless browser's viewer. This can be a bit inconvenient because it requires going through the entire login process, even if you have already logged in with a normal browser.
+
+First navigate to the page:
+
+```R
+library(chromote)
+b <- ChromoteSession$new()
+b$view()
+b$Page$navigate("https://beta.rstudioconnect.com/content/123456/")
+```
+
+Next, log in interactively via the viewer. Once that's done, use Chromote to capture the cookies.
+
+```R
+cookies <- b$Network$getCookies()
+str(cookies)
+saveRDS(cookies, "cookies.rds")
+```
+
+After saving the cookies, you can restart R and navigate to the page, using the cookies.
+
+```R
+library(chromote)
+b <- ChromoteSession$new()
+b$view()
+cookies <- readRDS("cookies.rds")
+b$Network$setCookies(cookies = cookies$cookies)
+# Navigate to the app that requires a login
+b$Page$navigate("https://beta.rstudioconnect.com/content/123456/")
+b$screenshot()
+```
+
+
+**Method 2:** The second method captures the cookies using a normal browser. This is can be more convenient because, if you are already logged in, you don't need to do it again. This requires a Chromium-based browser, and it requires running DevTools-in-DevTools on that browser.
+
+First, navigate to the page in your browser. Then press Cmd-Option-I (Mac) or Ctrl-Shift-I (Windows/Linux). The developer tools panel will open. Make sure to undock the developer tools so that they are in their own window. Then press Cmd-Option-I or Ctrl-Shift-I again. A second developer tools window will open. (See [this SO answer](https://stackoverflow.com/questions/12291138/how-do-you-inspect-the-web-inspector-in-chrome/12291163#12291163) for detailed instructions.)
+
+In the second developer tools window, run the following:
+
+```JS
+var cookies = await Main.sendOverProtocol('Network.getCookies', {})
+JSON.stringify(cookies)
+```
+
+This will return a JSON string representing the cookies for that page. For example:
+
+```JSON
+[{"cookies":[{"name":"AWSALB","value":"T3dNdcdnMasdf/cNn0j+JHMVkZ3RI8mitnAggd9AlPsaWJdsfoaje/OowIh0qe3dDPiHc0mSafe5jNH+1Aeinfalsd30AejBZDYwE","domain":"beta.rstudioconnect.com","path":"/","expires":1594632233.96943,"size":130,"httpOnly":false,"secure":false,"session":false}]}]
+```
+
+Copy that string to the clipboard. In your R session, you can paste it to this code, surrounded by single-quotes:
+
+```R
+cookie_json <- '[{"cookies":[{"name":"AWSALB","value":"T3dNdcdnMasdf/cNn0j+JHMVkZ3RI8mitnAggd9AlPsaWJdsfoaje/OowIh0qe3dDPiHc0mSafe5jNH+1Aeinfalsd30AejBZDYwE","domain":"beta.rstudioconnect.com","path":"/","expires":1594632233.96943,"size":130,"httpOnly":false,"secure":false,"session":false}]}]'
+
+cookies <- jsonlite::fromJSON(cookie_json, simplifyVector = FALSE)[[1]]
+```
+
+Then you can use Chromote to navigate to the page and take a screenshot.
+
+```R
+library(chromote)
+b <- ChromoteSession$new()
+b$view()
+b$Network$setCookies(cookies = cookies$cookies)
+b$Page$navigate("https://beta.rstudioconnect.com/content/123456/")
+b$screenshot()
 ```
 
 
