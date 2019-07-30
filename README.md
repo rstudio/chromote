@@ -168,7 +168,7 @@ $timestamp
 >
 > By default, Chromote hides this implementation detail. When you call `b$Page$loadEventFired()`, Chromote sends a `Page.enable` command automatically, and then waits until it receives the `Page.loadEventFired` event notification. Then it sends a `Page.disable` command.
 >
-> Note that for asynchronous mode, the behavior is slightly different: it maintains a counter of how many outstanding events it is waiting for in a given domain. When that count goes from 0 to 1, it sends the `X.enable` command; when the count goes from 1 to 0, it sends the `X.disable` command. For more information, see the [[Async events]] section.
+> Note that for asynchronous mode, the behavior is slightly different: it maintains a counter of how many outstanding events it is waiting for in a given domain. When that count goes from 0 to 1, it sends the `X.enable` command; when the count goes from 1 to 0, it sends the `X.disable` command. For more information, see the [Async events](#async-events) section.
 >
 > If you do not want automatic event enabling and disabling, then when creating the ChromoteSession object, use `ChromoteSession$new(auto_events = FALSE)`.
 
@@ -207,9 +207,6 @@ There are also the following classes which represent the browser at a lower leve
 * `Browser`: This represents an instance of a browser that supports the Chrome Devtools Protocol. It contains information about how to communicate with the Chrome browser. A `Chromote` object contains one of these.
 * `Chrome`: This is a subclass of `Browser` that represents a local browser. It extends the `Browser` class with a `processx::process` object, which represents the browser's system process.
 * `ChromeRemote`: This is a subclass of `Browser` that represents a browser running on a remote system.
-
-
-TODO: Write about Supervisor
 
 
 ### Synchronous vs. asynchronous usage
@@ -465,8 +462,6 @@ b <- ChromoteSession$new()
 
 With the synchronous API, the call to `b$Page$loadEventFired()` will block until Chromote receives a `Page.loadEventFired` message from the browser. However, with the async promise API, you would write it like this:
 
-TODO: use better example, since these methods don't actually have to be chained.
-
 ```R
 b$Page$navigate("https://www.r-project.org/", sync_ = FALSE) %...>%
   { b$Page$loadEventFired(sync_ = FALSE) } %...>%
@@ -557,7 +552,7 @@ b$Page$navigate("https://www.rstudio.com/")
 
 When Chromote starts a Chrome process, it calls `Chrome$new()`. This launches the Chrome process it using `processx::process()`, and enables a supervisor for the process. This means that if the R process stops, the supervisor will detect this and shut down any Chrome processes that were registered with the supervisor. This prevents the proliferation of Chrome processes that are no longer needed.
 
-Additionally, the Chromote package will, by default, use a single Chrome process and a single `Chromote` object, and each time `ChromoteSession$new()` is called, it will spawn them from the `Chromote` object. See [[The Chromote object model]] for more information.
+Additionally, the Chromote package will, by default, use a single Chrome process and a single `Chromote` object, and each time `ChromoteSession$new()` is called, it will spawn them from the `Chromote` object. See [The Chromote object model](#the-chromote-object-model) for more information.
 
 
 ## Chrome on remote hosts
