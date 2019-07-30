@@ -191,6 +191,14 @@ Chromote <- R6Class(
       paste0("http://", private$browser$get_host(), ":", private$browser$get_port(), path)
     },
 
+    is_active = function() {
+      private$is_active_
+    },
+
+    get_browser = function() {
+      private$browser
+    },
+
     default_timeout = 10,
     protocol = NULL
   ),
@@ -310,7 +318,6 @@ Chromote <- R6Class(
     # =========================================================================
     child_loop = NULL,
     parent_loop = NULL,
-    sync_mode_ = TRUE,
     child_loop_is_scheduled = FALSE,
 
     schedule_child_loop = function() {

@@ -70,6 +70,8 @@ ChromoteSession$set("public", "screenshot",
         )
 
         promise(function(resolve, reject) {
+          # TODO: Wait 0.5 second for resize to complete. Can we wait for an
+          # event instead?
           later(function() resolve(TRUE), 0.5)
         })
       })
