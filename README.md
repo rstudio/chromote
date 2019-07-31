@@ -61,7 +61,7 @@ If you have the viewer open and run the following, you'll see the web page load 
 b$Page$navigate("https://www.r-project.org/")
 ```
 
-In the official Chrome DevTools Protocol (CDP) documentation, this is the [`Page.navigate`](https://chromedevtools.github.io/devtools-protocol/1-3/Page#method-navigate) command.
+In the official Chrome DevTools Protocol (CDP) documentation, this is the [`Page.navigate`](https://chromedevtools.github.io/devtools-protocol/tot/Page#method-navigate) command.
 
 In addition to full support of the CDP, ChromoteSession objects also some convenience methods, like `$screenshot()`. (See the Examples section below for more information about screenshots.)
 
@@ -75,7 +75,7 @@ b$screenshot("sidebar.png", selector = ".sidebar"))
 
 **Note:** All members of `Chromote` and `ChromoteSession` objects which start with a capital letter (like `b$Page`, `b$DOM`, and `b$Browser`) correspond to domains from the Chrome Devtools Protocol, and are documented in the [official CDP site](https://chromedevtools.github.io/devtools-protocol/). All members which start with a lower-case letter (like `b$screenshot` and `b$close`) are not part of the Chrome Devtools Protocol, and are specific to `Chromote` and `ChromoteSession`.
 
-Here is an example of how to use Chromote to find the position of a DOM element.
+Here is an example of how to use Chromote to find the position of a DOM element using [DOM.getBoxModel](https://chromedevtools.github.io/devtools-protocol/tot/DOM/#method-getBoxModel).
 
 ```R
 x <- b$DOM$getDocument()
