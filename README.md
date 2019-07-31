@@ -73,7 +73,7 @@ b$screenshot()
 b$screenshot("sidebar.png", selector = ".sidebar"))
 ```
 
-**Note:** All members of `Chromote` and `ChromoteSession` objects which start with a captial letter (like `b$Page`, `b$DOM`, and `b$Browser`) correspond to domains from the Chrome Devtools Protocol. All members which start with a lower-case letter (like `b$screenshot` and `b$close`) are specific to `Chromote` and `ChromoteSession`.
+**Note:** All members of `Chromote` and `ChromoteSession` objects which start with a capital letter (like `b$Page`, `b$DOM`, and `b$Browser`) correspond to domains from the Chrome Devtools Protocol, and are documented in the [official CDP site](https://chromedevtools.github.io/devtools-protocol/). All members which start with a lower-case letter (like `b$screenshot` and `b$close`) are not part of the Chrome Devtools Protocol, and are specific to `Chromote` and `ChromoteSession`.
 
 Here is an example of how to use Chromote to find the position of a DOM element.
 
