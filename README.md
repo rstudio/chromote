@@ -693,7 +693,7 @@ This tells it to fire off the `Page.navigate` command and _not_ wait for it, and
 
 ## Examples
 
-#### Screenshot
+### Taking a screenshot of a web page
 
 Take a screenshot of the viewport and display it using the [showimage](https://github.com/r-lib/showimage#readme) package. This uses Chromote's `$screenshot()` method, which wraps up many calls to the Chrome Devtools Protocol.
 
@@ -725,6 +725,26 @@ b$screenshot("s3.png", selector = ".page", region = "margin", scale = 2)
 ```
 
 If a vector is passed to `selector`, it will take a screenshot with a rectangle that encompasses all the DOM elements picked out by the selectors. Similarly, if a selector picks out multiple DOM elements, all of them will be in the screenshot region.
+
+
+### Taking a screenshot of a web page after interacting with it
+
+Headless Chrome provides a remote debugging UI which you can use to interact with the web page. The ChromoteSession's `$view()` method opens a regular browser and navigates to the remote debugging UI.
+
+```R
+b <- ChromoteSession$new()
+
+b$view()
+b$Page$navigate("https://www.google.com") # Or just type the URL in the navigation bar
+```
+
+At this point, you can interact with the web page by typing in text and clicking on things.
+
+Then take a screenshot:
+
+```R
+b$screenshot()
+```
 
 
 ### Setting custom headers
