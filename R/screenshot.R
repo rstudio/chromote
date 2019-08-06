@@ -9,6 +9,15 @@ ChromoteSession$set("public", "screenshot",
     show = FALSE,
     wait_ = TRUE
   ) {
+    force(filename)
+    force(selector)
+    force(cliprect)
+    force(region)
+    force(expand)
+    force(scale)
+    force(show)
+    force(wait_)
+
     region = match.arg(region)
     if (length(filename) == 0 && !show) {
       stop("Cannot have empty filename and show=FALSE")
@@ -190,6 +199,16 @@ ChromoteSession$set("public", "screenshot_pdf",
     scale = 1,
     wait_ = TRUE
   ) {
+    force(filename)
+    force(pagesize)
+    force(margins)
+    force(units)
+    force(landscape)
+    force(display_header_footer)
+    force(print_background)
+    force(scale)
+    force(wait_)
+
     page_sizes <- list(
       letter  = c(8.5,   11),
       legal   = c(8.5,   14),
