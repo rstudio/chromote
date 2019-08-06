@@ -14,7 +14,8 @@ ChromoteSession <- R6Class(
       parent = default_chromote_object(),
       session_id = NULL,
       width = 992,
-      height = 744
+      height = 744,
+      wait_ = TRUE
     ) {
       # There are two ways of initializing a ChromoteSession object: one is by
       # sipmly calling ChromoteSession$new() (without a session_id), in which
@@ -28,15 +29,23 @@ ChromoteSession <- R6Class(
       if (is.null(session_id)) {
         # Create a session from the Chromote. Basically the same code as
         # new_session(), but this is synchronous.
-        target <- parent$Target$createTarget("about:blank")
-        tid <- target$targetId
-        session_info <- parent$Target$attachToTarget(tid, flatten = TRUE)
-        private$session_id <- session_info$sessionId
+        p <- parent$Target$createTarget("about:blank", wait_ = FALSE)$
+          then(function(value) {
+            tid <- value$targetId
+            parent$Target$attachToTarget(tid, flatten = TRUE, wait_ = FALSE)
+          })$
+          then(function(value) {
+            private$session_id <- value$sessionId
 
-        self$parent$.__enclos_env__$private$sessions[[private$session_id]] <- self
+            # Add self to the parent's list of sessions
+            self$parent$.__enclos_env__$private$sessions[[private$session_id]] <- self
+          })
 
       } else {
         private$session_id <- session_id
+
+        # We need p to be a promise that we can chain off of.
+        p <- promise_resolve(TRUE)
       }
 
       # Whenever a command method (like x$Page$navigate()) is executed, it calls
@@ -51,17 +60,45 @@ ChromoteSession <- R6Class(
       private$event_manager <- EventManager$new(self)
       private$is_active_ <- TRUE
 
+      # Find pixelRatio for screenshots
+      p <- p$
+        then(function(value) {
+          self$Runtime$evaluate("window.devicePixelRatio", wait_ = FALSE)
+        })$
+        then(function(value) {
+          private$pixel_ratio <- value$result$value
+        })
 
       # Set starting size
       if (!is.null(width) || !is.null(height)) {
-        info <- self$Browser$getWindowForTarget()
-        info$bounds$width <- width
-        info$bounds$height <- height
-        self$Browser$setWindowBounds(windowId = info$windowId, bounds = info$bounds)
+        p <- p$
+          then(function(value) {
+            self$Browser$getWindowForTarget(wait_ = FALSE)
+          })$
+          then(function(value) {
+            value$bounds$width <- width
+            value$bounds$height <- height
+            self$Browser$setWindowBounds(
+              windowId = value$windowId, bounds = value$bounds, wait_ = FALSE
+            )
+          })
       }
 
-      # Find pixelRatio for screenshots
-      private$pixel_ratio <- self$Runtime$evaluate("window.devicePixelRatio")$result$value
+      if (wait_) {
+        self$wait_for(p)
+      } else {
+        # If wait_=FALSE, then we can't use the usual strategy of just
+        # returning p, because the call to ChromoteSession$new() always
+        # returns the new object. Instead, we'll store it as
+        # private$init_promise_, and the user can retrieve it with
+        # b$init_promise().
+        private$init_promise_ <- p$then(function(value) self)
+      }
+
+    },
+
+    init_promise = function() {
+      private$init_promise_
     },
 
     close = function(wait_ = TRUE) {
@@ -157,6 +194,7 @@ ChromoteSession <- R6Class(
     is_active_ = NULL,
     event_manager = NULL,
     pixel_ratio = NULL,
+    init_promise_ = NULL,
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
       if (!private$is_active_) {
