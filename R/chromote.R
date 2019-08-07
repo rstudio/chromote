@@ -77,12 +77,16 @@ Chromote <- R6Class(
       browseURL(self$url())
     },
 
-    get_child_loop = function() {
-      private$child_loop
-    },
-
     get_auto_events = function() {
       private$auto_events
+    },
+
+    # =========================================================================
+    # Event loop, promises, and synchronization
+    # =========================================================================
+
+    get_child_loop = function() {
+      private$child_loop
     },
 
     # This runs the child loop until the promise is resolved.
@@ -121,6 +125,11 @@ Chromote <- R6Class(
     register_session = function(session) {
       private$sessions[[session$get_session_id()]] <- session
     },
+
+    # =========================================================================
+    # Commands and events
+    # =========================================================================
+
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
       if (!private$is_active_) {
         stop("Chromote object is closed.")
@@ -167,6 +176,10 @@ Chromote <- R6Class(
     invoke_event_callbacks = function(event, params) {
       private$event_manager$invoke_event_callbacks(event, params)
     },
+
+    # =========================================================================
+    # Debugging
+    # =========================================================================
 
     # Enable or disable message debugging. If enabled, R will print out the
     # JSON messages that are sent and received. If called with no value, this
