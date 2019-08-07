@@ -164,6 +164,7 @@ later_with_interrupt <- function(
   force(loop)
   force(interrupt_domain)
   force(on_interrupt)
+  force(poll_interval)
 
   if (is.null(interrupt_domain)) {
     return(later(func, delay, loop))

@@ -45,14 +45,24 @@ Chromote <- R6Class(
 
         private$ws$onMessage(private$on_message)
 
-        p <- promise(function(resolve, reject) {
-          private$ws$onOpen(resolve)
+        # Allow up to 10 seconds to connect to browser.
 
-          # Allow up to 10 seconds to connect to browser.
-          later(function() {
-            reject(paste0("Chromote: timed out waiting for WebSocket connection to browser."))
-          }, 10)
-        })
+        # TODO: The extra promise_resolve()$then() wrapper is currently
+        # necessary because promise_timeout needs to be run _within_ a
+        # synchronize() call (which $wait_for(), down below, does). If we call
+        # promise_timeout() directly here, then it will error out because
+        # there isn't a current interrupt domain. Hopefully we can remove this
+        # delay and extra wrapper stuff.
+        p <- promise_resolve(TRUE)$
+          then(function(value) {
+            promise_timeout(
+              promise(function(resolve, reject) {
+                private$ws$onOpen(resolve)
+              }),
+              10,
+              timeout_message = "Chromote: timed out waiting for WebSocket connection to browser."
+            )
+          })
 
         private$ws$connect()
 
