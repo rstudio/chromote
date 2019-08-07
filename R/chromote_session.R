@@ -20,7 +20,12 @@ ChromoteSession <- R6Class(
 
       # Create a session from the Chromote. Basically the same code as
       # new_session(), but this is synchronous.
-      p <- parent$Target$createTarget("about:blank", wait_ = FALSE)$
+      p <- parent$Target$createTarget(
+          "about:blank",
+          width = width,
+          height = height,
+          wait_ = FALSE
+        )$
         then(function(value) {
           tid <- value$targetId
           parent$Target$attachToTarget(tid, flatten = TRUE, wait_ = FALSE)
@@ -51,21 +56,6 @@ ChromoteSession <- R6Class(
         then(function(value) {
           private$pixel_ratio <- value$result$value
         })
-
-      # Set starting size
-      if (!is.null(width) || !is.null(height)) {
-        p <- p$
-          then(function(value) {
-            self$Browser$getWindowForTarget(wait_ = FALSE)
-          })$
-          then(function(value) {
-            value$bounds$width <- width
-            value$bounds$height <- height
-            self$Browser$setWindowBounds(
-              windowId = value$windowId, bounds = value$bounds, wait_ = FALSE
-            )
-          })
-      }
 
       if (wait_) {
         self$wait_for(p)
