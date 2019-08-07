@@ -94,27 +94,18 @@ Chromote <- R6Class(
       synchronize(p, loop = private$child_loop)
     },
 
+    # =========================================================================
+    # Session management
+    # =========================================================================
+
     new_session = function(width = 992, height = 774, wait_ = TRUE) {
-      session_id <<- NULL
+      session <- ChromoteSession$new(self, width, height, wait_ = FALSE)
 
-      p <- self$protocol$Target$createTarget("about:blank", wait_ = FALSE)$
-        then(function(target) {
-          tid <- target$targetId
-          self$protocol$Target$attachToTarget(tid, flatten = TRUE, wait_ = FALSE)
-        })$
-        then(function(session_info) {
-          session_id <<- session_info$sessionId
-          session <- ChromoteSession$new(self, session_id, width, height, wait_ = FALSE)
-
-          # ChromoteSession$new() always returns the object, but the
-          # initialization is async. To properly wait for initialization, we
-          # need to call b$init_promise() to get the promise; it resolves
-          # after initialization is complete.
-          session$init_promise()
-        })$
-        then(function(session) {
-          private$sessions[[session_id]] <- session
-        })
+      # ChromoteSession$new() always returns the object, but the
+      # initialization is async. To properly wait for initialization, we
+      # need to call b$init_promise() to get the promise; it resolves
+      # after initialization is complete.
+      p <- session$init_promise()
 
       if (wait_) {
         self$wait_for(p)
@@ -127,6 +118,9 @@ Chromote <- R6Class(
       private$sessions
     },
 
+    register_session = function(session) {
+      private$sessions[[session$get_session_id()]] <- session
+    },
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
       if (!private$is_active_) {
         stop("Chromote object is closed.")

@@ -12,41 +12,24 @@ ChromoteSession <- R6Class(
   public = list(
     initialize = function(
       parent = default_chromote_object(),
-      session_id = NULL,
       width = 992,
       height = 744,
       wait_ = TRUE
     ) {
-      # There are two ways of initializing a ChromoteSession object: one is by
-      # sipmly calling ChromoteSession$new() (without a session_id), in which
-      # case a Chromote object is created, and it is queried for the first
-      # already-existing session. In this case, session_id will be NULL.
-      # Another is by having the Chromote create a new session and the
-      # ChromoteSession object. In this case, the Chromote will pass itself as
-      # the parent and supply a session_id.
       self$parent <- parent
 
-      if (is.null(session_id)) {
-        # Create a session from the Chromote. Basically the same code as
-        # new_session(), but this is synchronous.
-        p <- parent$Target$createTarget("about:blank", wait_ = FALSE)$
-          then(function(value) {
-            tid <- value$targetId
-            parent$Target$attachToTarget(tid, flatten = TRUE, wait_ = FALSE)
-          })$
-          then(function(value) {
-            private$session_id <- value$sessionId
+      # Create a session from the Chromote. Basically the same code as
+      # new_session(), but this is synchronous.
+      p <- parent$Target$createTarget("about:blank", wait_ = FALSE)$
+        then(function(value) {
+          tid <- value$targetId
+          parent$Target$attachToTarget(tid, flatten = TRUE, wait_ = FALSE)
+        })$
+        then(function(value) {
+          private$session_id <- value$sessionId
 
-            # Add self to the parent's list of sessions
-            self$parent$.__enclos_env__$private$sessions[[private$session_id]] <- self
-          })
-
-      } else {
-        private$session_id <- session_id
-
-        # We need p to be a promise that we can chain off of.
-        p <- promise_resolve(TRUE)
-      }
+          self$parent$register_session(self)
+        })
 
       # Whenever a command method (like x$Page$navigate()) is executed, it calls
       # x$send_command(). This object's send_command() method calls the parent's
