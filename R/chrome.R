@@ -51,16 +51,16 @@ launch_chrome <- function(path = find_chrome(), args = character(0)) {
     stderr = tempfile("chrome-stderr-", fileext = ".log")
   )
 
-  if (!p$is_alive()) {
-    stop(
-      "Failed to start chrome. Error: ",
-      strwrap(p$read_error_lines())
-    )
-  }
 
   connected <- FALSE
   end <- Sys.time() + 10
   while (!connected && Sys.time() < end) {
+    if (!p$is_alive()) {
+      stop(
+        "Failed to start chrome. Error: ",
+        paste(readLines(p$get_error_file()), collapse = "\n")
+      )
+    }
     tryCatch(
       {
         # Find port number from output
