@@ -371,9 +371,7 @@ Chromote <- R6Class(
 
       # This tells the parent loop to schedule one run of the child
       # (private) loop.
-      with_loop(private$parent_loop,
-        later(private$run_child_loop, 0.01)
-      )
+      later(private$run_child_loop, 0.01, loop = private$parent_loop)
 
       private$child_loop_is_scheduled <- TRUE
     },
@@ -382,9 +380,7 @@ Chromote <- R6Class(
       private$child_loop_is_scheduled <- FALSE
 
       tryCatch(
-        with_loop(private$child_loop,
-          run_now()
-        ),
+        run_now(loop = private$child_loop),
         finally = {
           private$schedule_child_loop()
         }
