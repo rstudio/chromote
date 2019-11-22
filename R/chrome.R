@@ -34,8 +34,14 @@ find_chrome <- function() {
     path
 
   } else if (is_linux()) {
-    Sys.which("google-chrome")
-
+    path <- Sys.which("google-chrome")
+    if (nchar(path) == 0) {
+      path <- Sys.which("chromium-browser")
+    }
+    if (nchar(path) == 0) {
+      stop("`google-chrome` and `chromium-browser` were not found. Try setting the CHROMOTE_CHROME environment variable or adding one of these executables to your PATH.")
+    }
+    path
   } else {
     stop("Platform currently not supported")
   }
