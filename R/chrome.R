@@ -34,8 +34,11 @@ find_chrome <- function() {
     path
 
   } else if (is_linux()) {
-    Sys.which("google-chrome")
-
+    path <- Sys.which("google-chrome")
+    if (nchar(path) == 0) {
+      path <- Sys.which("chromium-browser")
+    }
+    path
   } else {
     stop("Platform currently not supported")
   }
