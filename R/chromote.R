@@ -76,7 +76,6 @@ Chromote <- R6Class(
         private$event_manager <- EventManager$new(self)
         private$is_active_ <- TRUE
 
-        private$schedule_child_loop()
         self$wait_for(p)
 
         private$register_default_event_listeners()
@@ -352,40 +351,7 @@ Chromote <- R6Class(
     # Event loop for the websocket and the parent event loop
     # =========================================================================
     child_loop = NULL,
-    parent_loop = NULL,
-    child_loop_is_scheduled = FALSE,
-
-    schedule_child_loop = function() {
-      # Make sure that if this function is called multiple times, there aren't
-      # multiple streams of overlapping callbacks.
-      if (private$child_loop_is_scheduled)
-        return()
-
-      # If the websocket has closed, there's no reason to run the child loop
-      # anymore.
-      if (private$ws$readyState() == 3) {
-        self$debug_log("Websocket state is closed.")
-        private$is_active_ <- FALSE
-        return()
-      }
-
-      # This tells the parent loop to schedule one run of the child
-      # (private) loop.
-      later(private$run_child_loop, 0.01, loop = private$parent_loop)
-
-      private$child_loop_is_scheduled <- TRUE
-    },
-
-    run_child_loop = function() {
-      private$child_loop_is_scheduled <- FALSE
-
-      tryCatch(
-        run_now(loop = private$child_loop),
-        finally = {
-          private$schedule_child_loop()
-        }
-      )
-    }
+    parent_loop = NULL
   )
 )
 
