@@ -1,3 +1,12 @@
+create_blank_target <- function(parent, width, height) {
+  parent$Target$createTarget(
+    "about:blank",
+    width = width,
+    height = height,
+    wait_ = FALSE
+  )
+}
+
 # This represents one _session_ in a Chromote object. Note that in the Chrome
 # Devtools Protocol a session is a debugging interface connected to a
 # _target_; a target is a browser window/tab, or an iframe. A single target
@@ -14,25 +23,16 @@ ChromoteSession <- R6Class(
       parent = default_chromote_object(),
       width = 992,
       height = 744,
+      tid = create_blank_target(parent, width, height)$targetId,
       wait_ = TRUE
     ) {
       self$parent <- parent
 
       # Create a session from the Chromote. Basically the same code as
       # new_session(), but this is synchronous.
-      p <- parent$Target$createTarget(
-          "about:blank",
-          width = width,
-          height = height,
-          wait_ = FALSE
-        )$
-        then(function(value) {
-          tid <- value$targetId
-          parent$Target$attachToTarget(tid, flatten = TRUE, wait_ = FALSE)
-        })$
+      p <- parent$Target$attachToTarget(tid, flatten = TRUE, wait_ = FALSE)$
         then(function(value) {
           private$session_id <- value$sessionId
-
           self$parent$register_session(self)
         })
 
