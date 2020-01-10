@@ -23,7 +23,7 @@ ChromoteSession <- R6Class(
     #'   `width` and `height` arguments are ignored. If NULL (the default) a new
     #'   target is created and attached to, and the `width` and `height`
     #'   arguments determine its viewport size.
-    #' @param wait_ If `FALSE`, return a [promises::promise] of a new
+    #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
     #' @return A new `ChromoteSession` object.
@@ -38,16 +38,17 @@ ChromoteSession <- R6Class(
 
       # Create a session from the Chromote. Basically the same code as
       # new_session(), but this is synchronous.
-      p <- (if (is.null(tid)) {
-        parent$Target$createTarget(
+      if (is.null(tid)) {
+        target <- parent$Target$createTarget(
           "about:blank",
           width = width,
           height = height,
           wait_ = FALSE
          )
-        } else {
-          promise_resolve(list(targetId = tid))
-        })$
+      } else {
+        target <- promise_resolve(list(targetId = tid))
+      }
+      p <- target$
         then(function(value) {
           tid <- value$targetId
           parent$Target$attachToTarget(tid, flatten = TRUE, wait_ = FALSE)
