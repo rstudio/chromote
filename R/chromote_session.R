@@ -137,8 +137,8 @@ ChromoteSession <- R6Class(
       private$is_active_
     },
 
-    new_session = function(wait_ = TRUE, width = 992, height = 774) {
-      self$parent$new_session(wait_, width = width, height = height)
+    new_session = function(width = 992, height = 774, targetId = NULL, wait_ = TRUE) {
+      self$parent$new_session(width = width, height = height, targetId = targetId, wait_ = wait_)
     },
 
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
