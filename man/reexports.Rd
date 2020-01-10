@@ -22,6 +22,6 @@ below to see their documentation.
 \describe{
   \item{magrittr}{\code{\link[magrittr]{\%>\%}}, \code{\link[magrittr]{\%T>\%}}}
 
-  \item{promises}{\code{\link[promises]{\%...>\%}}, \code{\link[promises]{\%...!\%}}, \code{\link[promises]{\%...T>\%}}, \code{\link[promises]{\%...T!\%}}, \code{\link[promises]{promise}}, \code{\link[promises]{then}}, \code{\link[promises]{catch}}, \code{\link[promises]{finally}}}
+  \item{promises}{\code{\link[promises]{\%...!\%}}, \code{\link[promises]{\%...>\%}}, \code{\link[promises]{\%...T!\%}}, \code{\link[promises]{\%...T>\%}}, \code{\link[promises]{catch}}, \code{\link[promises]{finally}}, \code{\link[promises]{promise}}, \code{\link[promises]{then}}}
 }}
 
