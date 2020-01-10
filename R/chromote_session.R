@@ -13,13 +13,13 @@ ChromoteSession <- R6Class(
     #' @description Create a new `ChromoteSession` object.
     #' @param parent [`Chromote`] object to use; defaults to
     #'   [default_chromote_object()]
-    #' @param width Width, in pixels, of the `Target` to create if `tid` is
+    #' @param width Width, in pixels, of the `Target` to create if `targetId` is
     #'   `NULL`
-    #' @param height Height, in pixels, of the `Target` to create if `tid` is
+    #' @param height Height, in pixels, of the `Target` to create if `targetId` is
     #'   `NULL`
-    #' @param tid
+    #' @param targetId
     #'   [Target](https://chromedevtools.github.io/devtools-protocol/tot/Target)
-    #'   ID of an existing target to attach to. When a `tid` is provided, the
+    #'   ID of an existing target to attach to. When a `targetId` is provided, the
     #'   `width` and `height` arguments are ignored. If NULL (the default) a new
     #'   target is created and attached to, and the `width` and `height`
     #'   arguments determine its viewport size.
@@ -31,14 +31,14 @@ ChromoteSession <- R6Class(
       parent = default_chromote_object(),
       width = 992,
       height = 744,
-      tid = NULL,
+      targetId = NULL,
       wait_ = TRUE
     ) {
       self$parent <- parent
 
       # Create a session from the Chromote. Basically the same code as
       # new_session(), but this is synchronous.
-      if (is.null(tid)) {
+      if (is.null(targetId)) {
         target <- parent$Target$createTarget(
           "about:blank",
           width = width,
@@ -46,7 +46,7 @@ ChromoteSession <- R6Class(
           wait_ = FALSE
          )
       } else {
-        target <- promise_resolve(list(targetId = tid))
+        target <- promise_resolve(list(targetId = targetId))
       }
       p <- target$
         then(function(value) {
