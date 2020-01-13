@@ -108,7 +108,12 @@ A new \code{ChromoteSession} object.
 \if{html}{\out{<a id="method-new_session"></a>}}
 \subsection{Method \code{new_session()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$new_session(wait_ = TRUE, width = 992, height = 774)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$new_session(
+  width = 992,
+  height = 774,
+  targetId = NULL,
+  wait_ = TRUE
+)}\if{html}{\out{</div>}}
 }
 
 }
