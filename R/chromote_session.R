@@ -39,24 +39,26 @@ ChromoteSession <- R6Class(
       # Create a session from the Chromote. Basically the same code as
       # new_session(), but this is synchronous.
       if (is.null(targetId)) {
-        target <- parent$Target$createTarget(
+        p <- parent$Target$createTarget(
           "about:blank",
           width = width,
           height = height,
           wait_ = FALSE
-         )
+         )$
+          then(function(value) {
+            parent$Target$attachToTarget(value$targetId, flatten = TRUE, wait_ = FALSE)
+          })$
+          then(function(value) {
+            private$session_id <- value$sessionId
+            self$parent$register_session(self)
+          })
       } else {
-        target <- promise_resolve(list(targetId = targetId))
+        p <- parent$Target$attachToTarget(targetId, flatten = TRUE, wait_ = FALSE)$
+          then(function(value) {
+            private$session_id <- value$sessionId
+            self$parent$register_session(self)
+          })
       }
-      p <- target$
-        then(function(value) {
-          tid <- value$targetId
-          parent$Target$attachToTarget(tid, flatten = TRUE, wait_ = FALSE)
-        })$
-        then(function(value) {
-          private$session_id <- value$sessionId
-          self$parent$register_session(self)
-        })
 
       # Whenever a command method (like x$Page$navigate()) is executed, it calls
       # x$send_command(). This object's send_command() method calls the parent's
