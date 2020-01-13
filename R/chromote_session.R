@@ -47,18 +47,16 @@ ChromoteSession <- R6Class(
          )$
           then(function(value) {
             parent$Target$attachToTarget(value$targetId, flatten = TRUE, wait_ = FALSE)
-          })$
-          then(function(value) {
-            private$session_id <- value$sessionId
-            self$parent$register_session(self)
           })
       } else {
-        p <- parent$Target$attachToTarget(targetId, flatten = TRUE, wait_ = FALSE)$
-          then(function(value) {
-            private$session_id <- value$sessionId
-            self$parent$register_session(self)
-          })
+        p <- parent$Target$attachToTarget(targetId, flatten = TRUE, wait_ = FALSE)
       }
+
+      p <- p$
+        then(function(value) {
+          private$session_id <- value$sessionId
+          self$parent$register_session(self)
+        })
 
       # Whenever a command method (like x$Page$navigate()) is executed, it calls
       # x$send_command(). This object's send_command() method calls the parent's
