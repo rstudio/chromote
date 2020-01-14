@@ -73,7 +73,7 @@ Chromote class
 \if{html}{\out{<a id="method-new_session"></a>}}
 \subsection{Method \code{new_session()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Chromote$new_session(width = 992, height = 774, wait_ = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$new_session(width = 992, height = 774, targetId = NULL, wait_ = TRUE)}\if{html}{\out{</div>}}
 }
 
 }

@@ -112,8 +112,8 @@ Chromote <- R6Class(
     # Session management
     # =========================================================================
 
-    new_session = function(width = 992, height = 774, wait_ = TRUE) {
-      session <- ChromoteSession$new(self, width, height, wait_ = FALSE)
+    new_session = function(width = 992, height = 774, targetId = NULL, wait_ = TRUE) {
+      session <- ChromoteSession$new(self, width, height, targetId, wait_ = FALSE)
 
       # ChromoteSession$new() always returns the object, but the
       # initialization is async. To properly wait for initialization, we

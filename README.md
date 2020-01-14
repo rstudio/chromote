@@ -148,7 +148,6 @@ b1$parent$stop()
 
 `b1$parent` is a `Chromote` object (as opposed to `ChromoteSession`), which represents the browser as a whole. This is explained in [The Chromote object model](#the-chromote-object-model).
 
-
 ### Commands and Events
 
 The Chrome Devtools Protocol has two types of methods: _commands_ and _events_. The methods used in the previous examples are commands. That is, they tell the browser to do something; the browser does it, and then sends back some data.
@@ -643,6 +642,8 @@ b$Page$navigate("https://www.whatismybrowser.com/")
 
 Chromote can control a browser running on a remote host. To start the browser, open a terminal on the remote host and run one of the following, depending on your platform:
 
+**Warning: Depending on how the remote machine is configured, the Chrome debug server might be accessible to anyone on the Internet. Proceed with caution.**
+
 ```
 # Mac
 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless \
@@ -655,7 +656,6 @@ google-chrome --headless --remote-debugging-address=0.0.0.0 --remote-debugging-p
 "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"  --headless \
   --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
 ```
-
 
 Then, in your local R session, create a Chromote object with the `host` and `port` (you will need to use the correct IP address). Once it's created, you can spawn a session off of it which you can control as normal:
 
@@ -688,6 +688,35 @@ b$screenshot("browser.png")
 
 This tells it to fire off the `Page.navigate` command and _not_ wait for it, and then immediately start waiting for `Page.loadEventFired` event.
 
+### Attaching to existing tabs
+
+In the examples above, we connected to an existing browser, but created a new tab to attach to. It's also possible to attach to an existing browser *and* and existing tab. In Chrome debugging terminology a tab is called a "Target", and there is a command to retrieve the list of current Targets:
+
+```R
+r$Target$getTargets()
+```
+
+Every target has a unique identifier string associated with it called the `targetId`; `"9DAE349A3A533718ED9E17441BA5159B"` is an example of one.
+
+Here we define a function that retrieves the ID of the first Target (tab) from a Chromote object:
+
+```R
+first_id <- function(r) {
+  ts <- r$Target$getTargets()$targetInfos
+  stopifnot(length(ts) > 0)
+  r$Target$getTargets()$targetInfos[[1]]$targetId
+}
+```
+
+The following code shows an alert box in the first tab, whatever it is:
+
+```R
+rc <- ChromeRemote$new(host = "localhost", port = 9222)
+r <- Chromote$new(browser = rc)
+tid <- first_id(r)
+b <- r$new_session(targetId = tid)
+b$Runtime$evaluate('alert("this is the first tab")')
+```
 
 *****
 

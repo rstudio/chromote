@@ -39,20 +39,20 @@ ChromoteSession <- R6Class(
       # Create a session from the Chromote. Basically the same code as
       # new_session(), but this is synchronous.
       if (is.null(targetId)) {
-        target <- parent$Target$createTarget(
+        p <- parent$Target$createTarget(
           "about:blank",
           width = width,
           height = height,
           wait_ = FALSE
-         )
+         )$
+          then(function(value) {
+            parent$Target$attachToTarget(value$targetId, flatten = TRUE, wait_ = FALSE)
+          })
       } else {
-        target <- promise_resolve(list(targetId = targetId))
+        p <- parent$Target$attachToTarget(targetId, flatten = TRUE, wait_ = FALSE)
       }
-      p <- target$
-        then(function(value) {
-          tid <- value$targetId
-          parent$Target$attachToTarget(tid, flatten = TRUE, wait_ = FALSE)
-        })$
+
+      p <- p$
         then(function(value) {
           private$session_id <- value$sessionId
           self$parent$register_session(self)
@@ -137,8 +137,8 @@ ChromoteSession <- R6Class(
       private$is_active_
     },
 
-    new_session = function(wait_ = TRUE, width = 992, height = 774) {
-      self$parent$new_session(wait_, width = width, height = height)
+    new_session = function(width = 992, height = 774, targetId = NULL, wait_ = TRUE) {
+      self$parent$new_session(width = width, height = height, targetId = targetId, wait_ = wait_)
     },
 
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
