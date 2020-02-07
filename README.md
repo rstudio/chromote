@@ -48,7 +48,8 @@ b$Browser$getVersion()
 #> [1] "@fae8db7ab9280fa6704a59980263c804f809ebd5"
 #>
 #> $userAgent
-#> [1] "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) #> HeadlessChrome/72.0.3626.109 Safari/537.36"
+#> [1] "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+#> HeadlessChrome/72.0.3626.109 Safari/537.36"
 #>
 #> $jsVersion
 #> [1] "7.2.502.25"
