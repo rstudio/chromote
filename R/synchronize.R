@@ -18,6 +18,10 @@ pop_interrupt_domain <- function() {
 }
 
 current_interrupt_domain <- function() {
+  if (length(promise_globals$interrupt_domains) == 0) {
+    return(NULL)
+  }
+
   promise_globals$interrupt_domains[[length(promise_globals$interrupt_domains)]]
 }
 
@@ -85,7 +89,7 @@ create_interrupt_domain <- function() {
         promise_globals$synchronized <- 0L
       }
       promise_globals$synchronized <- promise_globals$synchronized + 1L
-      on.exit(promise_globals$synchronized <- promise_globals$synchronized - 1L)
+      on.exit(promise_globals$synchronized <- promise_globals$synchronized - 1L, add = TRUE)
 
       force(expr)
     },
