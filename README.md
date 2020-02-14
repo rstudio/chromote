@@ -4,7 +4,7 @@ Chromote: Headless Chrome Remote Interface
 **Please note that Chromote is in development and the API is subject to change**
 
 Chromote is an R implementation of the [Chrome Devtools Protocol](https://chromedevtools.github.io/devtools-protocol/). It works with Chrome, Chromium, Opera, Vivaldi, and other browsers based on [Chromium](https://www.chromium.org/). By default it uses Google Chrome (which must already be installed on the system). To use a different browser, see [Specifying which browser to use](#specifying-which-browser-to-use).
-
+  
 Chromote is not the only R package that implements the Chrome Devtools Protocol. Here are some others:
 
 * [crrri](https://github.com/RLesur/crrri) by Romain Lesur and Christophe Dervieux
