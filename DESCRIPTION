@@ -1,6 +1,6 @@
 Package: chromote
 Title: Headless Chrome Web Browser Interface
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: c(
     person("Winston", "Chang", role = c("aut", "cre"), email = "winston@rstudio.com"),
     person(given = "RStudio", role = c("cph", "fnd"))
@@ -11,10 +11,10 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     jsonlite,
-    websocket,
+    websocket (>= 1.1.0.9002),
     processx,
     R6,
-    later (>= 0.8.0.9003),
+    later (>= 0.8.0.9004),
     promises (>= 1.0.1.9002),
     magrittr,
     rlang,
@@ -23,6 +23,7 @@ Suggests:
     showimage
 Remotes:
     r-lib/later,
+    rstudio/websocket,
     rstudio/promises
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.2
