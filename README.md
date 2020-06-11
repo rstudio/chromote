@@ -16,7 +16,7 @@ The interface to Chromote is similar to [chrome-remote-interface](https://github
 ## Installation
 
 ```R
-devtools::install_github("rstudio/chromote")
+remotes::install_github("rstudio/chromote")
 ```
 
 ## Basic usage
