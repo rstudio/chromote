@@ -776,6 +776,57 @@ Then take a screenshot:
 b$screenshot()
 ```
 
+### Taking screenshots of web pages in parallel
+
+With async code, it's possible to navigate to and take screenshots of multiple websites in parallel.
+
+```R
+library(promises)
+library(chromote)
+urls <- c(
+  "https://www.r-project.org/",
+  "https://github.com/",
+  "https://news.ycombinator.com/"
+)
+
+screenshot_p <- function(url, filename = NULL) {
+  if (is.null(filename)) {
+    filename <- gsub("^.*://", "", url)
+    filename <- gsub("/", "_", filename)
+    filename <- gsub("\\.", "_", filename)
+    filename <- sub("_$", "", filename)
+    filename <- paste0(filename, ".png")
+  }
+
+  b <- ChromoteSession$new()
+  b$Page$navigate(url, wait_ = FALSE)
+  b$Page$loadEventFired(wait_ = FALSE)$
+    then(function(value) {
+      b$screenshot(filename, wait_ = FALSE)
+    })$
+    then(function(value) {
+      message(filename)
+    })$
+    finally(function() {
+      b$close()
+    })
+}
+
+# Screenshot multiple simultaneously
+ps <- lapply(urls, screenshot_p)
+pa <- promise_all(.list = ps)$then(function(value) {
+  message("Done!")
+})
+
+# Block the console until the screenshots finish (optional)
+cm <- default_chromote_object()
+cm$wait_for(pa)
+#> www_r-project_org.png
+#> github_com.png
+#> news_ycombinator_com.png
+#> Done!
+```
+
 
 ### Setting custom headers
 
