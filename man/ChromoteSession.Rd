@@ -32,6 +32,7 @@ ChromoteSession class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{ChromoteSession} object.
 \subsection{Usage}{
@@ -74,6 +75,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-init_promise"></a>}}
+\if{latex}{\out{\hypertarget{method-init_promise}{}}}
 \subsection{Method \code{init_promise()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$init_promise()}\if{html}{\out{</div>}}
@@ -82,6 +84,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-close"></a>}}
+\if{latex}{\out{\hypertarget{method-close}{}}}
 \subsection{Method \code{close()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$close(wait_ = TRUE)}\if{html}{\out{</div>}}
@@ -90,6 +93,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-view"></a>}}
+\if{latex}{\out{\hypertarget{method-view}{}}}
 \subsection{Method \code{view()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$view()}\if{html}{\out{</div>}}
@@ -98,6 +102,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-is_active"></a>}}
+\if{latex}{\out{\hypertarget{method-is_active}{}}}
 \subsection{Method \code{is_active()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$is_active()}\if{html}{\out{</div>}}
@@ -106,6 +111,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new_session"></a>}}
+\if{latex}{\out{\hypertarget{method-new_session}{}}}
 \subsection{Method \code{new_session()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$new_session(
@@ -119,6 +125,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-send_command"></a>}}
+\if{latex}{\out{\hypertarget{method-send_command}{}}}
 \subsection{Method \code{send_command()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$send_command(
@@ -132,6 +139,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_parent"></a>}}
+\if{latex}{\out{\hypertarget{method-get_parent}{}}}
 \subsection{Method \code{get_parent()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_parent()}\if{html}{\out{</div>}}
@@ -140,6 +148,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_session_id"></a>}}
+\if{latex}{\out{\hypertarget{method-get_session_id}{}}}
 \subsection{Method \code{get_session_id()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_session_id()}\if{html}{\out{</div>}}
@@ -148,6 +157,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_child_loop"></a>}}
+\if{latex}{\out{\hypertarget{method-get_child_loop}{}}}
 \subsection{Method \code{get_child_loop()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_child_loop()}\if{html}{\out{</div>}}
@@ -156,6 +166,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-wait_for"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for}{}}}
 \subsection{Method \code{wait_for()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$wait_for(p)}\if{html}{\out{</div>}}
@@ -164,6 +175,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_auto_events"></a>}}
+\if{latex}{\out{\hypertarget{method-get_auto_events}{}}}
 \subsection{Method \code{get_auto_events()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_auto_events()}\if{html}{\out{</div>}}
@@ -172,6 +184,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-debug_log"></a>}}
+\if{latex}{\out{\hypertarget{method-debug_log}{}}}
 \subsection{Method \code{debug_log()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$debug_log(...)}\if{html}{\out{</div>}}
@@ -180,6 +193,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-invoke_event_callbacks"></a>}}
+\if{latex}{\out{\hypertarget{method-invoke_event_callbacks}{}}}
 \subsection{Method \code{invoke_event_callbacks()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$invoke_event_callbacks(event, params)}\if{html}{\out{</div>}}
@@ -188,6 +202,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-mark_closed"></a>}}
+\if{latex}{\out{\hypertarget{method-mark_closed}{}}}
 \subsection{Method \code{mark_closed()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$mark_closed()}\if{html}{\out{</div>}}
@@ -196,6 +211,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-screenshot}{}}}
 \subsection{Method \code{screenshot()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$screenshot(
@@ -213,6 +229,7 @@ A new \code{ChromoteSession} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-screenshot_pdf"></a>}}
+\if{latex}{\out{\hypertarget{method-screenshot_pdf}{}}}
 \subsection{Method \code{screenshot_pdf()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$screenshot_pdf(

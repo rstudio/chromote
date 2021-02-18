@@ -26,6 +26,7 @@ should also set private$process.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-is_local"></a>}}
+\if{latex}{\out{\hypertarget{method-is_local}{}}}
 \subsection{Method \code{is_local()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$is_local()}\if{html}{\out{</div>}}
@@ -34,6 +35,7 @@ should also set private$process.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_process"></a>}}
+\if{latex}{\out{\hypertarget{method-get_process}{}}}
 \subsection{Method \code{get_process()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$get_process()}\if{html}{\out{</div>}}
@@ -42,6 +44,7 @@ should also set private$process.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_host"></a>}}
+\if{latex}{\out{\hypertarget{method-get_host}{}}}
 \subsection{Method \code{get_host()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$get_host()}\if{html}{\out{</div>}}
@@ -50,6 +53,7 @@ should also set private$process.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_port"></a>}}
+\if{latex}{\out{\hypertarget{method-get_port}{}}}
 \subsection{Method \code{get_port()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$get_port()}\if{html}{\out{</div>}}
@@ -58,6 +62,7 @@ should also set private$process.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-close"></a>}}
+\if{latex}{\out{\hypertarget{method-close}{}}}
 \subsection{Method \code{close()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$close()}\if{html}{\out{</div>}}
@@ -66,6 +71,7 @@ should also set private$process.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

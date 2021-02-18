@@ -31,6 +31,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$new(browser = Chrome$new(), multi_session = TRUE, auto_events = TRUE)}\if{html}{\out{</div>}}
@@ -39,6 +40,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-view"></a>}}
+\if{latex}{\out{\hypertarget{method-view}{}}}
 \subsection{Method \code{view()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$view()}\if{html}{\out{</div>}}
@@ -47,6 +49,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_auto_events"></a>}}
+\if{latex}{\out{\hypertarget{method-get_auto_events}{}}}
 \subsection{Method \code{get_auto_events()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$get_auto_events()}\if{html}{\out{</div>}}
@@ -55,6 +58,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_child_loop"></a>}}
+\if{latex}{\out{\hypertarget{method-get_child_loop}{}}}
 \subsection{Method \code{get_child_loop()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$get_child_loop()}\if{html}{\out{</div>}}
@@ -63,6 +67,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-wait_for"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for}{}}}
 \subsection{Method \code{wait_for()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$wait_for(p)}\if{html}{\out{</div>}}
@@ -71,6 +76,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new_session"></a>}}
+\if{latex}{\out{\hypertarget{method-new_session}{}}}
 \subsection{Method \code{new_session()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$new_session(width = 992, height = 774, targetId = NULL, wait_ = TRUE)}\if{html}{\out{</div>}}
@@ -79,6 +85,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_sessions"></a>}}
+\if{latex}{\out{\hypertarget{method-get_sessions}{}}}
 \subsection{Method \code{get_sessions()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$get_sessions()}\if{html}{\out{</div>}}
@@ -87,6 +94,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-register_session"></a>}}
+\if{latex}{\out{\hypertarget{method-register_session}{}}}
 \subsection{Method \code{register_session()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$register_session(session)}\if{html}{\out{</div>}}
@@ -95,6 +103,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-send_command"></a>}}
+\if{latex}{\out{\hypertarget{method-send_command}{}}}
 \subsection{Method \code{send_command()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$send_command(
@@ -109,6 +118,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-invoke_event_callbacks"></a>}}
+\if{latex}{\out{\hypertarget{method-invoke_event_callbacks}{}}}
 \subsection{Method \code{invoke_event_callbacks()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$invoke_event_callbacks(event, params)}\if{html}{\out{</div>}}
@@ -117,6 +127,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-debug_messages"></a>}}
+\if{latex}{\out{\hypertarget{method-debug_messages}{}}}
 \subsection{Method \code{debug_messages()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$debug_messages(value = NULL)}\if{html}{\out{</div>}}
@@ -125,6 +136,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-debug_log"></a>}}
+\if{latex}{\out{\hypertarget{method-debug_log}{}}}
 \subsection{Method \code{debug_log()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$debug_log(...)}\if{html}{\out{</div>}}
@@ -133,6 +145,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-url"></a>}}
+\if{latex}{\out{\hypertarget{method-url}{}}}
 \subsection{Method \code{url()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$url(path = NULL)}\if{html}{\out{</div>}}
@@ -141,6 +154,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-is_active"></a>}}
+\if{latex}{\out{\hypertarget{method-is_active}{}}}
 \subsection{Method \code{is_active()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$is_active()}\if{html}{\out{</div>}}
@@ -149,6 +163,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_browser"></a>}}
+\if{latex}{\out{\hypertarget{method-get_browser}{}}}
 \subsection{Method \code{get_browser()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$get_browser()}\if{html}{\out{</div>}}
@@ -157,6 +172,7 @@ Chromote class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-stop"></a>}}
+\if{latex}{\out{\hypertarget{method-stop}{}}}
 \subsection{Method \code{stop()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$stop()}\if{html}{\out{</div>}}
