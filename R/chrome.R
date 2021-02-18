@@ -5,6 +5,9 @@ Chrome <- R6Class("Chrome",
   inherit = Browser,
   public = list(
     initialize = function(path = find_chrome(), args = character(0)) {
+      if (is.null(path)) {
+        stop("Invalid path to Chrome")
+      }
       res <- launch_chrome(path, args)
       private$host <- "127.0.0.1"
       private$process <- res$process
@@ -13,25 +16,29 @@ Chrome <- R6Class("Chrome",
   )
 )
 
-
+#' Find path to Chrome or Chromium browser
+#' @export
 find_chrome <- function() {
   if (Sys.getenv("CHROMOTE_CHROME") != "") {
     return(Sys.getenv("CHROMOTE_CHROME"))
   }
 
+  path <- NULL
+
   if (is_mac()) {
-    "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+    path <- "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 
   } else if (is_windows()) {
-    path <- NULL
     tryCatch(
       {
         path <- readRegistry("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe\\")
         path <- path[["(Default)"]]
       },
-      error = function(e) { }
+      error = function(e) {
+        message("Error trying to find path to Chrome")
+        path <<- NULL
+      }
     )
-    path
 
   } else if (is_linux()) {
     path <- Sys.which("google-chrome")
@@ -39,16 +46,23 @@ find_chrome <- function() {
       path <- Sys.which("chromium-browser")
     }
     if (nchar(path) == 0) {
-      stop("`google-chrome` and `chromium-browser` were not found. Try setting the CHROMOTE_CHROME environment variable or adding one of these executables to your PATH.")
+      message("`google-chrome` and `chromium-browser` were not found. Try setting the CHROMOTE_CHROME environment variable or adding one of these executables to your PATH.")
+      path <- NULL
     }
-    path
+
   } else {
-    stop("Platform currently not supported")
+    message("Platform currently not supported")
   }
+
+  path
 }
 
 
 launch_chrome <- function(path = find_chrome(), args = character(0)) {
+  if (is.null(path)) {
+    stop("Invalid path to Chrome")
+  }
+
   p <- process$new(
     command = path,
     args = c("--headless", "--remote-debugging-port=0", args),
