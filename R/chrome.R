@@ -46,6 +46,9 @@ find_chrome <- function() {
       path <- Sys.which("chromium-browser")
     }
     if (nchar(path) == 0) {
+      path <- Sys.which("chromium")
+    }
+    if (nchar(path) == 0) {
       message("`google-chrome` and `chromium-browser` were not found. Try setting the CHROMOTE_CHROME environment variable or adding one of these executables to your PATH.")
       path <- NULL
     }
