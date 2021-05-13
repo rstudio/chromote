@@ -307,7 +307,7 @@ Chromote <- R6Class(
       # The session cannot be closed because no session id is returned by the
       # Inspector.targetCrashed event
       self$protocol$Inspector$targetCrashed(function(msg) {
-        warning("A target has crashed.")
+        warning("Chromote has received a Inspector.targetCrashed event. This means that the ChromoteSession has probably crashed.")
       })
     },
 
