@@ -41,7 +41,8 @@ Create a new \code{ChromoteSession} object.
   width = 992,
   height = 744,
   targetId = NULL,
-  wait_ = TRUE
+  wait_ = TRUE,
+  auto_events = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -66,6 +67,11 @@ arguments determine its viewport size.}
 \item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} of a new
 \code{ChromoteSession} object. Otherwise, block during initialization, and
 return a \code{ChromoteSession} object directly.}
+
+\item{\code{auto_events}}{If \code{NULL} (the default), use the \code{auto_events} setting
+from the parent \code{Chromote} object. If \code{TRUE}, enable automatic
+event enabling/disabling; if \code{FALSE}, disable automatic event
+enabling/disabling.}
 }
 \if{html}{\out{</div>}}
 }
