@@ -88,12 +88,14 @@ ChromoteSession <- R6Class(
       # When a target crashes, raise a warning.
       # The session cannot be closed because no session id is returned by the
       # Inspector.targetCrashed event
-      p <- p$
-        then(function(value) {
-          self$Inspector$targetCrashed(timeout_ = NULL, wait_ = FALSE, function(value) {
-            warning("Chromote has received a Inspector.targetCrashed event. This means that the ChromoteSession has probably crashed.")
+      if (!is.null(self$Inspector$targetCrashed)) {
+        p <- p$
+          then(function(value) {
+            self$Inspector$targetCrashed(timeout_ = NULL, wait_ = FALSE, function(value) {
+              warning("Chromote has received a Inspector.targetCrashed event. This means that the ChromoteSession has probably crashed.")
+            })
           })
-        })
+      }
 
       if (wait_) {
         self$wait_for(p)
