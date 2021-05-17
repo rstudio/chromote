@@ -85,6 +85,19 @@ ChromoteSession <- R6Class(
           private$pixel_ratio <- value$result$value
         })
 
+      # When a target crashes, raise a warning.
+      if (!is.null(self$Inspector$targetCrashed)) {
+        p <- p$
+          then(function(value) {
+            self$Inspector$targetCrashed(timeout_ = NULL, wait_ = FALSE, function(value) {
+              warning("Chromote has received a Inspector.targetCrashed event. This means that the ChromoteSession has probably crashed.")
+              # Even if no targetId nor sessionId is returned by Inspector.targetCashed
+              # mark the session as closed. This will close all sessions..
+              self$mark_closed()
+            })
+          })
+      }
+
       if (wait_) {
         self$wait_for(p)
       } else {
