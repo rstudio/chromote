@@ -40,6 +40,7 @@ ChromoteSession <- R6Class(
       auto_events = NULL
     ) {
       self$parent <- parent
+      self$default_timeout <- parent$default_timeout
 
       # Create a session from the Chromote. Basically the same code as
       # new_session(), but this is synchronous.
@@ -204,6 +205,7 @@ ChromoteSession <- R6Class(
     },
 
     parent = NULL,
+    default_timeout = NULL,
     protocol = NULL
   ),
 
