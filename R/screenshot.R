@@ -7,6 +7,7 @@ ChromoteSession$set("public", "screenshot",
     expand = NULL,
     scale = 1,
     show = FALSE,
+    delay = 0.5,
     wait_ = TRUE
   ) {
     force(filename)
@@ -79,9 +80,9 @@ ChromoteSession$set("public", "screenshot",
         )
 
         promise(function(resolve, reject) {
-          # TODO: Wait 0.5 second for resize to complete. Can we wait for an
-          # event instead?
-          later(function() resolve(TRUE), 0.5)
+          # Wait `delay` seconds for resize to complete. For complicated apps this may need to be longer.
+          ## TODO: Can we wait for an event instead?
+          later(function() resolve(TRUE), delay)
         })
       })
 
