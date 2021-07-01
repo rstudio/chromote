@@ -33,10 +33,29 @@ Class representing a local Chrome process
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Create a new Chrome object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chrome$new(path = find_chrome(), args = character(0))}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{path}}{Location of chrome installation}
+
+\item{\code{args}}{A character vector of command-line arguments passed when
+initializing Chromium. Single on-off arguments are passed as single
+values (e.g.\code{"--disable-gpu"}), arguments with a value are given with a
+nested character vector (e.g. \code{c("--force-color-profile", "srgb")}).
+See
+\href{https://peter.sh/experiments/chromium-command-line-switches/}{here}
+for a list of possible arguments.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Chrome} object.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

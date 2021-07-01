@@ -4,6 +4,16 @@
 Chrome <- R6Class("Chrome",
   inherit = Browser,
   public = list(
+    #' @description Create a new Chrome object.
+    #' @param path Location of chrome installation
+    #' @param args A character vector of command-line arguments passed when
+    #'   initializing Chromium. Single on-off arguments are passed as single
+    #'   values (e.g.`"--disable-gpu"`), arguments with a value are given with a
+    #'   nested character vector (e.g. `c("--force-color-profile", "srgb")`).
+    #'   See
+    #'   [here](https://peter.sh/experiments/chromium-command-line-switches/)
+    #'   for a list of possible arguments.
+    #' @return A new `Chrome` object.
     initialize = function(path = find_chrome(), args = character(0)) {
       if (is.null(path)) {
         stop("Invalid path to Chrome")

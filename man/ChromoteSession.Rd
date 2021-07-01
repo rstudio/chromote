@@ -228,6 +228,7 @@ A new \code{ChromoteSession} object.
   expand = NULL,
   scale = 1,
   show = FALSE,
+  delay = 0.5,
   wait_ = TRUE
 )}\if{html}{\out{</div>}}
 }
