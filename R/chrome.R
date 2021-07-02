@@ -16,10 +16,8 @@ Chrome <- R6Class("Chrome",
     #'   If you want to use another option you can set it using the `args`
     #'   parameter.
     #' @param args A character vector of command-line arguments passed when
-    #'   initializing Chromium. Single on-off arguments are passed as single
-    #'   values (e.g.`"--disable-gpu"`), arguments with a value are given with a
-    #'   nested character vector (e.g. `c("--force-color-profile", "srgb")`).
-    #'   See
+    #'   initializing Chromium. E.g. `c("--disable-gpu",
+    #'   '--force-color-profile="srgb"')`. See
     #'   [here](https://peter.sh/experiments/chromium-command-line-switches/)
     #'   for a list of possible arguments.
     #' @return A new `Chrome` object.
