@@ -6,6 +6,15 @@ Chrome <- R6Class("Chrome",
   public = list(
     #' @description Create a new Chrome object.
     #' @param path Location of chrome installation
+    #' @param use_srgb_color_profile Should a standard color profile (srgb) be
+    #'   used when taking screenshots? Forcing a standard profile increases
+    #'   portability of screenshots as colors will differ when the monitor of
+    #'   screenshotting machines have different color profiles. The downside is
+    #'   that colors of output may be slightly different than what you see in
+    #'   your browser.
+    #'   Equivalent to settings `args = '--force-color-profile="srgb"'`.
+    #'   If you want to use another option you can set it using the `args`
+    #'   parameter.
     #' @param args A character vector of command-line arguments passed when
     #'   initializing Chromium. Single on-off arguments are passed as single
     #'   values (e.g.`"--disable-gpu"`), arguments with a value are given with a
@@ -14,11 +23,11 @@ Chrome <- R6Class("Chrome",
     #'   [here](https://peter.sh/experiments/chromium-command-line-switches/)
     #'   for a list of possible arguments.
     #' @return A new `Chrome` object.
-    initialize = function(path = find_chrome(), args = character(0)) {
+    initialize = function(path = find_chrome(), use_srgb_color_profile = TRUE, args = character(0)) {
       if (is.null(path)) {
         stop("Invalid path to Chrome")
       }
-      res <- launch_chrome(path, args)
+      res <- launch_chrome(path, use_srgb_color_profile, args)
       private$host <- "127.0.0.1"
       private$process <- res$process
       private$port <- res$port
@@ -71,14 +80,20 @@ find_chrome <- function() {
 }
 
 
-launch_chrome <- function(path = find_chrome(), args = character(0)) {
+launch_chrome <- function(path = find_chrome(), use_srgb_color_profile = TRUE, args = character(0)) {
   if (is.null(path)) {
     stop("Invalid path to Chrome")
   }
 
+
   p <- process$new(
     command = path,
-    args = c("--headless", "--remote-debugging-port=0", args),
+    args = c(
+      "--headless",
+      "--remote-debugging-port=0",
+      if (use_srgb_color_profile) '--force-color-profile="srgb"',
+      args
+    ),
     supervise = TRUE,
     stdout = tempfile("chrome-stdout-", fileext = ".log"),
     stderr = tempfile("chrome-stderr-", fileext = ".log")
