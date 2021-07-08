@@ -9,6 +9,8 @@ Description: An implementation of the Chrome Devtools Protocol, for controlling 
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
+SystemRequirements: Chrome or other Chromium-based browser. chromium: chromium (rpm) or chromium-browser (deb)
+
 Imports:
     jsonlite,
     websocket (>= 1.2.0),
