@@ -3,6 +3,8 @@ Chromote: Headless Chrome Remote Interface
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/rstudio/chromote/workflows/R-CMD-check/badge.svg)](https://github.com/rstudio/chromote/actions)
+[![CRAN status](https://www.r-pkg.org/badges/version/chromote)](https://CRAN.R-project.org/package=chromote)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 **!! Please note that Chromote is in development and the API is subject to change !!**
