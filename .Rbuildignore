@@ -3,3 +3,6 @@
 ^temp$
 ^chromote\.sublime-project$
 ^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
