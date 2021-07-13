@@ -1,0 +1,9 @@
+pandoc: 2.7.3
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles: {}
+last_built: 2021-07-13T21:51Z
+urls:
+  reference: http://rstudio.github.io/chromote/reference
+  article: http://rstudio.github.io/chromote/articles
+

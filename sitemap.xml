@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://rstudio.github.io/chromote/index.html</loc>
+  </url>
+  <url>
+    <loc>http://rstudio.github.io/chromote/reference/Browser.html</loc>
+  </url>
+  <url>
+    <loc>http://rstudio.github.io/chromote/reference/Chrome.html</loc>
+  </url>
+  <url>
+    <loc>http://rstudio.github.io/chromote/reference/ChromeRemote.html</loc>
+  </url>
+  <url>
+    <loc>http://rstudio.github.io/chromote/reference/Chromote.html</loc>
+  </url>
+  <url>
+    <loc>http://rstudio.github.io/chromote/reference/ChromoteSession.html</loc>
+  </url>
+  <url>
+    <loc>http://rstudio.github.io/chromote/reference/default_chromote_object.html</loc>
+  </url>
+  <url>
+    <loc>http://rstudio.github.io/chromote/reference/find_chrome.html</loc>
+  </url>
+  <url>
+    <loc>http://rstudio.github.io/chromote/reference/reexports.html</loc>
+  </url>
+</urlset>
