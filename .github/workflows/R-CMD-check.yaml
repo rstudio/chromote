@@ -17,24 +17,90 @@ on:
 name: R-CMD-check
 
 jobs:
+  rversions:
+    name: R Versions
+    runs-on: ubuntu-latest
+    outputs:
+      devel: ${{ steps.devel.outputs.installed-r-version }}
+      release: ${{ steps.release.outputs.installed-r-version }}
+      oldrel1: ${{ steps.oldrel1.outputs.installed-r-version }}
+      oldrel2: ${{ steps.oldrel2.outputs.installed-r-version }}
+      oldrel3: ${{ steps.oldrel3.outputs.installed-r-version }}
+      oldrel4: ${{ steps.oldrel4.outputs.installed-r-version }}
+    steps:
+    - name: devel
+      uses: r-lib/actions/setup-r@master
+      id: devel
+      with:
+        r-version: devel
+        install-r: false # No need to install. Just need version
+
+    - name: release
+      uses: r-lib/actions/setup-r@master
+      id: release
+      with:
+        r-version: release
+        install-r: false # No need to install. Just need version
+
+    - name: oldrel/1
+      uses: r-lib/actions/setup-r@master
+      id: oldrel1
+      with:
+        r-version: oldrel/1
+        install-r: false # No need to install. Just need version
+
+    - name: oldrel/2
+      uses: r-lib/actions/setup-r@master
+      id: oldrel2
+      with:
+        r-version: oldrel/2
+        install-r: false # No need to install. Just need version
+
+    - name: oldrel/3
+      uses: r-lib/actions/setup-r@master
+      id: oldrel3
+      with:
+        r-version: oldrel/3
+        install-r: false # No need to install. Just need version
+
+    - name: oldrel/4
+      uses: r-lib/actions/setup-r@master
+      id: oldrel4
+      with:
+        r-version: oldrel/4
+        install-r: false # No need to install. Just need version
+
+    - name: Set Output
+      id: set_versions
+      run: |
+        echo "devel: ${{ steps.devel.outputs.installed-r-version }}"
+        echo "release: ${{ steps.release.outputs.installed-r-version }}"
+        echo "oldrel1: ${{ steps.oldrel1.outputs.installed-r-version }}"
+        echo "oldrel2: ${{ steps.oldrel2.outputs.installed-r-version }}"
+        echo "oldrel3: ${{ steps.oldrel3.outputs.installed-r-version }}"
+        echo "oldrel4: ${{ steps.oldrel4.outputs.installed-r-version }}"
+
+
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
+    needs:
+      - rversions
     strategy:
       fail-fast: false
       matrix:
         config:
-          - {os: macOS-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
+          - {os: macOS-latest,   r: '${{ needs.rversions.outputs.release }}'}
+          - {os: windows-latest, r: '${{ needs.rversions.outputs.release }}'}
           - {os: windows-latest, r: '3.6', rspm: "https://packagemanager.rstudio.com/cran/latest"}
-          - {os: ubuntu-18.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", http-user-agent: "R/4.1.0 (ubuntu-18.04) R (4.1.0 x86_64-pc-linux-gnu x86_64 linux-gnu) on GitHub Actions" }
-          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: '3.6',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: '3.4',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: ubuntu-18.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", http-user-agent: "release" }
+          - {os: ubuntu-18.04,   r: '${{ needs.rversions.outputs.release }}', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: ubuntu-18.04,   r: '${{ needs.rversions.outputs.oldrel1 }}', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: ubuntu-18.04,   r: '${{ needs.rversions.outputs.oldrel2 }}', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: ubuntu-18.04,   r: '${{ needs.rversions.outputs.oldrel3 }}', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: ubuntu-18.04,   r: '${{ needs.rversions.outputs.oldrel4 }}', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
 
     env:
       RSPM: ${{ matrix.config.rspm }}
@@ -43,7 +109,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-r@master
         id: install-r
         with:
           r-version: ${{ matrix.config.r }}
