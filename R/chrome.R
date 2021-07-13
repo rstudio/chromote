@@ -41,7 +41,7 @@ find_chrome <- function() {
   } else if (is_windows()) {
     tryCatch(
       {
-        path <- readRegistry("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe\\")
+        path <- utils::readRegistry("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe\\")
         path <- path[["(Default)"]]
       },
       error = function(e) {

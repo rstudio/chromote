@@ -2,3 +2,9 @@
 ^\.Rproj\.user$
 ^temp$
 ^chromote\.sublime-project$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^README\.Rmd$
+^sidebar.png$
