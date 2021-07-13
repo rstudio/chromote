@@ -87,10 +87,10 @@ page load in the viewer:
 ``` r
 b$Page$navigate("https://www.r-project.org/")
 #> $frameId
-#> [1] "CC9ECA1E389ADB9A7B8DBEB03DFF9EF7"
+#> [1] "E45F218CE72B1BAEFA376140F5158676"
 #> 
 #> $loaderId
-#> [1] "9E210CE4CF0832F80232331F062EA412"
+#> [1] "AAE0287C68F36828B5810C103AB9D9EA"
 ```
 
 In the official Chrome DevTools Protocol (CDP) documentation, this is
@@ -239,10 +239,10 @@ affecting the first one.
 b1$view()
 b1$Page$navigate("https://github.com/rstudio/chromote")
 #> $frameId
-#> [1] "2322142974B792020563906C9ECE6FB7"
+#> [1] "F6265B867FDB447141D094636EDDCE1C"
 #> 
 #> $loaderId
-#> [1] "5C033DAC1481DDB6D7FDB28AEAD30B60"
+#> [1] "E3B7DF6412CF2677A089E240E524409F"
 ```
 
 To close a browser tab/window, you can run:
@@ -286,14 +286,14 @@ be enforced by wrapping both lines of code in `{ .... }`).
 # Send a command to navigate to a page
 b$Page$navigate("https://www.r-project.org")
 #> $frameId
-#> [1] "CC9ECA1E389ADB9A7B8DBEB03DFF9EF7"
+#> [1] "E45F218CE72B1BAEFA376140F5158676"
 #> 
 #> $loaderId
-#> [1] "F5ECABCF3574197798EF2ADD936C0FCD"
+#> [1] "62631131C8570E6AF7061AAD50833D18"
 # Wait for the Page.loadEventFired event
 b$Page$loadEventFired()
 #> $timestamp
-#> [1] 930213.7
+#> [1] 930407.9
 ```
 
 After running these two lines, the R process will be blocked. While it’s
@@ -428,12 +428,12 @@ understanding how the Chrome Devtools Protocol works.
 b <- ChromoteSession$new()
 b$parent$debug_messages(TRUE)
 b$Page$navigate("https://www.r-project.org/")
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 #> $frameId
-#> [1] "2A34B3A6869278EC3BFB87879CE67C1A"
+#> [1] "E47F1F1D63B0951F4E97A98E04805D52"
 #> 
 #> $loaderId
-#> [1] "55074CFE2757CA6F941FAA4F9F875C58"
+#> [1] "3A69CFD13600D4270F9F969F424D77A1"
 ```
 
 ### Synchronous vs. asynchronous usage
@@ -523,7 +523,7 @@ JSON to an R object. For example:
 ``` r
 # Synchronous
 str(b$Browser$getVersion())
-#> SEND {"method":"Browser.getVersion","params":[],"id":54,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":54,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 #> List of 5
 #>  $ protocolVersion: chr "1.3"
 #>  $ product        : chr "HeadlessChrome/91.0.4472.114"
@@ -541,7 +541,7 @@ promise. For example:
 ``` r
 # Async with callback
 b$Browser$getVersion(wait_ = FALSE, callback_ = str)
-#> SEND {"method":"Browser.getVersion","params":[],"id":55,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":55,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 #> <Promise [pending]>
 # After a very, very short pause, prints:
 ```
@@ -569,7 +569,7 @@ example:
   b$Browser$getVersion(wait_ = FALSE, callback_ = str)
   1+1
 }
-#> SEND {"method":"Browser.getVersion","params":[],"id":56,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":56,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 #> [1] 2
 ```
 
@@ -592,7 +592,7 @@ product <- NULL
 b$Browser$getVersion(wait_ = FALSE, callback_ = function(msg) {
   product <<- msg$product
 })
-#> SEND {"method":"Browser.getVersion","params":[],"id":57,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":57,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 #> <Promise [pending]>
 ```
 
@@ -635,7 +635,7 @@ a single paste operation and have the same effect.)
     print(value$product)
   })
 }
-#> SEND {"method":"Browser.getVersion","params":[],"id":58,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":58,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 # Wait for a moment, then prints:
 ```
 
@@ -653,26 +653,26 @@ library(promises)
 b$Browser$getVersion(wait_ = FALSE) %>% then(function(value) {
   print(value$product)
 })
-#> SEND {"method":"Browser.getVersion","params":[],"id":59,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":59,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 
 # Promise-pipe to anonymous function, which must be wrapped in parens
 b$Browser$getVersion(wait_ = FALSE) %...>% (function(value) {
   print(value$product)
 })
-#> SEND {"method":"Browser.getVersion","params":[],"id":60,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":60,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 
 # Promise-pipe to an expression (which gets converted to a function with the first argument `.`)
 b$Browser$getVersion(wait_ = FALSE) %...>% { print(.$product) }
-#> SEND {"method":"Browser.getVersion","params":[],"id":61,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":61,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 
 # Promise-pipe to a named function, with parentheses
 print_product <- function(msg) print(msg$product)
 b$Browser$getVersion(wait_ = FALSE) %...>% print_product()
-#> SEND {"method":"Browser.getVersion","params":[],"id":62,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":62,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 
 # Promise-pipe to a named function, without parentheses
 b$Browser$getVersion(wait_ = FALSE) %...>% print_product
-#> SEND {"method":"Browser.getVersion","params":[],"id":63,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":63,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 ```
 
 The earlier example where we found the dimensions of a DOM element using
@@ -685,7 +685,7 @@ b$DOM$getDocument(wait_ = FALSE) %...>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
   { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) } %...>%
   str()
-#> SEND {"method":"DOM.getDocument","params":{},"id":64,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"DOM.getDocument","params":{},"id":64,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 
 
 # Or, more verbosely:
@@ -699,7 +699,7 @@ b$DOM$getDocument(wait_ = FALSE)$
   then(function(value) {
     str(value)
   })
-#> SEND {"method":"DOM.getDocument","params":{},"id":65,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"DOM.getDocument","params":{},"id":65,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 ```
 
 Each step in the promise chain uses the value from the previous step,
@@ -720,7 +720,7 @@ p <- b$DOM$getDocument(wait_ = FALSE) %...>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
   { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) } %...>%
   str()
-#> SEND {"method":"DOM.getDocument","params":{},"id":66,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"DOM.getDocument","params":{},"id":66,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 
 b$wait_for(p)
 #> [1] "HeadlessChrome/91.0.4472.114"
@@ -786,7 +786,7 @@ value returned by `$wait_for()`:
 p <- b$DOM$getDocument(wait_ = FALSE) %...>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
   { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) }
-#> SEND {"method":"DOM.getDocument","params":{},"id":71,"sessionId":"32B0A19254EB899A4EE36A988B580E45"}
+#> SEND {"method":"DOM.getDocument","params":{},"id":71,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}
 
 x <- b$wait_for(p)
 str(x)
@@ -915,12 +915,12 @@ b <- ChromoteSession$new()
   b$Page$navigate("https://www.r-project.org/")
   str(b$Page$loadEventFired())
 }
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":78,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":78,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}
 #> Callbacks for Page++: 1
 #> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":79,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
+#> SEND {"method":"Page.enable","params":[],"id":79,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}
 #> List of 1
-#>  $ timestamp: num 930216
+#>  $ timestamp: num 930411
 ```
 
 With the synchronous API, the call to `b$Page$loadEventFired()` will
@@ -954,12 +954,12 @@ p <- b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)$
   then(function(value) {
     b$Page$loadEventFired(wait_ = FALSE)
   })
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":81,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":81,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}
 
 # wait_for returns the last value in the chain, so we can call str() on it
 str(b$wait_for(p))
 #> List of 1
-#>  $ timestamp: num 930217
+#>  $ timestamp: num 930411
 ```
 
 This particular example has a twist to it: After sending the
@@ -973,14 +973,14 @@ p <- promise(function(resolve, reject) {
   b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
   resolve(b$Page$loadEventFired(wait_ = FALSE))
 })
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":84,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":84,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}
 #> Callbacks for Page++: 1
 #> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":85,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
+#> SEND {"method":"Page.enable","params":[],"id":85,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}
 
 str(b$wait_for(p))
 #> List of 1
-#>  $ timestamp: num 930217
+#>  $ timestamp: num 930411
 ```
 
 Essentially, the `Page.navigate` command gets sent off and we don’t need
@@ -993,15 +993,15 @@ promise that’s returned by the event method:
 
 ``` r
 b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":87,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":87,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}
 #> <Promise [pending]>
 p <- b$Page$loadEventFired(wait_ = FALSE)
 #> Callbacks for Page++: 1
 #> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":88,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
+#> SEND {"method":"Page.enable","params":[],"id":88,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}
 str(b$wait_for(p))
 #> List of 1
-#>  $ timestamp: num 930217
+#>  $ timestamp: num 930411
 ```
 
 And we can make it yet simpler by firing off the navigation command and
@@ -1010,15 +1010,15 @@ default `wait_=TRUE`), which already calls `wait_for()`.
 
 ``` r
 b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":90,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":90,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}
 #> <Promise [pending]>
 x <- b$Page$loadEventFired()
 #> Callbacks for Page++: 1
 #> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":91,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
+#> SEND {"method":"Page.enable","params":[],"id":91,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}
 str(x)
 #> List of 1
-#>  $ timestamp: num 930217
+#>  $ timestamp: num 930411
 ```
 
 > **Technical note:** The Chrome Devtools Protocol itself does not
@@ -1050,24 +1050,15 @@ callback counter back to 0.)
 
 ``` r
 cancel_load_event_callback <- b$Page$loadEventFired(callback_ = str)
-#> Callbacks for Page++: 1
-#> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":93,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
 
 # Each of these will cause the callback to fire.
 n1 <- b$Page$navigate("https://www.r-project.org/")
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":94,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
 n2 <- b$Page$navigate("https://cran.r-project.org/")
-#> SEND {"method":"Page.navigate","params":{"url":"https://cran.r-project.org/"},"id":95,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
 
 cancel_load_event_callback()
-#> Callbacks for Page--: 0
-#> Disabling events for Page
-#> SEND {"method":"Page.disable","params":[],"id":96,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
 
 # No longer causes the callback to fire.
 n3 <- b$Page$navigate("https://www.rstudio.com/")
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.rstudio.com/"},"id":97,"sessionId":"9BD223769AF31F43D4B265773EB825B6"}
 ```
 
 ## Resource cleanup and garbage collection
