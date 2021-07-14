@@ -392,3 +392,160 @@ set_default_chromote_object <- function(x) {
   }
   globals$default_chromote <- x
 }
+
+
+
+
+cache_value <- function(fn) {
+  value <- NULL
+  function() {
+    if (is.null(value)) {
+      value <<- fn()
+    }
+    value
+  }
+}
+# inspired by https://www.npmjs.com/package/is-docker
+is_inside_docker <- cache_value(function() {
+  file.exists("/.dockerenv") ||
+  (
+    is_linux() &&
+    file.exists("/proc/self/cgroup") &&
+    any(grepl("docker", readLines("/proc/self/cgroup"), fixed = TRUE))
+  )
+})
+is_inside_ci <- cache_value(function() {
+  unset_val <- "CHROMOTE_FALSE"
+  !identical(Sys.getenv("CI", unset = unset_val), unset_val)
+})
+
+
+is_linux <- function() {
+  Sys.info()[["sysname"]] == "Linux"
+}
+is_missing_linux_user <- cache_value(function() {
+  is_linux() &&
+    system("id", ignore.stdout = TRUE) != 0
+})
+
+
+
+# Need to use a sentinal value that can be serialized within the package,
+# yet can not be used (such as `NULL`, which is valid)
+globals$default_args <- -1
+
+#' Default Chrome arguments
+#'
+#' A character vector of command-line arguments passed when initializing any new
+#' instance of [`Chrome`]. Single on-off arguments are passed as single values
+#' (e.g.`"--disable-gpu"`), arguments with a value are given with a nested
+#' character vector (e.g. `c("--force-color-profile", "srgb")`). See
+#' [here](https://peter.sh/experiments/chromium-command-line-switches/) for a
+#' list of possible arguments.
+#'
+#'
+#' @details
+#'
+#' Default chromote arguments are composed of the following values (when
+#' appropriate):
+#'
+#' * [`"--disable-gpu"`](https://peter.sh/experiments/chromium-command-line-switches/#disable-gpu)
+#'   * \verb{Disables GPU hardware acceleration. If software renderer is not in place, then the GPU process won't launch.}
+#' * [`"--no-sandbox"`](https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox)
+#'   * Only added when `CI` system environment variable is set or when the
+#'     user on a Linux system is not set.
+#'   * \verb{Disables the sandbox for all process types that are normally sandboxed. Meant to be used as a browser-level switch for testing purposes only}
+#' * [`"--disable-dev-shm-usage"`](https://peter.sh/experiments/chromium-command-line-switches/#disable-dev-shm-usage)
+#'   * Only added when `CI` system environment variable is set or when inside a docker instance.
+#'   * \verb{The /dev/shm partition is too small in certain VM environments, causing Chrome to fail or crash}
+#' * [`c("--force-color-profile", "srgb")`](https://peter.sh/experiments/chromium-command-line-switches/#force-color-profile)
+#'   * This means that screenshots taken on a laptop plugged into an external
+#'     monitor will often have subtly different colors than one taken when
+#'     the laptop is using its built-in monitor. This problem will be even
+#'     more likely across machines.
+#'   * \verb{Force all monitors to be treated as though they have the specified color profile.}
+#' * [`"--disable-extensions"`](https://peter.sh/experiments/chromium-command-line-switches/#disable-extensions)
+#'   * \verb{Disable extensions.}
+#' * [`"--hide-scrollbars"`](https://peter.sh/experiments/chromium-command-line-switches/#hide-scrollbars)
+#'   * \verb{Hide scrollbars from screenshots.}
+#' * [`"--mute-audio"`](https://peter.sh/experiments/chromium-command-line-switches/#mute-audio)
+#'   * \verb{Mutes audio sent to the audio device so it is not audible during automated testing}
+#'
+#' @return A character vector of default command-line arguments to be used with
+#'   every new [`ChromoteSession`]
+#' @describeIn default_chromote_args Returns a character vector of command-line
+#'   arguments passed when initializing Chrome. See Details for more
+#'   information.
+#' @export
+default_chromote_args <- function() {
+  if (identical(globals$default_args, -1)) {
+    set_default_chromote_args(c(
+      # Better cross platform support
+      "--disable-gpu",
+
+      # > Note: --no-sandbox is not needed if you properly setup a user in the container.
+      # https://developers.google.com/web/updates/2017/04/headless-chrome
+      if (is_inside_ci() || is_missing_linux_user()) {
+        "--no-sandbox"
+      },
+
+      # Until we have hundreds of concurrent usage, let's slow things down by
+      # using `/tmp` disk folder, rather than shared memory folder `/dev/shm`.
+      # This will make things more stable at the cost of accessing disk more often.
+      # Great discussion: https://github.com/puppeteer/puppeteer/issues/1834
+      if (is_inside_ci() || is_inside_docker()) {
+        "--disable-dev-shm-usage" # required bc the target easily crashes
+      },
+
+      # Consistent screenshot colors
+      # https://github.com/rstudio/chromote/pull/52
+      c("--force-color-profile", "srgb"),
+
+      # Have also seen usage of `--ignore-certificate-errors`
+
+      # Generic options to have consistent output
+      c(
+        '--disable-extensions',
+        '--hide-scrollbars',
+        '--mute-audio'
+      )
+    ))
+  }
+
+  globals$default_args
+}
+
+#' @describeIn default_chromote_args Sets the default command-line arguments
+#'   passed when initializing. Returns the updated defaults.
+#' @param args A character vector of command-line arguments to be used with
+#'   every new [`ChromoteSession`]. If `args` equals `-1`, then the default
+#'   chromote arguments will be reset to the original default values.
+#' @export
+set_default_chromote_args <- function(args) {
+  set_args <- function(args_) {
+    # Using $ to set `NULL` is safe with environments
+    globals$default_args <- args_
+    invisible(args_)
+  }
+  # Allow for `NULL` values
+  if (is.null(args)) {
+    return(set_args(NULL))
+  }
+  if (identical(args, -1)) {
+    globals$default_args <- -1
+    # update default values
+    return(invisible(default_chromote_args()))
+  }
+
+  # validate
+  default_args <- unique(unlist(args))
+  if (length(default_args) == 0) {
+    return(set_args(NULL))
+  }
+  if (anyNA(default_args) || !any(vapply(default_args, is.character, logical(1)))) {
+    stop("`set_default_chromote_args()` only accepts a character vector or `NULL`")
+  }
+
+  # set
+  return(set_args(default_args))
+}
