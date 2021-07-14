@@ -62,18 +62,18 @@ jobs:
           # Make session
           b <- ChromoteSession$new()
 
-          # set_default_chromote_object(
-          #   Chromote$new(
-          #     Chrome$new(
-          #       args = c(
-          #         "--disable-gpu",
-          #         "--no-sandbox",
-          #         "--disable-dev-shm-usage", # required bc the target easily crashes
-          #         c("--force-color-profile", "srgb")
-          #       )
-          #     )
-          #   )
-          # )
+          set_default_chromote_object(
+            Chromote$new(
+              Chrome$new(
+                args = c(
+                  "--disable-gpu",
+                  "--no-sandbox",
+                  "--disable-dev-shm-usage", # required bc the target easily crashes
+                  c("--force-color-profile", "srgb")
+                )
+              )
+            )
+          )
 
           # Download google.com
           b$Page$navigate("https://www.rstudio.com/")
