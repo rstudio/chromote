@@ -109,7 +109,7 @@ Chromote <- R6Class(
     # Session management
     # =========================================================================
 
-    new_session = function(width = 992, height = 774, targetId = NULL, wait_ = TRUE) {
+    new_session = function(width = 1200, height = 1600, targetId = NULL, wait_ = TRUE) {
       session <- ChromoteSession$new(self, width, height, targetId, wait_ = FALSE)
 
       # ChromoteSession$new() always returns the object, but the
