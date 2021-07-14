@@ -114,7 +114,7 @@
 <span class="co">#&gt; [1] "@4bb19460e8d88c3446b360b0df8fd991fee49c0b"</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $userAgent</span>
-<span class="co">#&gt; [1] "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/91.0.4472.114 Safari/537.36"</span>
+<span class="co">#&gt; [1] "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/91.0.4472.114 Safari/537.36"</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $jsVersion</span>
 <span class="co">#&gt; [1] "9.1.269.36"</span></code></pre></div>
@@ -122,10 +122,10 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span>
 <span class="co">#&gt; $frameId</span>
-<span class="co">#&gt; [1] "E45F218CE72B1BAEFA376140F5158676"</span>
+<span class="co">#&gt; [1] "E1A46A07632D6845F901CDF69EAEBA7C"</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $loaderId</span>
-<span class="co">#&gt; [1] "AAE0287C68F36828B5810C103AB9D9EA"</span></code></pre></div>
+<span class="co">#&gt; [1] "871C1F3731C7CBDF3013538117A019BE"</span></code></pre></div>
 <p>In the official Chrome DevTools Protocol (CDP) documentation, this is the <a href="https://chromedevtools.github.io/devtools-protocol/tot/Page#method-navigate"><code>Page.navigate</code></a> command.</p>
 <p>In addition to full support of the CDP, ChromoteSession objects also some convenience methods, like <code>$screenshot()</code>. (See the Examples section below for more information about screenshots.)</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -241,10 +241,10 @@
 <code class="sourceCode R"><span class="va">b1</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span>
 <span class="va">b1</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://github.com/rstudio/chromote"</span><span class="op">)</span>
 <span class="co">#&gt; $frameId</span>
-<span class="co">#&gt; [1] "F6265B867FDB447141D094636EDDCE1C"</span>
+<span class="co">#&gt; [1] "EF7DBBE6FF7A89DF909CF87FCBEF372C"</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $loaderId</span>
-<span class="co">#&gt; [1] "E3B7DF6412CF2677A089E240E524409F"</span></code></pre></div>
+<span class="co">#&gt; [1] "8D4B37F28B23E3C3F0C7A05BB50555C2"</span></code></pre></div>
 <p>To close a browser tab/window, you can run:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b1</span><span class="op">$</span><span class="fu">close</span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -264,14 +264,14 @@
 <code class="sourceCode R"><span class="co"># Send a command to navigate to a page</span>
 <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org"</span><span class="op">)</span>
 <span class="co">#&gt; $frameId</span>
-<span class="co">#&gt; [1] "E45F218CE72B1BAEFA376140F5158676"</span>
+<span class="co">#&gt; [1] "E1A46A07632D6845F901CDF69EAEBA7C"</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $loaderId</span>
-<span class="co">#&gt; [1] "62631131C8570E6AF7061AAD50833D18"</span>
+<span class="co">#&gt; [1] "5BB8AE65035C4CBF2CD93D0C6DE8A285"</span>
 <span class="co"># Wait for the Page.loadEventFired event</span>
 <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; $timestamp</span>
-<span class="co">#&gt; [1] 930407.9</span></code></pre></div>
+<span class="co">#&gt; [1] 227.2177</span></code></pre></div>
 <p>After running these two lines, the R process will be blocked. While it’s blocked, the browser will load the page, and then send a message to the R process saying that the <code>Page.loadEventFired</code> event has occurred. The message looks something like this:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">{</span><span class="dt">"method"</span><span class="fu">:</span><span class="st">"Page.loadEventFired"</span><span class="fu">,</span><span class="dt">"params"</span><span class="fu">:{</span><span class="dt">"timestamp"</span><span class="fu">:</span><span class="fl">699232.345338</span><span class="fu">}}</span></span></code></pre></div>
 <p>After the R process receives this message, the function returns the value, which looks like this:</p>
@@ -325,12 +325,12 @@
 <code class="sourceCode R"><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
 <span class="va">b</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">debug_messages</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 <span class="co">#&gt; $frameId</span>
-<span class="co">#&gt; [1] "E47F1F1D63B0951F4E97A98E04805D52"</span>
+<span class="co">#&gt; [1] "074CDE553AE989F4304EE14AE5E75F76"</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $loaderId</span>
-<span class="co">#&gt; [1] "3A69CFD13600D4270F9F969F424D77A1"</span></code></pre></div>
+<span class="co">#&gt; [1] "82E9C6978968B42A3E5519BF690A9D69"</span></code></pre></div>
 </div>
 <div id="synchronous-vs-asynchronous-usage" class="section level3">
 <h3 class="hasAnchor">
@@ -362,25 +362,25 @@
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Synchronous</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":54,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":54,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 <span class="co">#&gt; List of 5</span>
 <span class="co">#&gt;  $ protocolVersion: chr "1.3"</span>
 <span class="co">#&gt;  $ product        : chr "HeadlessChrome/91.0.4472.114"</span>
 <span class="co">#&gt;  $ revision       : chr "@4bb19460e8d88c3446b360b0df8fd991fee49c0b"</span>
-<span class="co">#&gt;  $ userAgent      : chr "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/91.0.4472"| __truncated__</span>
+<span class="co">#&gt;  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/91.0.4472.114 Safari/537.36"</span>
 <span class="co">#&gt;  $ jsVersion      : chr "9.1.269.36"</span></code></pre></div>
 <p>In async mode, there are two ways to use the value that the browser sends to the R process. One is to use the <code>callback_</code> argument with <code>wait_=FALSE</code>. The <code>wait_=FALSE</code> tells it to run the command in async mode; instead of returning the value from the browser, it returns a promise. For example:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Async with callback</span>
 <span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span>, callback_ <span class="op">=</span> <span class="va">str</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":55,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":55,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 <span class="co">#&gt; &lt;Promise [pending]&gt;</span>
 <span class="co"># After a very, very short pause, prints:</span></code></pre></div>
 <div class="sourceCode" id="cb21"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co">#&gt; List of 5</span></span>
 <span id="cb21-2"><a href="#cb21-2"></a><span class="co">#&gt;  $ protocolVersion: chr "1.3"</span></span>
 <span id="cb21-3"><a href="#cb21-3"></a><span class="co">#&gt;  $ product        : chr "HeadlessChrome/91.0.4472.114"</span></span>
 <span id="cb21-4"><a href="#cb21-4"></a><span class="co">#&gt;  $ revision       : chr "@4bb19460e8d88c3446b360b0df8fd991fee49c0b"</span></span>
-<span id="cb21-5"><a href="#cb21-5"></a><span class="co">#&gt;  $ userAgent      : chr "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/91.0.4472"| __truncated__</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a><span class="co">#&gt;  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/91.0.4472.114 Safari/537.36"</span></span>
 <span id="cb21-6"><a href="#cb21-6"></a><span class="co">#&gt;  $ jsVersion      : chr "9.1.269.36"</span></span></code></pre></div>
 <p>Notice that the function returned <code>&lt;Promise [pending]&gt;</code>, and then it printed out the data. We’ll come back to the promise part.</p>
 <blockquote>
@@ -392,13 +392,13 @@
   <span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span>, callback_ <span class="op">=</span> <span class="va">str</span><span class="op">)</span>
   <span class="fl">1</span><span class="op">+</span><span class="fl">1</span>
 <span class="op">}</span>
-<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":56,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":56,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 <span class="co">#&gt; [1] 2</span></code></pre></div>
 <div class="sourceCode" id="cb23"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co">#&gt; List of 5</span></span>
 <span id="cb23-2"><a href="#cb23-2"></a><span class="co">#&gt;  $ protocolVersion: chr "1.3"</span></span>
 <span id="cb23-3"><a href="#cb23-3"></a><span class="co">#&gt;  $ product        : chr "HeadlessChrome/91.0.4472.114"</span></span>
 <span id="cb23-4"><a href="#cb23-4"></a><span class="co">#&gt;  $ revision       : chr "@4bb19460e8d88c3446b360b0df8fd991fee49c0b"</span></span>
-<span id="cb23-5"><a href="#cb23-5"></a><span class="co">#&gt;  $ userAgent      : chr "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/91.0.4472"| __truncated__</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="co">#&gt;  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/91.0.4472.114 Safari/537.36"</span></span>
 <span id="cb23-6"><a href="#cb23-6"></a><span class="co">#&gt;  $ jsVersion      : chr "9.1.269.36"</span></span></code></pre></div>
 <p>In the code above, it executes the <code>1+1</code> and returns the value before the <code>str</code> callback can be executed on the message from the browser.</p>
 <p>If you want to store the value from the browser, you can write a callback that stores the value like so:</p>
@@ -408,7 +408,7 @@
 <span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span>, callback_ <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">msg</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">product</span> <span class="op">&lt;&lt;-</span> <span class="va">msg</span><span class="op">$</span><span class="va">product</span>
 <span class="op">}</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":57,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":57,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 <span class="co">#&gt; &lt;Promise [pending]&gt;</span></code></pre></div>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Wait for a moment, then run:</span>
@@ -424,7 +424,7 @@
     <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">value</span><span class="op">$</span><span class="va">product</span><span class="op">)</span>
   <span class="op">}</span><span class="op">)</span>
 <span class="op">}</span>
-<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":58,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":58,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 <span class="co"># Wait for a moment, then prints:</span></code></pre></div>
 <div class="sourceCode" id="cb27"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co">#&gt; [1] "HeadlessChrome/91.0.4472.114"</span></span></code></pre></div>
 <p>Here are some progressively more concise ways of achieving the same thing. As you work with promises, you will see these various forms of promise chaining. For more information, see the <a href="https://rstudio.github.io/promises/">promises documentation</a>.</p>
@@ -435,33 +435,33 @@
 <span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rstudio.github.io/promises//reference/then.html">then</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">value</span><span class="op">$</span><span class="va">product</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":59,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":59,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 
 <span class="co"># Promise-pipe to anonymous function, which must be wrapped in parens</span>
 <span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%...&gt;%</span> <span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">value</span><span class="op">$</span><span class="va">product</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":60,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":60,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 
 <span class="co"># Promise-pipe to an expression (which gets converted to a function with the first argument `.`)</span>
 <span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%...&gt;%</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">product</span><span class="op">)</span> <span class="op">}</span>
-<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":61,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":61,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 
 <span class="co"># Promise-pipe to a named function, with parentheses</span>
 <span class="va">print_product</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">msg</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">msg</span><span class="op">$</span><span class="va">product</span><span class="op">)</span>
 <span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%...&gt;%</span> <span class="fu">print_product</span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":62,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":62,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 
 <span class="co"># Promise-pipe to a named function, without parentheses</span>
 <span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%...&gt;%</span> <span class="va">print_product</span>
-<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":63,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span></code></pre></div>
+<span class="co">#&gt; SEND {"method":"Browser.getVersion","params":[],"id":63,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span></code></pre></div>
 <p>The earlier example where we found the dimensions of a DOM element using CSS selectors was done with the synchronous API and <code><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></code> pipes. The same can be done in async mode by switching from the regular pipe to the promise-pipe, and calling all the methods with <code>wait_=FALSE</code>:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">getDocument</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%...&gt;%</span>
   <span class="op">{</span> <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">querySelector</span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">root</span><span class="op">$</span><span class="va">nodeId</span>, <span class="st">".sidebar"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">}</span> <span class="op">%...&gt;%</span>
   <span class="op">{</span> <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">getBoxModel</span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">nodeId</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">}</span> <span class="op">%...&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"DOM.getDocument","params":{},"id":64,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"DOM.getDocument","params":{},"id":64,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 
 
 <span class="co"># Or, more verbosely:</span>
@@ -475,7 +475,7 @@
   <span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>
   <span class="op">}</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"DOM.getDocument","params":{},"id":65,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span></code></pre></div>
+<span class="co">#&gt; SEND {"method":"DOM.getDocument","params":{},"id":65,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span></code></pre></div>
 <p>Each step in the promise chain uses the value from the previous step, via <code>.</code> or <code>value</code>. Note that not all asynchronous code works in such a linear, straightforward way. Sometimes it is necessary to save data from intermediate steps in a broader-scoped variable, if it is to be used in a later step in the promise chain.</p>
 </div>
 <div id="turning-asynchronous-code-into-synchronous-code" class="section level4">
@@ -488,7 +488,7 @@
   <span class="op">{</span> <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">querySelector</span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">root</span><span class="op">$</span><span class="va">nodeId</span>, <span class="st">".sidebar"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">}</span> <span class="op">%...&gt;%</span>
   <span class="op">{</span> <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">getBoxModel</span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">nodeId</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">}</span> <span class="op">%...&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"DOM.getDocument","params":{},"id":66,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"DOM.getDocument","params":{},"id":66,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 
 <span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span>
 <span class="co">#&gt; [1] "HeadlessChrome/91.0.4472.114"</span>
@@ -499,40 +499,40 @@
 <span class="co">#&gt; List of 1</span>
 <span class="co">#&gt;  $ model:List of 6</span>
 <span class="co">#&gt;   ..$ content:List of 8</span>
-<span class="co">#&gt;   .. ..$ : num 107</span>
+<span class="co">#&gt;   .. ..$ : num 99.3</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 238</span>
+<span class="co">#&gt;   .. ..$ : num 231</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 238</span>
+<span class="co">#&gt;   .. ..$ : num 231</span>
 <span class="co">#&gt;   .. ..$ : int 986</span>
-<span class="co">#&gt;   .. ..$ : num 107</span>
+<span class="co">#&gt;   .. ..$ : num 99.3</span>
 <span class="co">#&gt;   .. ..$ : int 986</span>
 <span class="co">#&gt;   ..$ padding:List of 8</span>
-<span class="co">#&gt;   .. ..$ : num 91.8</span>
+<span class="co">#&gt;   .. ..$ : num 84.3</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 253</span>
+<span class="co">#&gt;   .. ..$ : num 246</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 253</span>
+<span class="co">#&gt;   .. ..$ : num 246</span>
 <span class="co">#&gt;   .. ..$ : int 986</span>
-<span class="co">#&gt;   .. ..$ : num 91.8</span>
+<span class="co">#&gt;   .. ..$ : num 84.3</span>
 <span class="co">#&gt;   .. ..$ : int 986</span>
 <span class="co">#&gt;   ..$ border :List of 8</span>
-<span class="co">#&gt;   .. ..$ : num 91.8</span>
+<span class="co">#&gt;   .. ..$ : num 84.3</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 253</span>
+<span class="co">#&gt;   .. ..$ : num 246</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 253</span>
+<span class="co">#&gt;   .. ..$ : num 246</span>
 <span class="co">#&gt;   .. ..$ : int 986</span>
-<span class="co">#&gt;   .. ..$ : num 91.8</span>
+<span class="co">#&gt;   .. ..$ : num 84.3</span>
 <span class="co">#&gt;   .. ..$ : int 986</span>
 <span class="co">#&gt;   ..$ margin :List of 8</span>
-<span class="co">#&gt;   .. ..$ : int 11</span>
+<span class="co">#&gt;   .. ..$ : num 3.5</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 253</span>
+<span class="co">#&gt;   .. ..$ : num 246</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 253</span>
+<span class="co">#&gt;   .. ..$ : num 246</span>
 <span class="co">#&gt;   .. ..$ : int 1028</span>
-<span class="co">#&gt;   .. ..$ : int 11</span>
+<span class="co">#&gt;   .. ..$ : num 3.5</span>
 <span class="co">#&gt;   .. ..$ : int 1028</span>
 <span class="co">#&gt;   ..$ width  : int 161</span>
 <span class="co">#&gt;   ..$ height : int 958</span>
@@ -543,47 +543,47 @@
 <code class="sourceCode R"><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">getDocument</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%...&gt;%</span>
   <span class="op">{</span> <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">querySelector</span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">root</span><span class="op">$</span><span class="va">nodeId</span>, <span class="st">".sidebar"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">}</span> <span class="op">%...&gt;%</span>
   <span class="op">{</span> <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">getBoxModel</span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">nodeId</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">}</span>
-<span class="co">#&gt; SEND {"method":"DOM.getDocument","params":{},"id":71,"sessionId":"AC60732C88EA310A3674B2EEE7454ED7"}</span>
+<span class="co">#&gt; SEND {"method":"DOM.getDocument","params":{},"id":71,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}</span>
 
 <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="co">#&gt; List of 1</span>
 <span class="co">#&gt;  $ model:List of 6</span>
 <span class="co">#&gt;   ..$ content:List of 8</span>
-<span class="co">#&gt;   .. ..$ : num 107</span>
+<span class="co">#&gt;   .. ..$ : num 99.3</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 238</span>
+<span class="co">#&gt;   .. ..$ : num 231</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 238</span>
+<span class="co">#&gt;   .. ..$ : num 231</span>
 <span class="co">#&gt;   .. ..$ : int 986</span>
-<span class="co">#&gt;   .. ..$ : num 107</span>
+<span class="co">#&gt;   .. ..$ : num 99.3</span>
 <span class="co">#&gt;   .. ..$ : int 986</span>
 <span class="co">#&gt;   ..$ padding:List of 8</span>
-<span class="co">#&gt;   .. ..$ : num 91.8</span>
+<span class="co">#&gt;   .. ..$ : num 84.3</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 253</span>
+<span class="co">#&gt;   .. ..$ : num 246</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 253</span>
+<span class="co">#&gt;   .. ..$ : num 246</span>
 <span class="co">#&gt;   .. ..$ : int 986</span>
-<span class="co">#&gt;   .. ..$ : num 91.8</span>
+<span class="co">#&gt;   .. ..$ : num 84.3</span>
 <span class="co">#&gt;   .. ..$ : int 986</span>
 <span class="co">#&gt;   ..$ border :List of 8</span>
-<span class="co">#&gt;   .. ..$ : num 91.8</span>
+<span class="co">#&gt;   .. ..$ : num 84.3</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 253</span>
+<span class="co">#&gt;   .. ..$ : num 246</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 253</span>
+<span class="co">#&gt;   .. ..$ : num 246</span>
 <span class="co">#&gt;   .. ..$ : int 986</span>
-<span class="co">#&gt;   .. ..$ : num 91.8</span>
+<span class="co">#&gt;   .. ..$ : num 84.3</span>
 <span class="co">#&gt;   .. ..$ : int 986</span>
 <span class="co">#&gt;   ..$ margin :List of 8</span>
-<span class="co">#&gt;   .. ..$ : int 11</span>
+<span class="co">#&gt;   .. ..$ : num 3.5</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 253</span>
+<span class="co">#&gt;   .. ..$ : num 246</span>
 <span class="co">#&gt;   .. ..$ : int 28</span>
-<span class="co">#&gt;   .. ..$ : num 253</span>
+<span class="co">#&gt;   .. ..$ : num 246</span>
 <span class="co">#&gt;   .. ..$ : int 1028</span>
-<span class="co">#&gt;   .. ..$ : int 11</span>
+<span class="co">#&gt;   .. ..$ : num 3.5</span>
 <span class="co">#&gt;   .. ..$ : int 1028</span>
 <span class="co">#&gt;   ..$ width  : int 161</span>
 <span class="co">#&gt;   ..$ height : int 958</span></code></pre></div>
@@ -639,12 +639,12 @@
   <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span>
-<span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":78,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}</span>
+<span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":78,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}</span>
 <span class="co">#&gt; Callbacks for Page++: 1</span>
 <span class="co">#&gt; Enabling events for Page</span>
-<span class="co">#&gt; SEND {"method":"Page.enable","params":[],"id":79,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}</span>
+<span class="co">#&gt; SEND {"method":"Page.enable","params":[],"id":79,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}</span>
 <span class="co">#&gt; List of 1</span>
-<span class="co">#&gt;  $ timestamp: num 930411</span></code></pre></div>
+<span class="co">#&gt;  $ timestamp: num 229</span></code></pre></div>
 <p>With the synchronous API, the call to <code>b$Page$loadEventFired()</code> will block until Chromote receives a <code>Page.loadEventFired</code> message from the browser. However, with the async promise API, you would write it like this:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%...&gt;%</span>
@@ -666,51 +666,51 @@
   <span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span>
     <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
   <span class="op">}</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":81,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}</span>
+<span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":81,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}</span>
 
 <span class="co"># wait_for returns the last value in the chain, so we can call str() on it</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; List of 1</span>
-<span class="co">#&gt;  $ timestamp: num 930411</span></code></pre></div>
+<span class="co">#&gt;  $ timestamp: num 230</span></code></pre></div>
 <p>This particular example has a twist to it: After sending the <code>Page.navigate</code> command, the R process doesn’t really need to wait for browser’s response before it starts waiting for the <code>Page.loadEventFired</code> event. So instead of chaining, you could just do this:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/promises//reference/promise.html">promise</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">resolve</span>, <span class="va">reject</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
   <span class="fu"><a href="https://rstudio.github.io/promises//reference/resolve.html">resolve</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":84,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}</span>
+<span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":84,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}</span>
 <span class="co">#&gt; Callbacks for Page++: 1</span>
 <span class="co">#&gt; Enabling events for Page</span>
-<span class="co">#&gt; SEND {"method":"Page.enable","params":[],"id":85,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}</span>
+<span class="co">#&gt; SEND {"method":"Page.enable","params":[],"id":85,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; List of 1</span>
-<span class="co">#&gt;  $ timestamp: num 930411</span></code></pre></div>
+<span class="co">#&gt;  $ timestamp: num 230</span></code></pre></div>
 <p>Essentially, the <code>Page.navigate</code> command gets sent off and we don’t need to wait for the browser’s reply. We can tell R to immediately start waiting for the <code>Page.loadEventFired</code> event.</p>
 <p>We can simplify it by not wrapping both method calls in a promise. We can just fire off the navigation command, and then directly use the promise that’s returned by the event method:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":87,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}</span>
+<span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":87,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}</span>
 <span class="co">#&gt; &lt;Promise [pending]&gt;</span>
 <span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; Callbacks for Page++: 1</span>
 <span class="co">#&gt; Enabling events for Page</span>
-<span class="co">#&gt; SEND {"method":"Page.enable","params":[],"id":88,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}</span>
+<span class="co">#&gt; SEND {"method":"Page.enable","params":[],"id":88,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; List of 1</span>
-<span class="co">#&gt;  $ timestamp: num 930411</span></code></pre></div>
+<span class="co">#&gt;  $ timestamp: num 230</span></code></pre></div>
 <p>And we can make it yet simpler by firing off the navigation command and then calling <code>b$Page$loadEventFired()</code> in synchronous mode (with the default <code>wait_=TRUE</code>), which already calls <code>wait_for()</code>.</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":90,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}</span>
+<span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":90,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}</span>
 <span class="co">#&gt; &lt;Promise [pending]&gt;</span>
 <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Callbacks for Page++: 1</span>
 <span class="co">#&gt; Enabling events for Page</span>
-<span class="co">#&gt; SEND {"method":"Page.enable","params":[],"id":91,"sessionId":"2B74C343877CB2F93C9F7366679A7ED3"}</span>
+<span class="co">#&gt; SEND {"method":"Page.enable","params":[],"id":91,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="co">#&gt; List of 1</span>
-<span class="co">#&gt;  $ timestamp: num 930411</span></code></pre></div>
+<span class="co">#&gt;  $ timestamp: num 231</span></code></pre></div>
 <blockquote>
 <p><strong>Technical note:</strong> The Chrome Devtools Protocol itself does not automatically enable event notifications. Normally, you would have to call the <code>Page.enable</code> method to turn on event notifications for the Page domain. However, Chromote saves you from needing to do this step by keeping track of how many callbacks there are for each domain. When the number of event callbacks for a domain goes from 0 to 1, Chromote automatically calls <code>$enable()</code> for that domain, and when it goes from 1 to 0, it it calls <code>$disable()</code>.</p>
 </blockquote>
