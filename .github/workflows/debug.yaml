@@ -62,18 +62,27 @@ jobs:
           # Make session
           b <- ChromoteSession$new()
 
-          set_default_chromote_object(
-            Chromote$new(
-              Chrome$new(
-                args = c(
-                  "--disable-gpu",
-                  "--no-sandbox",
-                  "--disable-dev-shm-usage", # required bc the target easily crashes
-                  c("--force-color-profile", "srgb")
-                )
-              )
-            )
+          print(
+            file.exists('/.dockerenv')
           )
+          print(
+            readLines('/proc/self/cgroup')
+          )
+          print(grepl("docker", readLines('/proc/self/cgroup')), fixed = TRUE)
+
+          # set_default_chromote_object(
+          #   Chromote$new(
+          #     Chrome$new(
+          #       args = c(
+          #         "--disable-gpu",
+          #         "--no-sandbox",
+          #         "--disable-dev-shm-usage", # required bc the target easily crashes
+          #         # c("--force-color-profile", "srgb"),
+          #         NULL
+          #       )
+          #     )
+          #   )
+          # )
 
           # Download google.com
           b$Page$navigate("https://www.rstudio.com/")
