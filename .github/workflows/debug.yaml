@@ -87,6 +87,7 @@ jobs:
 
       - name: Upload folder
         uses: actions/upload-artifact@main
+        if: always()
         with:
           name: debug-results
           path: ./
