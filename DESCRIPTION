@@ -11,6 +11,7 @@ Encoding: UTF-8
 LazyData: true
 SystemRequirements: Google Chrome or other Chromium-based browser. chromium: chromium (rpm) or chromium-browser (deb)
 Imports:
+    curl,
     jsonlite,
     websocket (>= 1.2.0),
     processx,
