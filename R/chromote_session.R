@@ -33,8 +33,8 @@ ChromoteSession <- R6Class(
     #' @return A new `ChromoteSession` object.
     initialize = function(
       parent = default_chromote_object(),
-      width = 992,
-      height = 744,
+      width = 1920,
+      height = 1200,
       targetId = NULL,
       wait_ = TRUE,
       auto_events = NULL
