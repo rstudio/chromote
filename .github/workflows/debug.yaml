@@ -62,13 +62,7 @@ jobs:
           # Make session
           b <- ChromoteSession$new()
 
-          print(
-            file.exists('/.dockerenv')
-          )
-          print(
-            readLines('/proc/self/cgroup')
-          )
-          print(grepl("docker", readLines('/proc/self/cgroup')), fixed = TRUE)
+          print(system("id"))
 
           # set_default_chromote_object(
           #   Chromote$new(
