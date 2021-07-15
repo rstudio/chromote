@@ -52,7 +52,7 @@ values (e.g.\code{"--disable-gpu"}), arguments with a value are given with a
 nested character vector (e.g. \code{c("--force-color-profile", "srgb")}).
 See
 \href{https://peter.sh/experiments/chromium-command-line-switches/}{here}
-for a list of possible arguments. Defaults to \code{\link[=`get_chrome_args]{`get_chrome_args()}}.}
+for a list of possible arguments. Defaults to \code{\link[=get_chrome_args]{get_chrome_args()}}.}
 }
 \if{html}{\out{</div>}}
 }
