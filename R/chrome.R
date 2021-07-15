@@ -12,10 +12,10 @@ Chrome <- R6Class("Chrome",
     #'   nested character vector (e.g. `c("--force-color-profile", "srgb")`).
     #'   See
     #'   [here](https://peter.sh/experiments/chromium-command-line-switches/)
-    #'   for a list of possible arguments. Defaults to [`default_chromote_args()].
+    #'   for a list of possible arguments. Defaults to [`get_chrome_args()].
     #' @return A new `Chrome` object.
-    #' @seealso [`default_chromote_args()`]
-    initialize = function(path = find_chrome(), args = default_chromote_args()) {
+    #' @seealso [`get_chrome_args()`]
+    initialize = function(path = find_chrome(), args = get_chrome_args()) {
       if (is.null(path)) {
         stop("Invalid path to Chrome")
       }
@@ -72,7 +72,7 @@ find_chrome <- function() {
 }
 
 
-launch_chrome <- function(path = find_chrome(), args = default_chromote_args()) {
+launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
   if (is.null(path)) {
     stop("Invalid path to Chrome")
   }
