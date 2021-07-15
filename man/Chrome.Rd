@@ -35,7 +35,11 @@ Class representing a local Chrome process
 \subsection{Method \code{new()}}{
 Create a new Chrome object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Chrome$new(path = find_chrome(), args = character(0))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Chrome$new(
+  path = find_chrome(),
+  use_srgb_color_profile = TRUE,
+  args = character(0)
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -43,11 +47,18 @@ Create a new Chrome object.
 \describe{
 \item{\code{path}}{Location of chrome installation}
 
+\item{\code{use_srgb_color_profile}}{Should a standard color profile (srgb) be
+used when taking screenshots? Forcing a standard profile increases
+portability of screenshots as colors will differ when the monitor of
+screenshotting machines have different color profiles. The downside is
+that colors of output may be slightly different than what you see in
+your browser.
+Equivalent to settings \code{args = '--force-color-profile="srgb"'}.
+If you want to use another option you can set it using the \code{args}
+parameter.}
+
 \item{\code{args}}{A character vector of command-line arguments passed when
-initializing Chromium. Single on-off arguments are passed as single
-values (e.g.\code{"--disable-gpu"}), arguments with a value are given with a
-nested character vector (e.g. \code{c("--force-color-profile", "srgb")}).
-See
+initializing Chromium. E.g. \code{c("--disable-gpu", '--force-color-profile="srgb"')}. See
 \href{https://peter.sh/experiments/chromium-command-line-switches/}{here}
 for a list of possible arguments.}
 }
