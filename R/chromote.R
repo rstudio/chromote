@@ -4,6 +4,7 @@
 #' @import promises later
 #' @importFrom fastmap fastmap
 #' @importFrom processx process
+#' @importFrom curl curl
 NULL
 
 
