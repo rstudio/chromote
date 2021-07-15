@@ -9,7 +9,7 @@ Class representing a local Chrome process
 Class representing a local Chrome process
 }
 \seealso{
-\code{\link[=default_chromote_args]{default_chromote_args()}}
+\code{\link[=get_chrome_args]{get_chrome_args()}}
 }
 \section{Super class}{
 \code{\link[chromote:Browser]{chromote::Browser}} -> \code{Chrome}
@@ -38,7 +38,7 @@ Class representing a local Chrome process
 \subsection{Method \code{new()}}{
 Create a new Chrome object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Chrome$new(path = find_chrome(), args = default_chromote_args())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Chrome$new(path = find_chrome(), args = get_chrome_args())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -52,7 +52,7 @@ values (e.g.\code{"--disable-gpu"}), arguments with a value are given with a
 nested character vector (e.g. \code{c("--force-color-profile", "srgb")}).
 See
 \href{https://peter.sh/experiments/chromium-command-line-switches/}{here}
-for a list of possible arguments. Defaults to \code{\link[=`default_chromote_args]{`default_chromote_args()}}.}
+for a list of possible arguments. Defaults to \code{\link[=`get_chrome_args]{`get_chrome_args()}}.}
 }
 \if{html}{\out{</div>}}
 }
