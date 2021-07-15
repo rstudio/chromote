@@ -406,6 +406,7 @@ cache_value <- function(fn) {
   }
 }
 # inspired by https://www.npmjs.com/package/is-docker
+# This should not change over time. Cache it
 is_inside_docker <- cache_value(function() {
   file.exists("/.dockerenv") ||
   (
@@ -414,10 +415,11 @@ is_inside_docker <- cache_value(function() {
     any(grepl("docker", readLines("/proc/self/cgroup"), fixed = TRUE))
   )
 })
-is_inside_ci <- cache_value(function() {
-  unset_val <- "CHROMOTE_FALSE"
-  !identical(Sys.getenv("CI", unset = unset_val), unset_val)
-})
+
+# This is a _fast_ function. Do not cache it.
+is_inside_ci <- function() {
+  !identical(Sys.getenv("CI", unset = ""), "")
+}
 
 
 is_linux <- function() {
