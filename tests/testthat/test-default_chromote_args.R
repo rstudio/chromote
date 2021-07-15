@@ -1,54 +1,53 @@
 
+min_chrome_arg_length <- 5
 
 test_that("default args are retrieved", {
-  expect_gte(length(default_chromote_args()), 6)
+  expect_gte(length(default_chrome_args()), min_chrome_arg_length)
 })
 
 test_that("default args can be reset", {
   # safety
-  on.exit({
-    set_default_chromote_args(-1)
-  }, add = TRUE)
+  cur_args <- get_chrome_args()
+  on.exit({ set_chrome_args(cur_args) }, add = TRUE)
+
+  reset_chrome_args()
 
   # Exists
-  expect_gte(length(default_chromote_args()), 6)
+  expect_gte(length(get_chrome_args()), min_chrome_arg_length)
 
   # Remove
-  set_default_chromote_args(NULL)
-  expect_equal(length(default_chromote_args()), 0)
+  set_chrome_args(NULL)
+  expect_equal(length(get_chrome_args()), 0)
+  expect_gte(length(default_chrome_args()), min_chrome_arg_length)
 
   # Reset
-  set_default_chromote_args(-1)
-  expect_gte(length(default_chromote_args()), 6)
+  reset_chrome_args()
+  expect_gte(length(get_chrome_args()), min_chrome_arg_length)
 
   # Remove
-  set_default_chromote_args(character(0))
-  expect_equal(length(default_chromote_args()), 0)
-
-  # Reset
-  set_default_chromote_args(-1)
-  expect_gte(length(default_chromote_args()), 6)
+  set_chrome_args(character(0))
+  expect_equal(length(get_chrome_args()), 0)
 })
 
 test_that("default args can be overwritten", {
   # safety
-  on.exit({
-    set_default_chromote_args(-1)
-  }, add = TRUE)
+  cur_args <- get_chrome_args()
+  on.exit({ set_chrome_args(cur_args) }, add = TRUE)
 
-  expect_gte(length(default_chromote_args()), 6)
-  set_default_chromote_args(c("hello", "goodbye"))
+  reset_chrome_args()
 
-  expect_equal(length(default_chromote_args()), 2)
+  expect_gte(length(get_chrome_args()), min_chrome_arg_length)
+
+  set_chrome_args(c("hello", "goodbye"))
+  expect_equal(length(get_chrome_args()), 2)
 })
 
 test_that("type checking", {
   # safety
-  on.exit({
-    set_default_chromote_args(-1)
-  }, add = TRUE)
+  cur_args <- get_chrome_args()
+  on.exit({ set_chrome_args(cur_args) }, add = TRUE)
 
-  expect_error(set_default_chromote_args(NA))
-  expect_error(set_default_chromote_args(NaN))
-  expect_error(set_default_chromote_args(1:10))
+  expect_error(set_chrome_args(NA))
+  expect_error(set_chrome_args(NaN))
+  expect_error(set_chrome_args(1:10))
 })
