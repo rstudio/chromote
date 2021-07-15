@@ -121,6 +121,9 @@ Class representing a local Chrome process" />
 
 
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='default_chrome_args.html'>get_chrome_args()</a></code></p></div>
     <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
 
     <p><code><a href='Browser.html'>chromote::Browser</a></code> -&gt; <code>Chrome</code></p>
@@ -146,19 +149,19 @@ Class representing a local Chrome process" />
 <hr>
 <a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
 <p>Create a new Chrome object.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Chrome</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>path <span class='op'>=</span> <span class='fu'><a href='find_chrome.html'>find_chrome</a></span><span class='op'>(</span><span class='op'>)</span>, args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>Chrome</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>path <span class='op'>=</span> <span class='fu'><a href='find_chrome.html'>find_chrome</a></span><span class='op'>(</span><span class='op'>)</span>, args <span class='op'>=</span> <span class='fu'><a href='default_chrome_args.html'>get_chrome_args</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
 <dt><code>path</code></dt><dd><p>Location of chrome installation</p></dd>
 
 <dt><code>args</code></dt><dd><p>A character vector of command-line arguments passed when
-initializing Chromium. Single on-off arguments are passed as single
+initializing Chrome. Single on-off arguments are passed as single
 values (e.g.<code>"--disable-gpu"</code>), arguments with a value are given with a
 nested character vector (e.g. <code><a href='https://rdrr.io/r/base/c.html'>c("--force-color-profile", "srgb")</a></code>).
 See
 <a href='https://peter.sh/experiments/chromium-command-line-switches/'>here</a>
-for a list of possible arguments.</p></dd>
+for a list of possible arguments. Defaults to <code><a href='default_chrome_args.html'>get_chrome_args()</a></code>.</p></dd>
 
 </dl><p></div></p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
