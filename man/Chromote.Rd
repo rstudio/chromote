@@ -79,7 +79,12 @@ Chromote class
 \if{latex}{\out{\hypertarget{method-new_session}{}}}
 \subsection{Method \code{new_session()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Chromote$new_session(width = 992, height = 774, targetId = NULL, wait_ = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$new_session(
+  width = 1200,
+  height = 1600,
+  targetId = NULL,
+  wait_ = TRUE
+)}\if{html}{\out{</div>}}
 }
 
 }

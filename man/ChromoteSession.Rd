@@ -38,8 +38,8 @@ Create a new \code{ChromoteSession} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$new(
   parent = default_chromote_object(),
-  width = 992,
-  height = 744,
+  width = 1200,
+  height = 1600,
   targetId = NULL,
   wait_ = TRUE,
   auto_events = NULL
@@ -121,8 +121,8 @@ A new \code{ChromoteSession} object.
 \subsection{Method \code{new_session()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$new_session(
-  width = 992,
-  height = 774,
+  width = 1200,
+  height = 1600,
   targetId = NULL,
   wait_ = TRUE
 )}\if{html}{\out{</div>}}

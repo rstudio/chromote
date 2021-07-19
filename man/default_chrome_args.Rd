@@ -47,7 +47,7 @@ user on a Linux system is not set, or when executing inside a Docker container.
 \item Only added when \code{CI} system environment variable is set or when inside a docker instance.
 \item \verb{The /dev/shm partition is too small in certain VM environments, causing Chrome to fail or crash}
 }
-\item \href{https://peter.sh/experiments/chromium-command-line-switches/#force-color-profile}{\code{c("--force-color-profile", "srgb")}}
+\item \href{https://peter.sh/experiments/chromium-command-line-switches/#force-color-profile}{\code{"--force-color-profile=srgb"}}
 \itemize{
 \item This means that screenshots taken on a laptop plugged into an external
 monitor will often have subtly different colors than one taken when
