@@ -1,0 +1,87 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+name: Rituals
+
+jobs:
+  # # added so that the workflow doesn't fail.
+  # always_runner:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Always run
+  #       run: echo "This job is used to prevent the workflow status from showing as failed when all other jobs are skipped"
+
+  Rituals:
+    name: Rituals
+    runs-on: ubuntu-20.04
+
+    env:
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      RSPM: "https://packagemanager.rstudio.com/all/__linux__/focal/latest"
+
+    steps:
+      - uses: actions/checkout@v2
+        name: Git Pull (master)
+        if: github.event_name != 'pull_request'
+
+      - uses: actions/checkout@v2
+        name: Git Pull (PR)
+        if: github.event_name == 'pull_request'
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Git Config
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+
+      - uses: r-lib/actions/setup-r@master
+        id: install-r
+
+      - uses: r-lib/actions/setup-pandoc@master
+
+      - name: Install pak and query dependencies
+        shell: Rscript {0}
+        run: |
+          install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
+          saveRDS(pak::pkg_deps_tree("local::.", dependencies = TRUE), ".github/r-depends.rds")
+      - name: Cache R packages
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ubuntu-20.04-${{ steps.install-r.outputs.installed-r-version }}-rituals-1-${{ hashFiles('.github/r-depends.rds') }}
+          restore-keys: ubuntu-20.04-${{ steps.install-r.outputs.installed-r-version }}-rituals-1-
+
+      - name: Install system dependencies
+        if: runner.os == 'Linux'
+        shell: Rscript {0}
+        run: |
+          pak::local_system_requirements(execute = TRUE)
+
+      - name: Install dependencies
+        shell: Rscript {0}
+        run: |
+          pak::local_install(upgrade = TRUE, dependencies = TRUE)
+
+      - name: Document
+        run: |
+          Rscript -e 'pak::pkg_install("roxygen2")'
+          Rscript -e 'roxygen2::roxygenise()'
+          git add man/\* NAMESPACE
+          git commit -m 'Document (GitHub Actions)' || echo "No documentation changes to commit"
+
+      - name: Git Push (PR)
+        uses: r-lib/actions/pr-push@master
+        if: github.event_name == 'pull_request'
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Git Push (PUSH)
+        if: github.event_name == 'push'
+        run: |
+          git push https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:${{ github.ref }} || echo "No changes to push"

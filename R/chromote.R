@@ -457,7 +457,7 @@ is_missing_linux_user <- cache_value(function() {
 #' * [`"--disable-dev-shm-usage"`](https://peter.sh/experiments/chromium-command-line-switches/#disable-dev-shm-usage)
 #'   * Only added when `CI` system environment variable is set or when inside a docker instance.
 #'   * \verb{The /dev/shm partition is too small in certain VM environments, causing Chrome to fail or crash}
-#' * [`c("--force-color-profile", "srgb")`](https://peter.sh/experiments/chromium-command-line-switches/#force-color-profile)
+#' * [`"--force-color-profile=srgb"`](https://peter.sh/experiments/chromium-command-line-switches/#force-color-profile)
 #'   * This means that screenshots taken on a laptop plugged into an external
 #'     monitor will often have subtly different colors than one taken when
 #'     the laptop is using its built-in monitor. This problem will be even
@@ -495,7 +495,7 @@ default_chrome_args <- function() {
 
     # Consistent screenshot colors
     # https://github.com/rstudio/chromote/pull/52
-    c("--force-color-profile", "srgb"),
+    "--force-color-profile=srgb",
 
     # Have also seen usage of `--ignore-certificate-errors`
 
