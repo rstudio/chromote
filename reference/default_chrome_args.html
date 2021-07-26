@@ -163,7 +163,7 @@ user on a Linux system is not set, or when executing inside a Docker container.<
 <li><p>Only added when <code>CI</code> system environment variable is set or when inside a docker instance.</p></li>
 <li><p><code>The /dev/shm partition is too small in certain VM environments, causing Chrome to fail or crash</code></p></li>
 </ul></li>
-<li><p><a href='https://peter.sh/experiments/chromium-command-line-switches/#force-color-profile'><code><a href='https://rdrr.io/r/base/c.html'>c("--force-color-profile", "srgb")</a></code></a></p><ul>
+<li><p><a href='https://peter.sh/experiments/chromium-command-line-switches/#force-color-profile'><code>"--force-color-profile=srgb"</code></a></p><ul>
 <li><p>This means that screenshots taken on a laptop plugged into an external
 monitor will often have subtly different colors than one taken when
 the laptop is using its built-in monitor. This problem will be even
