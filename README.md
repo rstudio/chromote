@@ -69,16 +69,16 @@ b$Browser$getVersion()
 #> [1] "1.3"
 #> 
 #> $product
-#> [1] "HeadlessChrome/91.0.4472.114"
+#> [1] "HeadlessChrome/94.0.4606.81"
 #> 
 #> $revision
-#> [1] "@4bb19460e8d88c3446b360b0df8fd991fee49c0b"
+#> [1] "@5a03c5f1033171d5ee1671d219a59e29cf75e054"
 #> 
 #> $userAgent
-#> [1] "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/91.0.4472.114 Safari/537.36"
+#> [1] "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/94.0.4606.81 Safari/537.36"
 #> 
 #> $jsVersion
-#> [1] "9.1.269.36"
+#> [1] "9.4.146.21"
 ```
 
 If you have the viewer open and run the following, you’ll see the web
@@ -87,10 +87,10 @@ page load in the viewer:
 ``` r
 b$Page$navigate("https://www.r-project.org/")
 #> $frameId
-#> [1] "E1A46A07632D6845F901CDF69EAEBA7C"
+#> [1] "16EAB1BF24316869FDC801284D7AAA4F"
 #> 
 #> $loaderId
-#> [1] "871C1F3731C7CBDF3013538117A019BE"
+#> [1] "907077ACC097F9F1DA38919A3AD49669"
 ```
 
 In the official Chrome DevTools Protocol (CDP) documentation, this is
@@ -135,43 +135,43 @@ str(x)
 #> List of 1
 #>  $ model:List of 6
 #>   ..$ content:List of 8
-#>   .. ..$ : num 107
+#>   .. ..$ : num 128
 #>   .. ..$ : int 28
-#>   .. ..$ : num 238
+#>   .. ..$ : num 292
 #>   .. ..$ : int 28
-#>   .. ..$ : num 238
-#>   .. ..$ : int 986
-#>   .. ..$ : num 107
-#>   .. ..$ : int 986
+#>   .. ..$ : num 292
+#>   .. ..$ : int 966
+#>   .. ..$ : num 128
+#>   .. ..$ : int 966
 #>   ..$ padding:List of 8
-#>   .. ..$ : num 91.8
+#>   .. ..$ : num 112
 #>   .. ..$ : int 28
-#>   .. ..$ : num 253
+#>   .. ..$ : num 308
 #>   .. ..$ : int 28
-#>   .. ..$ : num 253
-#>   .. ..$ : int 986
-#>   .. ..$ : num 91.8
-#>   .. ..$ : int 986
+#>   .. ..$ : num 308
+#>   .. ..$ : int 966
+#>   .. ..$ : num 112
+#>   .. ..$ : int 966
 #>   ..$ border :List of 8
-#>   .. ..$ : num 91.8
+#>   .. ..$ : num 112
 #>   .. ..$ : int 28
-#>   .. ..$ : num 253
+#>   .. ..$ : num 308
 #>   .. ..$ : int 28
-#>   .. ..$ : num 253
-#>   .. ..$ : int 986
-#>   .. ..$ : num 91.8
-#>   .. ..$ : int 986
+#>   .. ..$ : num 308
+#>   .. ..$ : int 966
+#>   .. ..$ : num 112
+#>   .. ..$ : int 966
 #>   ..$ margin :List of 8
-#>   .. ..$ : int 11
+#>   .. ..$ : int 15
 #>   .. ..$ : int 28
-#>   .. ..$ : num 253
+#>   .. ..$ : num 308
 #>   .. ..$ : int 28
-#>   .. ..$ : num 253
-#>   .. ..$ : int 1028
-#>   .. ..$ : int 11
-#>   .. ..$ : int 1028
-#>   ..$ width  : int 161
-#>   ..$ height : int 958
+#>   .. ..$ : num 308
+#>   .. ..$ : int 1008
+#>   .. ..$ : int 15
+#>   .. ..$ : int 1008
+#>   ..$ width  : int 195
+#>   ..$ height : int 938
 ```
 
 Or you can do the same thing by chaining commands together with a
@@ -185,43 +185,43 @@ b$DOM$getDocument() %>%
 #> List of 1
 #>  $ model:List of 6
 #>   ..$ content:List of 8
-#>   .. ..$ : num 107
+#>   .. ..$ : num 128
 #>   .. ..$ : int 28
-#>   .. ..$ : num 238
+#>   .. ..$ : num 292
 #>   .. ..$ : int 28
-#>   .. ..$ : num 238
-#>   .. ..$ : int 986
-#>   .. ..$ : num 107
-#>   .. ..$ : int 986
+#>   .. ..$ : num 292
+#>   .. ..$ : int 966
+#>   .. ..$ : num 128
+#>   .. ..$ : int 966
 #>   ..$ padding:List of 8
-#>   .. ..$ : num 91.8
+#>   .. ..$ : num 112
 #>   .. ..$ : int 28
-#>   .. ..$ : num 253
+#>   .. ..$ : num 308
 #>   .. ..$ : int 28
-#>   .. ..$ : num 253
-#>   .. ..$ : int 986
-#>   .. ..$ : num 91.8
-#>   .. ..$ : int 986
+#>   .. ..$ : num 308
+#>   .. ..$ : int 966
+#>   .. ..$ : num 112
+#>   .. ..$ : int 966
 #>   ..$ border :List of 8
-#>   .. ..$ : num 91.8
+#>   .. ..$ : num 112
 #>   .. ..$ : int 28
-#>   .. ..$ : num 253
+#>   .. ..$ : num 308
 #>   .. ..$ : int 28
-#>   .. ..$ : num 253
-#>   .. ..$ : int 986
-#>   .. ..$ : num 91.8
-#>   .. ..$ : int 986
+#>   .. ..$ : num 308
+#>   .. ..$ : int 966
+#>   .. ..$ : num 112
+#>   .. ..$ : int 966
 #>   ..$ margin :List of 8
-#>   .. ..$ : int 11
+#>   .. ..$ : int 15
 #>   .. ..$ : int 28
-#>   .. ..$ : num 253
+#>   .. ..$ : num 308
 #>   .. ..$ : int 28
-#>   .. ..$ : num 253
-#>   .. ..$ : int 1028
-#>   .. ..$ : int 11
-#>   .. ..$ : int 1028
-#>   ..$ width  : int 161
-#>   ..$ height : int 958
+#>   .. ..$ : num 308
+#>   .. ..$ : int 1008
+#>   .. ..$ : int 15
+#>   .. ..$ : int 1008
+#>   ..$ width  : int 195
+#>   ..$ height : int 938
 ```
 
 ### Creating new tabs and managing the process
@@ -239,10 +239,10 @@ affecting the first one.
 b1$view()
 b1$Page$navigate("https://github.com/rstudio/chromote")
 #> $frameId
-#> [1] "EF7DBBE6FF7A89DF909CF87FCBEF372C"
+#> [1] "B658ADE1EE79BF4E4A6CEBF6D0CF496E"
 #> 
 #> $loaderId
-#> [1] "8D4B37F28B23E3C3F0C7A05BB50555C2"
+#> [1] "F549EC39AD3D9B3E29CA464969F09880"
 ```
 
 To close a browser tab/window, you can run:
@@ -286,14 +286,14 @@ be enforced by wrapping both lines of code in `{ .... }`).
 # Send a command to navigate to a page
 b$Page$navigate("https://www.r-project.org")
 #> $frameId
-#> [1] "E1A46A07632D6845F901CDF69EAEBA7C"
+#> [1] "16EAB1BF24316869FDC801284D7AAA4F"
 #> 
 #> $loaderId
-#> [1] "5BB8AE65035C4CBF2CD93D0C6DE8A285"
+#> [1] "588B729C85DEB1B4A20273818458A1C5"
 # Wait for the Page.loadEventFired event
 b$Page$loadEventFired()
 #> $timestamp
-#> [1] 227.2177
+#> [1] 236.959
 ```
 
 After running these two lines, the R process will be blocked. While it’s
@@ -428,12 +428,12 @@ understanding how the Chrome Devtools Protocol works.
 b <- ChromoteSession$new()
 b$parent$debug_messages(TRUE)
 b$Page$navigate("https://www.r-project.org/")
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 #> $frameId
-#> [1] "074CDE553AE989F4304EE14AE5E75F76"
+#> [1] "ADFEEDABCCCE382B34CDE9F36969BF55"
 #> 
 #> $loaderId
-#> [1] "82E9C6978968B42A3E5519BF690A9D69"
+#> [1] "A3C41E77FB3722A0B8F7F4FF3A8A6BDD"
 ```
 
 ### Synchronous vs. asynchronous usage
@@ -523,13 +523,13 @@ JSON to an R object. For example:
 ``` r
 # Synchronous
 str(b$Browser$getVersion())
-#> SEND {"method":"Browser.getVersion","params":[],"id":54,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":54,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 #> List of 5
 #>  $ protocolVersion: chr "1.3"
-#>  $ product        : chr "HeadlessChrome/91.0.4472.114"
-#>  $ revision       : chr "@4bb19460e8d88c3446b360b0df8fd991fee49c0b"
-#>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/91.0.4472.114 Safari/537.36"
-#>  $ jsVersion      : chr "9.1.269.36"
+#>  $ product        : chr "HeadlessChrome/94.0.4606.81"
+#>  $ revision       : chr "@5a03c5f1033171d5ee1671d219a59e29cf75e054"
+#>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/94.0.4606.81 Safari/537.36"
+#>  $ jsVersion      : chr "9.4.146.21"
 ```
 
 In async mode, there are two ways to use the value that the browser
@@ -541,17 +541,17 @@ promise. For example:
 ``` r
 # Async with callback
 b$Browser$getVersion(wait_ = FALSE, callback_ = str)
-#> SEND {"method":"Browser.getVersion","params":[],"id":55,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":55,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 #> <Promise [pending]>
 # After a very, very short pause, prints:
 ```
 
     #> List of 5
     #>  $ protocolVersion: chr "1.3"
-    #>  $ product        : chr "HeadlessChrome/91.0.4472.114"
-    #>  $ revision       : chr "@4bb19460e8d88c3446b360b0df8fd991fee49c0b"
-    #>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/91.0.4472.114 Safari/537.36"
-    #>  $ jsVersion      : chr "9.1.269.36"
+    #>  $ product        : chr "HeadlessChrome/94.0.4606.81"
+    #>  $ revision       : chr "@5a03c5f1033171d5ee1671d219a59e29cf75e054"
+    #>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/94.0.4606.81 Safari/537.36"
+    #>  $ jsVersion      : chr "9.4.146.21"
 
 Notice that the function returned `<Promise [pending]>`, and then it
 printed out the data. We’ll come back to the promise part.
@@ -569,16 +569,16 @@ example:
   b$Browser$getVersion(wait_ = FALSE, callback_ = str)
   1+1
 }
-#> SEND {"method":"Browser.getVersion","params":[],"id":56,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":56,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 #> [1] 2
 ```
 
     #> List of 5
     #>  $ protocolVersion: chr "1.3"
-    #>  $ product        : chr "HeadlessChrome/91.0.4472.114"
-    #>  $ revision       : chr "@4bb19460e8d88c3446b360b0df8fd991fee49c0b"
-    #>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/91.0.4472.114 Safari/537.36"
-    #>  $ jsVersion      : chr "9.1.269.36"
+    #>  $ product        : chr "HeadlessChrome/94.0.4606.81"
+    #>  $ revision       : chr "@5a03c5f1033171d5ee1671d219a59e29cf75e054"
+    #>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/94.0.4606.81 Safari/537.36"
+    #>  $ jsVersion      : chr "9.4.146.21"
 
 In the code above, it executes the `1+1` and returns the value before
 the `str` callback can be executed on the message from the browser.
@@ -592,14 +592,14 @@ product <- NULL
 b$Browser$getVersion(wait_ = FALSE, callback_ = function(msg) {
   product <<- msg$product
 })
-#> SEND {"method":"Browser.getVersion","params":[],"id":57,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":57,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 #> <Promise [pending]>
 ```
 
 ``` r
 # Wait for a moment, then run:
 product
-#> [1] "HeadlessChrome/91.0.4472.114"
+#> [1] "HeadlessChrome/94.0.4606.81"
 ```
 
 But to get the value, you need to wait for the callback to execute
@@ -635,11 +635,11 @@ a single paste operation and have the same effect.)
     print(value$product)
   })
 }
-#> SEND {"method":"Browser.getVersion","params":[],"id":58,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":58,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 # Wait for a moment, then prints:
 ```
 
-    #> [1] "HeadlessChrome/91.0.4472.114"
+    #> [1] "HeadlessChrome/94.0.4606.81"
 
 Here are some progressively more concise ways of achieving the same
 thing. As you work with promises, you will see these various forms of
@@ -653,26 +653,26 @@ library(promises)
 b$Browser$getVersion(wait_ = FALSE) %>% then(function(value) {
   print(value$product)
 })
-#> SEND {"method":"Browser.getVersion","params":[],"id":59,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":59,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 
 # Promise-pipe to anonymous function, which must be wrapped in parens
 b$Browser$getVersion(wait_ = FALSE) %...>% (function(value) {
   print(value$product)
 })
-#> SEND {"method":"Browser.getVersion","params":[],"id":60,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":60,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 
 # Promise-pipe to an expression (which gets converted to a function with the first argument `.`)
 b$Browser$getVersion(wait_ = FALSE) %...>% { print(.$product) }
-#> SEND {"method":"Browser.getVersion","params":[],"id":61,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":61,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 
 # Promise-pipe to a named function, with parentheses
 print_product <- function(msg) print(msg$product)
 b$Browser$getVersion(wait_ = FALSE) %...>% print_product()
-#> SEND {"method":"Browser.getVersion","params":[],"id":62,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":62,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 
 # Promise-pipe to a named function, without parentheses
 b$Browser$getVersion(wait_ = FALSE) %...>% print_product
-#> SEND {"method":"Browser.getVersion","params":[],"id":63,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"Browser.getVersion","params":[],"id":63,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 ```
 
 The earlier example where we found the dimensions of a DOM element using
@@ -685,7 +685,7 @@ b$DOM$getDocument(wait_ = FALSE) %...>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
   { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) } %...>%
   str()
-#> SEND {"method":"DOM.getDocument","params":{},"id":64,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"DOM.getDocument","params":{},"id":64,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 
 
 # Or, more verbosely:
@@ -699,7 +699,7 @@ b$DOM$getDocument(wait_ = FALSE)$
   then(function(value) {
     str(value)
   })
-#> SEND {"method":"DOM.getDocument","params":{},"id":65,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"DOM.getDocument","params":{},"id":65,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 ```
 
 Each step in the promise chain uses the value from the previous step,
@@ -720,54 +720,54 @@ p <- b$DOM$getDocument(wait_ = FALSE) %...>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
   { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) } %...>%
   str()
-#> SEND {"method":"DOM.getDocument","params":{},"id":66,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"DOM.getDocument","params":{},"id":66,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 
 b$wait_for(p)
-#> [1] "HeadlessChrome/91.0.4472.114"
-#> [1] "HeadlessChrome/91.0.4472.114"
-#> [1] "HeadlessChrome/91.0.4472.114"
-#> [1] "HeadlessChrome/91.0.4472.114"
-#> [1] "HeadlessChrome/91.0.4472.114"
+#> [1] "HeadlessChrome/94.0.4606.81"
+#> [1] "HeadlessChrome/94.0.4606.81"
+#> [1] "HeadlessChrome/94.0.4606.81"
+#> [1] "HeadlessChrome/94.0.4606.81"
+#> [1] "HeadlessChrome/94.0.4606.81"
 #> List of 1
 #>  $ model:List of 6
 #>   ..$ content:List of 8
-#>   .. ..$ : num 99.3
+#>   .. ..$ : num 128
 #>   .. ..$ : int 28
-#>   .. ..$ : num 231
+#>   .. ..$ : num 292
 #>   .. ..$ : int 28
-#>   .. ..$ : num 231
-#>   .. ..$ : int 986
-#>   .. ..$ : num 99.3
-#>   .. ..$ : int 986
+#>   .. ..$ : num 292
+#>   .. ..$ : int 966
+#>   .. ..$ : num 128
+#>   .. ..$ : int 966
 #>   ..$ padding:List of 8
-#>   .. ..$ : num 84.3
+#>   .. ..$ : num 112
 #>   .. ..$ : int 28
-#>   .. ..$ : num 246
+#>   .. ..$ : num 308
 #>   .. ..$ : int 28
-#>   .. ..$ : num 246
-#>   .. ..$ : int 986
-#>   .. ..$ : num 84.3
-#>   .. ..$ : int 986
+#>   .. ..$ : num 308
+#>   .. ..$ : int 966
+#>   .. ..$ : num 112
+#>   .. ..$ : int 966
 #>   ..$ border :List of 8
-#>   .. ..$ : num 84.3
+#>   .. ..$ : num 112
 #>   .. ..$ : int 28
-#>   .. ..$ : num 246
+#>   .. ..$ : num 308
 #>   .. ..$ : int 28
-#>   .. ..$ : num 246
-#>   .. ..$ : int 986
-#>   .. ..$ : num 84.3
-#>   .. ..$ : int 986
+#>   .. ..$ : num 308
+#>   .. ..$ : int 966
+#>   .. ..$ : num 112
+#>   .. ..$ : int 966
 #>   ..$ margin :List of 8
-#>   .. ..$ : num 3.5
+#>   .. ..$ : int 15
 #>   .. ..$ : int 28
-#>   .. ..$ : num 246
+#>   .. ..$ : num 308
 #>   .. ..$ : int 28
-#>   .. ..$ : num 246
-#>   .. ..$ : int 1028
-#>   .. ..$ : num 3.5
-#>   .. ..$ : int 1028
-#>   ..$ width  : int 161
-#>   ..$ height : int 958
+#>   .. ..$ : num 308
+#>   .. ..$ : int 1008
+#>   .. ..$ : int 15
+#>   .. ..$ : int 1008
+#>   ..$ width  : int 195
+#>   ..$ height : int 938
 #> NULL
 ```
 
@@ -786,50 +786,50 @@ value returned by `$wait_for()`:
 p <- b$DOM$getDocument(wait_ = FALSE) %...>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
   { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) }
-#> SEND {"method":"DOM.getDocument","params":{},"id":71,"sessionId":"34EA0B7BFBC60E92C866CDA9916CBA65"}
+#> SEND {"method":"DOM.getDocument","params":{},"id":71,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 
 x <- b$wait_for(p)
 str(x)
 #> List of 1
 #>  $ model:List of 6
 #>   ..$ content:List of 8
-#>   .. ..$ : num 99.3
+#>   .. ..$ : num 128
 #>   .. ..$ : int 28
-#>   .. ..$ : num 231
+#>   .. ..$ : num 292
 #>   .. ..$ : int 28
-#>   .. ..$ : num 231
-#>   .. ..$ : int 986
-#>   .. ..$ : num 99.3
-#>   .. ..$ : int 986
+#>   .. ..$ : num 292
+#>   .. ..$ : int 966
+#>   .. ..$ : num 128
+#>   .. ..$ : int 966
 #>   ..$ padding:List of 8
-#>   .. ..$ : num 84.3
+#>   .. ..$ : num 112
 #>   .. ..$ : int 28
-#>   .. ..$ : num 246
+#>   .. ..$ : num 308
 #>   .. ..$ : int 28
-#>   .. ..$ : num 246
-#>   .. ..$ : int 986
-#>   .. ..$ : num 84.3
-#>   .. ..$ : int 986
+#>   .. ..$ : num 308
+#>   .. ..$ : int 966
+#>   .. ..$ : num 112
+#>   .. ..$ : int 966
 #>   ..$ border :List of 8
-#>   .. ..$ : num 84.3
+#>   .. ..$ : num 112
 #>   .. ..$ : int 28
-#>   .. ..$ : num 246
+#>   .. ..$ : num 308
 #>   .. ..$ : int 28
-#>   .. ..$ : num 246
-#>   .. ..$ : int 986
-#>   .. ..$ : num 84.3
-#>   .. ..$ : int 986
+#>   .. ..$ : num 308
+#>   .. ..$ : int 966
+#>   .. ..$ : num 112
+#>   .. ..$ : int 966
 #>   ..$ margin :List of 8
-#>   .. ..$ : num 3.5
+#>   .. ..$ : int 15
 #>   .. ..$ : int 28
-#>   .. ..$ : num 246
+#>   .. ..$ : num 308
 #>   .. ..$ : int 28
-#>   .. ..$ : num 246
-#>   .. ..$ : int 1028
-#>   .. ..$ : num 3.5
-#>   .. ..$ : int 1028
-#>   ..$ width  : int 161
-#>   ..$ height : int 958
+#>   .. ..$ : num 308
+#>   .. ..$ : int 1008
+#>   .. ..$ : int 15
+#>   .. ..$ : int 1008
+#>   ..$ width  : int 195
+#>   ..$ height : int 938
 ```
 
 There are some methods in Chromote and ChromoteSession objects which are
@@ -906,7 +906,7 @@ for it to actually finish loading that page. When it does, the
 
 ``` r
 b <- ChromoteSession$new()
-#> SEND {"method":"Target.createTarget","params":{"url":"about:blank","width":992,"height":744},"id":74}
+#> SEND {"method":"Target.createTarget","params":{"url":"about:blank","width":1200,"height":1600},"id":74}
 
 # Navigate and wait for Page.loadEventFired.
 # Note: these lines are put in a single code block to ensure that there is no
@@ -915,12 +915,12 @@ b <- ChromoteSession$new()
   b$Page$navigate("https://www.r-project.org/")
   str(b$Page$loadEventFired())
 }
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":78,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":78,"sessionId":"8D8605AFF860E3BF611303022C5F41DF"}
 #> Callbacks for Page++: 1
 #> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":79,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}
+#> SEND {"method":"Page.enable","params":[],"id":79,"sessionId":"8D8605AFF860E3BF611303022C5F41DF"}
 #> List of 1
-#>  $ timestamp: num 229
+#>  $ timestamp: num 239
 ```
 
 With the synchronous API, the call to `b$Page$loadEventFired()` will
@@ -954,12 +954,12 @@ p <- b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)$
   then(function(value) {
     b$Page$loadEventFired(wait_ = FALSE)
   })
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":81,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":81,"sessionId":"8D8605AFF860E3BF611303022C5F41DF"}
 
 # wait_for returns the last value in the chain, so we can call str() on it
 str(b$wait_for(p))
 #> List of 1
-#>  $ timestamp: num 230
+#>  $ timestamp: num 239
 ```
 
 This particular example has a twist to it: After sending the
@@ -973,14 +973,14 @@ p <- promise(function(resolve, reject) {
   b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
   resolve(b$Page$loadEventFired(wait_ = FALSE))
 })
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":84,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":84,"sessionId":"8D8605AFF860E3BF611303022C5F41DF"}
 #> Callbacks for Page++: 1
 #> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":85,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}
+#> SEND {"method":"Page.enable","params":[],"id":85,"sessionId":"8D8605AFF860E3BF611303022C5F41DF"}
 
 str(b$wait_for(p))
 #> List of 1
-#>  $ timestamp: num 230
+#>  $ timestamp: num 239
 ```
 
 Essentially, the `Page.navigate` command gets sent off and we don’t need
@@ -993,15 +993,15 @@ promise that’s returned by the event method:
 
 ``` r
 b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":87,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":87,"sessionId":"8D8605AFF860E3BF611303022C5F41DF"}
 #> <Promise [pending]>
 p <- b$Page$loadEventFired(wait_ = FALSE)
 #> Callbacks for Page++: 1
 #> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":88,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}
+#> SEND {"method":"Page.enable","params":[],"id":88,"sessionId":"8D8605AFF860E3BF611303022C5F41DF"}
 str(b$wait_for(p))
 #> List of 1
-#>  $ timestamp: num 230
+#>  $ timestamp: num 240
 ```
 
 And we can make it yet simpler by firing off the navigation command and
@@ -1010,15 +1010,15 @@ default `wait_=TRUE`), which already calls `wait_for()`.
 
 ``` r
 b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":90,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":90,"sessionId":"8D8605AFF860E3BF611303022C5F41DF"}
 #> <Promise [pending]>
 x <- b$Page$loadEventFired()
 #> Callbacks for Page++: 1
 #> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":91,"sessionId":"9349F9458EEA68ECD2937D4569FF5943"}
+#> SEND {"method":"Page.enable","params":[],"id":91,"sessionId":"8D8605AFF860E3BF611303022C5F41DF"}
 str(x)
 #> List of 1
-#>  $ timestamp: num 231
+#>  $ timestamp: num 240
 ```
 
 > **Technical note:** The Chrome Devtools Protocol itself does not
