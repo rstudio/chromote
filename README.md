@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/rstudio/chromote/workflows/R-CMD-check/badge.svg)](https://github.com/rstudio/chromote/actions)
+[![R-CMD-check](https://github.com/rstudio/chromote/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rstudio/chromote/actions)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/chromote)](https://CRAN.R-project.org/package=chromote)
 [![Lifecycle:
@@ -67,16 +67,16 @@ in the API docs) will query the browser for version information:
 b$Browser$getVersion()
 #> $protocolVersion
 #> [1] "1.3"
-#> 
+#>
 #> $product
 #> [1] "HeadlessChrome/94.0.4606.81"
-#> 
+#>
 #> $revision
 #> [1] "@5a03c5f1033171d5ee1671d219a59e29cf75e054"
-#> 
+#>
 #> $userAgent
 #> [1] "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/94.0.4606.81 Safari/537.36"
-#> 
+#>
 #> $jsVersion
 #> [1] "9.4.146.21"
 ```
@@ -88,7 +88,7 @@ page load in the viewer:
 b$Page$navigate("https://www.r-project.org/")
 #> $frameId
 #> [1] "16EAB1BF24316869FDC801284D7AAA4F"
-#> 
+#>
 #> $loaderId
 #> [1] "907077ACC097F9F1DA38919A3AD49669"
 ```
@@ -240,7 +240,7 @@ b1$view()
 b1$Page$navigate("https://github.com/rstudio/chromote")
 #> $frameId
 #> [1] "B658ADE1EE79BF4E4A6CEBF6D0CF496E"
-#> 
+#>
 #> $loaderId
 #> [1] "F549EC39AD3D9B3E29CA464969F09880"
 ```
@@ -287,7 +287,7 @@ be enforced by wrapping both lines of code in `{ .... }`).
 b$Page$navigate("https://www.r-project.org")
 #> $frameId
 #> [1] "16EAB1BF24316869FDC801284D7AAA4F"
-#> 
+#>
 #> $loaderId
 #> [1] "588B729C85DEB1B4A20273818458A1C5"
 # Wait for the Page.loadEventFired event
@@ -321,20 +321,20 @@ value, which looks like this:
 > page](https://chromedevtools.github.io/devtools-protocol/tot/Page)).
 > These notifications will continue to be sent until the browser
 > receives a `Page.disable` command.
-> 
+>
 > By default, Chromote hides this implementation detail. When you call
 > `b$Page$loadEventFired()`, Chromote sends a `Page.enable` command
 > automatically, and then waits until it receives the
 > `Page.loadEventFired` event notification. Then it sends a
 > `Page.disable` command.
-> 
+>
 > Note that in asynchronous mode, the behavior is slightly more
 > sophisticated: it maintains a counter of how many outstanding events
 > it is waiting for in a given domain. When that count goes from 0 to 1,
 > it sends the `X.enable` command; when the count goes from 1 to 0, it
 > sends the `X.disable` command. For more information, see the [Async
 > events](#async-events) section.
-> 
+>
 > If you do not want automatic event enabling and disabling, then when
 > creating the ChromoteSession object, use
 > `ChromoteSession$new(auto_events = FALSE)`.
@@ -431,7 +431,7 @@ b$Page$navigate("https://www.r-project.org/")
 #> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
 #> $frameId
 #> [1] "ADFEEDABCCCE382B34CDE9F36969BF55"
-#> 
+#>
 #> $loaderId
 #> [1] "A3C41E77FB3722A0B8F7F4FF3A8A6BDD"
 ```
@@ -479,7 +479,7 @@ the asynchronous functions to resolve.
 > idle); with **later** the event loop similarly runs when the call
 > stack is empty (when the R console is idle), but it can also be run at
 > any point by calling `later::run_now()`.
-> 
+>
 > There is another important difference between the JS event loop and
 > the one used by Chromote: Chromote uses *private event loops* provided
 > by [later](https://github.com/r-lib/later). Running the private event
@@ -1135,10 +1135,10 @@ caution.**
     # Mac
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless \
       --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
-    
+
     # Linux
     google-chrome --headless --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
-    
+
     # Windows
     "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"  --headless \
       --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
