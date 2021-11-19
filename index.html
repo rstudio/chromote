@@ -114,16 +114,16 @@
 <code class="sourceCode R"><span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; $protocolVersion</span>
 <span class="co">#&gt; [1] "1.3"</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt;</span>
 <span class="co">#&gt; $product</span>
 <span class="co">#&gt; [1] "HeadlessChrome/94.0.4606.81"</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt;</span>
 <span class="co">#&gt; $revision</span>
 <span class="co">#&gt; [1] "@5a03c5f1033171d5ee1671d219a59e29cf75e054"</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt;</span>
 <span class="co">#&gt; $userAgent</span>
 <span class="co">#&gt; [1] "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/94.0.4606.81 Safari/537.36"</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt;</span>
 <span class="co">#&gt; $jsVersion</span>
 <span class="co">#&gt; [1] "9.4.146.21"</span></code></pre></div>
 <p>If you have the viewer open and run the following, you’ll see the web page load in the viewer:</p>
@@ -131,7 +131,7 @@
 <code class="sourceCode R"><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span>
 <span class="co">#&gt; $frameId</span>
 <span class="co">#&gt; [1] "16EAB1BF24316869FDC801284D7AAA4F"</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt;</span>
 <span class="co">#&gt; $loaderId</span>
 <span class="co">#&gt; [1] "907077ACC097F9F1DA38919A3AD49669"</span></code></pre></div>
 <p>In the official Chrome DevTools Protocol (CDP) documentation, this is the <a href="https://chromedevtools.github.io/devtools-protocol/tot/Page#method-navigate"><code>Page.navigate</code></a> command.</p>
@@ -250,7 +250,7 @@
 <span class="va">b1</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://github.com/rstudio/chromote"</span><span class="op">)</span>
 <span class="co">#&gt; $frameId</span>
 <span class="co">#&gt; [1] "B658ADE1EE79BF4E4A6CEBF6D0CF496E"</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt;</span>
 <span class="co">#&gt; $loaderId</span>
 <span class="co">#&gt; [1] "F549EC39AD3D9B3E29CA464969F09880"</span></code></pre></div>
 <p>To close a browser tab/window, you can run:</p>
@@ -273,7 +273,7 @@
 <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org"</span><span class="op">)</span>
 <span class="co">#&gt; $frameId</span>
 <span class="co">#&gt; [1] "16EAB1BF24316869FDC801284D7AAA4F"</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt;</span>
 <span class="co">#&gt; $loaderId</span>
 <span class="co">#&gt; [1] "588B729C85DEB1B4A20273818458A1C5"</span>
 <span class="co"># Wait for the Page.loadEventFired event</span>
@@ -336,7 +336,7 @@
 <span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}</span>
 <span class="co">#&gt; $frameId</span>
 <span class="co">#&gt; [1] "ADFEEDABCCCE382B34CDE9F36969BF55"</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt;</span>
 <span class="co">#&gt; $loaderId</span>
 <span class="co">#&gt; [1] "A3C41E77FB3722A0B8F7F4FF3A8A6BDD"</span></code></pre></div>
 </div>
@@ -1131,7 +1131,7 @@
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/rstudio/chromote/actions"><img src="https://github.com/rstudio/chromote/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/rstudio/chromote/actions"><img src="https://github.com/rstudio/chromote/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://CRAN.R-project.org/package=chromote"><img src="https://www.r-pkg.org/badges/version/chromote" alt="CRAN status"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 </ul>
