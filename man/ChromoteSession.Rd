@@ -15,6 +15,7 @@ ChromoteSession class
 \item \href{#method-init_promise}{\code{ChromoteSession$init_promise()}}
 \item \href{#method-close}{\code{ChromoteSession$close()}}
 \item \href{#method-view}{\code{ChromoteSession$view()}}
+\item \href{#method-eval}{\code{ChromoteSession$eval()}}
 \item \href{#method-is_active}{\code{ChromoteSession$is_active()}}
 \item \href{#method-new_session}{\code{ChromoteSession$new_session()}}
 \item \href{#method-send_command}{\code{ChromoteSession$send_command()}}
@@ -105,6 +106,38 @@ A new \code{ChromoteSession} object.
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$view()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-eval"></a>}}
+\if{latex}{\out{\hypertarget{method-eval}{}}}
+\subsection{Method \code{eval()}}{
+Evaluate JavaScript
+This is a wrapper around \verb{$Runtime$evaluate()} that has sensible defaults for user interaction.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$eval(
+  script,
+  ...,
+  returnByValue = TRUE,
+  awaitPromise = TRUE,
+  wait_ = TRUE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{script}}{JavaScript (character) expression to evaluate}
+
+\item{\code{...}}{Arguments to pass to \verb{$Runtime$evaluate()}}
+
+\item{\code{returnByValue}}{This signifies if the return value of the script should be returned to the R session. Defaults to \code{TRUE}, which is different than Chrome DevTools Protocol (\code{FALSE}).}
+
+\item{\code{awaitPromise}}{If the JavaScript expression returns a Promise, \code{awaitPromise} will cause the Chrome DevTools Protocol to block until the promise is resolved. Defaults to \code{TRUE}, which is different than Chrome DevTools Protocol (\code{FALSE}).}
+
+\item{\code{timeout}}{Chrome DevTools Protocol timeout, in milliseconds. If provided, the \pkg{chromote} \code{timeout_} argument will default to to \code{2 * timeout}.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-is_active"></a>}}
