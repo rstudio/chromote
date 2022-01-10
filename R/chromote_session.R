@@ -153,6 +153,58 @@ ChromoteSession <- R6Class(
       browseURL(self$parent$url(path))
     },
 
+    #' @description Evaluate JavaScript
+    #' This is a wrapper around `$Runtime$evaluate()` that has sensible defaults for user interaction.
+    #' @param script JavaScript (character) expression to evaluate
+    #' @param ... Arguments to pass to `$Runtime$evaluate()`
+    #' @param timeout Chrome DevTools Protocol timeout, in milliseconds. If provided, the \pkg{chromote} `timeout_` argument will default to to `2 * timeout`.
+    #' @param awaitPromise If the JavaScript expression returns a Promise, `awaitPromise` will cause the Chrome DevTools Protocol to block until the promise is resolved. Defaults to `TRUE`, which is different than Chrome DevTools Protocol (`FALSE`).
+    #' @param returnByValue This signifies if the return value of the script should be returned to the R session. Defaults to `TRUE`, which is different than Chrome DevTools Protocol (`FALSE`).
+    eval = function(
+      script,
+      ...,
+      # TODO-barret; Should `arguments` be a parameter? This would require a function wrap around the code.
+      returnByValue = TRUE,
+      awaitPromise = TRUE,
+      wait_ = TRUE
+    ) {
+
+      # cat("\n", script, "\n")
+
+      # https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-evaluate
+      p <-
+        self$Runtime$evaluate(
+          script, ...,
+          returnByValue = returnByValue,
+          wait_ = FALSE
+        )$
+        catch(function(e) {
+          # Ex:
+          # ```r
+          # b$Runtime$evaluate(
+          #  "{let fib = function(n) { if (n < 2) { return n}; return fib(n-1) + fib(n - 2)}; fib(40);}",
+          #  timeout = 100, timeout_ = 10
+          # )
+          #> Error in onRejected(reason) : code: -32000
+          #>   message: Execution was terminated
+          # Have not come across other data in the error object to capture / pass along
+
+          # Return something similar to a timeout object
+          list(results = list(
+            type = "object",
+            subtype = "error",
+            className = "Error",
+            description = paste0("Error while evaluating JavaScript: ", as.character(e))
+          ))
+        })
+
+      if (wait_) {
+        self$wait_for(p)
+      } else {
+        p
+      }
+    },
+
     is_active = function() {
       private$is_active_
     },
