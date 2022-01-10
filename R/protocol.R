@@ -89,6 +89,16 @@ gen_command_body <- function(method_name, params) {
     )
   })
 
+  timeout_default_expr <-
+    if ("timeout" %in% lapply(params, `[[`, "name")) {
+      # Set the wall time of chromote to twice that of the execution time.
+      expr({if (is.null(timeout_) && !is.null(timeout)) {
+        timeout_ <- 2 * timeout / 1000
+      }})
+    } else {
+      expr({})
+    }
+
   # Construct parameters for message
   param_list <- lapply(params, function(param) {
     as.symbol(param$name)
@@ -107,6 +117,8 @@ gen_command_body <- function(method_name, params) {
 
     if (!identical(wait_, TRUE) && !identical(wait_, FALSE))
       stop("`wait_` must be TRUE or FALSE.")
+
+    !!!timeout_default_expr
 
     # Check for missing non-optional args
     !!!check_missing_exprs
