@@ -65,7 +65,11 @@ gen_command_args <- function(params) {
     args,
     callback_ = list(NULL),
     error_    = list(NULL),
-    timeout_  = quote(self$default_timeout),
+    timeout_  = if ("timeout" %in% names(args)) {
+      expr(if (is.null(timeout)) NULL else 2 * timeout / 1000 )
+    } else {
+      quote(self$default_timeout)
+    },
     wait_     = TRUE
   )
   args
