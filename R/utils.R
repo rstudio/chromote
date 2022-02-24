@@ -69,3 +69,14 @@ truncate <- function(x, n = 1000, message = "[truncated]") {
 find_domain <- function(event) {
   sub("\\.[^.]+", "", event)
 }
+
+
+# =============================================================================
+# Browser
+# =============================================================================
+
+# Force url to be opened by Chromium browser
+browse_url <- function(path, chromote) {
+  url <- chromote$url(path)
+  browseURL(url, shQuote(chromote$get_browser()$get_path()))
+}
