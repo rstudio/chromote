@@ -150,7 +150,7 @@ ChromoteSession <- R6Class(
         stop("Target info not found.")
       }
 
-      browseURL(self$parent$url(path))
+      self$parent$view(path)
     },
 
     is_active = function() {

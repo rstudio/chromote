@@ -23,6 +23,7 @@ Chrome <- R6Class("Chrome",
       private$host <- "127.0.0.1"
       private$process <- res$process
       private$port <- res$port
+      private$path <- path
     }
   )
 )

@@ -80,8 +80,8 @@ Chromote <- R6Class(
       })
     },
 
-    view = function() {
-      browseURL(self$url())
+    view = function(path = NULL) {
+      browseURL(self$url(path), shQuote(private$browser$get_path()))
     },
 
     get_auto_events = function() {

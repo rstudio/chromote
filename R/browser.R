@@ -22,6 +22,8 @@ Browser <- R6Class("Browser",
 
     get_port = function() private$port,
 
+    get_path = function() private$path,
+
     close = function() {
       if (self$is_local() && private$process$is_alive()) {
         private$process$signal(tools::SIGTERM)
@@ -32,6 +34,7 @@ Browser <- R6Class("Browser",
     process = NULL,
     host = NULL,
     port = NULL,
+    path = NULL,
     finalize = function(e) {
       if (self$is_local()) {
         self$close()
