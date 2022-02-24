@@ -65,8 +65,9 @@ gen_command_args <- function(params) {
     args,
     callback_ = list(NULL),
     error_    = list(NULL),
-    timeout_  = if ("timeout" %in% names(args)) {
-      expr(if (is.null(timeout)) NULL else 2 * timeout / 1000 )
+    timeout_  =
+    if ("timeout" %in% names(args)) {
+      expr(missing_arg())
     } else {
       quote(self$default_timeout)
     },
@@ -92,8 +93,13 @@ gen_command_body <- function(method_name, params) {
   timeout_default_expr <-
     if ("timeout" %in% lapply(params, `[[`, "name")) {
       # Set the wall time of chromote to twice that of the execution time.
-      expr({if (is.null(timeout_) && !is.null(timeout)) {
-        timeout_ <- 2 * timeout / 1000
+      expr({if (is_missing(timeout_)) {
+        timeout_ <-
+          if (is.null(timeout)) {
+            self$default_timeout
+          } else {
+            2 * timeout / 1000
+          }
       }})
     } else {
       expr({})
@@ -112,13 +118,13 @@ gen_command_body <- function(method_name, params) {
     if (!is.null(error_) && !is.function(error_))
       stop("`error_` must be a function or NULL.")
 
+    !!!timeout_default_expr
     if (!is.null(timeout_) && !is.numeric(timeout_))
       stop("`timeout_` must be a number or NULL.")
 
     if (!identical(wait_, TRUE) && !identical(wait_, FALSE))
       stop("`wait_` must be TRUE or FALSE.")
 
-    !!!timeout_default_expr
 
     # Check for missing non-optional args
     !!!check_missing_exprs
