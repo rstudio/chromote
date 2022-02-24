@@ -22,10 +22,11 @@ Class representing a local Chrome process
 }
 }
 \if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
+\out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="close">}\href{../../chromote/html/Browser.html#method-close}{\code{chromote::Browser$close()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_host">}\href{../../chromote/html/Browser.html#method-get_host}{\code{chromote::Browser$get_host()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_path">}\href{../../chromote/html/Browser.html#method-get_path}{\code{chromote::Browser$get_path()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_port">}\href{../../chromote/html/Browser.html#method-get_port}{\code{chromote::Browser$get_port()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_process">}\href{../../chromote/html/Browser.html#method-get_process}{\code{chromote::Browser$get_process()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_local">}\href{../../chromote/html/Browser.html#method-is_local}{\code{chromote::Browser$is_local()}}\out{</span>}
