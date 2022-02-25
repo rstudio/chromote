@@ -112,7 +112,7 @@ b$screenshot("sidebar.png", selector = ".sidebar")
 #> [1] "sidebar.png"
 ```
 
-![Sidebar Screenshot](sidebar.png)
+![](man/figures/sidebar.png)
 
 **Note:** All members of `Chromote` and `ChromoteSession` objects which
 start with a capital letter (like `b$Page`, `b$DOM`, and `b$Browser`)
