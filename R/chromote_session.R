@@ -33,8 +33,8 @@ ChromoteSession <- R6Class(
     #' @return A new `ChromoteSession` object.
     initialize = function(
       parent = default_chromote_object(),
-      width = 1200,
-      height = 1600,
+      width = 992,
+      height = 1323,
       targetId = NULL,
       wait_ = TRUE,
       auto_events = NULL
@@ -157,7 +157,7 @@ ChromoteSession <- R6Class(
       private$is_active_
     },
 
-    new_session = function(width = 1200, height = 1600, targetId = NULL, wait_ = TRUE) {
+    new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
       self$parent$new_session(width = width, height = height, targetId = targetId, wait_ = wait_)
     },
 
