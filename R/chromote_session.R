@@ -54,6 +54,8 @@ ChromoteSession <- R6Class(
       auto_events = NULL
     ) {
       self$parent <- parent
+      lockBinding("parent", self) # do not allow `$parent` to be set!
+
       self$default_timeout <- parent$default_timeout
 
       # Create a session from the Chromote. Basically the same code as
@@ -372,12 +374,6 @@ ChromoteSession <- R6Class(
     #' #> [1] "https://www.r-project.org/"}
     new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
       self$parent$new_session(width = width, height = height, targetId = targetId, wait_ = wait_)
-    },
-
-    #' @description
-    #' Retrieve the [`Chromote`] object associated with this session.
-    get_parent = function() {
-      self$parent
     },
 
     #' @description
