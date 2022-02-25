@@ -4,11 +4,15 @@
 \alias{Browser}
 \title{Browser base class}
 \description{
+Browser base class
+
+Browser base class
+}
+\details{
 Base class for browsers like Chrome, Chromium, etc. Defines the interface
 used by various browser implementations. It can represent a local browser
 process or one running remotely.
-}
-\details{
+
 The \code{initialize()} method of an implementation should set private$host
 and private$port. If the process is local, the \code{initialize()} method
 should also set private$process.
@@ -29,6 +33,8 @@ should also set private$process.
 \if{html}{\out{<a id="method-is_local"></a>}}
 \if{latex}{\out{\hypertarget{method-is_local}{}}}
 \subsection{Method \code{is_local()}}{
+Is local browser?
+Returns TRUE if the browser is running locally, FALSE if it's remote.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$is_local()}\if{html}{\out{</div>}}
 }
@@ -38,6 +44,7 @@ should also set private$process.
 \if{html}{\out{<a id="method-get_process"></a>}}
 \if{latex}{\out{\hypertarget{method-get_process}{}}}
 \subsection{Method \code{get_process()}}{
+Browser process
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$get_process()}\if{html}{\out{</div>}}
 }
@@ -47,6 +54,7 @@ should also set private$process.
 \if{html}{\out{<a id="method-get_host"></a>}}
 \if{latex}{\out{\hypertarget{method-get_host}{}}}
 \subsection{Method \code{get_host()}}{
+Browser Host
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$get_host()}\if{html}{\out{</div>}}
 }
@@ -56,6 +64,7 @@ should also set private$process.
 \if{html}{\out{<a id="method-get_port"></a>}}
 \if{latex}{\out{\hypertarget{method-get_port}{}}}
 \subsection{Method \code{get_port()}}{
+Browser port
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$get_port()}\if{html}{\out{</div>}}
 }
@@ -74,6 +83,7 @@ should also set private$process.
 \if{html}{\out{<a id="method-close"></a>}}
 \if{latex}{\out{\hypertarget{method-close}{}}}
 \subsection{Method \code{close()}}{
+Close the browser
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$close()}\if{html}{\out{</div>}}
 }

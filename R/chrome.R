@@ -1,5 +1,8 @@
-#' Class representing a local Chrome process
+#' Local Chrome process
 #'
+#' This is a subclass of [`Browser`] that represents a local browser. It extends
+#' the [`Browser`] class with a [`processx::process`] object, which represents
+#' the browser's system process.
 #' @export
 Chrome <- R6Class("Chrome",
   inherit = Browser,
@@ -131,12 +134,18 @@ launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
 }
 
 
-#' Class representing a remote Chrome process
+#' Remote Chrome process
+#'
+#'
 #'
 #' @export
 ChromeRemote <- R6Class("ChromeRemote",
   inherit = Browser,
   public = list(
+    #' @description Create a new ChromeRemote object.
+    #' @param host A string that is a valid IPv4 or IPv6 address. `"0.0.0.0"`
+    #' represents all IPv4 addresses and `"::/0"` represents all IPv6 addresses.
+    #' @param port A number or integer that indicates the server port.
     initialize = function(host, port) {
       private$host <- host
       private$port <- port

@@ -2,11 +2,16 @@
 % Please edit documentation in R/chrome.R
 \name{Chrome}
 \alias{Chrome}
-\title{Class representing a local Chrome process}
+\title{Local Chrome process}
 \description{
-Class representing a local Chrome process
+Local Chrome process
 
-Class representing a local Chrome process
+Local Chrome process
+}
+\details{
+This is a subclass of \code{\link{Browser}} that represents a local browser. It extends
+the \code{\link{Browser}} class with a \code{\link[processx:process]{processx::process}} object, which represents
+the browser's system process.
 }
 \seealso{
 \code{\link[=get_chrome_args]{get_chrome_args()}}
