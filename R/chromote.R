@@ -8,13 +8,36 @@ NULL
 
 
 #' Chromote class
+#'
+#' This class represents the browser as a whole.
+#'
+#' A `Chromote` object represents the browser as a whole, and it can have
+#' multiple _targets_, which each represent a browser tab. In the Chrome
+#' Devtools Protocol, each target can have one or more debugging _sessions_ to
+#' control it. A `ChromoteSession` object represents a single _session_.
+#'
+#' A `Chromote` object can have any number of `ChromoteSession` objects as
+#' children. It is not necessary to create a `Chromote` object manually. You can
+#' simply call:
+#' ```{r}
+#' b <- ChromoteSession$new()
+#' ```
+#' and it will automatically create a `Chromote` object if one has not already
+#' been created. The \pkg{chromote} package will then designate that `Chromote`
+#' object as the _default_ `Chromote` object for the package, so that any future
+#' calls to `ChromoteSession$new()` will automatically use the same `Chromote`.
+#' This is so that it doesn't start a new browser for every `ChromoteSession`
+#' object that is created.
 #' @export
 Chromote <- R6Class(
   "Chromote",
   lock_objects = FALSE,
   cloneable = FALSE,
   public = list(
-
+    #' @param browser A [`Browser`] object
+    #' @param multi_session Should multiple sessions be allowed?
+    #' @param auto_events If `TRUE`, enable automatic event enabling/disabling;
+    #'   if `FALSE`, disable automatic event enabling/disabling.
     initialize = function(
       browser = Chrome$new(),
       multi_session = TRUE,
@@ -80,10 +103,15 @@ Chromote <- R6Class(
       })
     },
 
+    #' @description Display the current session in the `browser`
     view = function() {
       browseURL(self$url())
     },
 
+    #' @description
+    #' `auto_events` value.
+    #'
+    #' For internal use only.
     get_auto_events = function() {
       private$auto_events
     },
@@ -92,11 +120,20 @@ Chromote <- R6Class(
     # Event loop, promises, and synchronization
     # =========================================================================
 
+    #' @description Local \pkg{later} loop.
+    #'
+    #' For expert async usage only.
     get_child_loop = function() {
       private$child_loop
     },
 
     # This runs the child loop until the promise is resolved.
+    #' @description Wait until the promise resolves
+    #'
+    #' Blocks the R session until the promise (`p`) is resolved. The loop from
+    #' `$get_child_loop()` will only advance just far enough for the promise to
+    #' resolve.
+    #' @param p A promise to resolve.
     wait_for = function(p) {
       if (!is.promise(p)) {
         stop("wait_for requires a promise object.")
@@ -109,7 +146,19 @@ Chromote <- R6Class(
     # Session management
     # =========================================================================
 
-    new_session = function(width = 1200, height = 1600, targetId = NULL, wait_ = TRUE) {
+    #' @description Create a new tab / window
+    #'
+    #' @param width,height Width and height of the new window.
+    #' @param targetId
+    #'   [Target](https://chromedevtools.github.io/devtools-protocol/tot/Target)
+    #'   ID of an existing target to attach to. When a `targetId` is provided, the
+    #'   `width` and `height` arguments are ignored. If NULL (the default) a new
+    #'   target is created and attached to, and the `width` and `height`
+    #'   arguments determine its viewport size.
+    #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
+    #'   `ChromoteSession` object. Otherwise, block during initialization, and
+    #'   return a `ChromoteSession` object directly.
+    new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
       session <- ChromoteSession$new(self, width, height, targetId, wait_ = FALSE)
 
       # ChromoteSession$new() always returns the object, but the
@@ -125,10 +174,16 @@ Chromote <- R6Class(
       }
     },
 
+    #' @description Retrieve all [`ChromoteSession`] objects
+    #' @return A list of `ChromoteSession` objects
     get_sessions = function() {
       private$sessions
     },
 
+    #' @description Register [`ChromoteSession`] object
+    #' @param session A `ChromoteSession` object
+    #'
+    #' For internal use only.
     register_session = function(session) {
       private$sessions[[session$get_session_id()]] <- session
     },
@@ -137,6 +192,17 @@ Chromote <- R6Class(
     # Commands and events
     # =========================================================================
 
+    #' @description
+    #' Send command through Chrome DevTools Protocol.
+    #'
+    #' For expert use only.
+    #' @param msg A JSON-serializable list containing `method`, and `params`.
+    #' @param callback Method to run when the command finishes successfully.
+    #' @param error Method to run if an error occurs.
+    #' @param timeout Number of milliseconds for Chrome Devtools Protocol
+    #' execute a method.
+    #' @param sessionId Determines which [`ChromoteSession`] with the
+    #' corresponding to send the command to.
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
       if (!private$is_active_) {
         stop("Chromote object is closed.")
@@ -180,6 +246,12 @@ Chromote <- R6Class(
       p
     },
 
+    #' @description
+    #' Immediately call all event callback methods.
+    #'
+    #' For internal use only.
+    #' @param event A single event string
+    #' @param params A list of parameters to pass to the event callback methods.
     invoke_event_callbacks = function(event, params) {
       private$event_manager$invoke_event_callbacks(event, params)
     },
@@ -188,9 +260,12 @@ Chromote <- R6Class(
     # Debugging
     # =========================================================================
 
-    # Enable or disable message debugging. If enabled, R will print out the
+    #' @description Enable or disable message debugging
+    #'
+    #' If enabled, R will print out the
     # JSON messages that are sent and received. If called with no value, this
     # method will print out the current debugging state.
+    #' @param value If `TRUE`, enable debugging. If `FALSE`, disable debugging.
     debug_messages = function(value = NULL) {
       if (is.null(value))
         return(private$debug_messages_)
@@ -201,6 +276,17 @@ Chromote <- R6Class(
       private$debug_messages_ <- value
     },
 
+    #' @description
+    #' Submit debug log message
+    #'
+    #' @param ... Arguments pasted together with `paste0(..., collapse = "")`.
+    #' @examples
+    #' \dontrun{b <- ChromoteSession$new()
+    #' b$parent$debug_messages(TRUE)
+    #' b$Page$navigate("https://www.r-project.org/")
+    #' #> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
+    #' # Turn off debug messages
+    #' b$parent$debug_messages(FALSE)}
     debug_log = function(...) {
       txt <- truncate(paste0(..., collapse = ""), 1000)
       if (private$debug_messages_) {
@@ -212,6 +298,8 @@ Chromote <- R6Class(
     # Misc utility functions
     # =========================================================================
 
+    #' @description Create url for a given path
+    #' @param path A path string to append to the host and port
     url = function(path = NULL) {
       if (!is.null(path) && substr(path, 1, 1) != "/") {
         stop('path must be NULL or a string that starts with "/"')
@@ -219,19 +307,29 @@ Chromote <- R6Class(
       paste0("http://", private$browser$get_host(), ":", private$browser$get_port(), path)
     },
 
+    #' @description Retrieve active status
+    #' Once initialized, the value returned is `TRUE`. If `$stop()` has been
+    #' called, this value will be `FALSE`.
     is_active = function() {
       private$is_active_
     },
 
+    #' @description Retrieve [`Browser`]` object
+    #'
     get_browser = function() {
       private$browser
     },
 
+    #' @description Close the [`Browser`] object
     stop = function() {
+      private$is_active_ <- FALSE
       self$Browser$close()
     },
 
+    #' @field default_timeout Default timeout in seconds for \pkg{chromote} to
+    #' wait for a Chrome DevTools Protocol response.
     default_timeout = 10,
+    #' @field protocol Dynamic protocol implementation. For expert use only!
     protocol = NULL
   ),
 
