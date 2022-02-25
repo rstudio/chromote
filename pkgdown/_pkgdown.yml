@@ -8,3 +8,25 @@ template:
   #   primary: "#096B72"
   #   navbar-background: "#e6f3fc"
   trailing_slash_redirect: true
+
+
+reference:
+- title: Chromote Sessions
+  # desc:  ~
+  contents:
+  - ChromoteSession
+  - Chromote
+
+- title: Default settings
+  # desc:  ~
+  contents:
+  - default_chrome_args
+  - default_chromote_object
+
+- title: Browsers
+  # desc: ~
+  contents:
+  - find_chrome
+  - Browser
+  - Chrome
+  - ChromeRemote

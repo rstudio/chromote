@@ -1,4 +1,4 @@
-#' Class representing a local Chrome process
+#' Local Chrome process
 #'
 #' This is a subclass of [`Browser`] that represents a local browser. It extends
 #' the [`Browser`] class with a [`processx::process`] object, which represents
@@ -133,7 +133,9 @@ launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
 }
 
 
-#' Class representing a remote Chrome process
+#' Remote Chrome process
+#'
+#'
 #'
 #' @export
 ChromeRemote <- R6Class("ChromeRemote",

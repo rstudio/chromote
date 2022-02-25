@@ -2,11 +2,11 @@
 % Please edit documentation in R/chrome.R
 \name{ChromeRemote}
 \alias{ChromeRemote}
-\title{Class representing a remote Chrome process}
+\title{Remote Chrome process}
 \description{
-Class representing a remote Chrome process
+Remote Chrome process
 
-Class representing a remote Chrome process
+Remote Chrome process
 }
 \section{Super class}{
 \code{\link[chromote:Browser]{chromote::Browser}} -> \code{ChromeRemote}

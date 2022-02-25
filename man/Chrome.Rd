@@ -2,11 +2,11 @@
 % Please edit documentation in R/chrome.R
 \name{Chrome}
 \alias{Chrome}
-\title{Class representing a local Chrome process}
+\title{Local Chrome process}
 \description{
-Class representing a local Chrome process
+Local Chrome process
 
-Class representing a local Chrome process
+Local Chrome process
 }
 \details{
 This is a subclass of \code{\link{Browser}} that represents a local browser. It extends
