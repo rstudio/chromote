@@ -281,10 +281,12 @@ Chromote <- R6Class(
     #'
     #' @param ... Arguments pasted together with `paste0(..., collapse = "")`.
     #' @examples
-    #' b <- ChromoteSession$new()
+    #' \dontrun{b <- ChromoteSession$new()
     #' b$parent$debug_messages(TRUE)
     #' b$Page$navigate("https://www.r-project.org/")
     #' #> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
+    #' # Turn off debug messages
+    #' b$parent$debug_messages(FALSE)}
     debug_log = function(...) {
       txt <- truncate(paste0(..., collapse = ""), 1000)
       if (private$debug_messages_) {

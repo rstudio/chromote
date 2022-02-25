@@ -14,7 +14,7 @@ ChromoteSession class
 ## Method `ChromoteSession$new`
 ## ------------------------------------------------
 
-# Create a new `ChromoteSession` object.
+\dontrun{# Create a new `ChromoteSession` object.
 b <- ChromoteSession$new()
 
 # Create a ChromoteSession with a specific height,width
@@ -24,39 +24,39 @@ b <- ChromoteSession$new(height = 1080, width = 1920)
 b$Page$navigate("http://www.r-project.org/")
 
 # View current chromote session
-if (interactive()) b$view()
+if (interactive()) b$view()}
 
 ## ------------------------------------------------
 ## Method `ChromoteSession$view`
 ## ------------------------------------------------
 
-# Create a new `ChromoteSession` object.
+\dontrun{# Create a new `ChromoteSession` object.
 b <- ChromoteSession$new()
 
 # Navigate to page
 b$Page$navigate("http://www.r-project.org/")
 
 # View current chromote session
-if (interactive()) b$view()
+if (interactive()) b$view()}
 
 ## ------------------------------------------------
 ## Method `ChromoteSession$close`
 ## ------------------------------------------------
 
-# Create a new `ChromoteSession` object.
+\dontrun{# Create a new `ChromoteSession` object.
 b <- ChromoteSession$new()
 
 # Navigate to page
 b$Page$navigate("http://www.r-project.org/")
 
 # Close current chromote session
-b$close()
+b$close()}
 
 ## ------------------------------------------------
 ## Method `ChromoteSession$screenshot`
 ## ------------------------------------------------
 
-# Create a new `ChromoteSession` object.
+\dontrun{# Create a new `ChromoteSession` object.
 b <- ChromoteSession$new()
 
 # Navigate to page
@@ -68,7 +68,7 @@ is_interactive <- interactive() # Display screenshot if interactive
 b$screenshot(tmppngfile, show = is_interactive)
 
 # Show screenshot file info
-file.info(tmppngfile)
+unlist(file.info(tmppngfile))
 
 
 # Take screenshot using a selector
@@ -98,39 +98,38 @@ screenshot_p <- function(url, filename = NULL) {
     filename <- paste0(filename, ".png")
   }
 
-  b <- ChromoteSession$new()
-  b$Page$navigate(url, wait_ = FALSE)
-  b$Page$loadEventFired(wait_ = FALSE)$
+  b2 <- b$new_session()
+  b2$Page$navigate(url, wait_ = FALSE)
+  b2$Page$loadEventFired(wait_ = FALSE)$
     then(function(value) {
-      b$screenshot(filename, wait_ = FALSE)
+      b2$screenshot(filename, wait_ = FALSE)
     })$
     then(function(value) {
       message(filename)
     })$
     finally(function() {
-      b$close()
+      b2$close()
     })
 }
 
 # Take multiple screenshots simultaneously
 ps <- lapply(urls, screenshot_p)
-pa <- promise_all(.list = ps)$then(function(value) {
+pa <- promises::promise_all(.list = ps)$then(function(value) {
   message("Done!")
 })
 
 # Block the console until the screenshots finish (optional)
-cm <- default_chromote_object()
-cm$wait_for(pa)
+b$wait_for(pa)
 #> www_r-project_org.png
 #> github_com.png
 #> news_ycombinator_com.png
-#> Done!
+#> Done!}
 
 ## ------------------------------------------------
 ## Method `ChromoteSession$screenshot_pdf`
 ## ------------------------------------------------
 
-# Create a new `ChromoteSession` object.
+\dontrun{# Create a new `ChromoteSession` object.
 b <- ChromoteSession$new()
 
 # Navigate to page
@@ -141,50 +140,52 @@ tmppdffile <- tempfile(fileext = ".pdf")
 b$screenshot_pdf(tmppdffile)
 
 # Show PDF file info
-file.info(tmppdffile)
+unlist(file.info(tmppdffile))}
 
 ## ------------------------------------------------
 ## Method `ChromoteSession$new_session`
 ## ------------------------------------------------
 
-b1 <- ChromoteSession$new()
+\dontrun{b1 <- ChromoteSession$new()
 b1$Page$navigate("http://www.google.com")
 b2 <- b1$new_session()
 b2$Page$navigate("http://www.r-project.org/")
 b1$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
 #> [1] "https://www.google.com/"
 b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
-#> [1] "https://www.r-project.org/"
+#> [1] "https://www.r-project.org/"}
 
 ## ------------------------------------------------
 ## Method `ChromoteSession$get_session_id`
 ## ------------------------------------------------
 
-b <- ChromoteSession$new()
+\dontrun{b <- ChromoteSession$new()
 b$get_session_id()
-#> [1] "05764F1D439F4292497A21C6526575DA"
+#> [1] "05764F1D439F4292497A21C6526575DA"}
 
 ## ------------------------------------------------
 ## Method `ChromoteSession$wait_for`
 ## ------------------------------------------------
 
-b <- ChromoteSession$new()
+\dontrun{b <- ChromoteSession$new()
 
 # Async with promise
 p <- b$Browser$getVersion(wait_ = FALSE)
 p$then(str)
 
 # Async with callback
-b$Browser$getVersion(wait_ = FALSE, callback_ = str)
+b$Browser$getVersion(wait_ = FALSE, callback_ = str)}
 
 ## ------------------------------------------------
 ## Method `ChromoteSession$debug_log`
 ## ------------------------------------------------
 
-b <- ChromoteSession$new()
+\dontrun{b <- ChromoteSession$new()
 b$parent$debug_messages(TRUE)
 b$Page$navigate("https://www.r-project.org/")
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
+# Turn off debug messages
+b$parent$debug_messages(FALSE)}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -270,7 +271,7 @@ A new \code{ChromoteSession} object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Create a new `ChromoteSession` object.
+\preformatted{\dontrun{# Create a new `ChromoteSession` object.
 b <- ChromoteSession$new()
 
 # Create a ChromoteSession with a specific height,width
@@ -280,7 +281,7 @@ b <- ChromoteSession$new(height = 1080, width = 1920)
 b$Page$navigate("http://www.r-project.org/")
 
 # View current chromote session
-if (interactive()) b$view()
+if (interactive()) b$view()}
 }
 \if{html}{\out{</div>}}
 
@@ -298,14 +299,14 @@ Display the current session in the \code{\link{Chromote}} browser.
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Create a new `ChromoteSession` object.
+\preformatted{\dontrun{# Create a new `ChromoteSession` object.
 b <- ChromoteSession$new()
 
 # Navigate to page
 b$Page$navigate("http://www.r-project.org/")
 
 # View current chromote session
-if (interactive()) b$view()
+if (interactive()) b$view()}
 }
 \if{html}{\out{</div>}}
 
@@ -332,14 +333,14 @@ when the \code{ChromoteSession} is closed. Otherwise, block until the
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Create a new `ChromoteSession` object.
+\preformatted{\dontrun{# Create a new `ChromoteSession` object.
 b <- ChromoteSession$new()
 
 # Navigate to page
 b$Page$navigate("http://www.r-project.org/")
 
 # Close current chromote session
-b$close()
+b$close()}
 }
 \if{html}{\out{</div>}}
 
@@ -398,7 +399,7 @@ until the \code{ChromoteSession} has saved the screnshot.}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Create a new `ChromoteSession` object.
+\preformatted{\dontrun{# Create a new `ChromoteSession` object.
 b <- ChromoteSession$new()
 
 # Navigate to page
@@ -410,7 +411,7 @@ is_interactive <- interactive() # Display screenshot if interactive
 b$screenshot(tmppngfile, show = is_interactive)
 
 # Show screenshot file info
-file.info(tmppngfile)
+unlist(file.info(tmppngfile))
 
 
 # Take screenshot using a selector
@@ -440,33 +441,32 @@ screenshot_p <- function(url, filename = NULL) {
     filename <- paste0(filename, ".png")
   }
 
-  b <- ChromoteSession$new()
-  b$Page$navigate(url, wait_ = FALSE)
-  b$Page$loadEventFired(wait_ = FALSE)$
+  b2 <- b$new_session()
+  b2$Page$navigate(url, wait_ = FALSE)
+  b2$Page$loadEventFired(wait_ = FALSE)$
     then(function(value) {
-      b$screenshot(filename, wait_ = FALSE)
+      b2$screenshot(filename, wait_ = FALSE)
     })$
     then(function(value) {
       message(filename)
     })$
     finally(function() {
-      b$close()
+      b2$close()
     })
 }
 
 # Take multiple screenshots simultaneously
 ps <- lapply(urls, screenshot_p)
-pa <- promise_all(.list = ps)$then(function(value) {
+pa <- promises::promise_all(.list = ps)$then(function(value) {
   message("Done!")
 })
 
 # Block the console until the screenshots finish (optional)
-cm <- default_chromote_object()
-cm$wait_for(pa)
+b$wait_for(pa)
 #> www_r-project_org.png
 #> github_com.png
 #> news_ycombinator_com.png
-#> Done!
+#> Done!}
 }
 \if{html}{\out{</div>}}
 
@@ -523,7 +523,7 @@ until the \code{ChromoteSession} has saved the screnshot.}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Create a new `ChromoteSession` object.
+\preformatted{\dontrun{# Create a new `ChromoteSession` object.
 b <- ChromoteSession$new()
 
 # Navigate to page
@@ -534,7 +534,7 @@ tmppdffile <- tempfile(fileext = ".pdf")
 b$screenshot_pdf(tmppdffile)
 
 # Show PDF file info
-file.info(tmppdffile)
+unlist(file.info(tmppdffile))}
 }
 \if{html}{\out{</div>}}
 
@@ -574,14 +574,14 @@ until the \code{ChromoteSession} has created a new session.}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{b1 <- ChromoteSession$new()
+\preformatted{\dontrun{b1 <- ChromoteSession$new()
 b1$Page$navigate("http://www.google.com")
 b2 <- b1$new_session()
 b2$Page$navigate("http://www.r-project.org/")
 b1$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
 #> [1] "https://www.google.com/"
 b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
-#> [1] "https://www.r-project.org/"
+#> [1] "https://www.r-project.org/"}
 }
 \if{html}{\out{</div>}}
 
@@ -609,9 +609,9 @@ Retrieve the session id
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{b <- ChromoteSession$new()
+\preformatted{\dontrun{b <- ChromoteSession$new()
 b$get_session_id()
-#> [1] "05764F1D439F4292497A21C6526575DA"
+#> [1] "05764F1D439F4292497A21C6526575DA"}
 }
 \if{html}{\out{</div>}}
 
@@ -639,14 +639,14 @@ resolve.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{b <- ChromoteSession$new()
+\preformatted{\dontrun{b <- ChromoteSession$new()
 
 # Async with promise
 p <- b$Browser$getVersion(wait_ = FALSE)
 p$then(str)
 
 # Async with callback
-b$Browser$getVersion(wait_ = FALSE, callback_ = str)
+b$Browser$getVersion(wait_ = FALSE, callback_ = str)}
 }
 \if{html}{\out{</div>}}
 
@@ -671,10 +671,12 @@ Send a debug log message to the parent \link{Chromote} object
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{b <- ChromoteSession$new()
+\preformatted{\dontrun{b <- ChromoteSession$new()
 b$parent$debug_messages(TRUE)
 b$Page$navigate("https://www.r-project.org/")
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
+# Turn off debug messages
+b$parent$debug_messages(FALSE)}
 }
 \if{html}{\out{</div>}}
 

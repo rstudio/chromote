@@ -34,7 +34,7 @@ ChromoteSession <- R6Class(
     #'   return a `ChromoteSession` object directly.
     #' @return A new `ChromoteSession` object.
     #' @examples
-    #' # Create a new `ChromoteSession` object.
+    #' \dontrun{# Create a new `ChromoteSession` object.
     #' b <- ChromoteSession$new()
     #'
     #' # Create a ChromoteSession with a specific height,width
@@ -44,7 +44,7 @@ ChromoteSession <- R6Class(
     #' b$Page$navigate("http://www.r-project.org/")
     #'
     #' # View current chromote session
-    #' if (interactive()) b$view()
+    #' if (interactive()) b$view()}
     initialize = function(
       parent = default_chromote_object(),
       width = 1200,
@@ -129,14 +129,14 @@ ChromoteSession <- R6Class(
 
     #' @description Display the current session in the [`Chromote`] browser.
     #' @examples
-    #' # Create a new `ChromoteSession` object.
+    #' \dontrun{# Create a new `ChromoteSession` object.
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
     #' b$Page$navigate("http://www.r-project.org/")
     #'
     #' # View current chromote session
-    #' if (interactive()) b$view()
+    #' if (interactive()) b$view()}
     view = function() {
       tid <- self$Target$getTargetInfo()$targetInfo$targetId
 
@@ -155,14 +155,14 @@ ChromoteSession <- R6Class(
     #' when the `ChromoteSession` is closed. Otherwise, block until the
     #' `ChromoteSession` has closed.
     #' @examples
-    #' # Create a new `ChromoteSession` object.
+    #' \dontrun{# Create a new `ChromoteSession` object.
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
     #' b$Page$navigate("http://www.r-project.org/")
     #'
     #' # Close current chromote session
-    #' b$close()
+    #' b$close()}
     close = function(wait_ = TRUE) {
       p <- self$Target$getTargetInfo(wait_ = FALSE)
       p <- p$then(function(target) {
@@ -207,7 +207,7 @@ ChromoteSession <- R6Class(
     #' when the `ChromoteSession` has saved the screenshot. Otherwise, block
     #' until the `ChromoteSession` has saved the screnshot.
     #' @examples
-    #' # Create a new `ChromoteSession` object.
+    #' \dontrun{# Create a new `ChromoteSession` object.
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
@@ -249,33 +249,32 @@ ChromoteSession <- R6Class(
     #'     filename <- paste0(filename, ".png")
     #'   }
     #'
-    #'   b <- ChromoteSession$new()
-    #'   b$Page$navigate(url, wait_ = FALSE)
-    #'   b$Page$loadEventFired(wait_ = FALSE)$
+    #'   b2 <- b$new_session()
+    #'   b2$Page$navigate(url, wait_ = FALSE)
+    #'   b2$Page$loadEventFired(wait_ = FALSE)$
     #'     then(function(value) {
-    #'       b$screenshot(filename, wait_ = FALSE)
+    #'       b2$screenshot(filename, wait_ = FALSE)
     #'     })$
     #'     then(function(value) {
     #'       message(filename)
     #'     })$
     #'     finally(function() {
-    #'       b$close()
+    #'       b2$close()
     #'     })
     #' }
     #'
     #' # Take multiple screenshots simultaneously
     #' ps <- lapply(urls, screenshot_p)
-    #' pa <- promise_all(.list = ps)$then(function(value) {
+    #' pa <- promises::promise_all(.list = ps)$then(function(value) {
     #'   message("Done!")
     #' })
     #'
     #' # Block the console until the screenshots finish (optional)
-    #' cm <- default_chromote_object()
-    #' cm$wait_for(pa)
+    #' b$wait_for(pa)
     #' #> www_r-project_org.png
     #' #> github_com.png
     #' #> news_ycombinator_com.png
-    #' #> Done!
+    #' #> Done!}
     screenshot = function(
       filename = "screenshot.png",
       selector = "html",
@@ -319,7 +318,7 @@ ChromoteSession <- R6Class(
     #' when the `ChromoteSession` has saved the screenshot. Otherwise, block
     #' until the `ChromoteSession` has saved the screnshot.
     #' @examples
-    #' # Create a new `ChromoteSession` object.
+    #' \dontrun{# Create a new `ChromoteSession` object.
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
@@ -363,14 +362,14 @@ ChromoteSession <- R6Class(
     #' when the `ChromoteSession` has created a new session. Otherwise, block
     #' until the `ChromoteSession` has created a new session.
     #' @examples
-    #' b1 <- ChromoteSession$new()
+    #' \dontrun{b1 <- ChromoteSession$new()
     #' b1$Page$navigate("http://www.google.com")
     #' b2 <- b1$new_session()
     #' b2$Page$navigate("http://www.r-project.org/")
     #' b1$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
     #' #> [1] "https://www.google.com/"
     #' b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
-    #' #> [1] "https://www.r-project.org/"
+    #' #> [1] "https://www.r-project.org/"}
     new_session = function(width = 1200, height = 1600, targetId = NULL, wait_ = TRUE) {
       self$parent$new_session(width = width, height = height, targetId = targetId, wait_ = wait_)
     },
@@ -384,9 +383,9 @@ ChromoteSession <- R6Class(
     #' @description
     #' Retrieve the session id
     #' @examples
-    #' b <- ChromoteSession$new()
+    #' \dontrun{b <- ChromoteSession$new()
     #' b$get_session_id()
-    #' #> [1] "05764F1D439F4292497A21C6526575DA"
+    #' #> [1] "05764F1D439F4292497A21C6526575DA"}
     get_session_id = function() {
       private$session_id
     },
@@ -398,14 +397,14 @@ ChromoteSession <- R6Class(
     #' resolve.
     #' @param p A promise to resolve.
     #' @examples
-    #' b <- ChromoteSession$new()
+    #' \dontrun{b <- ChromoteSession$new()
     #'
     #' # Async with promise
     #' p <- b$Browser$getVersion(wait_ = FALSE)
     #' p$then(str)
     #'
     #' # Async with callback
-    #' b$Browser$getVersion(wait_ = FALSE, callback_ = str)
+    #' b$Browser$getVersion(wait_ = FALSE, callback_ = str)}
     wait_for = function(p) {
       self$parent$wait_for(p)
     },
@@ -415,10 +414,12 @@ ChromoteSession <- R6Class(
     #'
     #' @param ... Arguments pasted together with `paste0(..., collapse = "")`.
     #' @examples
-    #' b <- ChromoteSession$new()
+    #' \dontrun{b <- ChromoteSession$new()
     #' b$parent$debug_messages(TRUE)
     #' b$Page$navigate("https://www.r-project.org/")
     #' #> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
+    #' # Turn off debug messages
+    #' b$parent$debug_messages(FALSE)}
     debug_log = function(...) {
       self$parent$debug_log(...)
     },

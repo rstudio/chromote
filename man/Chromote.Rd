@@ -34,10 +34,12 @@ object that is created.
 ## Method `Chromote$debug_log`
 ## ------------------------------------------------
 
-b <- ChromoteSession$new()
+\dontrun{b <- ChromoteSession$new()
 b$parent$debug_messages(TRUE)
 b$Page$navigate("https://www.r-project.org/")
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
+# Turn off debug messages
+b$parent$debug_messages(FALSE)}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -303,10 +305,12 @@ Submit debug log message
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{b <- ChromoteSession$new()
+\preformatted{\dontrun{b <- ChromoteSession$new()
 b$parent$debug_messages(TRUE)
 b$Page$navigate("https://www.r-project.org/")
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
+# Turn off debug messages
+b$parent$debug_messages(FALSE)}
 }
 \if{html}{\out{</div>}}
 
