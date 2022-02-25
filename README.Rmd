@@ -3,6 +3,10 @@ output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- Do not run R chunks that print any session information.
+     This produces unstable output.
+     Instead, copy output from a local execution
+     Still use README.Rmd to get special UTF-8 chars from pandoc -->
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -43,7 +47,7 @@ remotes::install_github("rstudio/chromote")
 
 This will start a headless browser and open an interactive viewer for it in a normal browser, so that you can see what the headless browser is doing.
 
-```{r init}
+```R
 library(chromote)
 
 b <- ChromoteSession$new()
@@ -56,14 +60,28 @@ b$view()
 The browser can be given _commands_, as specified by the [Chrome Devtools Protocol](https://chromedevtools.github.io/devtools-protocol/). For example, `$Browser$getVersion()` (which corresponds to the [Browser.getVersion](https://chromedevtools.github.io/devtools-protocol/tot/Browser#method-getVersion) in the API docs) will query the browser for version information:
 
 
-```{r getVersion}
+```R
 b$Browser$getVersion()
+#> $protocolVersion
+#> [1] "1.3"
+#>
+#> $product
+#> [1] "HeadlessChrome/98.0.4758.102"
+#>
+#> $revision
+#> [1] "@273bf7ac8c909cde36982d27f66f3c70846a3718"
+#>
+#> $userAgent
+#> [1] "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/98.0.4758.102 Safari/537.36"
+#>
+#> $jsVersion
+#> [1] "9.8.177.11"
 ```
 
 
 If you have the viewer open and run the following, you'll see the web page load in the viewer:
 
-```{r}
+```R
 b$Page$navigate("https://www.r-project.org/")
 ```
 
@@ -71,7 +89,7 @@ In the official Chrome DevTools Protocol (CDP) documentation, this is the [`Page
 
 In addition to full support of the CDP, ChromoteSession objects also some convenience methods, like `$screenshot()`. (See the Examples section below for more information about screenshots.)
 
-```{r screenshot}
+```R
 # Saves to screenshot.png
 b$screenshot()
 
@@ -85,40 +103,125 @@ b$screenshot("sidebar.png", selector = ".sidebar")
 
 Here is an example of how to use Chromote to find the position of a DOM element using [DOM.getBoxModel](https://chromedevtools.github.io/devtools-protocol/tot/DOM/#method-getBoxModel).
 
-```{r boxModel}
+```R
 x <- b$DOM$getDocument()
 x <- b$DOM$querySelector(x$root$nodeId, ".sidebar")
 x <- b$DOM$getBoxModel(x$nodeId)
 str(x)
+#> List of 1
+#>  $ model:List of 6
+#>   ..$ content:List of 8
+#>   .. ..$ : num 128
+#>   .. ..$ : int 28
+#>   .. ..$ : num 292
+#>   .. ..$ : int 28
+#>   .. ..$ : num 292
+#>   .. ..$ : num 988
+#>   .. ..$ : num 128
+#>   .. ..$ : num 988
+#>   ..$ padding:List of 8
+#>   .. ..$ : num 112
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : num 988
+#>   .. ..$ : num 112
+#>   .. ..$ : num 988
+#>   ..$ border :List of 8
+#>   .. ..$ : num 112
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : num 988
+#>   .. ..$ : num 112
+#>   .. ..$ : num 988
+#>   ..$ margin :List of 8
+#>   .. ..$ : int 15
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : num 1030
+#>   .. ..$ : int 15
+#>   .. ..$ : num 1030
+#>   ..$ width  : int 195
+#>   ..$ height : int 960
 ```
 
 Or you can do the same thing by chaining commands together with a magrittr pipe:
 
-```{r boxModelChain}
+```R
 b$DOM$getDocument() %>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar") } %>%
   { b$DOM$getBoxModel(.$nodeId) } %>%
   str()
+#> List of 1
+#>  $ model:List of 6
+#>   ..$ content:List of 8
+#>   .. ..$ : num 128
+#>   .. ..$ : int 28
+#>   .. ..$ : num 292
+#>   .. ..$ : int 28
+#>   .. ..$ : num 292
+#>   .. ..$ : num 988
+#>   .. ..$ : num 128
+#>   .. ..$ : num 988
+#>   ..$ padding:List of 8
+#>   .. ..$ : num 112
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : num 988
+#>   .. ..$ : num 112
+#>   .. ..$ : num 988
+#>   ..$ border :List of 8
+#>   .. ..$ : num 112
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : num 988
+#>   .. ..$ : num 112
+#>   .. ..$ : num 988
+#>   ..$ margin :List of 8
+#>   .. ..$ : int 15
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : num 1030
+#>   .. ..$ : int 15
+#>   .. ..$ : num 1030
+#>   ..$ width  : int 195
+#>   ..$ height : int 960
 ```
 
 ### Creating new tabs and managing the process
 
 To create a new tab/window:
 
-```{r newSession}
+```R
 b1 <- b$new_session()
 ```
 
 Once it's created, you can perform operations with the new tab without affecting the first one.
 
-```{r newTabOperation}
+```R
 b1$view()
 b1$Page$navigate("https://github.com/rstudio/chromote")
+#> $frameId
+#> [1] "714439EBDD663E597658503C86F77B0B"
+#>
+#> $loaderId
+#> [1] "F39339CBA7D1ACB83618FEF40C3C7467"
 ```
 
 To close a browser tab/window, you can run:
 
-```{r closeTab, eval = FALSE}
+```R
 b1$close()
 ```
 
@@ -126,7 +229,7 @@ This is different from shutting down the browser process. If you call `b$close()
 
 To shut down the process, call:
 
-```{r closeProcess, eval = FALSE}
+```R
 b1$parent$stop()
 ```
 
@@ -140,11 +243,19 @@ Events are quite different from commands. When, for example, you run `b$Page$loa
 
 Here is an example of how that event can be used. Note that these two lines of code must be run together, without any delay at all (this can be enforced by wrapping both lines of code in `{ .... }`).
 
-```{r loadEventFired}
+```R
 # Send a command to navigate to a page
 b$Page$navigate("https://www.r-project.org")
+#> $frameId
+#> [1] "0ADE3CFBAF764B0308ADE1ACCC33358B"
+#>
+#> $loaderId
+#> [1] "112AF4AC0C13FF4A95BED8173C3F4C7F"
+
 # Wait for the Page.loadEventFired event
 b$Page$loadEventFired()
+#> $timestamp
+#> [1] 680.7603
 ```
 
 After running these two lines, the R process will be blocked. While it's blocked, the browser will load the page, and then send a message to the R process saying that the `Page.loadEventFired` event has occurred. The message looks something like this:
@@ -177,7 +288,7 @@ When a `ChromoteSession` object is instantiated, a target is created, then a ses
 
 A `Chromote` object can have any number of `ChromoteSession` objects as children. It is not necessary to create a `Chromote` object manually. You can simply call:
 
-```{r newSession2}
+```R
 b <- ChromoteSession$new()
 ```
 
@@ -187,20 +298,20 @@ In the Chrome Devtools Protocol, most commands can be sent to individual session
 
 To access the parent `Chromote` object from a `ChromoteSession`, you can simply use `$parent`:
 
-```{r chromoteObject}
+```R
 b <- ChromoteSession$new()
 m <- b$parent
 ```
 
 With a `Chromote` object, you can get a list containing all the `ChromoteSession`s, with `$get_sessions()`:
 
-```{r sessions, include = FALSE}
+```R
 m$get_sessions()
 ```
 
 Normally, subsequent calls to `ChromoteSession$new()` will use the existing `Chromote` object. However, if you want to start a new browser process, you can manually create a `Chromote` object, then spawn a session from it; or you can pass the new `Chromote` object to ` ChromoteSession$new()`:
 
-```{r manualSession}
+```R
 cm <- Chromote$new()
 b1 <- cm$new_session()
 
@@ -222,10 +333,19 @@ There are also the following classes which represent the browser at a lower leve
 
 Calling `b$debug_messages(TRUE)` will enable the printing of all the JSON messages sent between R and Chrome. This can be very helpful for understanding how the Chrome Devtools Protocol works.
 
-```{r debugMessages}
+```R
 b <- ChromoteSession$new()
 b$parent$debug_messages(TRUE)
 b$Page$navigate("https://www.r-project.org/")
+#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
+#> $frameId
+#> [1] "BAAC175C67E55886207BADE1776E7B1F"
+#>
+#> $loaderId
+#> [1] "66DED3DF9403DA4A307444765FDE828E"
+
+# Disable debug messages
+b$parent$debug_messages(FALSE)
 ```
 
 ### Synchronous vs. asynchronous usage
@@ -261,27 +381,29 @@ When you are _programming_ with Chromote instead of using it interactively, it i
 
 When a method is called in synchronous mode, it blocks until the browser sends back a response, and then it returns the value, converted from JSON to an R object. For example:
 
-```{r syncMode}
+```R
 # Synchronous
 str(b$Browser$getVersion())
+#> List of 5
+#>  $ protocolVersion: chr "1.3"
+#>  $ product        : chr "HeadlessChrome/98.0.4758.102"
+#>  $ revision       : chr "@273bf7ac8c909cde36982d27f66f3c70846a3718"
+#>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/98.0.4758.102 Safari/537.36"
+#>  $ jsVersion      : chr "9.8.177.11"
 ```
 
 In async mode, there are two ways to use the value that the browser sends to the R process. One is to use the `callback_` argument with `wait_=FALSE`. The `wait_=FALSE` tells it to run the command in async mode; instead of returning the value from the browser, it returns a promise. For example:
 
-```{r asyncMode}
+```R
 # Async with callback
 b$Browser$getVersion(wait_ = FALSE, callback_ = str)
-# After a very, very short pause, prints:
-```
-
-```{r asyncModeOutput, echo = FALSE, include = TRUE}
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
+#> <Promise [pending]>
+#> List of 5
+#>  $ protocolVersion: chr "1.3"
+#>  $ product        : chr "HeadlessChrome/98.0.4758.102"
+#>  $ revision       : chr "@273bf7ac8c909cde36982d27f66f3c70846a3718"
+#>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/98.0.4758.102 Safari/537.36"
+#>  $ jsVersion      : chr "9.8.177.11"
 ```
 
 Notice that the function returned `<Promise [pending]>`, and then it printed out the data. We'll come back to the promise part.
@@ -290,48 +412,34 @@ Notice that the function returned `<Promise [pending]>`, and then it printed out
 
 If you run the command in a code block (or a function), the entire code block will finish executing before the callback can be executed. For example:
 
-```{r codeBlock}
+```R
 {
   b$Browser$getVersion(wait_ = FALSE, callback_ = str)
   1+1
 }
-```
-
-```{r codeBlockOutput, echo = FALSE, include = TRUE}
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
+#> [1] 2
+#> List of 5
+#>  $ protocolVersion: chr "1.3"
+#>  $ product        : chr "HeadlessChrome/98.0.4758.102"
+#>  $ revision       : chr "@273bf7ac8c909cde36982d27f66f3c70846a3718"
+#>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/98.0.4758.102 Safari/537.36"
+#>  $ jsVersion      : chr "9.8.177.11"
 ```
 
 In the code above, it executes the `1+1` and returns the value before the `str` callback can be executed on the message from the browser.
 
 If you want to store the value from the browser, you can write a callback that stores the value like so:
 
-```{r callbackValue}
+```R
 # This will extract the product field
 product <- NULL
 b$Browser$getVersion(wait_ = FALSE, callback_ = function(msg) {
   product <<- msg$product
 })
-```
-
-```{r callbackValueWait, echo = FALSE, include = TRUE}
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-```
-
-```{r callbackValueValue}
+#> <Promise [pending]>
 # Wait for a moment, then run:
 product
+#> [1] "HeadlessChrome/98.0.4758.102"
 ```
 
 But to get the value, you need to wait for the callback to execute before you can use the value. Waiting for a value is simple when running R interactively -- you can just add a `message("message arrived")` call in the callback and wait for it before running the next line of code -- but waiting for the value is not easy to do using ordinary straight-line coding. Fortunately, Chromote has a way to wait for async operations, which we'll see later.
@@ -340,7 +448,7 @@ The other way of using the value is to use _promises_. If `wait_=FALSE` and no `
 
 Here's an example that uses promises to print out the version information. Note that the surrounding curly braces are there to indicate that this whole thing must be run as a block without any idle time in between the function calls -- if you were to run the code in the R console line-by-line, the browser would send back the message and the promise would resolve before you called `p$then()`, which is where you tell the promise what to do with the return value. (The curly braces aren't strictly necessary -- you could run the code inside the braces in a single paste operation and have the same effect.)
 
-```{r callbackValueBlock}
+```R
 {
   p <- b$Browser$getVersion(wait_ = FALSE)
   p$then(function(value) {
@@ -348,21 +456,12 @@ Here's an example that uses promises to print out the version information. Note 
   })
 }
 # Wait for a moment, then prints:
-```
-
-```{r callbackValueBlockOutput, echo = FALSE, include = TRUE}
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
-later::run_now()
+#> [1] "HeadlessChrome/98.0.4758.102"
 ```
 
 Here are some progressively more concise ways of achieving the same thing. As you work with promises, you will see these various forms of promise chaining. For more information, see the [promises documentation](https://rstudio.github.io/promises/).
 
-```{r concise}
+```R
 library(promises)
 
 # Regular function pipe to then()
@@ -386,10 +485,9 @@ b$Browser$getVersion(wait_ = FALSE) %...>% print_product()
 b$Browser$getVersion(wait_ = FALSE) %...>% print_product
 ```
 
-
 The earlier example where we found the dimensions of a DOM element using CSS selectors was done with the synchronous API and `%>%` pipes. The same can be done in async mode by switching from the regular pipe to the promise-pipe, and calling all the methods with `wait_=FALSE`:
 
-```{r promisePipe}
+```R
 b$DOM$getDocument(wait_ = FALSE) %...>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
   { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) } %...>%
@@ -416,7 +514,7 @@ Each step in the promise chain uses the value from the previous step, via `.` or
 
 There may be times, especially when programming with Chromote, where you want to wait for a promise to resolve before continuing. To do this, you can use the Chromote or ChromoteSession's `wait_for()` method.
 
-```{r waitFor}
+```R
 # A promise chain
 p <- b$DOM$getDocument(wait_ = FALSE) %...>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
@@ -424,19 +522,99 @@ p <- b$DOM$getDocument(wait_ = FALSE) %...>%
   str()
 
 b$wait_for(p)
+#> List of 1
+#>  $ model:List of 6
+#>   ..$ content:List of 8
+#>   .. ..$ : num 128
+#>   .. ..$ : int 28
+#>   .. ..$ : num 292
+#>   .. ..$ : int 28
+#>   .. ..$ : num 292
+#>   .. ..$ : num 988
+#>   .. ..$ : num 128
+#>   .. ..$ : num 988
+#>   ..$ padding:List of 8
+#>   .. ..$ : num 112
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : num 988
+#>   .. ..$ : num 112
+#>   .. ..$ : num 988
+#>   ..$ border :List of 8
+#>   .. ..$ : num 112
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : num 988
+#>   .. ..$ : num 112
+#>   .. ..$ : num 988
+#>   ..$ margin :List of 8
+#>   .. ..$ : int 15
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : num 1030
+#>   .. ..$ : int 15
+#>   .. ..$ : num 1030
+#>   ..$ width  : int 195
+#>   ..$ height : int 960
 ```
 
 This documentation will refer to this technique as _synchronizing_ asynchronous code. The way that `wait_for()` works is that it runs the Chromote object's private event loop until the promise has resolved. Because the event loop is _private_, running it will not interfere with the global event loop, which, for example, may used by Shiny to serve a web application.
 
 The `$wait_for()` method will return the value from the promise, so instead of putting the `str()` in the chain, you call `str()` on the value returned by `$wait_for()`:
 
-```{r waitForStr}
+```R
 p <- b$DOM$getDocument(wait_ = FALSE) %...>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
   { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) }
 
 x <- b$wait_for(p)
 str(x)
+#> List of 1
+#>  $ model:List of 6
+#>   ..$ content:List of 8
+#>   .. ..$ : num 128
+#>   .. ..$ : int 28
+#>   .. ..$ : num 292
+#>   .. ..$ : int 28
+#>   .. ..$ : num 292
+#>   .. ..$ : num 988
+#>   .. ..$ : num 128
+#>   .. ..$ : num 988
+#>   ..$ padding:List of 8
+#>   .. ..$ : num 112
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : num 988
+#>   .. ..$ : num 112
+#>   .. ..$ : num 988
+#>   ..$ border :List of 8
+#>   .. ..$ : num 112
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : num 988
+#>   .. ..$ : num 112
+#>   .. ..$ : num 988
+#>   ..$ margin :List of 8
+#>   .. ..$ : int 15
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : int 28
+#>   .. ..$ : num 308
+#>   .. ..$ : num 1030
+#>   .. ..$ : int 15
+#>   .. ..$ : num 1030
+#>   ..$ width  : int 195
+#>   ..$ height : int 960
 ```
 
 There are some methods in Chromote and ChromoteSession objects which are written using asynchronous method calls, but conditionally use `wait_for()` so that they can be called either synchronously or asynchronously. The `$screenshot()` method works this way, for example. You can call `b$screenshot(wait_=TRUE)` (which is the default) for synchronous behavior, or `b$screenshot(wait_=FALSE)` for async behavior.
@@ -489,7 +667,7 @@ In addition to _commands_ The Chrome Devtools Protocol also has _events_. These 
 
 As an example, it can be a bit tricky to find out when to take a screenshot. When you send the browser a command to navigate to a page, it sends a response immediately, but it may take several more seconds for it to actually finish loading that page. When it does, the `Page.loadEventFired` event will be fired.
 
-```{r asyncEvents}
+```R
 b <- ChromoteSession$new()
 
 # Navigate and wait for Page.loadEventFired.
@@ -499,6 +677,8 @@ b <- ChromoteSession$new()
   b$Page$navigate("https://www.r-project.org/")
   str(b$Page$loadEventFired())
 }
+#> List of 1
+#>  $ timestamp: num 683
 ```
 
 With the synchronous API, the call to `b$Page$loadEventFired()` will block until Chromote receives a `Page.loadEventFired` message from the browser. However, with the async promise API, you would write it like this:
@@ -522,7 +702,7 @@ There will be a short delay after running the code before the value is printed.
 
 If you want to schedule a chain of promises and then wait for them to resolve, you can once again use the `wait_for()` method. For example:
 
-```{r waitForAsyncEvents}
+```R
 p <- b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)$
   then(function(value) {
     b$Page$loadEventFired(wait_ = FALSE)
@@ -530,35 +710,43 @@ p <- b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)$
 
 # wait_for returns the last value in the chain, so we can call str() on it
 str(b$wait_for(p))
+#> List of 1
+#>  $ timestamp: num 683
 ```
 
 This particular example has a twist to it: After sending the `Page.navigate` command, the R process doesn't really need to wait for browser's response before it starts waiting for the `Page.loadEventFired` event. So instead of chaining, you could just do this:
 
-```{r waitForAsyncEventDirect}
+```R
 p <- promise(function(resolve, reject) {
   b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
   resolve(b$Page$loadEventFired(wait_ = FALSE))
 })
 
 str(b$wait_for(p))
+#> List of 1
+#>  $ timestamp: num 683
 ```
 
 Essentially, the `Page.navigate` command gets sent off and we don't need to wait for the browser's reply. We can tell R to immediately start waiting for the `Page.loadEventFired` event.
 
 We can simplify it by not wrapping both method calls in a promise. We can just fire off the navigation command, and then directly use the promise that's returned by the event method:
 
-```{r waitForAsyncLoadEvent}
+```R
 b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
 p <- b$Page$loadEventFired(wait_ = FALSE)
 str(b$wait_for(p))
+#> List of 1
+#>  $ timestamp: num 683
 ```
 
 And we can make it yet simpler by firing off the navigation command and then calling `b$Page$loadEventFired()` in synchronous mode (with the default `wait_=TRUE`), which already calls `wait_for()`.
 
-```{r cleanAsyncEvents}
+```R
 b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
 x <- b$Page$loadEventFired()
 str(x)
+#> List of 1
+#>  $ timestamp: num 683
 ```
 
 > **Technical note:** The Chrome Devtools Protocol itself does not automatically enable event notifications. Normally, you would have to call the `Page.enable` method to turn on event notifications for the Page domain. However, Chromote saves you from needing to do this step by keeping track of how many callbacks there are for each domain. When the number of event callbacks for a domain goes from 0 to 1, Chromote automatically calls `$enable()` for that domain, and when it goes from 1 to 0, it it calls `$disable()`.

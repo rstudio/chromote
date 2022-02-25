@@ -1,6 +1,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+<!-- Do not run R chunks that print any session information.
+     This produces unstable output.
+     Instead, copy output from a local execution
+     Still use README.Rmd to get special UTF-8 chars from pandoc -->
+
 # Chromote: Headless Chrome Remote Interface
 
 <!-- badges: start -->
@@ -67,16 +72,16 @@ in the API docs) will query the browser for version information:
 b$Browser$getVersion()
 #> $protocolVersion
 #> [1] "1.3"
-#> 
+#>
 #> $product
 #> [1] "HeadlessChrome/98.0.4758.102"
-#> 
+#>
 #> $revision
 #> [1] "@273bf7ac8c909cde36982d27f66f3c70846a3718"
-#> 
+#>
 #> $userAgent
 #> [1] "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/98.0.4758.102 Safari/537.36"
-#> 
+#>
 #> $jsVersion
 #> [1] "9.8.177.11"
 ```
@@ -86,11 +91,6 @@ page load in the viewer:
 
 ``` r
 b$Page$navigate("https://www.r-project.org/")
-#> $frameId
-#> [1] "0ADE3CFBAF764B0308ADE1ACCC33358B"
-#> 
-#> $loaderId
-#> [1] "196977360A543D7071B105A346E1FB41"
 ```
 
 In the official Chrome DevTools Protocol (CDP) documentation, this is
@@ -105,11 +105,9 @@ section below for more information about screenshots.)
 ``` r
 # Saves to screenshot.png
 b$screenshot()
-#> [1] "An error occurred: Error in onRejected(...): code: -32000\n  message: Could not find node with given id\n"
 
 # Takes a screenshot of elements picked out by CSS selector
 b$screenshot("sidebar.png", selector = ".sidebar")
-#> [1] "sidebar.png"
 ```
 
 ![](man/figures/sidebar.png)
@@ -240,7 +238,7 @@ b1$view()
 b1$Page$navigate("https://github.com/rstudio/chromote")
 #> $frameId
 #> [1] "714439EBDD663E597658503C86F77B0B"
-#> 
+#>
 #> $loaderId
 #> [1] "F39339CBA7D1ACB83618FEF40C3C7467"
 ```
@@ -287,9 +285,10 @@ be enforced by wrapping both lines of code in `{ .... }`).
 b$Page$navigate("https://www.r-project.org")
 #> $frameId
 #> [1] "0ADE3CFBAF764B0308ADE1ACCC33358B"
-#> 
+#>
 #> $loaderId
 #> [1] "112AF4AC0C13FF4A95BED8173C3F4C7F"
+
 # Wait for the Page.loadEventFired event
 b$Page$loadEventFired()
 #> $timestamp
@@ -385,6 +384,10 @@ m <- b$parent
 With a `Chromote` object, you can get a list containing all the
 `ChromoteSession`s, with `$get_sessions()`:
 
+``` r
+m$get_sessions()
+```
+
 Normally, subsequent calls to `ChromoteSession$new()` will use the
 existing `Chromote` object. However, if you want to start a new browser
 process, you can manually create a `Chromote` object, then spawn a
@@ -431,9 +434,12 @@ b$Page$navigate("https://www.r-project.org/")
 #> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 #> $frameId
 #> [1] "BAAC175C67E55886207BADE1776E7B1F"
-#> 
+#>
 #> $loaderId
 #> [1] "66DED3DF9403DA4A307444765FDE828E"
+
+# Disable debug messages
+b$parent$debug_messages(FALSE)
 ```
 
 ### Synchronous vs. asynchronous usage
@@ -523,7 +529,6 @@ JSON to an R object. For example:
 ``` r
 # Synchronous
 str(b$Browser$getVersion())
-#> SEND {"method":"Browser.getVersion","params":[],"id":54,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 #> List of 5
 #>  $ protocolVersion: chr "1.3"
 #>  $ product        : chr "HeadlessChrome/98.0.4758.102"
@@ -541,17 +546,14 @@ promise. For example:
 ``` r
 # Async with callback
 b$Browser$getVersion(wait_ = FALSE, callback_ = str)
-#> SEND {"method":"Browser.getVersion","params":[],"id":55,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 #> <Promise [pending]>
-# After a very, very short pause, prints:
+#> List of 5
+#>  $ protocolVersion: chr "1.3"
+#>  $ product        : chr "HeadlessChrome/98.0.4758.102"
+#>  $ revision       : chr "@273bf7ac8c909cde36982d27f66f3c70846a3718"
+#>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/98.0.4758.102 Safari/537.36"
+#>  $ jsVersion      : chr "9.8.177.11"
 ```
-
-    #> List of 5
-    #>  $ protocolVersion: chr "1.3"
-    #>  $ product        : chr "HeadlessChrome/98.0.4758.102"
-    #>  $ revision       : chr "@273bf7ac8c909cde36982d27f66f3c70846a3718"
-    #>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/98.0.4758.102 Safari/537.36"
-    #>  $ jsVersion      : chr "9.8.177.11"
 
 Notice that the function returned `<Promise [pending]>`, and then it
 printed out the data. We’ll come back to the promise part.
@@ -569,16 +571,14 @@ example:
   b$Browser$getVersion(wait_ = FALSE, callback_ = str)
   1+1
 }
-#> SEND {"method":"Browser.getVersion","params":[],"id":56,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 #> [1] 2
+#> List of 5
+#>  $ protocolVersion: chr "1.3"
+#>  $ product        : chr "HeadlessChrome/98.0.4758.102"
+#>  $ revision       : chr "@273bf7ac8c909cde36982d27f66f3c70846a3718"
+#>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/98.0.4758.102 Safari/537.36"
+#>  $ jsVersion      : chr "9.8.177.11"
 ```
-
-    #> List of 5
-    #>  $ protocolVersion: chr "1.3"
-    #>  $ product        : chr "HeadlessChrome/98.0.4758.102"
-    #>  $ revision       : chr "@273bf7ac8c909cde36982d27f66f3c70846a3718"
-    #>  $ userAgent      : chr "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/98.0.4758.102 Safari/537.36"
-    #>  $ jsVersion      : chr "9.8.177.11"
 
 In the code above, it executes the `1+1` and returns the value before
 the `str` callback can be executed on the message from the browser.
@@ -592,11 +592,7 @@ product <- NULL
 b$Browser$getVersion(wait_ = FALSE, callback_ = function(msg) {
   product <<- msg$product
 })
-#> SEND {"method":"Browser.getVersion","params":[],"id":57,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 #> <Promise [pending]>
-```
-
-``` r
 # Wait for a moment, then run:
 product
 #> [1] "HeadlessChrome/98.0.4758.102"
@@ -635,11 +631,9 @@ a single paste operation and have the same effect.)
     print(value$product)
   })
 }
-#> SEND {"method":"Browser.getVersion","params":[],"id":58,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 # Wait for a moment, then prints:
+#> [1] "HeadlessChrome/98.0.4758.102"
 ```
-
-    #> [1] "HeadlessChrome/98.0.4758.102"
 
 Here are some progressively more concise ways of achieving the same
 thing. As you work with promises, you will see these various forms of
@@ -653,26 +647,21 @@ library(promises)
 b$Browser$getVersion(wait_ = FALSE) %>% then(function(value) {
   print(value$product)
 })
-#> SEND {"method":"Browser.getVersion","params":[],"id":59,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 
 # Promise-pipe to anonymous function, which must be wrapped in parens
 b$Browser$getVersion(wait_ = FALSE) %...>% (function(value) {
   print(value$product)
 })
-#> SEND {"method":"Browser.getVersion","params":[],"id":60,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 
 # Promise-pipe to an expression (which gets converted to a function with the first argument `.`)
 b$Browser$getVersion(wait_ = FALSE) %...>% { print(.$product) }
-#> SEND {"method":"Browser.getVersion","params":[],"id":61,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 
 # Promise-pipe to a named function, with parentheses
 print_product <- function(msg) print(msg$product)
 b$Browser$getVersion(wait_ = FALSE) %...>% print_product()
-#> SEND {"method":"Browser.getVersion","params":[],"id":62,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 
 # Promise-pipe to a named function, without parentheses
 b$Browser$getVersion(wait_ = FALSE) %...>% print_product
-#> SEND {"method":"Browser.getVersion","params":[],"id":63,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 ```
 
 The earlier example where we found the dimensions of a DOM element using
@@ -685,7 +674,6 @@ b$DOM$getDocument(wait_ = FALSE) %...>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
   { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) } %...>%
   str()
-#> SEND {"method":"DOM.getDocument","params":{},"id":64,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 
 
 # Or, more verbosely:
@@ -699,7 +687,6 @@ b$DOM$getDocument(wait_ = FALSE)$
   then(function(value) {
     str(value)
   })
-#> SEND {"method":"DOM.getDocument","params":{},"id":65,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 ```
 
 Each step in the promise chain uses the value from the previous step,
@@ -720,14 +707,8 @@ p <- b$DOM$getDocument(wait_ = FALSE) %...>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
   { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) } %...>%
   str()
-#> SEND {"method":"DOM.getDocument","params":{},"id":66,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 
 b$wait_for(p)
-#> [1] "HeadlessChrome/98.0.4758.102"
-#> [1] "HeadlessChrome/98.0.4758.102"
-#> [1] "HeadlessChrome/98.0.4758.102"
-#> [1] "HeadlessChrome/98.0.4758.102"
-#> [1] "HeadlessChrome/98.0.4758.102"
 #> List of 1
 #>  $ model:List of 6
 #>   ..$ content:List of 8
@@ -768,7 +749,6 @@ b$wait_for(p)
 #>   .. ..$ : num 1030
 #>   ..$ width  : int 195
 #>   ..$ height : int 960
-#> NULL
 ```
 
 This documentation will refer to this technique as *synchronizing*
@@ -786,7 +766,6 @@ value returned by `$wait_for()`:
 p <- b$DOM$getDocument(wait_ = FALSE) %...>%
   { b$DOM$querySelector(.$root$nodeId, ".sidebar", wait_ = FALSE) } %...>%
   { b$DOM$getBoxModel(.$nodeId, wait_ = FALSE) }
-#> SEND {"method":"DOM.getDocument","params":{},"id":71,"sessionId":"12CB6B044A379DA0BDCFBBA55318247C"}
 
 x <- b$wait_for(p)
 str(x)
@@ -906,7 +885,6 @@ for it to actually finish loading that page. When it does, the
 
 ``` r
 b <- ChromoteSession$new()
-#> SEND {"method":"Target.createTarget","params":{"url":"about:blank","width":1200,"height":1600},"id":74}
 
 # Navigate and wait for Page.loadEventFired.
 # Note: these lines are put in a single code block to ensure that there is no
@@ -915,10 +893,6 @@ b <- ChromoteSession$new()
   b$Page$navigate("https://www.r-project.org/")
   str(b$Page$loadEventFired())
 }
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":78,"sessionId":"85DBB81C3DF1CA022268E145BCE66FEF"}
-#> Callbacks for Page++: 1
-#> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":79,"sessionId":"85DBB81C3DF1CA022268E145BCE66FEF"}
 #> List of 1
 #>  $ timestamp: num 683
 ```
@@ -954,7 +928,6 @@ p <- b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)$
   then(function(value) {
     b$Page$loadEventFired(wait_ = FALSE)
   })
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":81,"sessionId":"85DBB81C3DF1CA022268E145BCE66FEF"}
 
 # wait_for returns the last value in the chain, so we can call str() on it
 str(b$wait_for(p))
@@ -973,10 +946,6 @@ p <- promise(function(resolve, reject) {
   b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
   resolve(b$Page$loadEventFired(wait_ = FALSE))
 })
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":84,"sessionId":"85DBB81C3DF1CA022268E145BCE66FEF"}
-#> Callbacks for Page++: 1
-#> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":85,"sessionId":"85DBB81C3DF1CA022268E145BCE66FEF"}
 
 str(b$wait_for(p))
 #> List of 1
@@ -993,15 +962,10 @@ promise that’s returned by the event method:
 
 ``` r
 b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":87,"sessionId":"85DBB81C3DF1CA022268E145BCE66FEF"}
-#> <Promise [pending]>
 p <- b$Page$loadEventFired(wait_ = FALSE)
-#> Callbacks for Page++: 1
-#> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":88,"sessionId":"85DBB81C3DF1CA022268E145BCE66FEF"}
 str(b$wait_for(p))
 #> List of 1
-#>  $ timestamp: num 684
+#>  $ timestamp: num 683
 ```
 
 And we can make it yet simpler by firing off the navigation command and
@@ -1010,15 +974,10 @@ default `wait_=TRUE`), which already calls `wait_for()`.
 
 ``` r
 b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":90,"sessionId":"85DBB81C3DF1CA022268E145BCE66FEF"}
-#> <Promise [pending]>
 x <- b$Page$loadEventFired()
-#> Callbacks for Page++: 1
-#> Enabling events for Page
-#> SEND {"method":"Page.enable","params":[],"id":91,"sessionId":"85DBB81C3DF1CA022268E145BCE66FEF"}
 str(x)
 #> List of 1
-#>  $ timestamp: num 684
+#>  $ timestamp: num 683
 ```
 
 > **Technical note:** The Chrome Devtools Protocol itself does not
