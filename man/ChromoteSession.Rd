@@ -157,6 +157,14 @@ b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
 #> [1] "https://www.r-project.org/"
 
 ## ------------------------------------------------
+## Method `ChromoteSession$get_session_id`
+## ------------------------------------------------
+
+b <- ChromoteSession$new()
+b$get_session_id()
+#> [1] "05764F1D439F4292497A21C6526575DA"
+
+## ------------------------------------------------
 ## Method `ChromoteSession$wait_for`
 ## ------------------------------------------------
 
@@ -595,11 +603,18 @@ Retrieve the \code{\link{Chromote}} object associated with this session.
 \if{latex}{\out{\hypertarget{method-get_session_id}{}}}
 \subsection{Method \code{get_session_id()}}{
 Retrieve the session id
-b <- ChromoteSession$new()
-b$get_session_id()
-#> \link{1} "05764F1D439F4292497A21C6526575DA"
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_session_id()}\if{html}{\out{</div>}}
+}
+
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{b <- ChromoteSession$new()
+b$get_session_id()
+#> [1] "05764F1D439F4292497A21C6526575DA"
+}
+\if{html}{\out{</div>}}
+
 }
 
 }

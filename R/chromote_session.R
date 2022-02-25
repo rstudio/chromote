@@ -383,6 +383,7 @@ ChromoteSession <- R6Class(
 
     #' @description
     #' Retrieve the session id
+    #' @examples
     #' b <- ChromoteSession$new()
     #' b$get_session_id()
     #' #> [1] "05764F1D439F4292497A21C6526575DA"
