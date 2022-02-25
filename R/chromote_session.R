@@ -17,9 +17,6 @@
 #'   `width` and `height` arguments are ignored. If NULL (the default) a new
 #'   target is created and attached to, and the `width` and `height`
 #'   arguments determine its viewport size.
-#' @param wait_ If `FALSE`, return a [promises::promise()] of a new
-#'   `ChromoteSession` object. Otherwise, block during initialization, and
-#'   return a `ChromoteSession` object directly.
 ChromoteSession <- R6Class(
   "ChromoteSession",
   lock_objects = FALSE,
@@ -32,6 +29,9 @@ ChromoteSession <- R6Class(
     #'   from the parent `Chromote` object. If `TRUE`, enable automatic
     #'   event enabling/disabling; if `FALSE`, disable automatic event
     #'   enabling/disabling.
+    #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
+    #'   `ChromoteSession` object. Otherwise, block during initialization, and
+    #'   return a `ChromoteSession` object directly.
     #' @return A new `ChromoteSession` object.
     initialize = function(
       parent = default_chromote_object(),
@@ -115,8 +115,7 @@ ChromoteSession <- R6Class(
     },
 
 
-    #' @description Display the current session in the browser.
-    #' The url opened should be displayed using a Chromium based browser.
+    #' @description Display the current session in the [`Chromote`] browser.
     view = function() {
       tid <- self$Target$getTargetInfo()$targetInfo$targetId
 
@@ -131,6 +130,9 @@ ChromoteSession <- R6Class(
     },
 
     #' @description Close the Chromote session.
+    #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
+    #' when the `ChromoteSession` is closed. Otherwise, block until the
+    #' `ChromoteSession` has closed.
     close = function(wait_ = TRUE) {
       p <- self$Target$getTargetInfo(wait_ = FALSE)
       p <- p$then(function(target) {
@@ -165,6 +167,9 @@ ChromoteSession <- R6Class(
     #' @param scale Page scale factor
     #' @param show If `TRUE`, the screenshot will be displayed in the viewer.
     #' @param delay The number of seconds to wait before taking the screenshot after resizing the page. For complicated pages, this may need to be increased.
+    #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
+    #' when the `ChromoteSession` has saved the screenshot. Otherwise, block until the
+    #' `ChromoteSession` has saved the screnshot.
     screenshot = function(
       filename = "screenshot.png",
       selector = "html",
@@ -202,6 +207,9 @@ ChromoteSession <- R6Class(
     #' @param display_header_footer Display header and footer.
     #' @param print_background Print background graphics.
     #' @param scale Page scale factor.
+    #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
+    #' when the `ChromoteSession` has saved the screenshot. Otherwise, block until the
+    #' `ChromoteSession` has saved the screnshot.
     screenshot_pdf = function(
       filename = "screenshot.pdf",
       pagesize = "letter",
@@ -230,6 +238,10 @@ ChromoteSession <- R6Class(
     #' @description Create a new tab / window
     #'
     #' @param width,height Width and height of the new window.
+    #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
+    #' when the `ChromoteSession` has created a new session. Otherwise, block until the
+    #' `ChromoteSession` has created a new session.
+    #' @examples
     #' b1 <- ChromoteSession$new()
     #' b1$Page$navigate("http://www.google.com")
     #' b2 <- b1$new_session()
@@ -262,7 +274,7 @@ ChromoteSession <- R6Class(
     #' session until the provided promise resolves. The loop from
     #' `$get_child_loop()` will only advance just far enough for the promise to
     #' resolve.
-    #' @param p A promise that is (hopefully) known by `$get_child_loop()`.
+    #' @param p A promise to resolve.
     #' @examples
     #' b <- ChromoteSession$new()
     #'
