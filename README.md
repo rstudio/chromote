@@ -399,7 +399,7 @@ cm <- Chromote$new()
 b1 <- cm$new_session()
 
 # Or:
-b <- ChromoteSession$new(parent = Chromote$new())
+b <- ChromoteSession$new(parent = cm)
 ```
 
 Note that if you use either of these methods, the new `Chromote` object
