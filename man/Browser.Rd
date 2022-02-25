@@ -74,6 +74,7 @@ Browser port
 \if{html}{\out{<a id="method-get_path"></a>}}
 \if{latex}{\out{\hypertarget{method-get_path}{}}}
 \subsection{Method \code{get_path()}}{
+Browser application path
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$get_path()}\if{html}{\out{</div>}}
 }
