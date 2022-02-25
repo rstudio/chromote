@@ -1,4 +1,5 @@
 chromote_session_screenshot <- function(
+  self, private,
   filename = "screenshot.png",
   selector = "html",
   cliprect = NULL,
@@ -188,6 +189,7 @@ chromote_session_screenshot <- function(
 
 
 chromote_session_screenshot_pdf <- function(
+  self, private,
   filename = "screenshot.pdf",
   pagesize = "letter",
   margins = 0.5,
