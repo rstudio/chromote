@@ -284,7 +284,7 @@ Chromote <- R6Class(
     #' b <- ChromoteSession$new()
     #' b$parent$debug_messages(TRUE)
     #' b$Page$navigate("https://www.r-project.org/")
-    #' #> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"},"id":53,"sessionId":"832990D69318198A8E5B39A2764E6DD4"}
+    #' #> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
     debug_log = function(...) {
       txt <- truncate(paste0(..., collapse = ""), 1000)
       if (private$debug_messages_) {
