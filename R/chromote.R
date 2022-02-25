@@ -90,6 +90,8 @@ Chromote <- R6Class(
         # Populate methods while the connection is being established.
         protocol_spec <- jsonlite::fromJSON(self$url("/json/protocol"), simplifyVector = FALSE)
         self$protocol <- process_protocol(protocol_spec, self$.__enclos_env__)
+        lockBinding("protocol", self)
+
         # self$protocol is a list of domains, each of which is a list of
         # methods. Graft the entries from self$protocol onto self
         list2env(self$protocol, self)

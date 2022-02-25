@@ -85,6 +85,7 @@ ChromoteSession <- R6Class(
       # send_command() method with a sessionId -- that is how the command is
       # scoped to this session.
       self$protocol <- protocol_reassign_envs(parent$protocol, env = self$.__enclos_env__)
+      lockBinding("protocol", self)
 
       # Graft the entries from self$protocol onto self
       list2env(self$protocol, self)
