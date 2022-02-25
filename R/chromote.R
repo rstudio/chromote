@@ -310,7 +310,7 @@ Chromote <- R6Class(
     },
 
     #' @description Retrieve active status
-    #' Once initialized, the value returned is `TRUE`. If `$stop()` has been
+    #' Once initialized, the value returned is `TRUE`. If `$close()` has been
     #' called, this value will be `FALSE`.
     is_active = function() {
       private$is_active_
@@ -323,7 +323,7 @@ Chromote <- R6Class(
     },
 
     #' @description Close the [`Browser`] object
-    stop = function() {
+    close = function() {
       private$is_active_ <- FALSE
       self$Browser$close()
     },

@@ -230,7 +230,7 @@ This is different from shutting down the browser process. If you call `b$close()
 To shut down the process, call:
 
 ```R
-b1$parent$stop()
+b1$parent$close()
 ```
 
 `b1$parent` is a `Chromote` object (as opposed to `ChromoteSession`), which represents the browser as a whole. This is explained in [The Chromote object model](#the-chromote-object-model).

@@ -257,7 +257,7 @@ new tab by calling `b1$new_session()`.
 To shut down the process, call:
 
 ``` r
-b1$parent$stop()
+b1$parent$close()
 ```
 
 `b1$parent` is a `Chromote` object (as opposed to `ChromoteSession`),
