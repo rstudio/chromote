@@ -8,6 +8,11 @@ Class representing a local Chrome process
 
 Class representing a local Chrome process
 }
+\details{
+This is a subclass of \code{\link{Browser}} that represents a local browser. It extends
+the \code{\link{Browser}} class with a \code{\link[processx:process]{processx::process}} object, which represents
+the browser's system process.
+}
 \seealso{
 \code{\link[=get_chrome_args]{get_chrome_args()}}
 }
