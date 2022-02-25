@@ -320,6 +320,7 @@ Chromote <- R6Class(
 
     #' @description Close the [`Browser`] object
     stop = function() {
+      private$is_active_ <- FALSE
       self$Browser$close()
     },
 
