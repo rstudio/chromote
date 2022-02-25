@@ -2,11 +2,11 @@
 % Please edit documentation in R/chrome.R
 \name{ChromeRemote}
 \alias{ChromeRemote}
-\title{Class representing a remote Chrome process}
+\title{Remote Chrome process}
 \description{
-Class representing a remote Chrome process
+Remote Chrome process
 
-Class representing a remote Chrome process
+Remote Chrome process
 }
 \section{Super class}{
 \code{\link[chromote:Browser]{chromote::Browser}} -> \code{ChromeRemote}
@@ -33,10 +33,21 @@ Class representing a remote Chrome process
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Create a new ChromeRemote object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromeRemote$new(host, port)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{host}}{A string that is a valid IPv4 or IPv6 address. \code{"0.0.0.0"}
+represents all IPv4 addresses and \code{"::/0"} represents all IPv6 addresses.}
+
+\item{\code{port}}{A number or integer that indicates the server port.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

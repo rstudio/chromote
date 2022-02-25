@@ -2,8 +2,9 @@ Package: chromote
 Title: Headless Chrome Web Browser Interface
 Version: 0.0.0.9003
 Authors@R: c(
-    person("Winston", "Chang", role = c("aut", "cre"), email = "winston@rstudio.com"),
-    person(given = "RStudio", role = c("cph", "fnd"))
+      person("Winston", "Chang", role = c("aut", "cre"), email = "winston@rstudio.com"),
+      person("Barret", "Schloerke", role = c("ctb"), email = "barret@rstudio.com"),
+      person(given = "RStudio", role = c("cph", "fnd"))
     )
 Description: An implementation of the Chrome Devtools Protocol, for controlling a headless Chrome web browser.
 License: GPL-2
@@ -29,3 +30,4 @@ RoxygenNote: 7.1.2
 URL: https://github.com/rstudio/chromote
 BugReports: https://github.com/rstudio/chromote/issues
 Config/testthat/edition: 3
+Config/Needs/website: tidyverse/tidytemplate
