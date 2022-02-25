@@ -33,6 +33,18 @@ ChromoteSession <- R6Class(
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
     #' @return A new `ChromoteSession` object.
+    #' @examples
+    #' # Create a new `ChromoteSession` object.
+    #' b <- ChromoteSession$new()
+    #'
+    #' # Create a ChromoteSession with a specific height,width
+    #' b <- ChromoteSession$new(height = 1080, width = 1920)
+    #'
+    #' # Navigate to page
+    #' b$Page$navigate("http://www.r-project.org/")
+    #'
+    #' # View current chromote session
+    #' if (interactive()) b$view()
     initialize = function(
       parent = default_chromote_object(),
       width = 1200,
@@ -116,6 +128,15 @@ ChromoteSession <- R6Class(
 
 
     #' @description Display the current session in the [`Chromote`] browser.
+    #' @examples
+    #' # Create a new `ChromoteSession` object.
+    #' b <- ChromoteSession$new()
+    #'
+    #' # Navigate to page
+    #' b$Page$navigate("http://www.r-project.org/")
+    #'
+    #' # View current chromote session
+    #' if (interactive()) b$view()
     view = function() {
       tid <- self$Target$getTargetInfo()$targetInfo$targetId
 
@@ -133,6 +154,15 @@ ChromoteSession <- R6Class(
     #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
     #' when the `ChromoteSession` is closed. Otherwise, block until the
     #' `ChromoteSession` has closed.
+    #' @examples
+    #' # Create a new `ChromoteSession` object.
+    #' b <- ChromoteSession$new()
+    #'
+    #' # Navigate to page
+    #' b$Page$navigate("http://www.r-project.org/")
+    #'
+    #' # Close current chromote session
+    #' b$close()
     close = function(wait_ = TRUE) {
       p <- self$Target$getTargetInfo(wait_ = FALSE)
       p <- p$then(function(target) {
@@ -161,15 +191,91 @@ ChromoteSession <- R6Class(
     #'
     #' @param filename File path of where to save the screenshot.
     #' @param selector CSS selector to use for the screenshot.
-    #' @param cliprect A list containing `x`, `y`, `width`, and `height`. See [`Page.Viewport`](https://chromedevtools.github.io/devtools-protocol/tot/Page/#type-Viewport) for more information. If provided, `selector` and `expand` will be ignored. To provide a scale, use the `scale` parameter.
+    #' @param cliprect A list containing `x`, `y`, `width`, and `height`. See
+    #' [`Page.Viewport`](https://chromedevtools.github.io/devtools-protocol/tot/Page/#type-Viewport)
+    #' for more information. If provided, `selector` and `expand` will be
+    #' ignored. To provide a scale, use the `scale` parameter.
     #' @param region CSS region to use for the screenshot.
-    #' @param expand Extra pixels to expand the screenshot. May be a single value or a numeric vector of top, right, bottom, left values.
+    #' @param expand Extra pixels to expand the screenshot. May be a single
+    #' value or a numeric vector of top, right, bottom, left values.
     #' @param scale Page scale factor
     #' @param show If `TRUE`, the screenshot will be displayed in the viewer.
-    #' @param delay The number of seconds to wait before taking the screenshot after resizing the page. For complicated pages, this may need to be increased.
+    #' @param delay The number of seconds to wait before taking the screenshot
+    #' after resizing the page. For complicated pages, this may need to be
+    #' increased.
     #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
-    #' when the `ChromoteSession` has saved the screenshot. Otherwise, block until the
-    #' `ChromoteSession` has saved the screnshot.
+    #' when the `ChromoteSession` has saved the screenshot. Otherwise, block
+    #' until the `ChromoteSession` has saved the screnshot.
+    #' @examples
+    #' # Create a new `ChromoteSession` object.
+    #' b <- ChromoteSession$new()
+    #'
+    #' # Navigate to page
+    #' b$Page$navigate("http://www.r-project.org/")
+    #'
+    #' # Take screenshot
+    #' tmppngfile <- tempfile(fileext = ".png")
+    #' is_interactive <- interactive() # Display screenshot if interactive
+    #' b$screenshot(tmppngfile, show = is_interactive)
+    #'
+    #' # Show screenshot file info
+    #' file.info(tmppngfile)
+    #'
+    #'
+    #' # Take screenshot using a selector
+    #' sidebar_file <- tempfile(fileext = ".png")
+    #' b$screenshot(sidebar_file, selector = ".sidebar", show = is_interactive)
+    #'
+    #' # ----------------------------
+    #' # Take screenshots in parallel
+    #'
+    #' urls <- c(
+    #'   "https://www.r-project.org/",
+    #'   "https://github.com/",
+    #'   "https://news.ycombinator.com/"
+    #' )
+    #' # Helper method that:
+    #' # 1. Navigates to the given URL
+    #' # 2. Waits for the page loaded event to fire
+    #' # 3. Takes a screenshot
+    #' # 4. Prints a message
+    #' # 5. Close the ChromoteSession
+    #' screenshot_p <- function(url, filename = NULL) {
+    #'   if (is.null(filename)) {
+    #'     filename <- gsub("^.*://", "", url)
+    #'     filename <- gsub("/", "_", filename)
+    #'     filename <- gsub("\\.", "_", filename)
+    #'     filename <- sub("_$", "", filename)
+    #'     filename <- paste0(filename, ".png")
+    #'   }
+    #'
+    #'   b <- ChromoteSession$new()
+    #'   b$Page$navigate(url, wait_ = FALSE)
+    #'   b$Page$loadEventFired(wait_ = FALSE)$
+    #'     then(function(value) {
+    #'       b$screenshot(filename, wait_ = FALSE)
+    #'     })$
+    #'     then(function(value) {
+    #'       message(filename)
+    #'     })$
+    #'     finally(function() {
+    #'       b$close()
+    #'     })
+    #' }
+    #'
+    #' # Take multiple screenshots simultaneously
+    #' ps <- lapply(urls, screenshot_p)
+    #' pa <- promise_all(.list = ps)$then(function(value) {
+    #'   message("Done!")
+    #' })
+    #'
+    #' # Block the console until the screenshots finish (optional)
+    #' cm <- default_chromote_object()
+    #' cm$wait_for(pa)
+    #' #> www_r-project_org.png
+    #' #> github_com.png
+    #' #> news_ycombinator_com.png
+    #' #> Done!
     screenshot = function(
       filename = "screenshot.png",
       selector = "html",
@@ -201,15 +307,30 @@ ChromoteSession <- R6Class(
     #' @param pagesize A single character value in the set `"letter"`,
     #' `"legal"`, `"tabloid"`, `"ledger"` and `"a0"` through `"a1"`. Or a
     #' numeric vector `c(width, height)` specifying the page size.
-    #' @param margins A numeric vector `c(top, right, bottom, left)` specifying the page margins.
-    #' @param units Page and margin size units. Either `"in"` or `"cm"` for inches and centimeters respectively.
+    #' @param margins A numeric vector `c(top, right, bottom, left)` specifying
+    #' the page margins.
+    #' @param units Page and margin size units. Either `"in"` or `"cm"` for
+    #' inches and centimeters respectively.
     #' @param landscape Paper orientation.
     #' @param display_header_footer Display header and footer.
     #' @param print_background Print background graphics.
     #' @param scale Page scale factor.
     #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
-    #' when the `ChromoteSession` has saved the screenshot. Otherwise, block until the
-    #' `ChromoteSession` has saved the screnshot.
+    #' when the `ChromoteSession` has saved the screenshot. Otherwise, block
+    #' until the `ChromoteSession` has saved the screnshot.
+    #' @examples
+    #' # Create a new `ChromoteSession` object.
+    #' b <- ChromoteSession$new()
+    #'
+    #' # Navigate to page
+    #' b$Page$navigate("http://www.r-project.org/")
+    #'
+    #' # Take screenshot
+    #' tmppdffile <- tempfile(fileext = ".pdf")
+    #' b$screenshot_pdf(tmppdffile)
+    #'
+    #' # Show PDF file info
+    #' file.info(tmppdffile)
     screenshot_pdf = function(
       filename = "screenshot.pdf",
       pagesize = "letter",
@@ -239,8 +360,8 @@ ChromoteSession <- R6Class(
     #'
     #' @param width,height Width and height of the new window.
     #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
-    #' when the `ChromoteSession` has created a new session. Otherwise, block until the
-    #' `ChromoteSession` has created a new session.
+    #' when the `ChromoteSession` has created a new session. Otherwise, block
+    #' until the `ChromoteSession` has created a new session.
     #' @examples
     #' b1 <- ChromoteSession$new()
     #' b1$Page$navigate("http://www.google.com")
@@ -316,7 +437,8 @@ ChromoteSession <- R6Class(
     #' @param msg A JSON-serializable list containing `method`, and `params`.
     #' @param callback Method to run when the command finishes successfully.
     #' @param error Method to run if an error occurs.
-    #' @param timeout Number of milliseconds for Chrome Devtools Protocol execute a method.
+    #' @param timeout Number of milliseconds for Chrome Devtools Protocol
+    #' execute a method.
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
       if (!private$is_active_) {
         stop("Session ", private$session_id, " is closed.")
@@ -370,7 +492,8 @@ ChromoteSession <- R6Class(
 
     #' @field parent [`Chromote`] object
     parent = NULL,
-    #' @field default_timeout Default timeout in seconds for \pkg{chromote} to wait for a Chrome DevTools Protocol response.
+    #' @field default_timeout Default timeout in seconds for \pkg{chromote} to
+    #' wait for a Chrome DevTools Protocol response.
     default_timeout = NULL,
     #' @field protocol Dynamic protocol implementation. For expert use only!
     protocol = NULL
