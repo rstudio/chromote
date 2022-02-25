@@ -47,8 +47,8 @@ ChromoteSession <- R6Class(
     #' if (interactive()) b$view()}
     initialize = function(
       parent = default_chromote_object(),
-      width = 1200,
-      height = 1600,
+      width = 992,
+      height = 1323,
       targetId = NULL,
       wait_ = TRUE,
       auto_events = NULL
@@ -370,7 +370,7 @@ ChromoteSession <- R6Class(
     #' #> [1] "https://www.google.com/"
     #' b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
     #' #> [1] "https://www.r-project.org/"}
-    new_session = function(width = 1200, height = 1600, targetId = NULL, wait_ = TRUE) {
+    new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
       self$parent$new_session(width = width, height = height, targetId = targetId, wait_ = wait_)
     },
 

@@ -229,8 +229,8 @@ Create a new \code{ChromoteSession} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$new(
   parent = default_chromote_object(),
-  width = 1200,
-  height = 1600,
+  width = 992,
+  height = 1323,
   targetId = NULL,
   wait_ = TRUE,
   auto_events = NULL
@@ -548,8 +548,8 @@ unlist(file.info(tmppdffile))}
 Create a new tab / window
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$new_session(
-  width = 1200,
-  height = 1600,
+  width = 992,
+  height = 1323,
   targetId = NULL,
   wait_ = TRUE
 )}\if{html}{\out{</div>}}

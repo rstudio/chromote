@@ -158,7 +158,7 @@ Chromote <- R6Class(
     #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
-    new_session = function(width = 1200, height = 1600, targetId = NULL, wait_ = TRUE) {
+    new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
       session <- ChromoteSession$new(self, width, height, targetId, wait_ = FALSE)
 
       # ChromoteSession$new() always returns the object, but the
