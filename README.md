@@ -257,7 +257,7 @@ new tab by calling `b1$new_session()`.
 To shut down the process, call:
 
 ``` r
-b1$parent$stop()
+b1$parent$close()
 ```
 
 `b1$parent` is a `Chromote` object (as opposed to `ChromoteSession`),
@@ -399,7 +399,7 @@ cm <- Chromote$new()
 b1 <- cm$new_session()
 
 # Or:
-b <- ChromoteSession$new(parent = Chromote$new())
+b1 <- ChromoteSession$new(parent = cm)
 ```
 
 Note that if you use either of these methods, the new `Chromote` object
