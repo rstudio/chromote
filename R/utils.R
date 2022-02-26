@@ -78,5 +78,14 @@ find_domain <- function(event) {
 # Force url to be opened by Chromium browser
 browse_url <- function(path, chromote) {
   url <- chromote$url(path)
-  browseURL(url, shQuote(chromote$get_browser()$get_path()))
+
+  browser <- chromote$get_browser()
+  if (inherits(browser, "Chrome")) {
+    # If locally available, use the local browser
+    browseURL(url, shQuote(browser$get_path()))
+  } else {
+    # Otherwise pray opening the url works as expected
+    # Users can set `options(browser=)` to override default behavior
+    browseURL(url)
+  }
 }
