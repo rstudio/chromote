@@ -27,7 +27,12 @@ Chrome <- R6Class("Chrome",
       private$process <- res$process
       private$port <- res$port
       private$path <- path
-    }
+    },
+    #' @description Browser application path
+    get_path = function() private$path
+  ),
+  private = list(
+    path = NULL
   )
 )
 

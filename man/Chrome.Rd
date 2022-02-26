@@ -23,15 +23,15 @@ the browser's system process.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Chrome$new()}}
+\item \href{#method-get_path}{\code{Chrome$get_path()}}
 \item \href{#method-clone}{\code{Chrome$clone()}}
 }
 }
 \if{html}{
-\out{<details ><summary>Inherited methods</summary>}
+\out{<details open ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="close">}\href{../../chromote/html/Browser.html#method-close}{\code{chromote::Browser$close()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_host">}\href{../../chromote/html/Browser.html#method-get_host}{\code{chromote::Browser$get_host()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_path">}\href{../../chromote/html/Browser.html#method-get_path}{\code{chromote::Browser$get_path()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_port">}\href{../../chromote/html/Browser.html#method-get_port}{\code{chromote::Browser$get_port()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_process">}\href{../../chromote/html/Browser.html#method-get_process}{\code{chromote::Browser$get_process()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_local">}\href{../../chromote/html/Browser.html#method-is_local}{\code{chromote::Browser$is_local()}}\out{</span>}
@@ -65,6 +65,16 @@ for a list of possible arguments. Defaults to \code{\link[=get_chrome_args]{get_
 \subsection{Returns}{
 A new \code{Chrome} object.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_path"></a>}}
+\if{latex}{\out{\hypertarget{method-get_path}{}}}
+\subsection{Method \code{get_path()}}{
+Browser application path
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Chrome$get_path()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

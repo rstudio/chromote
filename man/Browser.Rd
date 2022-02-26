@@ -24,7 +24,6 @@ should also set private$process.
 \item \href{#method-get_process}{\code{Browser$get_process()}}
 \item \href{#method-get_host}{\code{Browser$get_host()}}
 \item \href{#method-get_port}{\code{Browser$get_port()}}
-\item \href{#method-get_path}{\code{Browser$get_path()}}
 \item \href{#method-close}{\code{Browser$close()}}
 \item \href{#method-clone}{\code{Browser$clone()}}
 }
@@ -67,16 +66,6 @@ Browser Host
 Browser port
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$get_port()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_path"></a>}}
-\if{latex}{\out{\hypertarget{method-get_path}{}}}
-\subsection{Method \code{get_path()}}{
-Browser application path
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Browser$get_path()}\if{html}{\out{</div>}}
 }
 
 }

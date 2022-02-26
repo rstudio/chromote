@@ -27,9 +27,6 @@ Browser <- R6Class("Browser",
     #' @description Browser port
     get_port = function() private$port,
 
-    #' @description Browser application path
-    get_path = function() private$path,
-
     #' @description Close the browser
     close = function() {
       if (self$is_local() && private$process$is_alive()) {
@@ -41,7 +38,6 @@ Browser <- R6Class("Browser",
     process = NULL,
     host = NULL,
     port = NULL,
-    path = NULL,
     finalize = function(e) {
       if (self$is_local()) {
         self$close()
