@@ -292,6 +292,10 @@ if (interactive()) b$view()}
 \if{latex}{\out{\hypertarget{method-view}{}}}
 \subsection{Method \code{view()}}{
 Display the current session in the \code{\link{Chromote}} browser.
+
+If a \code{\link{Chrome}} browser is being used, this method will open a new tab
+using your \code{\link{Chrome}} browser. When not using a \code{\link{Chrome}} browser, set
+\code{options(browser=)} to change the default behavior of \code{\link[=browseURL]{browseURL()}}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$view()}\if{html}{\out{</div>}}
 }

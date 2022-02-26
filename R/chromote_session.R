@@ -131,6 +131,10 @@ ChromoteSession <- R6Class(
 
 
     #' @description Display the current session in the [`Chromote`] browser.
+    #'
+    #' If a [`Chrome`] browser is being used, this method will open a new tab
+    #' using your [`Chrome`] browser. When not using a [`Chrome`] browser, set
+    #' `options(browser=)` to change the default behavior of [`browseURL()`].
     #' @examples
     #' \dontrun{# Create a new `ChromoteSession` object.
     #' b <- ChromoteSession$new()
