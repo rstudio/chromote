@@ -79,7 +79,6 @@ wait for a Chrome DevTools Protocol response.</p></dd>
 <li><p><a href="#method-screenshot"><code>ChromoteSession$screenshot()</code></a></p></li>
 <li><p><a href="#method-screenshot_pdf"><code>ChromoteSession$screenshot_pdf()</code></a></p></li>
 <li><p><a href="#method-new_session"><code>ChromoteSession$new_session()</code></a></p></li>
-<li><p><a href="#method-get_parent"><code>ChromoteSession$get_parent()</code></a></p></li>
 <li><p><a href="#method-get_session_id"><code>ChromoteSession$get_session_id()</code></a></p></li>
 <li><p><a href="#method-wait_for"><code>ChromoteSession$wait_for()</code></a></p></li>
 <li><p><a href="#method-debug_log"><code>ChromoteSession$debug_log()</code></a></p></li>
@@ -485,18 +484,10 @@ b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
 </div>
 
 
-</div><p></p><hr><a id="method-get_parent"></a><div class="section">
-<h3 id="method-get-parent-">Method <code>get_parent()</code><a class="anchor" aria-label="anchor" href="#method-get-parent-"></a></h3>
-<p>Retrieve the <code><a href="Chromote.html">Chromote</a></code> object associated with this session.</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_parent</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
-</div>
-
-
 </div><p></p><hr><a id="method-get_session_id"></a><div class="section">
 <h3 id="method-get-session-id-">Method <code>get_session_id()</code><a class="anchor" aria-label="anchor" href="#method-get-session-id-"></a></h3>
 <p>Retrieve the session id</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_session_id</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -515,7 +506,7 @@ b$get_session_id()
 session until the provided promise resolves. The loop from
 <code>$get_child_loop()</code> will only advance just far enough for the promise to
 resolve.</p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -544,7 +535,7 @@ b$Browser$getVersion(wait_ = FALSE, callback_ = str)}
 </div><p></p><hr><a id="method-debug_log"></a><div class="section">
 <h3 id="method-debug-log-">Method <code>debug_log()</code><a class="anchor" aria-label="anchor" href="#method-debug-log-"></a></h3>
 <p>Send a debug log message to the parent <a href="Chromote.html">Chromote</a> object</p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">debug_log</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -572,7 +563,7 @@ b$parent$debug_messages(FALSE)}
 <h3 id="method-get-child-loop-">Method <code>get_child_loop()</code><a class="anchor" aria-label="anchor" href="#method-get-child-loop-"></a></h3>
 <p><span class="pkg">later</span> loop.</p>
 <p>For expert async usage only.</p><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_child_loop</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -581,7 +572,7 @@ b$parent$debug_messages(FALSE)}
 <h3 id="method-send-command-">Method <code>send_command()</code><a class="anchor" aria-label="anchor" href="#method-send-command-"></a></h3>
 <p>Send command through Chrome DevTools Protocol.</p>
 <p>For expert use only.</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">send_command</span><span class="op">(</span>
   <span class="va">msg</span>,
   callback <span class="op">=</span> <span class="cn">NULL</span>,
@@ -616,7 +607,7 @@ execute a method.</p></dd>
 <h3 id="method-get-auto-events-">Method <code>get_auto_events()</code><a class="anchor" aria-label="anchor" href="#method-get-auto-events-"></a></h3>
 <p>Resolved <code>auto_events</code> value.</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_auto_events</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -625,7 +616,7 @@ execute a method.</p></dd>
 <h3 id="method-invoke-event-callbacks-">Method <code>invoke_event_callbacks()</code><a class="anchor" aria-label="anchor" href="#method-invoke-event-callbacks-"></a></h3>
 <p>Immediately call all event callback methods.</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">invoke_event_callbacks</span><span class="op">(</span><span class="va">event</span>, <span class="va">params</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -646,7 +637,7 @@ execute a method.</p></dd>
 <h3 id="method-mark-closed-">Method <code>mark_closed()</code><a class="anchor" aria-label="anchor" href="#method-mark-closed-"></a></h3>
 <p>Disable callbacks for a given session.</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
+<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">mark_closed</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -656,7 +647,7 @@ execute a method.</p></dd>
 <p>Retrieve active status
 Once initialized, the value returned is <code>TRUE</code>. If <code>$close()</code> has been
 called, this value will be <code>FALSE</code>.</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">is_active</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -665,7 +656,7 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <h3 id="method-init-promise-">Method <code>init_promise()</code><a class="anchor" aria-label="anchor" href="#method-init-promise-"></a></h3>
 <p>Initial promise</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">init_promise</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -690,10 +681,10 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <span class="r-in"><span class="co"># Navigate to page</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $frameId</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "82371847BF01CA447163294A21320437"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "AC8E01BBF8D7A5AEFC33FB217EAA89F5"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $loaderId</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4FA4100BA11F87C275E4FA2B2B85040E"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "10961C5C8B48B38187BDE4D454723923"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># View current chromote session</span></span>
@@ -709,10 +700,10 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <span class="r-in"><span class="co"># Navigate to page</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $frameId</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "82371847BF01CA447163294A21320437"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "AC8E01BBF8D7A5AEFC33FB217EAA89F5"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $loaderId</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "392220DB348C0BA883336C18C8BDB826"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "B37762EA107FED7BD0A9446EBFDD9A4A"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># View current chromote session</span></span>
@@ -728,10 +719,10 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <span class="r-in"><span class="co"># Navigate to page</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $frameId</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "82371847BF01CA447163294A21320437"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "AC8E01BBF8D7A5AEFC33FB217EAA89F5"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $loaderId</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "38A4D96FB995D353D436D48A01B023B1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "79F204282900B9D35FF20900B28C7F9C"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Close current chromote session</span></span>
@@ -747,13 +738,13 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Navigate to page</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session EAA5CF5AC6E5644A94B363A06A5D3308 is closed.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session BDAB4903F078B4720FC81AA36564EA9D is closed.</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Take screenshot</span></span>
 <span class="r-in"><span class="va">tmppngfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".png"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">is_interactive</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># Display screenshot if interactive</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="va">tmppngfile</span>, show <span class="op">=</span> <span class="va">is_interactive</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session EAA5CF5AC6E5644A94B363A06A5D3308 is closed.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session BDAB4903F078B4720FC81AA36564EA9D is closed.</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Show screenshot file info</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.info</a></span><span class="op">(</span><span class="va">tmppngfile</span><span class="op">)</span><span class="op">)</span></span>
@@ -764,7 +755,7 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <span class="r-in"><span class="co"># Take screenshot using a selector</span></span>
 <span class="r-in"><span class="va">sidebar_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".png"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="va">sidebar_file</span>, selector <span class="op">=</span> <span class="st">".sidebar"</span>, show <span class="op">=</span> <span class="va">is_interactive</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session EAA5CF5AC6E5644A94B363A06A5D3308 is closed.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session BDAB4903F078B4720FC81AA36564EA9D is closed.</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># ----------------------------</span></span>
 <span class="r-in"><span class="co"># Take screenshots in parallel</span></span>
@@ -826,12 +817,12 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Navigate to page</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session EAA5CF5AC6E5644A94B363A06A5D3308 is closed.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session BDAB4903F078B4720FC81AA36564EA9D is closed.</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Take screenshot</span></span>
 <span class="r-in"><span class="va">tmppdffile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".pdf"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="fu">screenshot_pdf</span><span class="op">(</span><span class="va">tmppdffile</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session EAA5CF5AC6E5644A94B363A06A5D3308 is closed.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session BDAB4903F078B4720FC81AA36564EA9D is closed.</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Show PDF file info</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.info</a></span><span class="op">(</span><span class="va">tmppdffile</span><span class="op">)</span><span class="op">)</span></span>
@@ -862,7 +853,7 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="va">b</span> <span class="op">&lt;-</span> <span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="fu">get_session_id</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EAA5CF5AC6E5644A94B363A06A5D3308"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "BDAB4903F078B4720FC81AA36564EA9D"</span>
 <span class="r-in"><span class="co">#&gt; [1] "05764F1D439F4292497A21C6526575DA"</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
@@ -873,13 +864,13 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Async with promise</span></span>
 <span class="r-in"><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session EAA5CF5AC6E5644A94B363A06A5D3308 is closed.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session BDAB4903F078B4720FC81AA36564EA9D is closed.</span>
 <span class="r-in"><span class="va">p</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="va">str</span><span class="op">)</span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'p' not found</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Async with callback</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span>, callback_ <span class="op">=</span> <span class="va">str</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session EAA5CF5AC6E5644A94B363A06A5D3308 is closed.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session BDAB4903F078B4720FC81AA36564EA9D is closed.</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
 <span class="r-in"><span class="co">## Method `ChromoteSession$debug_log`</span></span>
@@ -888,7 +879,7 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="va">b</span> <span class="op">&lt;-</span> <span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">debug_messages</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session EAA5CF5AC6E5644A94B363A06A5D3308 is closed.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in self$send_command(msg, callback = callback_, error = error_,     timeout = timeout_):</span> Session BDAB4903F078B4720FC81AA36564EA9D is closed.</span>
 <span class="r-in"><span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}</span></span>
 <span class="r-in"><span class="co"># Turn off debug messages</span></span>
 <span class="r-in"><span class="va">b</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">debug_messages</span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span></span>

@@ -241,7 +241,7 @@
 <p>This is different from shutting down the browser process. If you call <code>b$close()</code>, the browser process will still be running, even if all tabs have been closed. If all tabs have been closed, you can still create a new tab by calling <code>b1$new_session()</code>.</p>
 <p>To shut down the process, call:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">b1</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">b1</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">close</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><code>b1$parent</code> is a <code>Chromote</code> object (as opposed to <code>ChromoteSession</code>), which represents the browser as a whole. This is explained in <a href="#the-chromote-object-model">The Chromote object model</a>.</p>
 </div>
 <div class="section level3">
@@ -298,7 +298,7 @@
 <span class="va">b1</span> <span class="op">&lt;-</span> <span class="va">cm</span><span class="op">$</span><span class="fu">new_session</span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># Or:</span>
-<span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>parent <span class="op">=</span> <span class="va"><a href="reference/Chromote.html">Chromote</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="va">b1</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>parent <span class="op">=</span> <span class="va">cm</span><span class="op">)</span></code></pre></div>
 <p>Note that if you use either of these methods, the new <code>Chromote</code> object will <em>not</em> be set as the default that is used by future calls to <code>ChromoteSesssion$new()</code>. See <a href="#specifying-which-browser-to-use">Specifying which browser to use</a> for information on setting the default <code>Chromote</code> object.</p>
 <p>There are also the following classes which represent the browser at a lower level:</p>
 <ul>
