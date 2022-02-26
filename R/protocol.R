@@ -69,7 +69,7 @@ gen_command_args <- function(params) {
     if ("timeout" %in% names(args)) {
       expr(missing_arg())
     } else {
-      quote(self$default_timeout)
+      expr(self$default_timeout)
     },
     wait_     = TRUE
   )
@@ -154,7 +154,7 @@ event_to_function <- function(event, domain_name, env) {
   new_function(
     args = list(
       callback_ = NULL,
-      timeout_  = quote(self$default_timeout),
+      timeout_  = expr(self$default_timeout),
       wait_     = TRUE
     ),
     body = gen_event_body(paste0(domain_name, ".", event$name)),
