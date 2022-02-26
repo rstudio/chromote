@@ -230,7 +230,7 @@ This is different from shutting down the browser process. If you call `b$close()
 To shut down the process, call:
 
 ```R
-b1$parent$stop()
+b1$parent$close()
 ```
 
 `b1$parent` is a `Chromote` object (as opposed to `ChromoteSession`), which represents the browser as a whole. This is explained in [The Chromote object model](#the-chromote-object-model).
@@ -316,7 +316,7 @@ cm <- Chromote$new()
 b1 <- cm$new_session()
 
 # Or:
-b <- ChromoteSession$new(parent = Chromote$new())
+b1 <- ChromoteSession$new(parent = cm)
 ```
 
 Note that if you use either of these methods, the new `Chromote` object will _not_ be set as the default that is used by future calls to `ChromoteSesssion$new()`. See [Specifying which browser to use](#specifying-which-browser-to-use) for information on setting the default `Chromote` object.
