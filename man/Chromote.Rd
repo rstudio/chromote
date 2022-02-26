@@ -69,7 +69,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-url}{\code{Chromote$url()}}
 \item \href{#method-is_active}{\code{Chromote$is_active()}}
 \item \href{#method-get_browser}{\code{Chromote$get_browser()}}
-\item \href{#method-stop}{\code{Chromote$stop()}}
+\item \href{#method-close}{\code{Chromote$close()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -334,7 +334,7 @@ Create url for a given path
 \if{latex}{\out{\hypertarget{method-is_active}{}}}
 \subsection{Method \code{is_active()}}{
 Retrieve active status
-Once initialized, the value returned is \code{TRUE}. If \verb{$stop()} has been
+Once initialized, the value returned is \code{TRUE}. If \verb{$close()} has been
 called, this value will be \code{FALSE}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$is_active()}\if{html}{\out{</div>}}
@@ -352,12 +352,12 @@ Retrieve \code{\link{Browser}}` object
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-stop"></a>}}
-\if{latex}{\out{\hypertarget{method-stop}{}}}
-\subsection{Method \code{stop()}}{
+\if{html}{\out{<a id="method-close"></a>}}
+\if{latex}{\out{\hypertarget{method-close}{}}}
+\subsection{Method \code{close()}}{
 Close the \code{\link{Browser}} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Chromote$stop()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$close()}\if{html}{\out{</div>}}
 }
 
 }
