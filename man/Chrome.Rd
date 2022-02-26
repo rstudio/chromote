@@ -23,6 +23,7 @@ the browser's system process.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Chrome$new()}}
+\item \href{#method-get_path}{\code{Chrome$get_path()}}
 \item \href{#method-clone}{\code{Chrome$clone()}}
 }
 }
@@ -64,6 +65,16 @@ for a list of possible arguments. Defaults to \code{\link[=get_chrome_args]{get_
 \subsection{Returns}{
 A new \code{Chrome} object.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_path"></a>}}
+\if{latex}{\out{\hypertarget{method-get_path}{}}}
+\subsection{Method \code{get_path()}}{
+Browser application path
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Chrome$get_path()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

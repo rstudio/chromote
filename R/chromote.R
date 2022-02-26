@@ -106,8 +106,12 @@ Chromote <- R6Class(
     },
 
     #' @description Display the current session in the `browser`
+    #'
+    #' If a [`Chrome`] browser is being used, this method will open a new tab
+    #' using your [`Chrome`] browser. When not using a [`Chrome`] browser, set
+    #' `options(browser=)` to change the default behavior of [`browseURL()`].
     view = function() {
-      browseURL(self$url())
+      browse_url(path = NULL, self)
     },
 
     #' @description
