@@ -82,7 +82,7 @@ browse_url <- function(path, chromote) {
   browser <- chromote$get_browser()
   if (inherits(browser, "Chrome")) {
     # If locally available, use the local browser
-    browseURL(url, shQuote(browser$get_path()))
+    browseURL(url, browser$get_path())
   } else {
     # Otherwise pray opening the url works as expected
     # Users can set `options(browser=)` to override default behavior

@@ -19,7 +19,7 @@ NULL
 #' A `Chromote` object can have any number of `ChromoteSession` objects as
 #' children. It is not necessary to create a `Chromote` object manually. You can
 #' simply call:
-#' ```{r}
+#' ```r
 #' b <- ChromoteSession$new()
 #' ```
 #' and it will automatically create a `Chromote` object if one has not already
