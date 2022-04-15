@@ -6,7 +6,7 @@ Authors@R: c(
       person("Barret", "Schloerke", role = c("aut"), email = "barret@rstudio.com"),
       person(given = "RStudio", role = c("cph", "fnd"))
     )
-Description: An implementation of the Chrome DevTools Protocol, for controlling a headless Chrome web browser.
+Description: An implementation of the 'Chrome DevTools Protocol', for controlling a headless Chrome web browser.
 License: GPL-2
 Encoding: UTF-8
 SystemRequirements: Google Chrome or other Chromium-based browser. chromium: chromium (rpm) or chromium-browser (deb)
