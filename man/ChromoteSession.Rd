@@ -396,7 +396,7 @@ increased.}
 
 \item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} that will resolve
 when the \code{ChromoteSession} has saved the screenshot. Otherwise, block
-until the \code{ChromoteSession} has saved the screnshot.}
+until the \code{ChromoteSession} has saved the screenshot.}
 }
 \if{html}{\out{</div>}}
 }
@@ -713,7 +713,7 @@ For expert use only.
 
 \item{\code{error}}{Method to run if an error occurs.}
 
-\item{\code{timeout}}{Number of milliseconds for Chrome Devtools Protocol
+\item{\code{timeout}}{Number of milliseconds for Chrome DevTools Protocol
 execute a method.}
 }
 \if{html}{\out{</div>}}

@@ -13,7 +13,7 @@ NULL
 #'
 #' A `Chromote` object represents the browser as a whole, and it can have
 #' multiple _targets_, which each represent a browser tab. In the Chrome
-#' Devtools Protocol, each target can have one or more debugging _sessions_ to
+#' DevTools Protocol, each target can have one or more debugging _sessions_ to
 #' control it. A `ChromoteSession` object represents a single _session_.
 #'
 #' A `Chromote` object can have any number of `ChromoteSession` objects as
@@ -205,7 +205,7 @@ Chromote <- R6Class(
     #' @param msg A JSON-serializable list containing `method`, and `params`.
     #' @param callback Method to run when the command finishes successfully.
     #' @param error Method to run if an error occurs.
-    #' @param timeout Number of milliseconds for Chrome Devtools Protocol
+    #' @param timeout Number of milliseconds for Chrome DevTools Protocol
     #' execute a method.
     #' @param sessionId Determines which [`ChromoteSession`] with the
     #' corresponding to send the command to.

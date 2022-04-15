@@ -2,8 +2,8 @@
 
 utils::globalVariables(c("self", "private", "callback_", "error_", "timeout", "timeout_", "wait_"))
 
-# Given a protocol spec (essentially, the Chrome Devtools Protocol JSON
-# converted to an R object), returns a list of domains of the Devtools
+# Given a protocol spec (essentially, the Chrome DevTools Protocol JSON
+# converted to an R object), returns a list of domains of the DevTools
 # Protocol (like Browser, Page, Runtime). Each domain has a function for each
 # command and event (like Browser$getVersion, Page$navigate, etc). The
 # `protocol` input is the protocol object from the browser, translated from

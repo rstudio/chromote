@@ -6,7 +6,7 @@ Authors@R: c(
       person("Barret", "Schloerke", role = c("aut"), email = "barret@rstudio.com"),
       person(given = "RStudio", role = c("cph", "fnd"))
     )
-Description: An implementation of the Chrome Devtools Protocol, for controlling a headless Chrome web browser.
+Description: An implementation of the Chrome DevTools Protocol, for controlling a headless Chrome web browser.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
@@ -31,3 +31,4 @@ URL: https://github.com/rstudio/chromote
 BugReports: https://github.com/rstudio/chromote/issues
 Config/testthat/edition: 3
 Config/Needs/website: tidyverse/tidytemplate
+Language: en-US
