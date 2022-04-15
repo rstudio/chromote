@@ -65,7 +65,7 @@ b$view()
 The browser can be given *commands*, as specified by the [Chrome
 Devtools Protocol](https://chromedevtools.github.io/devtools-protocol/).
 For example, `$Browser$getVersion()` (which corresponds to the
-[Browser.getVersion](https://chromedevtools.github.io/devtools-protocol/tot/Browser#method-getVersion)
+[Browser.getVersion](https://chromedevtools.github.io/devtools-protocol/tot/Browser/#method-getVersion)
 in the API docs) will query the browser for version information:
 
 ``` r
@@ -95,7 +95,7 @@ b$Page$navigate("https://www.r-project.org/")
 
 In the official Chrome DevTools Protocol (CDP) documentation, this is
 the
-[`Page.navigate`](https://chromedevtools.github.io/devtools-protocol/tot/Page#method-navigate)
+[`Page.navigate`](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-navigate)
 command.
 
 In addition to full support of the CDP, ChromoteSession objects also
@@ -317,7 +317,7 @@ value, which looks like this:
 > for a domain. For example `Page.enable` enables event notifications
 > for the `Page` domain – the browser will send messages for *all*
 > `Page` events. (See the Events section in [this
-> page](https://chromedevtools.github.io/devtools-protocol/tot/Page)).
+> page](https://chromedevtools.github.io/devtools-protocol/tot/Page/)).
 > These notifications will continue to be sent until the browser
 > receives a `Page.disable` command.
 > 

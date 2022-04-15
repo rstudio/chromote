@@ -57,7 +57,7 @@ b <- ChromoteSession$new()
 b$view()
 ```
 
-The browser can be given _commands_, as specified by the [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/). For example, `$Browser$getVersion()` (which corresponds to the [Browser.getVersion](https://chromedevtools.github.io/devtools-protocol/tot/Browser#method-getVersion) in the API docs) will query the browser for version information:
+The browser can be given _commands_, as specified by the [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/). For example, `$Browser$getVersion()` (which corresponds to the [Browser.getVersion](https://chromedevtools.github.io/devtools-protocol/tot/Browser/#method-getVersion) in the API docs) will query the browser for version information:
 
 
 ```R
@@ -85,7 +85,7 @@ If you have the viewer open and run the following, you'll see the web page load 
 b$Page$navigate("https://www.r-project.org/")
 ```
 
-In the official Chrome DevTools Protocol (CDP) documentation, this is the [`Page.navigate`](https://chromedevtools.github.io/devtools-protocol/tot/Page#method-navigate) command.
+In the official Chrome DevTools Protocol (CDP) documentation, this is the [`Page.navigate`](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-navigate) command.
 
 In addition to full support of the CDP, `ChromoteSession` objects also some convenience methods, like `$screenshot()`. (See the Examples section below for more information about screenshots.)
 
@@ -271,7 +271,7 @@ $timestamp
 [1] 699232.3
 ```
 
-> **Technical note:** Chromote insulates the user from some of the details of how the CDP implements event notifications. Event notifications are not sent from the browser to the R process by default; you must first send a command to enable event notifications for a domain. For example `Page.enable` enables event notifications for the `Page` domain -- the browser will send messages for _all_ `Page` events. (See the Events section in [this page](https://chromedevtools.github.io/devtools-protocol/tot/Page)). These notifications will continue to be sent until the browser receives a `Page.disable` command.
+> **Technical note:** Chromote insulates the user from some of the details of how the CDP implements event notifications. Event notifications are not sent from the browser to the R process by default; you must first send a command to enable event notifications for a domain. For example `Page.enable` enables event notifications for the `Page` domain -- the browser will send messages for _all_ `Page` events. (See the Events section in [this page](https://chromedevtools.github.io/devtools-protocol/tot/Page/)). These notifications will continue to be sent until the browser receives a `Page.disable` command.
 >
 > By default, Chromote hides this implementation detail. When you call `b$Page$loadEventFired()`, Chromote sends a `Page.enable` command automatically, and then waits until it receives the `Page.loadEventFired` event notification. Then it sends a `Page.disable` command.
 >

@@ -15,7 +15,7 @@
 #' @param height Height, in pixels, of the `Target` to create if `targetId` is
 #'   `NULL`
 #' @param targetId
-#'   [Target](https://chromedevtools.github.io/devtools-protocol/tot/Target)
+#'   [Target](https://chromedevtools.github.io/devtools-protocol/tot/Target/)
 #'   ID of an existing target to attach to. When a `targetId` is provided, the
 #'   `width` and `height` arguments are ignored. If NULL (the default) a new
 #'   target is created and attached to, and the `width` and `height`
