@@ -17,10 +17,7 @@ status](https://www.r-pkg.org/badges/version/chromote)](https://CRAN.R-project.o
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-**\!\! Please note that Chromote is in development and the API is
-subject to change \!\!**
-
-Chromote is an R implementation of the [Chrome Devtools
+Chromote is an R implementation of the [Chrome DevTools
 Protocol](https://chromedevtools.github.io/devtools-protocol/). It works
 with Chrome, Chromium, Opera, Vivaldi, and other browsers based on
 [Chromium](https://www.chromium.org/). By default it uses Google Chrome
@@ -28,7 +25,7 @@ with Chrome, Chromium, Opera, Vivaldi, and other browsers based on
 browser, see [Specifying which browser to
 use](#specifying-which-browser-to-use).
 
-Chromote is not the only R package that implements the Chrome Devtools
+Chromote is not the only R package that implements the Chrome DevTools
 Protocol. Here are some others:
 
   - [crrri](https://github.com/RLesur/crrri) by Romain Lesur and
@@ -43,6 +40,10 @@ for node.js.
 ## Installation
 
 ``` r
+# CRAN
+install.packages("rstudio/chromote")
+
+# Development
 remotes::install_github("rstudio/chromote")
 ```
 
@@ -63,7 +64,7 @@ b$view()
 ```
 
 The browser can be given *commands*, as specified by the [Chrome
-Devtools Protocol](https://chromedevtools.github.io/devtools-protocol/).
+DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/).
 For example, `$Browser$getVersion()` (which corresponds to the
 [Browser.getVersion](https://chromedevtools.github.io/devtools-protocol/tot/Browser/#method-getVersion)
 in the API docs) will query the browser for version information:
@@ -98,7 +99,7 @@ the
 [`Page.navigate`](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-navigate)
 command.
 
-In addition to full support of the CDP, ChromoteSession objects also
+In addition to full support of the CDP, `ChromoteSession` objects also
 some convenience methods, like `$screenshot()`. (See the Examples
 section below for more information about screenshots.)
 
@@ -114,11 +115,11 @@ b$screenshot("sidebar.png", selector = ".sidebar")
 
 **Note:** All members of `Chromote` and `ChromoteSession` objects which
 start with a capital letter (like `b$Page`, `b$DOM`, and `b$Browser`)
-correspond to domains from the Chrome Devtools Protocol, and are
+correspond to domains from the Chrome DevTools Protocol, and are
 documented in the [official CDP
 site](https://chromedevtools.github.io/devtools-protocol/). All members
 which start with a lower-case letter (like `b$screenshot` and `b$close`)
-are not part of the Chrome Devtools Protocol, and are specific to
+are not part of the Chrome DevTools Protocol, and are specific to
 `Chromote` and `ChromoteSession`.
 
 Here is an example of how to use Chromote to find the position of a DOM
@@ -266,7 +267,7 @@ Chromote object model](#the-chromote-object-model).
 
 ### Commands and Events
 
-The Chrome Devtools Protocol has two types of methods: *commands* and
+The Chrome DevTools Protocol has two types of methods: *commands* and
 *events*. The methods used in the previous examples are commands. That
 is, they tell the browser to do something; the browser does it, and then
 sends back some data.
@@ -343,7 +344,7 @@ value, which looks like this:
 There are two R6 classes that are used to represent the Chrome browser.
 One is `Chromote`, and the other is `ChromoteSession`. A `Chromote`
 object represents the browser as a whole, and it can have multiple
-*targets*, which each represent a browser tab. In the Chrome Devtools
+*targets*, which each represent a browser tab. In the Chrome DevTools
 Protocol, each target can have one or more debugging *sessions* to
 control it. A `ChromoteSession` object represents a single *session*.
 
@@ -368,7 +369,7 @@ that any future calls to `ChromoteSession$new()` will automatically use
 the same `Chromote`. This is so that it doesn’t start a new browser for
 every `ChromoteSession` object that is created.
 
-In the Chrome Devtools Protocol, most commands can be sent to individual
+In the Chrome DevTools Protocol, most commands can be sent to individual
 sessions using the `ChromoteSession` object, but there are some commands
 which can only be sent to the overall browser, using the `Chromote`
 object.
@@ -412,7 +413,7 @@ There are also the following classes which represent the browser at a
 lower level:
 
   - `Browser`: This represents an instance of a browser that supports
-    the Chrome Devtools Protocol. It contains information about how to
+    the Chrome DevTools Protocol. It contains information about how to
     communicate with the Chrome browser. A `Chromote` object contains
     one of these.
   - `Chrome`: This is a subclass of `Browser` that represents a local
@@ -425,7 +426,7 @@ lower level:
 
 Calling `b$debug_messages(TRUE)` will enable the printing of all the
 JSON messages sent between R and Chrome. This can be very helpful for
-understanding how the Chrome Devtools Protocol works.
+understanding how the Chrome DevTools Protocol works.
 
 ``` r
 b <- ChromoteSession$new()
@@ -873,7 +874,7 @@ b$wait_for(p)
 
 ## Async events
 
-In addition to *commands* The Chrome Devtools Protocol also has
+In addition to *commands* The Chrome DevTools Protocol also has
 *events*. These are messages that are sent from the browser to the R
 process when various browser events happen.
 
@@ -980,7 +981,7 @@ str(x)
 #>  $ timestamp: num 683
 ```
 
-> **Technical note:** The Chrome Devtools Protocol itself does not
+> **Technical note:** The Chrome DevTools Protocol itself does not
 > automatically enable event notifications. Normally, you would have to
 > call the `Page.enable` method to turn on event notifications for the
 > Page domain. However, Chromote saves you from needing to do this step
@@ -1193,7 +1194,7 @@ b$Runtime$evaluate('alert("this is the first tab")')
 Take a screenshot of the viewport and display it using the
 [showimage](https://github.com/r-lib/showimage#readme) package. This
 uses Chromote’s `$screenshot()` method, which wraps up many calls to the
-Chrome Devtools Protocol.
+Chrome DevTools Protocol.
 
 ``` r
 b <- ChromoteSession$new()
@@ -1476,10 +1477,10 @@ browser. This is can be more convenient because, if you are already
 logged in, you don’t need to do it again. This requires a Chromium-based
 browser, and it requires running DevTools-in-DevTools on that browser.
 
-First, navigate to the page in your browser. Then press Cmd-Option-I
+First, navigate to the page in your browser. Then press CMD-Option-I
 (Mac) or Ctrl-Shift-I (Windows/Linux). The developer tools panel will
 open. Make sure to undock the developer tools so that they are in their
-own window. Then press Cmd-Option-I or Ctrl-Shift-I again. A second
+own window. Then press CMD-Option-I or Ctrl-Shift-I again. A second
 developer tools window will open. (See [this SO
 answer](https://stackoverflow.com/questions/12291138/how-do-you-inspect-the-web-inspector-in-chrome/12291163#12291163)
 for detailed instructions.)
