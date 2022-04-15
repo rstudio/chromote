@@ -12,7 +12,7 @@ Chromote class"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/l
     
     <a class="navbar-brand me-2" href="../index.html">chromote</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,9 @@ Chromote class"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/l
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -55,7 +58,7 @@ Chromote class"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/l
     <p>This class represents the browser as a whole.</p>
 <p>A <code>Chromote</code> object represents the browser as a whole, and it can have
 multiple <em>targets</em>, which each represent a browser tab. In the Chrome
-Devtools Protocol, each target can have one or more debugging <em>sessions</em> to
+DevTools Protocol, each target can have one or more debugging <em>sessions</em> to
 control it. A <code>ChromoteSession</code> object represents a single <em>session</em>.</p>
 <p>A <code>Chromote</code> object can have any number of <code>ChromoteSession</code> objects as
 children. It is not necessary to create a <code>Chromote</code> object manually. You can
@@ -190,7 +193,7 @@ resolve.</p><div class="section">
 
 
 <dt><code>targetId</code></dt>
-<dd><p><a href="https://chromedevtools.github.io/devtools-protocol/tot/Target" class="external-link">Target</a>
+<dd><p><a href="https://chromedevtools.github.io/devtools-protocol/tot/Target/" class="external-link">Target</a>
 ID of an existing target to attach to. When a <code>targetId</code> is provided, the
 <code>width</code> and <code>height</code> arguments are ignored. If NULL (the default) a new
 target is created and attached to, and the <code>width</code> and <code>height</code>
@@ -264,7 +267,7 @@ return a <code>ChromoteSession</code> object directly.</p></dd>
 
 
 <dt><code>timeout</code></dt>
-<dd><p>Number of milliseconds for Chrome Devtools Protocol
+<dd><p>Number of milliseconds for Chrome DevTools Protocol
 execute a method.</p></dd>
 
 
@@ -412,7 +415,7 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
    </div>
   <footer><div class="container">
   <div class="pkgdown-footer-left">
-  <p></p><p>Developed by <a href="https://github.com/wch" class="external-link">Winston Chang</a>, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
+  <p></p><p>Developed by <a href="https://github.com/wch" class="external-link">Winston Chang</a>, <a href="http://schloerke.com" class="external-link">Barret Schloerke</a>, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

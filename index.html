@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="An implementation of the Chrome Devtools Protocol, for controlling a headless Chrome web browser.">
+<meta name="description" content="An implementation of the Chrome DevTools Protocol, for controlling a headless Chrome web browser.">
 <title>Headless Chrome Web Browser Interface • chromote</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
@@ -14,7 +14,7 @@
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Headless Chrome Web Browser Interface">
-<meta property="og:description" content="An implementation of the Chrome Devtools Protocol, for controlling a headless Chrome web browser.">
+<meta property="og:description" content="An implementation of the Chrome DevTools Protocol, for controlling a headless Chrome web browser.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -32,7 +32,7 @@
     
     <a class="navbar-brand me-2" href="index.html">chromote</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,9 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="news/index.html">Changelog</a>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -68,9 +71,8 @@
 </h1></div>
 <!-- badges: start -->
 
-<p><strong>!! Please note that Chromote is in development and the API is subject to change !!</strong></p>
-<p>Chromote is an R implementation of the <a href="https://chromedevtools.github.io/devtools-protocol/" class="external-link">Chrome Devtools Protocol</a>. It works with Chrome, Chromium, Opera, Vivaldi, and other browsers based on <a href="https://www.chromium.org/" class="external-link">Chromium</a>. By default it uses Google Chrome (which must already be installed on the system). To use a different browser, see <a href="#specifying-which-browser-to-use">Specifying which browser to use</a>.</p>
-<p>Chromote is not the only R package that implements the Chrome Devtools Protocol. Here are some others:</p>
+<p>Chromote is an R implementation of the <a href="https://chromedevtools.github.io/devtools-protocol/" class="external-link">Chrome DevTools Protocol</a>. It works with Chrome, Chromium, Opera, Vivaldi, and other browsers based on <a href="https://www.chromium.org/" class="external-link">Chromium</a>. By default it uses Google Chrome (which must already be installed on the system). To use a different browser, see <a href="#specifying-which-browser-to-use">Specifying which browser to use</a>.</p>
+<p>Chromote is not the only R package that implements the Chrome DevTools Protocol. Here are some others:</p>
 <ul>
 <li>
 <a href="https://github.com/RLesur/crrri" class="external-link">crrri</a> by Romain Lesur and Christophe Dervieux</li>
@@ -84,7 +86,11 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rstudio/chromote"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="co"># CRAN</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rstudio/chromote"</span><span class="op">)</span>
+
+<span class="co"># Development</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rstudio/chromote"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
@@ -98,7 +104,7 @@
 <span class="co"># In a web browser, open a viewer for the headless browser. Works best with</span>
 <span class="co"># Chromium-based browsers.</span>
 <span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>The browser can be given <em>commands</em>, as specified by the <a href="https://chromedevtools.github.io/devtools-protocol/" class="external-link">Chrome Devtools Protocol</a>. For example, <code>$Browser$getVersion()</code> (which corresponds to the <a href="https://chromedevtools.github.io/devtools-protocol/tot/Browser#method-getVersion" class="external-link">Browser.getVersion</a> in the API docs) will query the browser for version information:</p>
+<p>The browser can be given <em>commands</em>, as specified by the <a href="https://chromedevtools.github.io/devtools-protocol/" class="external-link">Chrome DevTools Protocol</a>. For example, <code>$Browser$getVersion()</code> (which corresponds to the <a href="https://chromedevtools.github.io/devtools-protocol/tot/Browser/#method-getVersion" class="external-link">Browser.getVersion</a> in the API docs) will query the browser for version information:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; $protocolVersion</span>
@@ -118,8 +124,8 @@
 <p>If you have the viewer open and run the following, you’ll see the web page load in the viewer:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span></code></pre></div>
-<p>In the official Chrome DevTools Protocol (CDP) documentation, this is the <a href="https://chromedevtools.github.io/devtools-protocol/tot/Page#method-navigate" class="external-link"><code>Page.navigate</code></a> command.</p>
-<p>In addition to full support of the CDP, ChromoteSession objects also some convenience methods, like <code>$screenshot()</code>. (See the Examples section below for more information about screenshots.)</p>
+<p>In the official Chrome DevTools Protocol (CDP) documentation, this is the <a href="https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-navigate" class="external-link"><code>Page.navigate</code></a> command.</p>
+<p>In addition to full support of the CDP, <code>ChromoteSession</code> objects also some convenience methods, like <code>$screenshot()</code>. (See the Examples section below for more information about screenshots.)</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Saves to screenshot.png</span>
 <span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="op">)</span>
@@ -127,7 +133,7 @@
 <span class="co"># Takes a screenshot of elements picked out by CSS selector</span>
 <span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"sidebar.png"</span>, selector <span class="op">=</span> <span class="st">".sidebar"</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/sidebar.png"></p>
-<p><strong>Note:</strong> All members of <code>Chromote</code> and <code>ChromoteSession</code> objects which start with a capital letter (like <code>b$Page</code>, <code>b$DOM</code>, and <code>b$Browser</code>) correspond to domains from the Chrome Devtools Protocol, and are documented in the <a href="https://chromedevtools.github.io/devtools-protocol/" class="external-link">official CDP site</a>. All members which start with a lower-case letter (like <code>b$screenshot</code> and <code>b$close</code>) are not part of the Chrome Devtools Protocol, and are specific to <code>Chromote</code> and <code>ChromoteSession</code>.</p>
+<p><strong>Note:</strong> All members of <code>Chromote</code> and <code>ChromoteSession</code> objects which start with a capital letter (like <code>b$Page</code>, <code>b$DOM</code>, and <code>b$Browser</code>) correspond to domains from the Chrome DevTools Protocol, and are documented in the <a href="https://chromedevtools.github.io/devtools-protocol/" class="external-link">official CDP site</a>. All members which start with a lower-case letter (like <code>b$screenshot</code> and <code>b$close</code>) are not part of the Chrome DevTools Protocol, and are specific to <code>Chromote</code> and <code>ChromoteSession</code>.</p>
 <p>Here is an example of how to use Chromote to find the position of a DOM element using <a href="https://chromedevtools.github.io/devtools-protocol/tot/DOM/#method-getBoxModel" class="external-link">DOM.getBoxModel</a>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">getDocument</span><span class="op">(</span><span class="op">)</span>
@@ -247,7 +253,7 @@
 <div class="section level3">
 <h3 id="commands-and-events">Commands and Events<a class="anchor" aria-label="anchor" href="#commands-and-events"></a>
 </h3>
-<p>The Chrome Devtools Protocol has two types of methods: <em>commands</em> and <em>events</em>. The methods used in the previous examples are commands. That is, they tell the browser to do something; the browser does it, and then sends back some data.</p>
+<p>The Chrome DevTools Protocol has two types of methods: <em>commands</em> and <em>events</em>. The methods used in the previous examples are commands. That is, they tell the browser to do something; the browser does it, and then sends back some data.</p>
 <p>Events are quite different from commands. When, for example, you run <code>b$Page$loadEventFired()</code>, it does not send a message to the browser. Rather, this method tells the R process to wait until it receives a <code>Page.loadEventFired</code> message from the browser.</p>
 <p>Here is an example of how that event can be used. Note that these two lines of code must be run together, without any delay at all (this can be enforced by wrapping both lines of code in <code>{ .... }</code>).</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -269,7 +275,7 @@
 <div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="op">$</span>timestamp</span>
 <span id="cb14-2"><a href="#cb14-2"></a>[<span class="dv">1</span>] <span class="fl">699232.3</span></span></code></pre></div>
 <blockquote>
-<p><strong>Technical note:</strong> Chromote insulates the user from some of the details of how the CDP implements event notifications. Event notifications are not sent from the browser to the R process by default; you must first send a command to enable event notifications for a domain. For example <code>Page.enable</code> enables event notifications for the <code>Page</code> domain – the browser will send messages for <em>all</em> <code>Page</code> events. (See the Events section in <a href="https://chromedevtools.github.io/devtools-protocol/tot/Page" class="external-link">this page</a>). These notifications will continue to be sent until the browser receives a <code>Page.disable</code> command.</p>
+<p><strong>Technical note:</strong> Chromote insulates the user from some of the details of how the CDP implements event notifications. Event notifications are not sent from the browser to the R process by default; you must first send a command to enable event notifications for a domain. For example <code>Page.enable</code> enables event notifications for the <code>Page</code> domain – the browser will send messages for <em>all</em> <code>Page</code> events. (See the Events section in <a href="https://chromedevtools.github.io/devtools-protocol/tot/Page/" class="external-link">this page</a>). These notifications will continue to be sent until the browser receives a <code>Page.disable</code> command.</p>
 <p>By default, Chromote hides this implementation detail. When you call <code>b$Page$loadEventFired()</code>, Chromote sends a <code>Page.enable</code> command automatically, and then waits until it receives the <code>Page.loadEventFired</code> event notification. Then it sends a <code>Page.disable</code> command.</p>
 <p>Note that in asynchronous mode, the behavior is slightly more sophisticated: it maintains a counter of how many outstanding events it is waiting for in a given domain. When that count goes from 0 to 1, it sends the <code>X.enable</code> command; when the count goes from 1 to 0, it sends the <code>X.disable</code> command. For more information, see the <a href="#async-events">Async events</a> section.</p>
 <p>If you do not want automatic event enabling and disabling, then when creating the ChromoteSession object, use <code>ChromoteSession$new(auto_events = FALSE)</code>.</p>
@@ -278,13 +284,13 @@
 <div class="section level3">
 <h3 id="the-chromote-object-model">The Chromote object model<a class="anchor" aria-label="anchor" href="#the-chromote-object-model"></a>
 </h3>
-<p>There are two R6 classes that are used to represent the Chrome browser. One is <code>Chromote</code>, and the other is <code>ChromoteSession</code>. A <code>Chromote</code> object represents the browser as a whole, and it can have multiple <em>targets</em>, which each represent a browser tab. In the Chrome Devtools Protocol, each target can have one or more debugging <em>sessions</em> to control it. A <code>ChromoteSession</code> object represents a single <em>session</em>.</p>
+<p>There are two R6 classes that are used to represent the Chrome browser. One is <code>Chromote</code>, and the other is <code>ChromoteSession</code>. A <code>Chromote</code> object represents the browser as a whole, and it can have multiple <em>targets</em>, which each represent a browser tab. In the Chrome DevTools Protocol, each target can have one or more debugging <em>sessions</em> to control it. A <code>ChromoteSession</code> object represents a single <em>session</em>.</p>
 <p>When a <code>ChromoteSession</code> object is instantiated, a target is created, then a session is attached to that target, and the <code>ChromoteSession</code> object represents the session. (It is possible, though not very useful, to have multiple <code>ChromoteSession</code> objects connected to the same target, each with a different session.)</p>
 <p>A <code>Chromote</code> object can have any number of <code>ChromoteSession</code> objects as children. It is not necessary to create a <code>Chromote</code> object manually. You can simply call:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>and it will automatically create a <code>Chromote</code> object if one has not already been created. The Chromote package will then designate that <code>Chromote</code> object as the <em>default</em> Chromote object for the package, so that any future calls to <code>ChromoteSession$new()</code> will automatically use the same <code>Chromote</code>. This is so that it doesn’t start a new browser for every <code>ChromoteSession</code> object that is created.</p>
-<p>In the Chrome Devtools Protocol, most commands can be sent to individual sessions using the <code>ChromoteSession</code> object, but there are some commands which can only be sent to the overall browser, using the <code>Chromote</code> object.</p>
+<p>In the Chrome DevTools Protocol, most commands can be sent to individual sessions using the <code>ChromoteSession</code> object, but there are some commands which can only be sent to the overall browser, using the <code>Chromote</code> object.</p>
 <p>To access the parent <code>Chromote</code> object from a <code>ChromoteSession</code>, you can simply use <code>$parent</code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
@@ -303,7 +309,7 @@
 <p>There are also the following classes which represent the browser at a lower level:</p>
 <ul>
 <li>
-<code>Browser</code>: This represents an instance of a browser that supports the Chrome Devtools Protocol. It contains information about how to communicate with the Chrome browser. A <code>Chromote</code> object contains one of these.</li>
+<code>Browser</code>: This represents an instance of a browser that supports the Chrome DevTools Protocol. It contains information about how to communicate with the Chrome browser. A <code>Chromote</code> object contains one of these.</li>
 <li>
 <code>Chrome</code>: This is a subclass of <code>Browser</code> that represents a local browser. It extends the <code>Browser</code> class with a <code><a href="http://processx.r-lib.org/reference/process.html" class="external-link">processx::process</a></code> object, which represents the browser’s system process.</li>
 <li>
@@ -313,7 +319,7 @@
 <div class="section level3">
 <h3 id="debugging">Debugging<a class="anchor" aria-label="anchor" href="#debugging"></a>
 </h3>
-<p>Calling <code>b$debug_messages(TRUE)</code> will enable the printing of all the JSON messages sent between R and Chrome. This can be very helpful for understanding how the Chrome Devtools Protocol works.</p>
+<p>Calling <code>b$debug_messages(TRUE)</code> will enable the printing of all the JSON messages sent between R and Chrome. This can be very helpful for understanding how the Chrome DevTools Protocol works.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
 <span class="va">b</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">debug_messages</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
@@ -600,7 +606,7 @@
 <div class="section level2">
 <h2 id="async-events">Async events<a class="anchor" aria-label="anchor" href="#async-events"></a>
 </h2>
-<p>In addition to <em>commands</em> The Chrome Devtools Protocol also has <em>events</em>. These are messages that are sent from the browser to the R process when various browser events happen.</p>
+<p>In addition to <em>commands</em> The Chrome DevTools Protocol also has <em>events</em>. These are messages that are sent from the browser to the R process when various browser events happen.</p>
 <p>As an example, it can be a bit tricky to find out when to take a screenshot. When you send the browser a command to navigate to a page, it sends a response immediately, but it may take several more seconds for it to actually finish loading that page. When it does, the <code>Page.loadEventFired</code> event will be fired.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
@@ -666,7 +672,7 @@
 <span class="co">#&gt; List of 1</span>
 <span class="co">#&gt;  $ timestamp: num 683</span></code></pre></div>
 <blockquote>
-<p><strong>Technical note:</strong> The Chrome Devtools Protocol itself does not automatically enable event notifications. Normally, you would have to call the <code>Page.enable</code> method to turn on event notifications for the Page domain. However, Chromote saves you from needing to do this step by keeping track of how many callbacks there are for each domain. When the number of event callbacks for a domain goes from 0 to 1, Chromote automatically calls <code>$enable()</code> for that domain, and when it goes from 1 to 0, it it calls <code>$disable()</code>.</p>
+<p><strong>Technical note:</strong> The Chrome DevTools Protocol itself does not automatically enable event notifications. Normally, you would have to call the <code>Page.enable</code> method to turn on event notifications for the Page domain. However, Chromote saves you from needing to do this step by keeping track of how many callbacks there are for each domain. When the number of event callbacks for a domain goes from 0 to 1, Chromote automatically calls <code>$enable()</code> for that domain, and when it goes from 1 to 0, it it calls <code>$disable()</code>.</p>
 </blockquote>
 <p>In addition to async events with promises, they can also be used with regular callbacks. For example:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
@@ -792,7 +798,7 @@
 <div class="section level3">
 <h3 id="taking-a-screenshot-of-a-web-page">Taking a screenshot of a web page<a class="anchor" aria-label="anchor" href="#taking-a-screenshot-of-a-web-page"></a>
 </h3>
-<p>Take a screenshot of the viewport and display it using the <a href="https://github.com/r-lib/showimage#readme" class="external-link">showimage</a> package. This uses Chromote’s <code>$screenshot()</code> method, which wraps up many calls to the Chrome Devtools Protocol.</p>
+<p>Take a screenshot of the viewport and display it using the <a href="https://github.com/r-lib/showimage#readme" class="external-link">showimage</a> package. This uses Chromote’s <code>$screenshot()</code> method, which wraps up many calls to the Chrome DevTools Protocol.</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
 
@@ -1025,7 +1031,7 @@
 <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://beta.rstudioconnect.com/content/123456/"</span><span class="op">)</span>
 <span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><strong>Method 2:</strong> The second method captures the cookies using a normal browser. This is can be more convenient because, if you are already logged in, you don’t need to do it again. This requires a Chromium-based browser, and it requires running DevTools-in-DevTools on that browser.</p>
-<p>First, navigate to the page in your browser. Then press Cmd-Option-I (Mac) or Ctrl-Shift-I (Windows/Linux). The developer tools panel will open. Make sure to undock the developer tools so that they are in their own window. Then press Cmd-Option-I or Ctrl-Shift-I again. A second developer tools window will open. (See <a href="https://stackoverflow.com/questions/12291138/how-do-you-inspect-the-web-inspector-in-chrome/12291163#12291163" class="external-link">this SO answer</a> for detailed instructions.)</p>
+<p>First, navigate to the page in your browser. Then press CMD-Option-I (Mac) or Ctrl-Shift-I (Windows/Linux). The developer tools panel will open. Make sure to undock the developer tools so that they are in their own window. Then press CMD-Option-I or Ctrl-Shift-I again. A second developer tools window will open. (See <a href="https://stackoverflow.com/questions/12291138/how-do-you-inspect-the-web-inspector-in-chrome/12291163#12291163" class="external-link">this SO answer</a> for detailed instructions.)</p>
 <p>In the second developer tools window, run the following:</p>
 <div class="sourceCode" id="cb61"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb61-1"><a href="#cb61-1"></a><span class="kw">var</span> cookies <span class="op">=</span> <span class="cf">await</span> <span class="va">Main</span>.<span class="at">sendOverProtocol</span>(<span class="st">'Network.getCookies'</span><span class="op">,</span> <span class="op">{}</span>)</span>
 <span id="cb61-2"><a href="#cb61-2"></a><span class="va">JSON</span>.<span class="at">stringify</span>(cookies)</span></code></pre></div>
@@ -1076,8 +1082,9 @@
 <li>
 <a href="https://github.com/wch" class="external-link">Winston Chang</a> <br><small class="roles"> Author, maintainer </small>  </li>
 <li>
+<a href="http://schloerke.com" class="external-link">Barret Schloerke</a> <br><small class="roles"> Author </small>  </li>
+<li>
 <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a> <br><small class="roles"> Copyright holder, funder </small>  </li>
-<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 
@@ -1098,7 +1105,7 @@
   <footer><div class="container">
   <div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="https://github.com/wch" class="external-link">Winston Chang</a>, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
+<p>Developed by <a href="https://github.com/wch" class="external-link">Winston Chang</a>, <a href="http://schloerke.com" class="external-link">Barret Schloerke</a>, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
