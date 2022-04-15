@@ -209,7 +209,6 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-screenshot}{\code{ChromoteSession$screenshot()}}
 \item \href{#method-screenshot_pdf}{\code{ChromoteSession$screenshot_pdf()}}
 \item \href{#method-new_session}{\code{ChromoteSession$new_session()}}
-\item \href{#method-get_parent}{\code{ChromoteSession$get_parent()}}
 \item \href{#method-get_session_id}{\code{ChromoteSession$get_session_id()}}
 \item \href{#method-wait_for}{\code{ChromoteSession$wait_for()}}
 \item \href{#method-debug_log}{\code{ChromoteSession$debug_log()}}
@@ -294,6 +293,10 @@ if (interactive()) b$view()}
 \if{latex}{\out{\hypertarget{method-view}{}}}
 \subsection{Method \code{view()}}{
 Display the current session in the \code{\link{Chromote}} browser.
+
+If a \code{\link{Chrome}} browser is being used, this method will open a new tab
+using your \code{\link{Chrome}} browser. When not using a \code{\link{Chrome}} browser, set
+\code{options(browser=)} to change the default behavior of \code{\link[=browseURL]{browseURL()}}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$view()}\if{html}{\out{</div>}}
 }
@@ -629,16 +632,6 @@ b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
 }
 \if{html}{\out{</div>}}
 
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_parent"></a>}}
-\if{latex}{\out{\hypertarget{method-get_parent}{}}}
-\subsection{Method \code{get_parent()}}{
-Retrieve the \code{\link{Chromote}} object associated with this session.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_parent()}\if{html}{\out{</div>}}
 }
 
 }

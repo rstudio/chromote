@@ -5,8 +5,11 @@
 
 #' ChromoteSession class
 #' @export
-#' @param timeout Number of seconds for \pkg{chromote} to wait for a Chrome Devtools Protocol response.
-#' @param timeout_ Number of milliseconds for Chrome Devtools Protocol execute a method.
+#' @param timeout_ Number of seconds for \pkg{chromote} to wait for a Chrome
+#' Devtools Protocol response. If `timeout_` is [`rlang::missing_arg()`] and
+#' `timeout` is provided, `timeout_` will be set to `2 * timeout / 1000`.
+#' @param timeout Number of milliseconds for Chrome Devtools Protocol execute a
+#' method.
 #' @param width Width, in pixels, of the `Target` to create if `targetId` is
 #'   `NULL`
 #' @param height Height, in pixels, of the `Target` to create if `targetId` is
@@ -54,6 +57,8 @@ ChromoteSession <- R6Class(
       auto_events = NULL
     ) {
       self$parent <- parent
+      lockBinding("parent", self) # do not allow `$parent` to be set!
+
       self$default_timeout <- parent$default_timeout
 
       # Create a session from the Chromote. Basically the same code as
@@ -83,6 +88,7 @@ ChromoteSession <- R6Class(
       # send_command() method with a sessionId -- that is how the command is
       # scoped to this session.
       self$protocol <- protocol_reassign_envs(parent$protocol, env = self$.__enclos_env__)
+      lockBinding("protocol", self)
 
       # Graft the entries from self$protocol onto self
       list2env(self$protocol, self)
@@ -128,6 +134,10 @@ ChromoteSession <- R6Class(
 
 
     #' @description Display the current session in the [`Chromote`] browser.
+    #'
+    #' If a [`Chrome`] browser is being used, this method will open a new tab
+    #' using your [`Chrome`] browser. When not using a [`Chrome`] browser, set
+    #' `options(browser=)` to change the default behavior of [`browseURL()`].
     #' @examples
     #' \dontrun{# Create a new `ChromoteSession` object.
     #' b <- ChromoteSession$new()
@@ -147,7 +157,7 @@ ChromoteSession <- R6Class(
         stop("Target info not found.")
       }
 
-      browseURL(self$parent$url(path))
+      browse_url(path, self$parent)
     },
 
     #' @description Close the Chromote session.
@@ -432,12 +442,6 @@ ChromoteSession <- R6Class(
     #' #> [1] "https://www.r-project.org/"}
     new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
       self$parent$new_session(width = width, height = height, targetId = targetId, wait_ = wait_)
-    },
-
-    #' @description
-    #' Retrieve the [`Chromote`] object associated with this session.
-    get_parent = function() {
-      self$parent
     },
 
     #' @description

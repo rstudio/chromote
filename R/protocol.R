@@ -1,6 +1,6 @@
 #' @import rlang
 
-utils::globalVariables(c("self", "private", "callback_", "error_", "timeout_", "wait_"))
+utils::globalVariables(c("self", "private", "callback_", "error_", "timeout", "timeout_", "wait_"))
 
 # Given a protocol spec (essentially, the Chrome Devtools Protocol JSON
 # converted to an R object), returns a list of domains of the Devtools
@@ -65,7 +65,12 @@ gen_command_args <- function(params) {
     args,
     callback_ = list(NULL),
     error_    = list(NULL),
-    timeout_  = quote(self$default_timeout),
+    timeout_  =
+    if ("timeout" %in% names(args)) {
+      expr(missing_arg())
+    } else {
+      expr(self$default_timeout)
+    },
     wait_     = TRUE
   )
   args
@@ -85,6 +90,21 @@ gen_command_body <- function(method_name, params) {
     )
   })
 
+  timeout_default_expr <-
+    if ("timeout" %in% lapply(params, `[[`, "name")) {
+      # Set the wall time of chromote to twice that of the execution time.
+      expr({if (is_missing(timeout_)) {
+        timeout_ <-
+          if (is.null(timeout)) {
+            self$default_timeout
+          } else {
+            2 * timeout / 1000
+          }
+      }})
+    } else {
+      expr({})
+    }
+
   # Construct parameters for message
   param_list <- lapply(params, function(param) {
     as.symbol(param$name)
@@ -98,11 +118,13 @@ gen_command_body <- function(method_name, params) {
     if (!is.null(error_) && !is.function(error_))
       stop("`error_` must be a function or NULL.")
 
+    !!!timeout_default_expr
     if (!is.null(timeout_) && !is.numeric(timeout_))
       stop("`timeout_` must be a number or NULL.")
 
     if (!identical(wait_, TRUE) && !identical(wait_, FALSE))
       stop("`wait_` must be TRUE or FALSE.")
+
 
     # Check for missing non-optional args
     !!!check_missing_exprs
@@ -132,7 +154,7 @@ event_to_function <- function(event, domain_name, env) {
   new_function(
     args = list(
       callback_ = NULL,
-      timeout_  = quote(self$default_timeout),
+      timeout_  = expr(self$default_timeout),
       wait_     = TRUE
     ),
     body = gen_event_body(paste0(domain_name, ".", event$name)),

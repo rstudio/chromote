@@ -19,7 +19,7 @@ NULL
 #' A `Chromote` object can have any number of `ChromoteSession` objects as
 #' children. It is not necessary to create a `Chromote` object manually. You can
 #' simply call:
-#' ```{r}
+#' ```r
 #' b <- ChromoteSession$new()
 #' ```
 #' and it will automatically create a `Chromote` object if one has not already
@@ -90,6 +90,8 @@ Chromote <- R6Class(
         # Populate methods while the connection is being established.
         protocol_spec <- jsonlite::fromJSON(self$url("/json/protocol"), simplifyVector = FALSE)
         self$protocol <- process_protocol(protocol_spec, self$.__enclos_env__)
+        lockBinding("protocol", self)
+
         # self$protocol is a list of domains, each of which is a list of
         # methods. Graft the entries from self$protocol onto self
         list2env(self$protocol, self)
@@ -104,8 +106,12 @@ Chromote <- R6Class(
     },
 
     #' @description Display the current session in the `browser`
+    #'
+    #' If a [`Chrome`] browser is being used, this method will open a new tab
+    #' using your [`Chrome`] browser. When not using a [`Chrome`] browser, set
+    #' `options(browser=)` to change the default behavior of [`browseURL()`].
     view = function() {
-      browseURL(self$url())
+      browse_url(path = NULL, self)
     },
 
     #' @description
@@ -308,7 +314,7 @@ Chromote <- R6Class(
     },
 
     #' @description Retrieve active status
-    #' Once initialized, the value returned is `TRUE`. If `$stop()` has been
+    #' Once initialized, the value returned is `TRUE`. If `$close()` has been
     #' called, this value will be `FALSE`.
     is_active = function() {
       private$is_active_
@@ -321,7 +327,7 @@ Chromote <- R6Class(
     },
 
     #' @description Close the [`Browser`] object
-    stop = function() {
+    close = function() {
       private$is_active_ <- FALSE
       self$Browser$close()
     },

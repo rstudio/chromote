@@ -69,3 +69,26 @@ truncate <- function(x, n = 1000, message = "[truncated]") {
 find_domain <- function(event) {
   sub("\\.[^.]+", "", event)
 }
+
+
+# =============================================================================
+# Browser
+# =============================================================================
+
+# Force url to be opened by Chromium browser
+browse_url <- function(path, chromote) {
+  url <- chromote$url(path)
+
+  browser <- chromote$get_browser()
+  if (inherits(browser, "Chrome")) {
+    # If locally available, use the local browser
+    browser_path <- browser$get_path()
+    # Quote the path if using a non-windows machine
+    if (!is_windows()) browser_path <- shQuote(browser_path)
+    utils::browseURL(url, browser_path)
+  } else {
+    # Otherwise pray opening the url works as expected
+    # Users can set `options(browser=)` to override default behavior
+    utils::browseURL(url)
+  }
+}
