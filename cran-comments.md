@@ -21,7 +21,6 @@ Winston
     * devel, 4.1, 4.0, 3.6, 3.5, 3.4
 * devtools::
   * check_win_devel()
-  * check_win_release()
   * check_win_oldrelease()
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
