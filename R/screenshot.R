@@ -42,7 +42,6 @@ chromote_session_screenshot <- function(
 
   # These vars are used to store information gathered from one step to use
   # in a later step.
-  visual_viewport <- NULL  # Initial viewport dimensions
   image_data      <- NULL
   overall_width   <- NULL
   overall_height  <- NULL
@@ -51,11 +50,6 @@ chromote_session_screenshot <- function(
   # Setup stuff for both selector and cliprect code paths.
   p <- self$Emulation$setScrollbarsHidden(hidden = TRUE, wait_ = FALSE)$
     then(function(value) {
-      self$Page$getLayoutMetrics(wait_ = FALSE)
-    })$
-    then(function(value) {
-      visual_viewport <<- value$visualViewport
-
       self$DOM$getDocument(wait_ = FALSE)
     })$
     then(function(value) {
@@ -68,16 +62,6 @@ chromote_session_screenshot <- function(
     then(function(value) {
       overall_width  <<- value$model$width
       overall_height <<- value$model$height
-
-      # Make viewport the same size as content -- seems to be necessary
-      # on Chrome 75 for Mac, though it wasn't necessary for 72. Without
-      # this, the screenshot will be the full height, but everything
-      # outside the viewport area will be blank white.
-      self$Emulation$setVisibleSize(
-        width = overall_width,
-        height = overall_height,
-        wait_ = FALSE
-      )
 
       promise(function(resolve, reject) {
         # Wait `delay` seconds for resize to complete. For complicated apps this may need to be longer.
@@ -116,6 +100,7 @@ chromote_session_screenshot <- function(
             scale = scale / private$pixel_ratio
           ),
           fromSurface = TRUE,
+          captureBeyondViewport = TRUE,
           wait_ = FALSE
         )
       })$
@@ -136,6 +121,7 @@ chromote_session_screenshot <- function(
             scale = scale / private$pixel_ratio
           ),
           fromSurface = TRUE,
+          captureBeyondViewport = TRUE,
           wait_ = FALSE
         )
       })$
@@ -146,13 +132,6 @@ chromote_session_screenshot <- function(
 
   p <- p$
     then(function(value) {
-      # Restore original viewport size
-      self$Emulation$setVisibleSize(
-        width = visual_viewport$clientWidth,
-        height = visual_viewport$clientHeight,
-        wait_ = FALSE
-      )
-
       # Un-hide scrollbars
       self$Emulation$setScrollbarsHidden(hidden = FALSE, wait_ = FALSE)
     })$
