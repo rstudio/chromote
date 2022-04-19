@@ -13,7 +13,7 @@ This class represents the browser as a whole.
 
 A \code{Chromote} object represents the browser as a whole, and it can have
 multiple \emph{targets}, which each represent a browser tab. In the Chrome
-Devtools Protocol, each target can have one or more debugging \emph{sessions} to
+DevTools Protocol, each target can have one or more debugging \emph{sessions} to
 control it. A \code{ChromoteSession} object represents a single \emph{session}.
 
 A \code{Chromote} object can have any number of \code{ChromoteSession} objects as
@@ -166,7 +166,7 @@ Create a new tab / window
 \describe{
 \item{\code{width, height}}{Width and height of the new window.}
 
-\item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target}{Target}
+\item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target/}{Target}
 ID of an existing target to attach to. When a \code{targetId} is provided, the
 \code{width} and \code{height} arguments are ignored. If NULL (the default) a new
 target is created and attached to, and the \code{width} and \code{height}
@@ -237,7 +237,7 @@ For expert use only.
 
 \item{\code{error}}{Method to run if an error occurs.}
 
-\item{\code{timeout}}{Number of milliseconds for Chrome Devtools Protocol
+\item{\code{timeout}}{Number of milliseconds for Chrome DevTools Protocol
 execute a method.}
 
 \item{\code{sessionId}}{Determines which \code{\link{ChromoteSession}} with the

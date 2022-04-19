@@ -8,3 +8,5 @@
 ^pkgdown$
 ^README\.Rmd$
 ^sidebar.png$
+^revdep$
+^cran-comments\.md$

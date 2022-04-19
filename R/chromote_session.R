@@ -1,21 +1,21 @@
 # This represents one _session_ in a Chromote object. Note that in the Chrome
-# Devtools Protocol a session is a debugging interface connected to a
+# DevTools Protocol a session is a debugging interface connected to a
 # _target_; a target is a browser window/tab, or an iframe. A single target
 # can have more than one session connected to it.
 
 #' ChromoteSession class
 #' @export
 #' @param timeout_ Number of seconds for \pkg{chromote} to wait for a Chrome
-#' Devtools Protocol response. If `timeout_` is [`rlang::missing_arg()`] and
+#' DevTools Protocol response. If `timeout_` is [`rlang::missing_arg()`] and
 #' `timeout` is provided, `timeout_` will be set to `2 * timeout / 1000`.
-#' @param timeout Number of milliseconds for Chrome Devtools Protocol execute a
+#' @param timeout Number of milliseconds for Chrome DevTools Protocol execute a
 #' method.
 #' @param width Width, in pixels, of the `Target` to create if `targetId` is
 #'   `NULL`
 #' @param height Height, in pixels, of the `Target` to create if `targetId` is
 #'   `NULL`
 #' @param targetId
-#'   [Target](https://chromedevtools.github.io/devtools-protocol/tot/Target)
+#'   [Target](https://chromedevtools.github.io/devtools-protocol/tot/Target/)
 #'   ID of an existing target to attach to. When a `targetId` is provided, the
 #'   `width` and `height` arguments are ignored. If NULL (the default) a new
 #'   target is created and attached to, and the `width` and `height`
@@ -215,7 +215,7 @@ ChromoteSession <- R6Class(
     #' increased.
     #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
     #' when the `ChromoteSession` has saved the screenshot. Otherwise, block
-    #' until the `ChromoteSession` has saved the screnshot.
+    #' until the `ChromoteSession` has saved the screenshot.
     #' @examples
     #' \dontrun{# Create a new `ChromoteSession` object.
     #' b <- ChromoteSession$new()
@@ -443,7 +443,7 @@ ChromoteSession <- R6Class(
     #' @param msg A JSON-serializable list containing `method`, and `params`.
     #' @param callback Method to run when the command finishes successfully.
     #' @param error Method to run if an error occurs.
-    #' @param timeout Number of milliseconds for Chrome Devtools Protocol
+    #' @param timeout Number of milliseconds for Chrome DevTools Protocol
     #' execute a method.
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
       if (!private$is_active_) {

@@ -248,7 +248,7 @@ Create a new \code{ChromoteSession} object.
 \item{\code{height}}{Height, in pixels, of the \code{Target} to create if \code{targetId} is
 \code{NULL}}
 
-\item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target}{Target}
+\item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target/}{Target}
 ID of an existing target to attach to. When a \code{targetId} is provided, the
 \code{width} and \code{height} arguments are ignored. If NULL (the default) a new
 target is created and attached to, and the \code{width} and \code{height}
@@ -396,7 +396,7 @@ increased.}
 
 \item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} that will resolve
 when the \code{ChromoteSession} has saved the screenshot. Otherwise, block
-until the \code{ChromoteSession} has saved the screnshot.}
+until the \code{ChromoteSession} has saved the screenshot.}
 }
 \if{html}{\out{</div>}}
 }
@@ -563,7 +563,7 @@ Create a new tab / window
 \describe{
 \item{\code{width, height}}{Width and height of the new window.}
 
-\item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target}{Target}
+\item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target/}{Target}
 ID of an existing target to attach to. When a \code{targetId} is provided, the
 \code{width} and \code{height} arguments are ignored. If NULL (the default) a new
 target is created and attached to, and the \code{width} and \code{height}
@@ -713,7 +713,7 @@ For expert use only.
 
 \item{\code{error}}{Method to run if an error occurs.}
 
-\item{\code{timeout}}{Number of milliseconds for Chrome Devtools Protocol
+\item{\code{timeout}}{Number of milliseconds for Chrome DevTools Protocol
 execute a method.}
 }
 \if{html}{\out{</div>}}
