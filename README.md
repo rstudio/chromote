@@ -41,7 +41,7 @@ for node.js.
 
 ``` r
 # CRAN
-install.packages("rstudio/chromote")
+install.packages("chromote")
 
 # Development
 remotes::install_github("rstudio/chromote")
