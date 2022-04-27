@@ -39,7 +39,7 @@ The interface to Chromote is similar to [chrome-remote-interface](https://github
 
 ```R
 # CRAN
-install.packages("rstudio/chromote")
+install.packages("chromote")
 
 # Development
 remotes::install_github("rstudio/chromote")
