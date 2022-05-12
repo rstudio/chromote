@@ -3,7 +3,7 @@ Title: Headless Chrome Web Browser Interface
 Version: 0.1.0
 Authors@R: c(
       person("Winston", "Chang", role = c("aut", "cre"), email = "winston@rstudio.com"),
-      person("Barret", "Schloerke", role = c("aut"), email = "barret@rstudio.com"),
+      person("Barret", "Schloerke", role = c("aut"), email = "barret@rstudio.com", comment = c(ORCID = "0000-0001-9986-114X")),
       person(given = "RStudio", role = c("cph", "fnd"))
     )
 Description: An implementation of the 'Chrome DevTools Protocol', for controlling a headless Chrome web browser.
