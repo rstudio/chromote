@@ -63,6 +63,15 @@ find_chrome <- function() {
   } else if (is_linux()) {
     path <- Sys.which("google-chrome")
     if (nchar(path) == 0) {
+      path <- Sys.which("google-chrome-stable")
+    }
+    if (nchar(path) == 0) {
+      path <- Sys.which("google-chrome-beta")
+    }
+    if (nchar(path) == 0) {
+      path <- Sys.which("google-chrome-unstable")
+    }
+    if (nchar(path) == 0) {
       path <- Sys.which("chromium-browser")
     }
     if (nchar(path) == 0) {
