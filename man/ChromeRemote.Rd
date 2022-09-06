@@ -9,7 +9,7 @@ Remote Chrome process
 Remote Chrome process
 }
 \section{Super class}{
-\code{chromote::Browser} -> \code{ChromeRemote}
+\code{\link[chromote:Browser]{chromote::Browser}} -> \code{ChromeRemote}
 }
 \section{Methods}{
 \subsection{Public methods}{
