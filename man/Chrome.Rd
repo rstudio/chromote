@@ -17,7 +17,7 @@ the browser's system process.
 \code{\link[=get_chrome_args]{get_chrome_args()}}
 }
 \section{Super class}{
-\code{chromote::Browser} -> \code{Chrome}
+\code{\link[chromote:Browser]{chromote::Browser}} -> \code{Chrome}
 }
 \section{Methods}{
 \subsection{Public methods}{
