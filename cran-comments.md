@@ -1,6 +1,6 @@
 ## Comments
 
-#### 2022-09-06
+#### 2022-09-07
 
 Releasing a patch to `{chromote}` which has documentation by the latest version of `{roxygen2}`.
 
