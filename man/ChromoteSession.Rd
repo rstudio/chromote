@@ -202,27 +202,27 @@ wait for a Chrome DevTools Protocol response.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{ChromoteSession$new()}}
-\item \href{#method-view}{\code{ChromoteSession$view()}}
-\item \href{#method-close}{\code{ChromoteSession$close()}}
-\item \href{#method-screenshot}{\code{ChromoteSession$screenshot()}}
-\item \href{#method-screenshot_pdf}{\code{ChromoteSession$screenshot_pdf()}}
-\item \href{#method-new_session}{\code{ChromoteSession$new_session()}}
-\item \href{#method-get_session_id}{\code{ChromoteSession$get_session_id()}}
-\item \href{#method-wait_for}{\code{ChromoteSession$wait_for()}}
-\item \href{#method-debug_log}{\code{ChromoteSession$debug_log()}}
-\item \href{#method-get_child_loop}{\code{ChromoteSession$get_child_loop()}}
-\item \href{#method-send_command}{\code{ChromoteSession$send_command()}}
-\item \href{#method-get_auto_events}{\code{ChromoteSession$get_auto_events()}}
-\item \href{#method-invoke_event_callbacks}{\code{ChromoteSession$invoke_event_callbacks()}}
-\item \href{#method-mark_closed}{\code{ChromoteSession$mark_closed()}}
-\item \href{#method-is_active}{\code{ChromoteSession$is_active()}}
-\item \href{#method-init_promise}{\code{ChromoteSession$init_promise()}}
+\item \href{#method-ChromoteSession-new}{\code{ChromoteSession$new()}}
+\item \href{#method-ChromoteSession-view}{\code{ChromoteSession$view()}}
+\item \href{#method-ChromoteSession-close}{\code{ChromoteSession$close()}}
+\item \href{#method-ChromoteSession-screenshot}{\code{ChromoteSession$screenshot()}}
+\item \href{#method-ChromoteSession-screenshot_pdf}{\code{ChromoteSession$screenshot_pdf()}}
+\item \href{#method-ChromoteSession-new_session}{\code{ChromoteSession$new_session()}}
+\item \href{#method-ChromoteSession-get_session_id}{\code{ChromoteSession$get_session_id()}}
+\item \href{#method-ChromoteSession-wait_for}{\code{ChromoteSession$wait_for()}}
+\item \href{#method-ChromoteSession-debug_log}{\code{ChromoteSession$debug_log()}}
+\item \href{#method-ChromoteSession-get_child_loop}{\code{ChromoteSession$get_child_loop()}}
+\item \href{#method-ChromoteSession-send_command}{\code{ChromoteSession$send_command()}}
+\item \href{#method-ChromoteSession-get_auto_events}{\code{ChromoteSession$get_auto_events()}}
+\item \href{#method-ChromoteSession-invoke_event_callbacks}{\code{ChromoteSession$invoke_event_callbacks()}}
+\item \href{#method-ChromoteSession-mark_closed}{\code{ChromoteSession$mark_closed()}}
+\item \href{#method-ChromoteSession-is_active}{\code{ChromoteSession$is_active()}}
+\item \href{#method-ChromoteSession-init_promise}{\code{ChromoteSession$init_promise()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-new"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{ChromoteSession} object.
 \subsection{Usage}{
@@ -288,8 +288,8 @@ if (interactive()) b$view()}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-view"></a>}}
-\if{latex}{\out{\hypertarget{method-view}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-view"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-view}{}}}
 \subsection{Method \code{view()}}{
 Display the current session in the \code{\link{Chromote}} browser.
 
@@ -317,8 +317,8 @@ if (interactive()) b$view()}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-close"></a>}}
-\if{latex}{\out{\hypertarget{method-close}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-close"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-close}{}}}
 \subsection{Method \code{close()}}{
 Close the Chromote session.
 \subsection{Usage}{
@@ -351,8 +351,8 @@ b$close()}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-screenshot"></a>}}
-\if{latex}{\out{\hypertarget{method-screenshot}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-screenshot}{}}}
 \subsection{Method \code{screenshot()}}{
 Take a PNG screenshot
 \subsection{Usage}{
@@ -477,8 +477,8 @@ b$wait_for(pa)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-screenshot_pdf"></a>}}
-\if{latex}{\out{\hypertarget{method-screenshot_pdf}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-screenshot_pdf"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-screenshot_pdf}{}}}
 \subsection{Method \code{screenshot_pdf()}}{
 Take a PDF screenshot
 \subsection{Usage}{
@@ -545,8 +545,8 @@ unlist(file.info(tmppdffile))}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new_session"></a>}}
-\if{latex}{\out{\hypertarget{method-new_session}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-new_session"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-new_session}{}}}
 \subsection{Method \code{new_session()}}{
 Create a new tab / window
 \subsection{Usage}{
@@ -592,8 +592,8 @@ b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_session_id"></a>}}
-\if{latex}{\out{\hypertarget{method-get_session_id}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-get_session_id"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-get_session_id}{}}}
 \subsection{Method \code{get_session_id()}}{
 Retrieve the session id
 \subsection{Usage}{
@@ -612,8 +612,8 @@ b$get_session_id()
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-wait_for"></a>}}
-\if{latex}{\out{\hypertarget{method-wait_for}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-wait_for"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-wait_for}{}}}
 \subsection{Method \code{wait_for()}}{
 Wait for a Chromote Session to finish. This method will block the R
 session until the provided promise resolves. The loop from
@@ -647,8 +647,8 @@ b$Browser$getVersion(wait_ = FALSE, callback_ = str)}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-debug_log"></a>}}
-\if{latex}{\out{\hypertarget{method-debug_log}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-debug_log"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-debug_log}{}}}
 \subsection{Method \code{debug_log()}}{
 Send a debug log message to the parent \link{Chromote} object
 \subsection{Usage}{
@@ -677,8 +677,8 @@ b$parent$debug_messages(FALSE)}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_child_loop"></a>}}
-\if{latex}{\out{\hypertarget{method-get_child_loop}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-get_child_loop"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-get_child_loop}{}}}
 \subsection{Method \code{get_child_loop()}}{
 \pkg{later} loop.
 
@@ -689,8 +689,8 @@ For expert async usage only.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-send_command"></a>}}
-\if{latex}{\out{\hypertarget{method-send_command}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-send_command"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-send_command}{}}}
 \subsection{Method \code{send_command()}}{
 Send command through Chrome DevTools Protocol.
 
@@ -720,8 +720,8 @@ execute a method.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_auto_events"></a>}}
-\if{latex}{\out{\hypertarget{method-get_auto_events}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-get_auto_events"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-get_auto_events}{}}}
 \subsection{Method \code{get_auto_events()}}{
 Resolved \code{auto_events} value.
 
@@ -732,8 +732,8 @@ For internal use only.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-invoke_event_callbacks"></a>}}
-\if{latex}{\out{\hypertarget{method-invoke_event_callbacks}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-invoke_event_callbacks"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-invoke_event_callbacks}{}}}
 \subsection{Method \code{invoke_event_callbacks()}}{
 Immediately call all event callback methods.
 
@@ -753,8 +753,8 @@ For internal use only.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-mark_closed"></a>}}
-\if{latex}{\out{\hypertarget{method-mark_closed}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-mark_closed"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-mark_closed}{}}}
 \subsection{Method \code{mark_closed()}}{
 Disable callbacks for a given session.
 
@@ -765,8 +765,8 @@ For internal use only.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-is_active"></a>}}
-\if{latex}{\out{\hypertarget{method-is_active}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-is_active"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-is_active}{}}}
 \subsection{Method \code{is_active()}}{
 Retrieve active status
 Once initialized, the value returned is \code{TRUE}. If \verb{$close()} has been
@@ -777,8 +777,8 @@ called, this value will be \code{FALSE}.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-init_promise"></a>}}
-\if{latex}{\out{\hypertarget{method-init_promise}{}}}
+\if{html}{\out{<a id="method-ChromoteSession-init_promise"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-init_promise}{}}}
 \subsection{Method \code{init_promise()}}{
 Initial promise
 

@@ -67,18 +67,18 @@ more likely across machines.
 }
 \section{Functions}{
 \itemize{
-\item \code{default_chrome_args}: Returns a character vector of command-line
+\item \code{default_chrome_args()}: Returns a character vector of command-line
 arguments passed when initializing Chrome. See Details for more
 information.
 
-\item \code{get_chrome_args}: Retrieves the default command-line arguments
+\item \code{get_chrome_args()}: Retrieves the default command-line arguments
 passed to \code{\link{Chrome}} during initialization. Returns either \code{NULL} or a
 character vector.
 
-\item \code{set_chrome_args}: Sets the default command-line arguments
+\item \code{set_chrome_args()}: Sets the default command-line arguments
 passed when initializing. Returns the updated defaults.
-}}
 
+}}
 \examples{
 old_chrome_args <- get_chrome_args()
 

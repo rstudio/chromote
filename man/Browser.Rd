@@ -20,17 +20,17 @@ should also set private$process.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-is_local}{\code{Browser$is_local()}}
-\item \href{#method-get_process}{\code{Browser$get_process()}}
-\item \href{#method-get_host}{\code{Browser$get_host()}}
-\item \href{#method-get_port}{\code{Browser$get_port()}}
-\item \href{#method-close}{\code{Browser$close()}}
-\item \href{#method-clone}{\code{Browser$clone()}}
+\item \href{#method-Browser-is_local}{\code{Browser$is_local()}}
+\item \href{#method-Browser-get_process}{\code{Browser$get_process()}}
+\item \href{#method-Browser-get_host}{\code{Browser$get_host()}}
+\item \href{#method-Browser-get_port}{\code{Browser$get_port()}}
+\item \href{#method-Browser-close}{\code{Browser$close()}}
+\item \href{#method-Browser-clone}{\code{Browser$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-is_local"></a>}}
-\if{latex}{\out{\hypertarget{method-is_local}{}}}
+\if{html}{\out{<a id="method-Browser-is_local"></a>}}
+\if{latex}{\out{\hypertarget{method-Browser-is_local}{}}}
 \subsection{Method \code{is_local()}}{
 Is local browser?
 Returns TRUE if the browser is running locally, FALSE if it's remote.
@@ -40,8 +40,8 @@ Returns TRUE if the browser is running locally, FALSE if it's remote.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_process"></a>}}
-\if{latex}{\out{\hypertarget{method-get_process}{}}}
+\if{html}{\out{<a id="method-Browser-get_process"></a>}}
+\if{latex}{\out{\hypertarget{method-Browser-get_process}{}}}
 \subsection{Method \code{get_process()}}{
 Browser process
 \subsection{Usage}{
@@ -50,8 +50,8 @@ Browser process
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_host"></a>}}
-\if{latex}{\out{\hypertarget{method-get_host}{}}}
+\if{html}{\out{<a id="method-Browser-get_host"></a>}}
+\if{latex}{\out{\hypertarget{method-Browser-get_host}{}}}
 \subsection{Method \code{get_host()}}{
 Browser Host
 \subsection{Usage}{
@@ -60,8 +60,8 @@ Browser Host
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_port"></a>}}
-\if{latex}{\out{\hypertarget{method-get_port}{}}}
+\if{html}{\out{<a id="method-Browser-get_port"></a>}}
+\if{latex}{\out{\hypertarget{method-Browser-get_port}{}}}
 \subsection{Method \code{get_port()}}{
 Browser port
 \subsection{Usage}{
@@ -70,8 +70,8 @@ Browser port
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-close"></a>}}
-\if{latex}{\out{\hypertarget{method-close}{}}}
+\if{html}{\out{<a id="method-Browser-close"></a>}}
+\if{latex}{\out{\hypertarget{method-Browser-close}{}}}
 \subsection{Method \code{close()}}{
 Close the browser
 \subsection{Usage}{
@@ -80,8 +80,8 @@ Close the browser
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-Browser-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-Browser-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
