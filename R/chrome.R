@@ -88,7 +88,7 @@ launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
 
   p <- process$new(
     command = path,
-    args = c("--headless", "--remote-debugging-port=0", args),
+    args = c("--headless", "--remote-debugging-port=0", "--remote-allow-origins=*", args),
     supervise = TRUE,
     stdout = tempfile("chrome-stdout-", fileext = ".log"),
     stderr = tempfile("chrome-stderr-", fileext = ".log")
