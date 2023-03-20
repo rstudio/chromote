@@ -101,12 +101,13 @@ browse_url <- function(path, chromote) {
 # Borrowed from https://github.com/rstudio/httpuv/blob/main/R/random_port.R
 
 with_random_port <- function(
-  .f,
+  startup,
   min = 1024L,
   max = 49151L,
   n = 5,
   host = "http://127.0.0.1"
 ) {
+  stopifnot(is.function(startup))
   valid_ports <- setdiff(seq.int(min, max), unsafe_ports)
 
   # Try up to n ports
@@ -117,7 +118,7 @@ with_random_port <- function(
 
     # Try to run `.f()` with the random port
     res <- tryCatch(
-      .f(host = host, port = port),
+      startup(host = host, port = port),
       error = function(err) if (identical(port, ports[n])) err,
       error_timeout = identity,
       system_command_error = identity
