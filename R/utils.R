@@ -119,9 +119,9 @@ with_random_port <- function(
     # Try to run `.f()` with the random port
     res <- tryCatch(
       startup(host = host, port = port),
-      error = function(err) if (identical(port, ports[n])) err,
       error_timeout = identity,
-      system_command_error = identity
+      system_command_error = identity,
+      error = function(err) if (identical(port, ports[n])) err
     )
 
     if (rlang::cnd_inherits(res, "error")) {
