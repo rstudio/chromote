@@ -102,6 +102,18 @@ browse_url <- function(path, chromote) {
 
 #' Startup a service that requires a random port
 #'
+#' `with_random_port()` provides `startup()` with a random port value and runs
+#' the function:
+#'
+#' 1. `startup()` always returns a (non-`NULL`) value if successful
+#' 2. If `startup()` fails with a generic error, we assume the port is occupied
+#'    and try the next random port.
+#' 3. If `startup()` fails with an error classed with `error_stop_port_search`
+#'    or `system_command_error`, we stop the port search and rethrow the fatal
+#'    error.
+#' 4. If we try `n` random ports, the port search stops with an informative
+#'    error that includes the last port attempt error.
+#'
 #' @param startup A function that takes a `port` argument, where `port` will be
 #'   randomly selected. When successful, `startup()` should return a non-NULL
 #'   value that will also be returned from `with_random_port()`. Generic errors
