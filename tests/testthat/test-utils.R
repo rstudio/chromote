@@ -62,3 +62,12 @@ test_that("with_random_port() returns result of `startup()`", {
     expect_true(all(tried_ports %% 5 > 0))
   }
 })
+
+test_that("with_random_port() startup function can return NULL", {
+  accept_any_port <- function(port) {
+    NULL
+  }
+
+  port <- with_random_port(accept_any_port)
+  expect_null(port)
+})

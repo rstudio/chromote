@@ -105,7 +105,7 @@ browse_url <- function(path, chromote) {
 #' `with_random_port()` provides `startup()` with a random port value and runs
 #' the function:
 #'
-#' 1. `startup()` always returns a (non-`NULL`) value if successful
+#' 1. `startup()` always returns a value if successful.
 #' 2. If `startup()` fails with a generic error, we assume the port is occupied
 #'    and try the next random port.
 #' 3. If `startup()` fails with an error classed with `error_stop_port_search`
@@ -141,8 +141,10 @@ with_random_port <- function(
   ports <- sample(valid_ports, n)
   err_port <- NULL
 
+  .empty_result <- structure(list(), class = "no value returned from startup")
+
   for (port in ports) {
-    res <- NULL
+    res <- .empty_result
     err <- NULL
 
     # Try to run `startup` with the random port
@@ -162,7 +164,7 @@ with_random_port <- function(
       rlang::cnd_signal(err)
     }
 
-    if (!is.null(res)) {
+    if (!inherits(res, "no value returned from startup")) {
       return(res)
     }
   }
