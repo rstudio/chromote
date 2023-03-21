@@ -123,6 +123,7 @@ with_random_port <- function(
       },
       error_timeout = function(cnd) err <<- cnd,
       system_command_error = function(cnd) err <<- cnd,
+      error_no_port_retry = function(cnd) err <<- cnd,
       # For other errors, they are probably because the port is already in use.
       # Don't do anything; we'll just continue in the loop.
       error = function(e) NULL
