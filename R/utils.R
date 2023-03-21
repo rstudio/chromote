@@ -143,15 +143,15 @@ with_random_port <- function(
   ports <- sample(valid_ports, n)
   err_port <- NULL
 
-  .empty_result <- structure(list(), class = "no value returned from startup")
-
   for (port in ports) {
-    res <- .empty_result
+    success <- FALSE
+    res <- NULL
     err_fatal <- NULL
 
     # Try to run `startup` with the random port
     tryCatch({
         res <- startup(port = port, ...)
+        success <- TRUE
       },
       error = function(cnd) {
         if (rlang::cnd_inherits(cnd, stop_on)) {
@@ -171,7 +171,7 @@ with_random_port <- function(
       rlang::cnd_signal(err_fatal)
     }
 
-    if (!inherits(res, "no value returned from startup")) {
+    if (isTRUE(success)) {
       return(res)
     }
   }
