@@ -100,6 +100,21 @@ browse_url <- function(path, chromote) {
 #
 # Borrowed from https://github.com/rstudio/httpuv/blob/main/R/random_port.R
 
+#' Startup a service that requires a random port
+#'
+#' @param startup A function that takes a `port` argument, where `port` will be
+#'   randomly selected. When successful, `startup()` should return a non-NULL
+#'   value that will also be returned from `with_random_port()`. Generic errors
+#'   emitted by this function are silently ignored: when `startup()` fails, we
+#'   assume the port was unavailable and we try with a new port. Errors with the
+#'   classes `error_timeout`, `error_no_port_retry` and `system_command_error`
+#'   fail immediately.
+#' @param ... Additional arguments passed to `startup()`.
+#' @param min,max Port range
+#' @param n Maximum number of ports to try
+#'
+#' @return The result of `startup()`, or an error if `startup()` fails.
+#' @noRd
 with_random_port <- function(
   startup,
   ...,
