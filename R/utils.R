@@ -108,9 +108,9 @@ browse_url <- function(path, chromote) {
 #' 1. `startup()` always returns a value if successful.
 #' 2. If `startup()` fails with a generic error, we assume the port is occupied
 #'    and try the next random port.
-#' 3. If `startup()` fails with an error classed with `error_stop_port_search`
-#'    or `system_command_error`, we stop the port search and rethrow the fatal
-#'    error.
+#' 3. If `startup()` fails with an error classed with errors in `stop_on`,
+#'    (`error_stop_port_search` or `system_command_error` by default), we stop
+#'    the port search and rethrow the fatal error.
 #' 4. If we try `n` random ports, the port search stops with an informative
 #'    error that includes the last port attempt error.
 #'
@@ -119,10 +119,11 @@ browse_url <- function(path, chromote) {
 #'   value that will also be returned from `with_random_port()`. Generic errors
 #'   emitted by this function are silently ignored: when `startup()` fails, we
 #'   assume the port was unavailable and we try with a new port. Errors with the
-#'   classes `error_stop_port_search` and `system_command_error` fail immediately.
+#'   classes in `stop_on` fail immediately.
 #' @param ... Additional arguments passed to `startup()`.
 #' @param min,max Port range
 #' @param n Maximum number of ports to try
+#' @param stop_on Error classes that signal the port search should be stopped
 #'
 #' @return The result of `startup()`, or an error if `startup()` fails.
 #' @noRd
@@ -131,7 +132,8 @@ with_random_port <- function(
   ...,
   min = 1024L,
   max = 49151L,
-  n = 10
+  n = 10,
+  stop_on = c("error_stop_port_search", "system_command_error")
 ) {
   stopifnot(is.function(startup))
   valid_ports <- setdiff(seq.int(min, max), unsafe_ports)
@@ -145,23 +147,28 @@ with_random_port <- function(
 
   for (port in ports) {
     res <- .empty_result
-    err <- NULL
+    err_fatal <- NULL
 
     # Try to run `startup` with the random port
     tryCatch({
         res <- startup(port = port, ...)
       },
-      # Non generic errors that signal we should stop trying new ports
-      system_command_error = function(cnd) err <<- cnd,
-      error_stop_port_search = function(cnd) err <<- cnd,
-      # For other errors, they are probably because the port is already in use.
-      # Don't do anything; we'll just continue in the loop, but we save the
-      # last port retry error to throw in case it's informative.
-      error = function(cnd) err_port <<- cnd
+      error = function(cnd) {
+        if (rlang::cnd_inherits(cnd, stop_on)) {
+          # Non generic errors that signal we should stop trying new ports
+          err_fatal <<- cnd
+          return()
+        }
+        # For other errors, they are probably because the port is already in
+        # use. Don't do anything; we'll just continue in the loop, but we save
+        # the last port retry error to throw in case it's informative.
+        err_port <<- cnd
+        NULL
+      }
     )
 
-    if (!is.null(err)) {
-      rlang::cnd_signal(err)
+    if (!is.null(err_fatal)) {
+      rlang::cnd_signal(err_fatal)
     }
 
     if (!inherits(res, "no value returned from startup")) {
