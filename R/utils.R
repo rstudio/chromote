@@ -104,7 +104,7 @@ with_random_port <- function(
   startup,
   min = 1024L,
   max = 49151L,
-  n = 5,
+  n = 10,
   host = "http://127.0.0.1"
 ) {
   stopifnot(is.function(startup))
