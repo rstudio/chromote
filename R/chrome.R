@@ -86,13 +86,13 @@ launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
     stop("Invalid path to Chrome")
   }
 
-  with_random_port(function(host, port) {
+  with_random_port(function(port) {
     p <- process$new(
       command = path,
       args = c(
         "--headless",
         paste0("--remote-debugging-port=", port),
-        paste0("--remote-allow-origins=", host, ":", port),
+        paste0("--remote-allow-origins=http://127.0.0.1:", port),
         args
       ),
       supervise = TRUE,

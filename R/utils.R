@@ -104,8 +104,7 @@ with_random_port <- function(
   startup,
   min = 1024L,
   max = 49151L,
-  n = 10,
-  host = "http://127.0.0.1"
+  n = 10
 ) {
   stopifnot(is.function(startup))
   valid_ports <- setdiff(seq.int(min, max), unsafe_ports)
@@ -118,7 +117,7 @@ with_random_port <- function(
 
     # Try to run `.f()` with the random port
     res <- tryCatch(
-      startup(host = host, port = port),
+      startup(port = port),
       error_timeout = identity,
       system_command_error = identity,
       error = function(err) if (identical(port, ports[n])) err
