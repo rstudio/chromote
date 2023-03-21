@@ -107,8 +107,7 @@ browse_url <- function(path, chromote) {
 #'   value that will also be returned from `with_random_port()`. Generic errors
 #'   emitted by this function are silently ignored: when `startup()` fails, we
 #'   assume the port was unavailable and we try with a new port. Errors with the
-#'   classes `error_timeout`, `error_no_port_retry` and `system_command_error`
-#'   fail immediately.
+#'   classes `error_stop_port_search` and `system_command_error` fail immediately.
 #' @param ... Additional arguments passed to `startup()`.
 #' @param min,max Port range
 #' @param n Maximum number of ports to try
@@ -139,9 +138,8 @@ with_random_port <- function(
         res <- startup(port = port, ...)
       },
       # Non generic errors that signal we should stop trying new ports
-      error_timeout = function(cnd) err <<- cnd,
       system_command_error = function(cnd) err <<- cnd,
-      error_no_port_retry = function(cnd) err <<- cnd,
+      error_stop_port_search = function(cnd) err <<- cnd,
       # For other errors, they are probably because the port is already in use.
       # Don't do anything; we'll just continue in the loop, but we save the
       # last port retry error to throw in case it's informative.

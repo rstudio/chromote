@@ -140,7 +140,7 @@ launch_chrome_impl <- function(path, args, port) {
   if (!connected) {
     rlang::abort(
       "Chrome debugging port not open after 10 seconds.",
-      class = "error_timeout"
+      class = "error_stop_port_search"
     )
   }
 
