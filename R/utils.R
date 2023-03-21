@@ -115,18 +115,22 @@ with_random_port <- function(
   ports <- sample(valid_ports, n)
   for (port in ports) {
     res <- NULL
+    err <- NULL
 
-    # Try to run `.f()` with the random port
-    res <- tryCatch(
-      startup(port = port, ...),
-      error_timeout = identity,
-      system_command_error = identity,
-      error = function(err) if (identical(port, ports[n])) err
+    # Try to run `startup` with the random port
+    tryCatch({
+        res <- startup(port = port, ...)
+      },
+      error_timeout = function(cnd) err <<- cnd,
+      system_command_error = function(cnd) err <<- cnd,
+      # For other errors, they are probably because the port is already in use.
+      # Don't do anything; we'll just continue in the loop.
+      error = function(e) NULL
     )
 
-    if (rlang::cnd_inherits(res, "error")) {
+    if (!is.null(err)) {
       # A timeout error or trying all ports is unlikely to be port-related problem
-      rlang::cnd_signal(res)
+      rlang::cnd_signal(err)
     }
 
     if (!is.null(res)) {
