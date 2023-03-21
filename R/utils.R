@@ -128,6 +128,8 @@ with_random_port <- function(
   # Try up to n ports
   n <- min(n, length(valid_ports))
   ports <- sample(valid_ports, n)
+  err_port <- NULL
+
   for (port in ports) {
     res <- NULL
     err <- NULL
@@ -136,16 +138,17 @@ with_random_port <- function(
     tryCatch({
         res <- startup(port = port, ...)
       },
+      # Non generic errors that signal we should stop trying new ports
       error_timeout = function(cnd) err <<- cnd,
       system_command_error = function(cnd) err <<- cnd,
       error_no_port_retry = function(cnd) err <<- cnd,
       # For other errors, they are probably because the port is already in use.
-      # Don't do anything; we'll just continue in the loop.
-      error = function(e) NULL
+      # Don't do anything; we'll just continue in the loop, but we save the
+      # last port retry error to throw in case it's informative.
+      error = function(cnd) err_port <<- cnd
     )
 
     if (!is.null(err)) {
-      # A timeout error or trying all ports is unlikely to be port-related problem
       rlang::cnd_signal(err)
     }
 
@@ -156,7 +159,8 @@ with_random_port <- function(
 
   rlang::abort(
     "Cannot find an available port. Please try again.",
-    class = "chromote_error_no_available_port"
+    class = "error_no_available_port",
+    parent = err_port
   )
 }
 
