@@ -1,4 +1,4 @@
-# chromote 0.1.1.9000
+# chromote 0.1.1.9001
 
 * Fixed #99: When the `$view()` method was called, recent versions of Chrome would display `"Debugging connection was closed. Reason: WebSocket disconnected"`. (#101)
 
