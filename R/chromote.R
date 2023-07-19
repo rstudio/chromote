@@ -328,8 +328,13 @@ Chromote <- R6Class(
 
     #' @description Close the [`Browser`] object
     close = function() {
-      self$Browser$close()
-      private$is_active_ <- FALSE
+      if (private$is_active_) {
+        self$Browser$close()
+        private$is_active_ <- FALSE
+        return(TRUE)
+      } else {
+        FALSE
+      }
     },
 
     #' @field default_timeout Default timeout in seconds for \pkg{chromote} to
