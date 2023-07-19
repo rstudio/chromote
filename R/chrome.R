@@ -55,7 +55,7 @@ find_chrome <- function() {
         path <- path[["(Default)"]]
       },
       error = function(e) {
-        message("Error trying to find path to Chrome")
+        message("Google Chrome was not found. Set the CHROMOTE_CHROME environment variable to the executable of a Chromium-based browser, such as Google Chrome, Chromium or Brave.")
         path <<- NULL
       }
     )
