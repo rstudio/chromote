@@ -2,32 +2,36 @@ Package: chromote
 Title: Headless Chrome Web Browser Interface
 Version: 0.1.1.9001
 Authors@R: c(
-      person("Winston", "Chang", role = c("aut", "cre"), email = "winston@posit.co"),
-      person("Barret", "Schloerke", role = c("aut"), email = "barret@posit.co", comment = c(ORCID = "0000-0001-9986-114X")),
-      person("Posit Software, PBC", role = c("cph", "fnd"))
-    )
-Description: An implementation of the 'Chrome DevTools Protocol', for controlling a headless Chrome web browser.
+    person("Winston", "Chang", , "winston@posit.co", role = c("aut", "cre")),
+    person("Barret", "Schloerke", , "barret@posit.co", role = "aut",
+           comment = c(ORCID = "0000-0001-9986-114X")),
+    person("Posit Software, PBC", role = c("cph", "fnd"))
+  )
+Description: An implementation of the 'Chrome DevTools Protocol', for
+    controlling a headless Chrome web browser.
 License: GPL-2
-Encoding: UTF-8
-SystemRequirements: Google Chrome or other Chromium-based browser. chromium: chromium (rpm) or chromium-browser (deb)
+URL: https://rstudio.github.io/chromote/,
+    https://github.com/rstudio/chromote
+BugReports: https://github.com/rstudio/chromote/issues
 Imports:
     curl,
+    fastmap,
     jsonlite,
-    websocket (>= 1.2.0),
-    processx,
-    R6,
     later (>= 1.1.0),
-    promises (>= 1.1.1),
     magrittr,
+    processx,
+    promises (>= 1.1.1),
+    R6,
     rlang,
-    fastmap
+    websocket (>= 1.2.0)
 Suggests:
-    testthat (>= 3.0.0),
-    showimage
+    showimage,
+    testthat (>= 3.0.0)
+Config/Needs/website: tidyverse/tidytemplate
+Config/testthat/edition: 3
+Encoding: UTF-8
+Language: en-US
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-URL: https://rstudio.github.io/chromote/, https://github.com/rstudio/chromote
-BugReports: https://github.com/rstudio/chromote/issues
-Config/testthat/edition: 3
-Config/Needs/website: tidyverse/tidytemplate
-Language: en-US
+SystemRequirements: Google Chrome or other Chromium-based browser.
+    chromium: chromium (rpm) or chromium-browser (deb)
