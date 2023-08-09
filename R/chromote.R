@@ -1,12 +1,3 @@
-#' @importFrom websocket WebSocket
-#' @importFrom jsonlite fromJSON toJSON
-#' @importFrom R6 R6Class
-#' @import promises later
-#' @importFrom fastmap fastmap
-#' @importFrom processx process
-NULL
-
-
 #' Chromote class
 #'
 #' This class represents the browser as a whole.
