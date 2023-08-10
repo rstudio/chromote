@@ -82,7 +82,7 @@ find_chrome_linux <- function() {
 
   for (path in possible_names) {
     path <- Sys.which(path)
-    if (nchar(path) > 0) {
+    if (nzchar(path)) {
       return(path)
     }
   }
