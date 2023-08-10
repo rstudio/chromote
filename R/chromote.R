@@ -1,12 +1,3 @@
-#' @importFrom websocket WebSocket
-#' @importFrom jsonlite fromJSON toJSON
-#' @importFrom R6 R6Class
-#' @import promises later
-#' @importFrom fastmap fastmap
-#' @importFrom processx process
-NULL
-
-
 #' Chromote class
 #'
 #' This class represents the browser as a whole.
@@ -328,8 +319,13 @@ Chromote <- R6Class(
 
     #' @description Close the [`Browser`] object
     close = function() {
-      private$is_active_ <- FALSE
-      self$Browser$close()
+      if (private$is_active_) {
+        self$Browser$close()
+        private$is_active_ <- FALSE
+        return(TRUE)
+      } else {
+        FALSE
+      }
     },
 
     #' @field default_timeout Default timeout in seconds for \pkg{chromote} to

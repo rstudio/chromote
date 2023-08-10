@@ -55,7 +55,7 @@ find_chrome <- function() {
         path <- path[["(Default)"]]
       },
       error = function(e) {
-        message("Error trying to find path to Chrome")
+        message("Google Chrome was not found. Set the CHROMOTE_CHROME environment variable to the executable of a Chromium-based browser, such as Google Chrome, Chromium or Brave.")
         path <<- NULL
       }
     )
@@ -95,14 +95,23 @@ launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
     stop("Invalid path to Chrome")
   }
 
+  res <- with_random_port(launch_chrome_impl, path = path, args = args)
+  res
+}
+
+launch_chrome_impl <- function(path, args, port) {
   p <- process$new(
     command = path,
-    args = c("--headless", "--remote-debugging-port=0", args),
+    args = c(
+      "--headless",
+      paste0("--remote-debugging-port=", port),
+      paste0("--remote-allow-origins=http://127.0.0.1:", port),
+      args
+    ),
     supervise = TRUE,
     stdout = tempfile("chrome-stdout-", fileext = ".log"),
     stderr = tempfile("chrome-stderr-", fileext = ".log")
   )
-
 
   connected <- FALSE
   end <- Sys.time() + 10
@@ -120,9 +129,9 @@ launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
         output <- output[grepl("^DevTools listening on ws://", output)]
         if (length(output) != 1) stop() # Just break out of the tryCatch
 
-        port <- sub("^DevTools listening on ws://[0-9\\.]+:(\\d+)/.*", "\\1", output)
-        port <- as.integer(port)
-        if (is.na(port)) stop()
+        output_port <- sub("^DevTools listening on ws://[0-9\\.]+:(\\d+)/.*", "\\1", output)
+        output_port <- as.integer(output_port)
+        if (is.na(output_port) || output_port != port) stop()
 
         con <- url(paste0("http://127.0.0.1:", port, "/json/protocol"), "rb")
         if (!isOpen(con)) break  # Failed to connect
@@ -138,7 +147,10 @@ launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
   }
 
   if (!connected) {
-    stop("Chrome debugging port not open after 10 seconds.")
+    rlang::abort(
+      "Chrome debugging port not open after 10 seconds.",
+      class = "error_stop_port_search"
+    )
   }
 
   list(

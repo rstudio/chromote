@@ -14,24 +14,24 @@ Remote Chrome process
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{ChromeRemote$new()}}
-\item \href{#method-clone}{\code{ChromeRemote$clone()}}
+\item \href{#method-ChromeRemote-new}{\code{ChromeRemote$new()}}
+\item \href{#method-ChromeRemote-clone}{\code{ChromeRemote$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="close">}\href{../../chromote/html/Browser.html#method-close}{\code{chromote::Browser$close()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_host">}\href{../../chromote/html/Browser.html#method-get_host}{\code{chromote::Browser$get_host()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_port">}\href{../../chromote/html/Browser.html#method-get_port}{\code{chromote::Browser$get_port()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_process">}\href{../../chromote/html/Browser.html#method-get_process}{\code{chromote::Browser$get_process()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_local">}\href{../../chromote/html/Browser.html#method-is_local}{\code{chromote::Browser$is_local()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="close"><a href='../../chromote/html/Browser.html#method-Browser-close'><code>chromote::Browser$close()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_host"><a href='../../chromote/html/Browser.html#method-Browser-get_host'><code>chromote::Browser$get_host()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_port"><a href='../../chromote/html/Browser.html#method-Browser-get_port'><code>chromote::Browser$get_port()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_process"><a href='../../chromote/html/Browser.html#method-Browser-get_process'><code>chromote::Browser$get_process()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_local"><a href='../../chromote/html/Browser.html#method-Browser-is_local'><code>chromote::Browser$is_local()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-ChromeRemote-new"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromeRemote-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new ChromeRemote object.
 \subsection{Usage}{
@@ -50,8 +50,8 @@ represents all IPv4 addresses and \code{"::/0"} represents all IPv6 addresses.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-ChromeRemote-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromeRemote-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

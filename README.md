@@ -1,6 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 <!-- Do not run R chunks that print any session information.
      This produces unstable output.
      Instead, copy output from a local execution
@@ -28,10 +27,10 @@ use](#specifying-which-browser-to-use).
 Chromote is not the only R package that implements the Chrome DevTools
 Protocol. Here are some others:
 
-  - [crrri](https://github.com/RLesur/crrri) by Romain Lesur and
-    Christophe Dervieux
-  - [decapitated](https://github.com/hrbrmstr/decapitated/) by Bob Rudis
-  - [chradle](https://github.com/milesmcbain/chradle) by Miles McBain
+- [crrri](https://github.com/RLesur/crrri) by Romain Lesur and
+  Christophe Dervieux
+- [decapitated](https://github.com/hrbrmstr/decapitated/) by Bob Rudis
+- [chradle](https://github.com/milesmcbain/chradle) by Miles McBain
 
 The interface to Chromote is similar to
 [chrome-remote-interface](https://github.com/cyrus-and/chrome-remote-interface)
@@ -321,20 +320,20 @@ value, which looks like this:
 > page](https://chromedevtools.github.io/devtools-protocol/tot/Page/)).
 > These notifications will continue to be sent until the browser
 > receives a `Page.disable` command.
-> 
+>
 > By default, Chromote hides this implementation detail. When you call
 > `b$Page$loadEventFired()`, Chromote sends a `Page.enable` command
 > automatically, and then waits until it receives the
 > `Page.loadEventFired` event notification. Then it sends a
 > `Page.disable` command.
-> 
+>
 > Note that in asynchronous mode, the behavior is slightly more
 > sophisticated: it maintains a counter of how many outstanding events
 > it is waiting for in a given domain. When that count goes from 0 to 1,
 > it sends the `X.enable` command; when the count goes from 1 to 0, it
 > sends the `X.disable` command. For more information, see the [Async
 > events](#async-events) section.
-> 
+>
 > If you do not want automatic event enabling and disabling, then when
 > creating the ChromoteSession object, use
 > `ChromoteSession$new(auto_events = FALSE)`.
@@ -412,15 +411,15 @@ default `Chromote` object.
 There are also the following classes which represent the browser at a
 lower level:
 
-  - `Browser`: This represents an instance of a browser that supports
-    the Chrome DevTools Protocol. It contains information about how to
-    communicate with the Chrome browser. A `Chromote` object contains
-    one of these.
-  - `Chrome`: This is a subclass of `Browser` that represents a local
-    browser. It extends the `Browser` class with a `processx::process`
-    object, which represents the browser’s system process.
-  - `ChromeRemote`: This is a subclass of `Browser` that represents a
-    browser running on a remote system.
+- `Browser`: This represents an instance of a browser that supports the
+  Chrome DevTools Protocol. It contains information about how to
+  communicate with the Chrome browser. A `Chromote` object contains one
+  of these.
+- `Chrome`: This is a subclass of `Browser` that represents a local
+  browser. It extends the `Browser` class with a `processx::process`
+  object, which represents the browser’s system process.
+- `ChromeRemote`: This is a subclass of `Browser` that represents a
+  browser running on a remote system.
 
 ### Debugging
 
@@ -478,15 +477,15 @@ the asynchronous functions to resolve.
 > asynchronously, the R process will run callbacks and promises using an
 > event loop provided by the [later](https://github.com/r-lib/later)
 > package. This event loop is very similar to the one used in
-> JavaScript, which is explained in depth by [this
-> article](https://blog.sessionstack.com/how-javascript-works-event-loop-and-the-rise-of-async-programming-5-ways-to-better-coding-with-2f077c4438b5).
-> One important difference between JavaScript’s event loop and the one
-> provided by **later**’s is that in JavaScript, the event loop only
-> runs when the call stack is empty (essentially, when the JS runtime is
-> idle); with **later** the event loop similarly runs when the call
-> stack is empty (when the R console is idle), but it can also be run at
-> any point by calling `later::run_now()`.
-> 
+> JavaScript, which is explained in depth by [Philip Roberts in this
+> video](https://youtu.be/8aGhZQkoFbQ). One important difference between
+> JavaScript’s event loop and the one provided by **later**’s is that in
+> JavaScript, the event loop only runs when the call stack is empty
+> (essentially, when the JS runtime is idle); with **later** the event
+> loop similarly runs when the call stack is empty (when the R console
+> is idle), but it can also be run at any point by calling
+> `later::run_now()`.
+>
 > There is another important difference between the JS event loop and
 > the one used by Chromote: Chromote uses *private event loops* provided
 > by [later](https://github.com/r-lib/later). Running the private event
@@ -499,12 +498,11 @@ the asynchronous functions to resolve.
 The synchronous API is easier to use than the asynchronous one. So why
 would you want to use the async API? Here are some reasons:
 
-  - The async API allows you to send commands to the browser that may
-    take some time for the browser to complete, and they will not block
-    the R process from doing other work while the browser executes the
-    command.
-  - The async API lets you send commands to multiple browser “tabs” and
-    let them work in parallel.
+- The async API allows you to send commands to the browser that may take
+  some time for the browser to complete, and they will not block the R
+  process from doing other work while the browser executes the command.
+- The async API lets you send commands to multiple browser “tabs” and
+  let them work in parallel.
 
 On the other hand, async programming can make it difficult to write code
 that proceeds in a straightforward, linear manner. Async programming may
@@ -1095,10 +1093,10 @@ caution.**
     # Mac
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless \
       --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
-    
+
     # Linux
     google-chrome --headless --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
-    
+
     # Windows
     "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"  --headless \
       --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
@@ -1185,7 +1183,7 @@ b <- r$new_session(targetId = tid)
 b$Runtime$evaluate('alert("this is the first tab")')
 ```
 
------
+------------------------------------------------------------------------
 
 ## Examples
 

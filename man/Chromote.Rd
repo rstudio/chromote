@@ -18,7 +18,9 @@ control it. A \code{ChromoteSession} object represents a single \emph{session}.
 
 A \code{Chromote} object can have any number of \code{ChromoteSession} objects as
 children. It is not necessary to create a \code{Chromote} object manually. You can
-simply call:\if{html}{\out{<div class="sourceCode r">}}\preformatted{b <- ChromoteSession$new()
+simply call:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{b <- ChromoteSession$new()
 }\if{html}{\out{</div>}}
 
 and it will automatically create a \code{Chromote} object if one has not already
@@ -54,27 +56,27 @@ wait for a Chrome DevTools Protocol response.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{Chromote$new()}}
-\item \href{#method-view}{\code{Chromote$view()}}
-\item \href{#method-get_auto_events}{\code{Chromote$get_auto_events()}}
-\item \href{#method-get_child_loop}{\code{Chromote$get_child_loop()}}
-\item \href{#method-wait_for}{\code{Chromote$wait_for()}}
-\item \href{#method-new_session}{\code{Chromote$new_session()}}
-\item \href{#method-get_sessions}{\code{Chromote$get_sessions()}}
-\item \href{#method-register_session}{\code{Chromote$register_session()}}
-\item \href{#method-send_command}{\code{Chromote$send_command()}}
-\item \href{#method-invoke_event_callbacks}{\code{Chromote$invoke_event_callbacks()}}
-\item \href{#method-debug_messages}{\code{Chromote$debug_messages()}}
-\item \href{#method-debug_log}{\code{Chromote$debug_log()}}
-\item \href{#method-url}{\code{Chromote$url()}}
-\item \href{#method-is_active}{\code{Chromote$is_active()}}
-\item \href{#method-get_browser}{\code{Chromote$get_browser()}}
-\item \href{#method-close}{\code{Chromote$close()}}
+\item \href{#method-Chromote-new}{\code{Chromote$new()}}
+\item \href{#method-Chromote-view}{\code{Chromote$view()}}
+\item \href{#method-Chromote-get_auto_events}{\code{Chromote$get_auto_events()}}
+\item \href{#method-Chromote-get_child_loop}{\code{Chromote$get_child_loop()}}
+\item \href{#method-Chromote-wait_for}{\code{Chromote$wait_for()}}
+\item \href{#method-Chromote-new_session}{\code{Chromote$new_session()}}
+\item \href{#method-Chromote-get_sessions}{\code{Chromote$get_sessions()}}
+\item \href{#method-Chromote-register_session}{\code{Chromote$register_session()}}
+\item \href{#method-Chromote-send_command}{\code{Chromote$send_command()}}
+\item \href{#method-Chromote-invoke_event_callbacks}{\code{Chromote$invoke_event_callbacks()}}
+\item \href{#method-Chromote-debug_messages}{\code{Chromote$debug_messages()}}
+\item \href{#method-Chromote-debug_log}{\code{Chromote$debug_log()}}
+\item \href{#method-Chromote-url}{\code{Chromote$url()}}
+\item \href{#method-Chromote-is_active}{\code{Chromote$is_active()}}
+\item \href{#method-Chromote-get_browser}{\code{Chromote$get_browser()}}
+\item \href{#method-Chromote-close}{\code{Chromote$close()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-Chromote-new"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$new(browser = Chrome$new(), multi_session = TRUE, auto_events = TRUE)}\if{html}{\out{</div>}}
@@ -94,8 +96,8 @@ if \code{FALSE}, disable automatic event enabling/disabling.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-view"></a>}}
-\if{latex}{\out{\hypertarget{method-view}{}}}
+\if{html}{\out{<a id="method-Chromote-view"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-view}{}}}
 \subsection{Method \code{view()}}{
 Display the current session in the \code{browser}
 
@@ -108,8 +110,8 @@ using your \code{\link{Chrome}} browser. When not using a \code{\link{Chrome}} b
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_auto_events"></a>}}
-\if{latex}{\out{\hypertarget{method-get_auto_events}{}}}
+\if{html}{\out{<a id="method-Chromote-get_auto_events"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-get_auto_events}{}}}
 \subsection{Method \code{get_auto_events()}}{
 \code{auto_events} value.
 
@@ -120,8 +122,8 @@ For internal use only.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_child_loop"></a>}}
-\if{latex}{\out{\hypertarget{method-get_child_loop}{}}}
+\if{html}{\out{<a id="method-Chromote-get_child_loop"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-get_child_loop}{}}}
 \subsection{Method \code{get_child_loop()}}{
 Local \pkg{later} loop.
 
@@ -132,8 +134,8 @@ For expert async usage only.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-wait_for"></a>}}
-\if{latex}{\out{\hypertarget{method-wait_for}{}}}
+\if{html}{\out{<a id="method-Chromote-wait_for"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-wait_for}{}}}
 \subsection{Method \code{wait_for()}}{
 Wait until the promise resolves
 
@@ -153,8 +155,8 @@ resolve.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new_session"></a>}}
-\if{latex}{\out{\hypertarget{method-new_session}{}}}
+\if{html}{\out{<a id="method-Chromote-new_session"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-new_session}{}}}
 \subsection{Method \code{new_session()}}{
 Create a new tab / window
 \subsection{Usage}{
@@ -180,8 +182,8 @@ return a \code{ChromoteSession} object directly.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_sessions"></a>}}
-\if{latex}{\out{\hypertarget{method-get_sessions}{}}}
+\if{html}{\out{<a id="method-Chromote-get_sessions"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-get_sessions}{}}}
 \subsection{Method \code{get_sessions()}}{
 Retrieve all \code{\link{ChromoteSession}} objects
 \subsection{Usage}{
@@ -193,8 +195,8 @@ A list of \code{ChromoteSession} objects
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-register_session"></a>}}
-\if{latex}{\out{\hypertarget{method-register_session}{}}}
+\if{html}{\out{<a id="method-Chromote-register_session"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-register_session}{}}}
 \subsection{Method \code{register_session()}}{
 Register \code{\link{ChromoteSession}} object
 \subsection{Usage}{
@@ -212,8 +214,8 @@ For internal use only.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-send_command"></a>}}
-\if{latex}{\out{\hypertarget{method-send_command}{}}}
+\if{html}{\out{<a id="method-Chromote-send_command"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-send_command}{}}}
 \subsection{Method \code{send_command()}}{
 Send command through Chrome DevTools Protocol.
 
@@ -247,8 +249,8 @@ corresponding to send the command to.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-invoke_event_callbacks"></a>}}
-\if{latex}{\out{\hypertarget{method-invoke_event_callbacks}{}}}
+\if{html}{\out{<a id="method-Chromote-invoke_event_callbacks"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-invoke_event_callbacks}{}}}
 \subsection{Method \code{invoke_event_callbacks()}}{
 Immediately call all event callback methods.
 
@@ -268,8 +270,8 @@ For internal use only.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-debug_messages"></a>}}
-\if{latex}{\out{\hypertarget{method-debug_messages}{}}}
+\if{html}{\out{<a id="method-Chromote-debug_messages"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-debug_messages}{}}}
 \subsection{Method \code{debug_messages()}}{
 Enable or disable message debugging
 
@@ -287,8 +289,8 @@ If enabled, R will print out the
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-debug_log"></a>}}
-\if{latex}{\out{\hypertarget{method-debug_log}{}}}
+\if{html}{\out{<a id="method-Chromote-debug_log"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-debug_log}{}}}
 \subsection{Method \code{debug_log()}}{
 Submit debug log message
 \subsection{Usage}{
@@ -317,8 +319,8 @@ b$parent$debug_messages(FALSE)}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-url"></a>}}
-\if{latex}{\out{\hypertarget{method-url}{}}}
+\if{html}{\out{<a id="method-Chromote-url"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-url}{}}}
 \subsection{Method \code{url()}}{
 Create url for a given path
 \subsection{Usage}{
@@ -334,8 +336,8 @@ Create url for a given path
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-is_active"></a>}}
-\if{latex}{\out{\hypertarget{method-is_active}{}}}
+\if{html}{\out{<a id="method-Chromote-is_active"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-is_active}{}}}
 \subsection{Method \code{is_active()}}{
 Retrieve active status
 Once initialized, the value returned is \code{TRUE}. If \verb{$close()} has been
@@ -346,8 +348,8 @@ called, this value will be \code{FALSE}.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_browser"></a>}}
-\if{latex}{\out{\hypertarget{method-get_browser}{}}}
+\if{html}{\out{<a id="method-Chromote-get_browser"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-get_browser}{}}}
 \subsection{Method \code{get_browser()}}{
 Retrieve \code{\link{Browser}}` object
 \subsection{Usage}{
@@ -356,8 +358,8 @@ Retrieve \code{\link{Browser}}` object
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-close"></a>}}
-\if{latex}{\out{\hypertarget{method-close}{}}}
+\if{html}{\out{<a id="method-Chromote-close"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-close}{}}}
 \subsection{Method \code{close()}}{
 Close the \code{\link{Browser}} object
 \subsection{Usage}{
