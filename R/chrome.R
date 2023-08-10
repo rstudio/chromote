@@ -45,29 +45,47 @@ find_chrome <- function() {
 
   path <- NULL
 
-  if (is_mac()) {
-    path <- "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+  path <-
+    if (is_mac()) {
+      inform_if_chrome_not_found(find_chrome_mac())
 
-  } else if (is_windows()) {
-    tryCatch(
-      {
-        path <- utils::readRegistry("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe\\")
-        path <- path[["(Default)"]]
-      },
-      error = function(e) {
-        message("Google Chrome was not found. Set the CHROMOTE_CHROME environment variable to the executable of a Chromium-based browser, such as Google Chrome, Chromium or Brave.")
-        path <<- NULL
-      }
-    )
+    } else if (is_windows()) {
+      inform_if_chrome_not_found(find_chrome_windows())
 
-  } else if (is_linux()) {
-    path <- find_chrome_linux()
+    } else if (is_linux()) {
+      inform_if_chrome_not_found(
+        find_chrome_linux(),
+        searched_for = "`google-chrome` and `chromium-browser` were",
+        extra_advice = "or adding one of these executables to your PATH"
+      )
 
-  } else {
-    message("Platform currently not supported")
-  }
+    } else {
+      message("Platform currently not supported")
+      NULL
+    }
 
   path
+}
+
+find_chrome_windows <- function() {
+  tryCatch(
+    {
+      path <- utils::readRegistry("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe\\")
+      path[["(Default)"]]
+    },
+    error = function(e) {
+      NULL
+    }
+  )
+}
+
+find_chrome_mac <- function() {
+  path_default <- "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+  if (file.exists(path_default)) {
+    return(path_default)
+  }
+
+  find_chrome_linux()
 }
 
 find_chrome_linux <- function() {
@@ -87,7 +105,24 @@ find_chrome_linux <- function() {
     }
   }
 
-  message("`google-chrome` and `chromium-browser` were not found. Try setting the CHROMOTE_CHROME environment variable or adding one of these executables to your PATH.")
+  NULL
+}
+
+inform_if_chrome_not_found <- function(
+  path,
+  searched_for = "Google Chrome was",
+  extra_advice = ""
+) {
+  if (!is.null(path)) return(invisible(path))
+
+  message(
+    searched_for, " not found.",
+    "Try setting the `CHROMOTE_CHROME` environment variable to the executable ",
+    "of a Chromium-based browser, such as Google Chrome, Chromium or Brave",
+    if (nzchar(extra_advice)) " ",
+    extra_advice,
+    "."
+  )
 
   NULL
 }
