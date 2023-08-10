@@ -61,17 +61,7 @@ find_chrome <- function() {
     )
 
   } else if (is_linux()) {
-    path <- Sys.which("google-chrome")
-    if (nchar(path) == 0) {
-      path <- Sys.which("chromium-browser")
-    }
-    if (nchar(path) == 0) {
-      path <- Sys.which("chromium")
-    }
-    if (nchar(path) == 0) {
-      message("`google-chrome` and `chromium-browser` were not found. Try setting the CHROMOTE_CHROME environment variable or adding one of these executables to your PATH.")
-      path <- NULL
-    }
+    path <- find_chrome_linux()
 
   } else {
     message("Platform currently not supported")
@@ -80,6 +70,27 @@ find_chrome <- function() {
   path
 }
 
+find_chrome_linux <- function() {
+  possible_names <- c(
+    "google-chrome",
+    "google-chrome-stable",
+    "chromium-browser",
+    "chromium",
+    "google-chrome-beta",
+    "google-chrome-unstable"
+  )
+
+  for (path in possible_names) {
+    path <- Sys.which(path)
+    if (nzchar(path)) {
+      return(path)
+    }
+  }
+
+  message("`google-chrome` and `chromium-browser` were not found. Try setting the CHROMOTE_CHROME environment variable or adding one of these executables to your PATH.")
+
+  NULL
+}
 
 launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
   if (is.null(path)) {

@@ -4,6 +4,8 @@
 
 * Fixed #99: When the `$view()` method was called, recent versions of Chrome would display `"Debugging connection was closed. Reason: WebSocket disconnected"`. (#101)
 
+* Fixed #89: `find_chrome()` now checks more possible binary names for Chrome or Chromium on Linux. (thanks @brianmsm, #117)
+
 
 # chromote 0.1.1
 
