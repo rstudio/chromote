@@ -43,8 +43,6 @@ find_chrome <- function() {
     return(Sys.getenv("CHROMOTE_CHROME"))
   }
 
-  path <- NULL
-
   path <-
     if (is_mac()) {
       inform_if_chrome_not_found(find_chrome_mac())
