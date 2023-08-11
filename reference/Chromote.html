@@ -321,6 +321,17 @@ corresponding to send the command to.</p></dd>
 </div><p></p><hr><a id="method-Chromote-debug_log"></a><div class="section">
 <h3 id="method-debug-log-">Method <code>debug_log()</code><a class="anchor" aria-label="anchor" href="#method-debug-log-"></a></h3>
 <p>Submit debug log message</p><div class="section">
+<h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
+
+
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">debug_messages</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}</span></span>
+<span><span class="co"># Turn off debug messages</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">debug_messages</span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre><p></p></div>
+</div>
+<div class="section">
 <h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Chromote</span><span class="op">$</span><span class="fu">debug_log</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -333,17 +344,6 @@ corresponding to send the command to.</p></dd>
 
 </dl><p></p></div>
 </div>
-<div class="section">
-<h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{b &lt;- ChromoteSession$new()
-b$parent$debug_messages(TRUE)
-b$Page$navigate("https://www.r-project.org/")
-#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
-# Turn off debug messages
-b$parent$debug_messages(FALSE)}
-</code></pre></div><p></p></div>
-</div>
-
 
 </div><p></p><hr><a id="method-Chromote-url"></a><div class="section">
 <h3 id="method-url-">Method <code><a href="https://rdrr.io/r/base/connections.html" class="external-link">url()</a></code><a class="anchor" aria-label="anchor" href="#method-url-"></a></h3>
@@ -391,24 +391,6 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 
     </div>
 
-    <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `Chromote$debug_log`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">b</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">debug_messages</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'b' not found</span>
-<span class="r-in"><span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'b' not found</span>
-<span class="r-in"><span><span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}</span></span></span>
-<span class="r-in"><span><span class="co"># Turn off debug messages</span></span></span>
-<span class="r-in"><span><span class="va">b</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">debug_messages</span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'b' not found</span>
-</code></pre></div>
-    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
