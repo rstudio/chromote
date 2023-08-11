@@ -53,7 +53,7 @@ Chrome <- R6Class("Chrome",
 #'
 #' ```r
 #' Sys.setenv(
-#'   CHROMOTE_CHROME = "/Applications/Microsoft\ Edge.app/Contents/MacOS/Microsoft\ Edge"
+#'   CHROMOTE_CHROME = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
 #' )
 #' ```
 #'

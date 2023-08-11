@@ -25,7 +25,7 @@ the value without any additional checks. On Mac, for example, one could use
 Microsoft Edge by setting \code{CHROMOTE_CHROME} with the following:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{Sys.setenv(
-  CHROMOTE_CHROME = "/Applications/Microsoft\\ Edge.app/Contents/MacOS/Microsoft\\ Edge"
+  CHROMOTE_CHROME = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
 )
 }\if{html}{\out{</div>}}
 
