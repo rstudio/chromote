@@ -30,19 +30,6 @@ calls to \code{ChromoteSession$new()} will automatically use the same \code{Chro
 This is so that it doesn't start a new browser for every \code{ChromoteSession}
 object that is created.
 }
-\examples{
-
-## ------------------------------------------------
-## Method `Chromote$debug_log`
-## ------------------------------------------------
-
-\dontrun{b <- ChromoteSession$new()
-b$parent$debug_messages(TRUE)
-b$Page$navigate("https://www.r-project.org/")
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
-# Turn off debug messages
-b$parent$debug_messages(FALSE)}
-}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
@@ -293,6 +280,16 @@ If enabled, R will print out the
 \if{latex}{\out{\hypertarget{method-Chromote-debug_log}{}}}
 \subsection{Method \code{debug_log()}}{
 Submit debug log message
+\subsection{Examples}{
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{b <- ChromoteSession$new()
+b$parent$debug_messages(TRUE)
+b$Page$navigate("https://www.r-project.org/")
+#> SEND \{"method":"Page.navigate","params":\{"url":"https://www.r-project.org/"\}| __truncated__\}
+# Turn off debug messages
+b$parent$debug_messages(FALSE)
+}\if{html}{\out{</div>}}
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$debug_log(...)}\if{html}{\out{</div>}}
 }
@@ -304,19 +301,6 @@ Submit debug log message
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{b <- ChromoteSession$new()
-b$parent$debug_messages(TRUE)
-b$Page$navigate("https://www.r-project.org/")
-#> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
-# Turn off debug messages
-b$parent$debug_messages(FALSE)}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Chromote-url"></a>}}

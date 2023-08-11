@@ -26,6 +26,23 @@ ChromoteSession <- R6Class(
   cloneable = FALSE,
   public = list(
     #' @description Create a new `ChromoteSession` object.
+    #'
+    #' ## Examples
+    #'
+    #' ```r
+    #' # Create a new `ChromoteSession` object.
+    #' b <- ChromoteSession$new()
+    #'
+    #' # Create a ChromoteSession with a specific height,width
+    #' b <- ChromoteSession$new(height = 1080, width = 1920)
+    #'
+    #' # Navigate to page
+    #' b$Page$navigate("http://www.r-project.org/")
+    #'
+    #' # View current chromote session
+    #' if (interactive()) b$view()
+    #' ```
+    #'
     #' @param parent [`Chromote`] object to use; defaults to
     #'   [default_chromote_object()]
     #' @param auto_events If `NULL` (the default), use the `auto_events` setting
@@ -36,18 +53,6 @@ ChromoteSession <- R6Class(
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
     #' @return A new `ChromoteSession` object.
-    #' @examples
-    #' \dontrun{# Create a new `ChromoteSession` object.
-    #' b <- ChromoteSession$new()
-    #'
-    #' # Create a ChromoteSession with a specific height,width
-    #' b <- ChromoteSession$new(height = 1080, width = 1920)
-    #'
-    #' # Navigate to page
-    #' b$Page$navigate("http://www.r-project.org/")
-    #'
-    #' # View current chromote session
-    #' if (interactive()) b$view()}
     initialize = function(
       parent = default_chromote_object(),
       width = 992,
@@ -138,15 +143,19 @@ ChromoteSession <- R6Class(
     #' If a [`Chrome`] browser is being used, this method will open a new tab
     #' using your [`Chrome`] browser. When not using a [`Chrome`] browser, set
     #' `options(browser=)` to change the default behavior of [`browseURL()`].
-    #' @examples
-    #' \dontrun{# Create a new `ChromoteSession` object.
+    #'
+    #' ## Examples
+    #'
+    #' ```r
+    #' # Create a new `ChromoteSession` object.
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
     #' b$Page$navigate("http://www.r-project.org/")
     #'
     #' # View current chromote session
-    #' if (interactive()) b$view()}
+    #' if (interactive()) b$view()
+    #' ```
     view = function() {
       tid <- self$Target$getTargetInfo()$targetInfo$targetId
 
@@ -161,18 +170,23 @@ ChromoteSession <- R6Class(
     },
 
     #' @description Close the Chromote session.
-    #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
-    #' when the `ChromoteSession` is closed. Otherwise, block until the
-    #' `ChromoteSession` has closed.
-    #' @examples
-    #' \dontrun{# Create a new `ChromoteSession` object.
+    #'
+    #' ## Examples
+    #'
+    #' ```r
+    #' # Create a new `ChromoteSession` object.
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
     #' b$Page$navigate("http://www.r-project.org/")
     #'
     #' # Close current chromote session
-    #' b$close()}
+    #' b$close()
+    #' ```
+    #'
+    #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
+    #' when the `ChromoteSession` is closed. Otherwise, block until the
+    #' `ChromoteSession` has closed.
     close = function(wait_ = TRUE) {
       p <- self$Target$getTargetInfo(wait_ = FALSE)
       p <- p$then(function(target) {
@@ -199,25 +213,10 @@ ChromoteSession <- R6Class(
 
     #' @description Take a PNG screenshot
     #'
-    #' @param filename File path of where to save the screenshot.
-    #' @param selector CSS selector to use for the screenshot.
-    #' @param cliprect A list containing `x`, `y`, `width`, and `height`. See
-    #' [`Page.Viewport`](https://chromedevtools.github.io/devtools-protocol/tot/Page/#type-Viewport)
-    #' for more information. If provided, `selector` and `expand` will be
-    #' ignored. To provide a scale, use the `scale` parameter.
-    #' @param region CSS region to use for the screenshot.
-    #' @param expand Extra pixels to expand the screenshot. May be a single
-    #' value or a numeric vector of top, right, bottom, left values.
-    #' @param scale Page scale factor
-    #' @param show If `TRUE`, the screenshot will be displayed in the viewer.
-    #' @param delay The number of seconds to wait before taking the screenshot
-    #' after resizing the page. For complicated pages, this may need to be
-    #' increased.
-    #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
-    #' when the `ChromoteSession` has saved the screenshot. Otherwise, block
-    #' until the `ChromoteSession` has saved the screenshot.
-    #' @examples
-    #' \dontrun{# Create a new `ChromoteSession` object.
+    #' ## Examples
+    #'
+    #' ```r
+    #' # Create a new `ChromoteSession` object.
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
@@ -284,7 +283,26 @@ ChromoteSession <- R6Class(
     #' #> www_r-project_org.png
     #' #> github_com.png
     #' #> news_ycombinator_com.png
-    #' #> Done!}
+    #' #> Done!
+    #' ```
+    #'
+    #' @param filename File path of where to save the screenshot.
+    #' @param selector CSS selector to use for the screenshot.
+    #' @param cliprect A list containing `x`, `y`, `width`, and `height`. See
+    #' [`Page.Viewport`](https://chromedevtools.github.io/devtools-protocol/tot/Page/#type-Viewport)
+    #' for more information. If provided, `selector` and `expand` will be
+    #' ignored. To provide a scale, use the `scale` parameter.
+    #' @param region CSS region to use for the screenshot.
+    #' @param expand Extra pixels to expand the screenshot. May be a single
+    #' value or a numeric vector of top, right, bottom, left values.
+    #' @param scale Page scale factor
+    #' @param show If `TRUE`, the screenshot will be displayed in the viewer.
+    #' @param delay The number of seconds to wait before taking the screenshot
+    #' after resizing the page. For complicated pages, this may need to be
+    #' increased.
+    #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
+    #' when the `ChromoteSession` has saved the screenshot. Otherwise, block
+    #' until the `ChromoteSession` has saved the screenshot.
     screenshot = function(
       filename = "screenshot.png",
       selector = "html",
@@ -312,6 +330,23 @@ ChromoteSession <- R6Class(
 
     #' @description Take a PDF screenshot
     #'
+    #' ## Examples
+    #'
+    #' ```r
+    #' # Create a new `ChromoteSession` object.
+    #' b <- ChromoteSession$new()
+    #'
+    #' # Navigate to page
+    #' b$Page$navigate("http://www.r-project.org/")
+    #'
+    #' # Take screenshot
+    #' tmppdffile <- tempfile(fileext = ".pdf")
+    #' b$screenshot_pdf(tmppdffile)
+    #'
+    #' # Show PDF file info
+    #' unlist(file.info(tmppdffile))
+    #' ```
+    #'
     #' @param filename File path of where to save the screenshot.
     #' @param pagesize A single character value in the set `"letter"`,
     #' `"legal"`, `"tabloid"`, `"ledger"` and `"a0"` through `"a1"`. Or a
@@ -327,19 +362,6 @@ ChromoteSession <- R6Class(
     #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
     #' when the `ChromoteSession` has saved the screenshot. Otherwise, block
     #' until the `ChromoteSession` has saved the screnshot.
-    #' @examples
-    #' \dontrun{# Create a new `ChromoteSession` object.
-    #' b <- ChromoteSession$new()
-    #'
-    #' # Navigate to page
-    #' b$Page$navigate("http://www.r-project.org/")
-    #'
-    #' # Take screenshot
-    #' tmppdffile <- tempfile(fileext = ".pdf")
-    #' b$screenshot_pdf(tmppdffile)
-    #'
-    #' # Show PDF file info
-    #' unlist(file.info(tmppdffile))}
     screenshot_pdf = function(
       filename = "screenshot.pdf",
       pagesize = "letter",
@@ -367,29 +389,37 @@ ChromoteSession <- R6Class(
 
     #' @description Create a new tab / window
     #'
-    #' @param width,height Width and height of the new window.
-    #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
-    #' when the `ChromoteSession` has created a new session. Otherwise, block
-    #' until the `ChromoteSession` has created a new session.
-    #' @examples
-    #' \dontrun{b1 <- ChromoteSession$new()
+    #' ## Examples
+    #'
+    #' ```r
+    #' b1 <- ChromoteSession$new()
     #' b1$Page$navigate("http://www.google.com")
     #' b2 <- b1$new_session()
     #' b2$Page$navigate("http://www.r-project.org/")
     #' b1$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
     #' #> [1] "https://www.google.com/"
     #' b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
-    #' #> [1] "https://www.r-project.org/"}
+    #' #> [1] "https://www.r-project.org/"
+    #' ```
+    #'
+    #' @param width,height Width and height of the new window.
+    #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
+    #' when the `ChromoteSession` has created a new session. Otherwise, block
+    #' until the `ChromoteSession` has created a new session.
     new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
       self$parent$new_session(width = width, height = height, targetId = targetId, wait_ = wait_)
     },
 
     #' @description
     #' Retrieve the session id
-    #' @examples
-    #' \dontrun{b <- ChromoteSession$new()
+    #'
+    #' ## Examples
+    #'
+    #' ```r
+    #' b <- ChromoteSession$new()
     #' b$get_session_id()
-    #' #> [1] "05764F1D439F4292497A21C6526575DA"}
+    #' #> [1] "05764F1D439F4292497A21C6526575DA"
+    #' ```
     get_session_id = function() {
       private$session_id
     },
@@ -399,16 +429,21 @@ ChromoteSession <- R6Class(
     #' session until the provided promise resolves. The loop from
     #' `$get_child_loop()` will only advance just far enough for the promise to
     #' resolve.
-    #' @param p A promise to resolve.
-    #' @examples
-    #' \dontrun{b <- ChromoteSession$new()
+    #'
+    #' ## Examples
+    #'
+    #' ```r
+    #' b <- ChromoteSession$new()
     #'
     #' # Async with promise
     #' p <- b$Browser$getVersion(wait_ = FALSE)
     #' p$then(str)
     #'
     #' # Async with callback
-    #' b$Browser$getVersion(wait_ = FALSE, callback_ = str)}
+    #' b$Browser$getVersion(wait_ = FALSE, callback_ = str)
+    #' ```
+    #'
+    #' @param p A promise to resolve.
     wait_for = function(p) {
       self$parent$wait_for(p)
     },
@@ -416,14 +451,18 @@ ChromoteSession <- R6Class(
     #' @description
     #' Send a debug log message to the parent [Chromote] object
     #'
-    #' @param ... Arguments pasted together with `paste0(..., collapse = "")`.
-    #' @examples
-    #' \dontrun{b <- ChromoteSession$new()
+    #' ## Examples
+    #'
+    #' ```r
+    #' b <- ChromoteSession$new()
     #' b$parent$debug_messages(TRUE)
     #' b$Page$navigate("https://www.r-project.org/")
     #' #> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
     #' # Turn off debug messages
-    #' b$parent$debug_messages(FALSE)}
+    #' b$parent$debug_messages(FALSE)
+    #' ```
+    #'
+    #' @param ... Arguments pasted together with `paste0(..., collapse = "")`.
     debug_log = function(...) {
       self$parent$debug_log(...)
     },
