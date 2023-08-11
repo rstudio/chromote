@@ -6,6 +6,36 @@
 \usage{
 find_chrome()
 }
+\value{
+A character vector with the value of \code{CHROMOTE_CHROME}, or a path to
+the discovered Chrome executable. If no path to is found, \code{find_chrome()}
+returns \code{NULL}.
+}
 \description{
-Find path to Chrome or Chromium browser
+\pkg{chromote} requires a Chrome- or Chromium-based browser with support for
+the Chrome DevTools Protocol. There are many such browser variants,
+including \href{https://www.google.com/chrome/}{Google Chrome},
+\href{https://www.chromium.org/chromium-projects/}{Chromium},
+\href{https://www.microsoft.com/en-us/edge/}{Microsoft Edge} and others.
+
+If you want \pkg{chromote} to use a specific browser, set the
+\code{CHROMOTE_CHROME} environment variable to the full path to the browser's
+executable. Note that when \code{CHROMOTE_CHROME} is set, \pkg{chromote} will use
+the value without any additional checks. On Mac, for example, one could use
+Microsoft Edge by setting \code{CHROMOTE_CHROME} with the following:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{Sys.setenv(
+  CHROMOTE_CHROME = "/Applications/Microsoft\\ Edge.app/Contents/MacOS/Microsoft\\ Edge"
+)
+}\if{html}{\out{</div>}}
+
+When \code{CHROMOTE_CHROME} is not set, \code{find_chrome()} will attempt to find a
+reasonable executable. On Windows, \code{find_chrome()} consults the registry to
+find \code{chrome.exe}. On Mac, it looks for \verb{Google Chrome} in the
+\verb{/Applications} folder (or tries the same checks as on Linux). On Linux, it
+searches for several common executable names.
+}
+\examples{
+find_chrome()
+
 }
