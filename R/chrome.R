@@ -182,7 +182,8 @@ launch_chrome_impl <- function(path, args, port) {
   )
 
   connected <- FALSE
-  end <- Sys.time() + 10
+  timeout <- getOption("chromote.timeout", 10)
+  end <- Sys.time() + timeout
   while (!connected && Sys.time() < end) {
     if (!p$is_alive()) {
       stop(
@@ -216,7 +217,7 @@ launch_chrome_impl <- function(path, args, port) {
 
   if (!connected) {
     rlang::abort(
-      "Chrome debugging port not open after 10 seconds.",
+      paste("Chrome debugging port not open after", timeout, "seconds."),
       class = "error_stop_port_search"
     )
   }
