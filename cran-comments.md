@@ -1,6 +1,6 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 1 notes
+0 errors | 0 warnings | 1 note
 
 Updated email address of maintainer: winston@posit.co
 
