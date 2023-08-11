@@ -71,8 +71,12 @@ Chromote <- R6Class(
               promise(function(resolve, reject) {
                 private$ws$onOpen(resolve)
               }),
-              10,
-              timeout_message = "Chromote: timed out waiting for WebSocket connection to browser."
+              timeout = getOption("chromote.timeout", 10),
+              timeout_message = paste0(
+                "Chromote: timed out waiting for WebSocket connection to browser. ",
+                "Use `options(chromote.timeout = ", getOption("chromote.timeout", 10), ")` ",
+                "to increase the timeout."
+              )
             )
           })
 
