@@ -29,11 +29,11 @@ Microsoft Edge by setting \code{CHROMOTE_CHROME} with the following:
 )
 }\if{html}{\out{</div>}}
 
-When \code{CHROMOTE_CHROME} is not set, \code{find_chrome()} will attempt to find a
-reasonable executable. On Windows, \code{find_chrome()} consults the registry to
-find \code{chrome.exe}. On Mac, it looks for \verb{Google Chrome} in the
-\verb{/Applications} folder (or tries the same checks as on Linux). On Linux, it
-searches for several common executable names.
+When \code{CHROMOTE_CHROME} is not set, \code{find_chrome()} will perform a limited
+search to find a reasonable executable. On Windows, \code{find_chrome()} consults
+the registry to find \code{chrome.exe}. On Mac, it looks for \verb{Google Chrome} in
+the \verb{/Applications} folder (or tries the same checks as on Linux). On Linux,
+it searches for several common executable names.
 }
 \examples{
 find_chrome()

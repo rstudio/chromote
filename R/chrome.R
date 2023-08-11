@@ -57,11 +57,11 @@ Chrome <- R6Class("Chrome",
 #' )
 #' ```
 #'
-#' When `CHROMOTE_CHROME` is not set, `find_chrome()` will attempt to find a
-#' reasonable executable. On Windows, `find_chrome()` consults the registry to
-#' find `chrome.exe`. On Mac, it looks for `Google Chrome` in the
-#' `/Applications` folder (or tries the same checks as on Linux). On Linux, it
-#' searches for several common executable names.
+#' When `CHROMOTE_CHROME` is not set, `find_chrome()` will perform a limited
+#' search to find a reasonable executable. On Windows, `find_chrome()` consults
+#' the registry to find `chrome.exe`. On Mac, it looks for `Google Chrome` in
+#' the `/Applications` folder (or tries the same checks as on Linux). On Linux,
+#' it searches for several common executable names.
 #'
 #' @examples
 #' find_chrome()
