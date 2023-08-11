@@ -147,7 +147,7 @@ inform_if_chrome_not_found <- function(
   if (!is.null(path)) return(invisible(path))
 
   message(
-    searched_for, " not found.",
+    searched_for, " not found. ",
     "Try setting the `CHROMOTE_CHROME` environment variable to the executable ",
     "of a Chromium-based browser, such as Google Chrome, Chromium or Brave",
     if (nzchar(extra_advice)) " ",
