@@ -43,43 +43,87 @@ find_chrome <- function() {
     return(Sys.getenv("CHROMOTE_CHROME"))
   }
 
-  path <- NULL
+  path <-
+    if (is_mac()) {
+      inform_if_chrome_not_found(find_chrome_mac())
 
-  if (is_mac()) {
-    path <- "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+    } else if (is_windows()) {
+      inform_if_chrome_not_found(find_chrome_windows())
 
-  } else if (is_windows()) {
-    tryCatch(
-      {
-        path <- utils::readRegistry("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe\\")
-        path <- path[["(Default)"]]
-      },
-      error = function(e) {
-        message("Google Chrome was not found. Set the CHROMOTE_CHROME environment variable to the executable of a Chromium-based browser, such as Google Chrome, Chromium or Brave.")
-        path <<- NULL
-      }
-    )
+    } else if (is_linux()) {
+      inform_if_chrome_not_found(
+        find_chrome_linux(),
+        searched_for = "`google-chrome` and `chromium-browser` were",
+        extra_advice = "or adding one of these executables to your PATH"
+      )
 
-  } else if (is_linux()) {
-    path <- Sys.which("google-chrome")
-    if (nchar(path) == 0) {
-      path <- Sys.which("chromium-browser")
+    } else {
+      message("Platform currently not supported")
+      NULL
     }
-    if (nchar(path) == 0) {
-      path <- Sys.which("chromium")
-    }
-    if (nchar(path) == 0) {
-      message("`google-chrome` and `chromium-browser` were not found. Try setting the CHROMOTE_CHROME environment variable or adding one of these executables to your PATH.")
-      path <- NULL
-    }
-
-  } else {
-    message("Platform currently not supported")
-  }
 
   path
 }
 
+find_chrome_windows <- function() {
+  tryCatch(
+    {
+      path <- utils::readRegistry("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe\\")
+      path[["(Default)"]]
+    },
+    error = function(e) {
+      NULL
+    }
+  )
+}
+
+find_chrome_mac <- function() {
+  path_default <- "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+  if (file.exists(path_default)) {
+    return(path_default)
+  }
+
+  find_chrome_linux()
+}
+
+find_chrome_linux <- function() {
+  possible_names <- c(
+    "google-chrome",
+    "google-chrome-stable",
+    "chromium-browser",
+    "chromium",
+    "google-chrome-beta",
+    "google-chrome-unstable"
+  )
+
+  for (path in possible_names) {
+    path <- Sys.which(path)
+    if (nzchar(path)) {
+      return(path)
+    }
+  }
+
+  NULL
+}
+
+inform_if_chrome_not_found <- function(
+  path,
+  searched_for = "Google Chrome was",
+  extra_advice = ""
+) {
+  if (!is.null(path)) return(invisible(path))
+
+  message(
+    searched_for, " not found.",
+    "Try setting the `CHROMOTE_CHROME` environment variable to the executable ",
+    "of a Chromium-based browser, such as Google Chrome, Chromium or Brave",
+    if (nzchar(extra_advice)) " ",
+    extra_advice,
+    "."
+  )
+
+  NULL
+}
 
 launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
   if (is.null(path)) {
