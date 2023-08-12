@@ -16,7 +16,7 @@ returns \code{NULL}.
 the Chrome DevTools Protocol. There are many such browser variants,
 including \href{https://www.google.com/chrome/}{Google Chrome},
 \href{https://www.chromium.org/chromium-projects/}{Chromium},
-\href{https://www.microsoft.com/en-us/edge/}{Microsoft Edge} and others.
+\href{https://www.microsoft.com/en-us/edge}{Microsoft Edge} and others.
 
 If you want \pkg{chromote} to use a specific browser, set the
 \code{CHROMOTE_CHROME} environment variable to the full path to the browser's

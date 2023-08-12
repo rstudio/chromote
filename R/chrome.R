@@ -43,7 +43,7 @@ Chrome <- R6Class("Chrome",
 #' the Chrome DevTools Protocol. There are many such browser variants,
 #' including [Google Chrome](https://www.google.com/chrome/),
 #' [Chromium](https://www.chromium.org/chromium-projects/),
-#' [Microsoft Edge](https://www.microsoft.com/en-us/edge/) and others.
+#' [Microsoft Edge](https://www.microsoft.com/en-us/edge) and others.
 #'
 #' If you want \pkg{chromote} to use a specific browser, set the
 #' `CHROMOTE_CHROME` environment variable to the full path to the browser's
