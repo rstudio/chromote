@@ -4,6 +4,10 @@
 # can have more than one session connected to it.
 
 #' ChromoteSession class
+#'
+#' @description
+#' ChromoteSession class
+#'
 #' @export
 #' @param timeout_ Number of seconds for \pkg{chromote} to wait for a Chrome
 #' DevTools Protocol response. If `timeout_` is [`rlang::missing_arg()`] and

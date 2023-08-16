@@ -5,8 +5,6 @@
 \title{ChromoteSession class}
 \description{
 ChromoteSession class
-
-ChromoteSession class
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
