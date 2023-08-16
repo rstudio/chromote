@@ -4,13 +4,9 @@
 \alias{Chromote}
 \title{Chromote class}
 \description{
-Chromote class
-
-Chromote class
+This class represents the browser as a whole.
 }
 \details{
-This class represents the browser as a whole.
-
 A \code{Chromote} object represents the browser as a whole, and it can have
 multiple \emph{targets}, which each represent a browser tab. In the Chrome
 DevTools Protocol, each target can have one or more debugging \emph{sessions} to
