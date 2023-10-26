@@ -177,6 +177,7 @@ chromote_session_screenshot <- function(
 
 screenshot_format <- function(filename) {
   ext <- strsplit(filename, ".", fixed = TRUE)[[1]]
+  if (length(ext) < 2) ext <- "no_ext"
   ext <- ext[length(ext)]
 
   switch(
@@ -188,8 +189,11 @@ screenshot_format <- function(filename) {
     pdf = rlang::abort(
       "Use the `screenshot_pdf()` method to capture a PDF screenshot."
     ),
+    no_ext = rlang::abort(
+      sprintf('Could not guess screenshot format from filename "%s". Does the name include a file extension?', filename)
+    ),
     rlang::abort(
-      sprintf('"%s" is not a supported screenshot format', ext)
+      sprintf('"%s" is not a supported screenshot format.', ext)
     )
   )
 }
