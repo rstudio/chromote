@@ -50,6 +50,9 @@ chromote_session_screenshot <- function(
     captureBeyondViewport = TRUE
   )
   screenshot_args <- utils::modifyList(screenshot_arg_defaults, options)
+  if (is.null(screenshot_args$format)) {
+    screenshot_args$format <- screenshot_format(filename)
+  }
 
   # These vars are used to store information gathered from one step to use
   # in a later step.
@@ -172,6 +175,24 @@ chromote_session_screenshot <- function(
   }
 }
 
+screenshot_format <- function(filename) {
+  ext <- strsplit(filename, ".", fixed = TRUE)[[1]]
+  ext <- ext[length(ext)]
+
+  switch(
+    tolower(ext),
+    png = "png",
+    jpg = ,
+    jpeg = "jpeg",
+    webp = "webp",
+    pdf = rlang::abort(
+      "Use the `screenshot_pdf()` method to capture a PDF screenshot."
+    ),
+    rlang::abort(
+      sprintf('"%s" is not a supported screenshot format', ext)
+    )
+  )
+}
 
 
 chromote_session_screenshot_pdf <- function(

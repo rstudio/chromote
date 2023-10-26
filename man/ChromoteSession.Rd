@@ -257,7 +257,12 @@ b$wait_for(pa)
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{filename}}{File path of where to save the screenshot.}
+\item{\code{filename}}{File path of where to save the screenshot. The format of
+the screenshot is inferred from the file extension; use
+\code{options = list(format = "jpeg")} to manually choose the format. See
+\href{https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot}{\code{Page.captureScreenshot}}
+for supported formats; at the time of this release the format options
+were \code{"png"} (default), \code{"jpeg"}, or \code{"webp"}.}
 
 \item{\code{selector}}{CSS selector to use for the screenshot.}
 
