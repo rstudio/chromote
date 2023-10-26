@@ -8,6 +8,7 @@ chromote_session_screenshot <- function(
   scale = 1,
   show = FALSE,
   delay = 0.5,
+  options = list(),
   wait_ = TRUE
 ) {
   force(filename)
@@ -39,6 +40,17 @@ chromote_session_screenshot <- function(
     expand <- rep(expand, 4)
   }
 
+  stopifnot(
+    "`options` must be a list" = rlang::is_list(options),
+    "`options` must be named" = rlang::is_named2(options())
+  )
+  screenshot_args <- list(
+    fromSurface = TRUE,
+    captureBeyondViewport = TRUE
+  )
+  for (arg_name in names(options)) {
+    screenshot_args[[arg_name]] <- options[[arg_name]]
+  }
 
   # These vars are used to store information gathered from one step to use
   # in a later step.
@@ -91,18 +103,16 @@ chromote_session_screenshot <- function(
         ymin <- max(ymin, 0)
         ymax <- min(ymax, overall_height)
 
-        self$Page$captureScreenshot(
-          clip = list(
-            x = xmin,
-            y = ymin,
-            width  = xmax - xmin,
-            height = ymax - ymin,
-            scale = scale / private$pixel_ratio
-          ),
-          fromSurface = TRUE,
-          captureBeyondViewport = TRUE,
-          wait_ = FALSE
+        screenshot_args$clip <- list(
+          x = xmin,
+          y = ymin,
+          width  = xmax - xmin,
+          height = ymax - ymin,
+          scale = scale / private$pixel_ratio
         )
+        screenshot_args$wait_ <- FALSE
+
+        do.call(self$Page$captureScreenshot, screenshot_args)
       })$
       then(function(value) {
         image_data <<- value
@@ -112,18 +122,16 @@ chromote_session_screenshot <- function(
     # If cliprect was provided, use it instead of selector
     p <- p$
       then(function(value) {
-        self$Page$captureScreenshot(
-          clip = list(
-            x = cliprect[[1]],
-            y = cliprect[[2]],
-            width  = cliprect[[3]],
-            height = cliprect[[4]],
-            scale = scale / private$pixel_ratio
-          ),
-          fromSurface = TRUE,
-          captureBeyondViewport = TRUE,
-          wait_ = FALSE
+        screenshot_args$clip <- list(
+          x = cliprect[[1]],
+          y = cliprect[[2]],
+          width  = cliprect[[3]],
+          height = cliprect[[4]],
+          scale = scale / private$pixel_ratio
         )
+        screenshot_args$wait_ <- FALSE
+
+        do.call(self$Page$captureScreenshot, screenshot_args)
       })$
       then(function(value) {
         image_data <<- value
