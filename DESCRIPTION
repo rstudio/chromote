@@ -23,6 +23,7 @@ Imports:
     promises (>= 1.1.1),
     R6,
     rlang,
+    utils,
     websocket (>= 1.2.0)
 Suggests:
     showimage,

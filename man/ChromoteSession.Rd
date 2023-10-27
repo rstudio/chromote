@@ -249,6 +249,7 @@ b$wait_for(pa)
   scale = 1,
   show = FALSE,
   delay = 0.5,
+  options = list(),
   wait_ = TRUE
 )}\if{html}{\out{</div>}}
 }
@@ -277,6 +278,9 @@ value or a numeric vector of top, right, bottom, left values.}
 \item{\code{delay}}{The number of seconds to wait before taking the screenshot
 after resizing the page. For complicated pages, this may need to be
 increased.}
+
+\item{\code{options}}{Additional options passed to
+\href{https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot}{\code{Page.captureScreenshot}}.}
 
 \item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} that will resolve
 when the \code{ChromoteSession} has saved the screenshot. Otherwise, block

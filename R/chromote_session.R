@@ -300,6 +300,8 @@ ChromoteSession <- R6Class(
     #' @param delay The number of seconds to wait before taking the screenshot
     #' after resizing the page. For complicated pages, this may need to be
     #' increased.
+    #' @param options Additional options passed to
+    #'   [`Page.captureScreenshot`](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot).
     #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
     #' when the `ChromoteSession` has saved the screenshot. Otherwise, block
     #' until the `ChromoteSession` has saved the screenshot.
@@ -312,6 +314,7 @@ ChromoteSession <- R6Class(
       scale = 1,
       show = FALSE,
       delay = 0.5,
+      options = list(),
       wait_ = TRUE
     ) {
       chromote_session_screenshot(
@@ -324,6 +327,7 @@ ChromoteSession <- R6Class(
         scale = scale,
         show = show,
         delay = delay,
+        options = options,
         wait_ = wait_
       )
     },
