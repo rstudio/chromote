@@ -45,13 +45,11 @@ chromote_session_screenshot <- function(
     "`options` must be named" = rlang::is_named2(options)
   )
   # Set up arg list from defaults & user options to pass to `Page$captureScreenshot`
-  screenshot_args <- list(
+  screenshot_arg_defaults <- list(
     fromSurface = TRUE,
     captureBeyondViewport = TRUE
   )
-  for (arg_name in names(options)) {
-    screenshot_args[[arg_name]] <- options[[arg_name]]
-  }
+  screenshot_args <- utils::modifyList(screenshot_arg_defaults, options)
 
   # These vars are used to store information gathered from one step to use
   # in a later step.
