@@ -286,7 +286,12 @@ ChromoteSession <- R6Class(
     #' #> Done!
     #' ```
     #'
-    #' @param filename File path of where to save the screenshot.
+    #' @param filename File path of where to save the screenshot. The format of
+    #'   the screenshot is inferred from the file extension; use
+    #'   `options = list(format = "jpeg")` to manually choose the format. See
+    #'   [`Page.captureScreenshot`](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot)
+    #'   for supported formats; at the time of this release the format options
+    #'   were `"png"` (default), `"jpeg"`, or `"webp"`.
     #' @param selector CSS selector to use for the screenshot.
     #' @param cliprect A list containing `x`, `y`, `width`, and `height`. See
     #' [`Page.Viewport`](https://chromedevtools.github.io/devtools-protocol/tot/Page/#type-Viewport)
