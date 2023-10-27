@@ -42,7 +42,7 @@ chromote_session_screenshot <- function(
 
   stopifnot(
     "`options` must be a list" = rlang::is_list(options),
-    "`options` must be named" = rlang::is_named2(options())
+    "`options` must be named" = rlang::is_named2(options)
   )
   # Set up arg list from defaults & user options to pass to `Page$captureScreenshot`
   screenshot_args <- list(
