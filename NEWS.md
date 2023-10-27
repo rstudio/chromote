@@ -1,5 +1,7 @@
 # chromote (development version)
 
+* `ChromoteSession$screenshot()` gains an `options` argument that accepts a list of additional options to be passed to the Chrome Devtools Protocol's [`Page.captureScreenshot` method](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot). (#129)
+
 # chromote 0.1.2
 
 * Fixed #109: An error would occur when a `Chromote` object's `$close()` method was called. (#110)
