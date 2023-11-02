@@ -826,24 +826,41 @@
 <p>If a vector is passed to <code>selector</code>, it will take a screenshot with a rectangle that encompasses all the DOM elements picked out by the selectors. Similarly, if a selector picks out multiple DOM elements, all of them will be in the screenshot region.</p>
 </div>
 <div class="section level3">
+<h3 id="setting-width-and-height-of-the-viewport-window">Setting width and height of the viewport (window)<a class="anchor" aria-label="anchor" href="#setting-width-and-height-of-the-viewport-window"></a>
+</h3>
+<p>The default size of a <code>ChromoteSession</code> viewport is 992 by 1323 pixels. You can set the width and height when it is created:</p>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">390</span>, height <span class="op">=</span> <span class="fl">844</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"narrow.png"</span><span class="op">)</span></span></code></pre></div>
+<p>With an existing <code>ChromoteSession</code>, you can set the size with <code>b$Emulation$setVisibleSize()</code>:</p>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">b</span><span class="op">$</span><span class="va">Emulation</span><span class="op">$</span><span class="fu">setVisibleSize</span><span class="op">(</span>width<span class="op">=</span><span class="fl">1600</span>, height<span class="op">=</span><span class="fl">900</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"wide.png"</span><span class="op">)</span></span></code></pre></div>
+<p>You can take a “Retina” (double) resolution screenshot by using <code>b$screenshot(scale=2)</code>:</p>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"wide-2x.png"</span>, scale <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="taking-a-screenshot-of-a-web-page-after-interacting-with-it">Taking a screenshot of a web page after interacting with it<a class="anchor" aria-label="anchor" href="#taking-a-screenshot-of-a-web-page-after-interacting-with-it"></a>
 </h3>
 <p>Headless Chrome provides a remote debugging UI which you can use to interact with the web page. The ChromoteSession’s <code>$view()</code> method opens a regular browser and navigates to the remote debugging UI.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.google.com"</span><span class="op">)</span> <span class="co"># Or just type the URL in the navigation bar</span></span></code></pre></div>
 <p>At this point, you can interact with the web page by typing in text and clicking on things.</p>
 <p>Then take a screenshot:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="taking-screenshots-of-web-pages-in-parallel">Taking screenshots of web pages in parallel<a class="anchor" aria-label="anchor" href="#taking-screenshots-of-web-pages-in-parallel"></a>
 </h3>
 <p>With async code, it’s possible to navigate to and take screenshots of multiple websites in parallel.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/promises/" class="external-link">promises</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">urls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -893,7 +910,7 @@
 <h3 id="setting-custom-headers">Setting custom headers<a class="anchor" aria-label="anchor" href="#setting-custom-headers"></a>
 </h3>
 <p>Currently setting custom headers requires a little extra work because it requires <code>Network.enable</code> be called before using it. In the future we’ll streamline things so that it will happen automatically.</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co"># Currently need to manually enable Network domain notifications. Calling</span></span>
 <span><span class="co"># b$Network$enable() would do it, but calling it directly will bypass the</span></span>
@@ -930,7 +947,7 @@
 <h3 id="custom-user-agent">Custom User-Agent<a class="anchor" aria-label="anchor" href="#custom-user-agent"></a>
 </h3>
 <p>Synchronous version:</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ==== Synchronous version ====</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Network</span><span class="op">$</span><span class="fu">setUserAgentOverride</span><span class="op">(</span>userAgent <span class="op">=</span> <span class="st">"My fake browser"</span><span class="op">)</span></span>
 <span></span>
@@ -950,7 +967,7 @@
 <h3 id="extracting-text-from-a-web-page">Extracting text from a web page<a class="anchor" aria-label="anchor" href="#extracting-text-from-a-web-page"></a>
 </h3>
 <p>One way to extract text from a page is to tell the browser to run JavaScript code that does it:</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ==== Synchronous version ====</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span>
 <span></span>
@@ -972,7 +989,7 @@
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">value</span><span class="op">$</span><span class="va">result</span><span class="op">$</span><span class="va">value</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>Another way is to use CDP commands to extract content from the DOM. This does not require executing JavaScript in the browser’s context, but it is also not as flexible as JavaScript.</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ==== Synchronous version ====</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">getDocument</span><span class="op">(</span><span class="op">)</span></span>
@@ -1012,18 +1029,18 @@
 <p>There are two ways to capture the cookies.</p>
 <p><strong>Method 1:</strong> The first method uses the headless browser’s viewer. This can be a bit inconvenient because it requires going through the entire login process, even if you have already logged in with a normal browser.</p>
 <p>First navigate to the page:</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://beta.rstudioconnect.com/content/123456/"</span><span class="op">)</span></span></code></pre></div>
 <p>Next, log in interactively via the viewer. Once that’s done, use Chromote to capture the cookies.</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cookies</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Network</span><span class="op">$</span><span class="fu">getCookies</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">cookies</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">cookies</span>, <span class="st">"cookies.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>After saving the cookies, you can restart R and navigate to the page, using the cookies.</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
@@ -1035,17 +1052,17 @@
 <p><strong>Method 2:</strong> The second method captures the cookies using a normal browser. This is can be more convenient because, if you are already logged in, you don’t need to do it again. This requires a Chromium-based browser, and it requires running DevTools-in-DevTools on that browser.</p>
 <p>First, navigate to the page in your browser. Then press CMD-Option-I (Mac) or Ctrl-Shift-I (Windows/Linux). The developer tools panel will open. Make sure to undock the developer tools so that they are in their own window. Then press CMD-Option-I or Ctrl-Shift-I again. A second developer tools window will open. (See <a href="https://stackoverflow.com/questions/12291138/how-do-you-inspect-the-web-inspector-in-chrome/12291163#12291163" class="external-link">this SO answer</a> for detailed instructions.)</p>
 <p>In the second developer tools window, run the following:</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a><span class="kw">var</span> cookies <span class="op">=</span> <span class="cf">await</span> Main<span class="op">.</span><span class="fu">sendOverProtocol</span>(<span class="st">'Network.getCookies'</span><span class="op">,</span> {})</span>
-<span id="cb61-2"><a href="#cb61-2" tabindex="-1"></a><span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(cookies)</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a><span class="kw">var</span> cookies <span class="op">=</span> <span class="cf">await</span> Main<span class="op">.</span><span class="fu">sendOverProtocol</span>(<span class="st">'Network.getCookies'</span><span class="op">,</span> {})</span>
+<span id="cb64-2"><a href="#cb64-2" tabindex="-1"></a><span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(cookies)</span></code></pre></div>
 <p>This will return a JSON string representing the cookies for that page. For example:</p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a><span class="ot">[</span><span class="fu">{</span><span class="dt">"cookies"</span><span class="fu">:</span><span class="ot">[</span><span class="fu">{</span><span class="dt">"name"</span><span class="fu">:</span><span class="st">"AWSALB"</span><span class="fu">,</span><span class="dt">"value"</span><span class="fu">:</span><span class="st">"T3dNdcdnMasdf/cNn0j+JHMVkZ3RI8mitnAggd9AlPsaWJdsfoaje/OowIh0qe3dDPiHc0mSafe5jNH+1Aeinfalsd30AejBZDYwE"</span><span class="fu">,</span><span class="dt">"domain"</span><span class="fu">:</span><span class="st">"beta.rstudioconnect.com"</span><span class="fu">,</span><span class="dt">"path"</span><span class="fu">:</span><span class="st">"/"</span><span class="fu">,</span><span class="dt">"expires"</span><span class="fu">:</span><span class="fl">1594632233.96943</span><span class="fu">,</span><span class="dt">"size"</span><span class="fu">:</span><span class="dv">130</span><span class="fu">,</span><span class="dt">"httpOnly"</span><span class="fu">:</span><span class="kw">false</span><span class="fu">,</span><span class="dt">"secure"</span><span class="fu">:</span><span class="kw">false</span><span class="fu">,</span><span class="dt">"session"</span><span class="fu">:</span><span class="kw">false</span><span class="fu">}</span><span class="ot">]</span><span class="fu">}</span><span class="ot">]</span></span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a><span class="ot">[</span><span class="fu">{</span><span class="dt">"cookies"</span><span class="fu">:</span><span class="ot">[</span><span class="fu">{</span><span class="dt">"name"</span><span class="fu">:</span><span class="st">"AWSALB"</span><span class="fu">,</span><span class="dt">"value"</span><span class="fu">:</span><span class="st">"T3dNdcdnMasdf/cNn0j+JHMVkZ3RI8mitnAggd9AlPsaWJdsfoaje/OowIh0qe3dDPiHc0mSafe5jNH+1Aeinfalsd30AejBZDYwE"</span><span class="fu">,</span><span class="dt">"domain"</span><span class="fu">:</span><span class="st">"beta.rstudioconnect.com"</span><span class="fu">,</span><span class="dt">"path"</span><span class="fu">:</span><span class="st">"/"</span><span class="fu">,</span><span class="dt">"expires"</span><span class="fu">:</span><span class="fl">1594632233.96943</span><span class="fu">,</span><span class="dt">"size"</span><span class="fu">:</span><span class="dv">130</span><span class="fu">,</span><span class="dt">"httpOnly"</span><span class="fu">:</span><span class="kw">false</span><span class="fu">,</span><span class="dt">"secure"</span><span class="fu">:</span><span class="kw">false</span><span class="fu">,</span><span class="dt">"session"</span><span class="fu">:</span><span class="kw">false</span><span class="fu">}</span><span class="ot">]</span><span class="fu">}</span><span class="ot">]</span></span></code></pre></div>
 <p>Copy that string to the clipboard. In your R session, you can paste it to this code, surrounded by single-quotes:</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cookie_json</span> <span class="op">&lt;-</span> <span class="st">'[{"cookies":[{"name":"AWSALB","value":"T3dNdcdnMasdf/cNn0j+JHMVkZ3RI8mitnAggd9AlPsaWJdsfoaje/OowIh0qe3dDPiHc0mSafe5jNH+1Aeinfalsd30AejBZDYwE","domain":"beta.rstudioconnect.com","path":"/","expires":1594632233.96943,"size":130,"httpOnly":false,"secure":false,"session":false}]}]'</span></span>
 <span></span>
 <span><span class="va">cookies</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">cookie_json</span>, simplifyVector <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>Then you can use Chromote to navigate to the page and take a screenshot.</p>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>

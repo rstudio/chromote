@@ -46,7 +46,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="chromote-development-version">chromote (development version)<a class="anchor" aria-label="anchor" href="#chromote-development-version"></a></h2>
-</div>
+<ul><li><p><code>ChromoteSession$screenshot()</code> gains an <code>options</code> argument that accepts a list of additional options to be passed to the Chrome Devtools Protocol’s <a href="https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot" class="external-link"><code>Page.captureScreenshot</code> method</a>. (<a href="https://github.com/rstudio/chromote/issues/129" class="external-link">#129</a>)</p></li>
+<li><p><code>ChromoteSession$screenshot()</code> will now infer the image format from the <code>filename</code> extension. Alternatively, you can specify the <code>format</code> in the list passed to <code>options</code>. (<a href="https://github.com/rstudio/chromote/issues/130" class="external-link">#130</a>)</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.2" id="chromote-012">chromote 0.1.2<a class="anchor" aria-label="anchor" href="#chromote-012"></a></h2><p class="text-muted">CRAN release: 2023-08-11</p>
 <ul><li><p>Fixed <a href="https://github.com/rstudio/chromote/issues/109" class="external-link">#109</a>: An error would occur when a <code>Chromote</code> object’s <code>$close()</code> method was called. (<a href="https://github.com/rstudio/chromote/issues/110" class="external-link">#110</a>)</p></li>

@@ -308,6 +308,7 @@ when the <code>ChromoteSession</code> is closed. Otherwise, block until the
 <span>  scale <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  show <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  delay <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  wait_ <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -315,7 +316,12 @@ when the <code>ChromoteSession</code> is closed. Otherwise, block until the
 <div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>filename</code></dt>
-<dd><p>File path of where to save the screenshot.</p></dd>
+<dd><p>File path of where to save the screenshot. The format of
+the screenshot is inferred from the file extension; use
+<code>options = list(format = "jpeg")</code> to manually choose the format. See
+<a href="https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot" class="external-link"><code>Page.captureScreenshot</code></a>
+for supported formats; at the time of this release the format options
+were <code>"png"</code> (default), <code>"jpeg"</code>, or <code>"webp"</code>.</p></dd>
 
 
 <dt><code>selector</code></dt>
@@ -350,6 +356,11 @@ value or a numeric vector of top, right, bottom, left values.</p></dd>
 <dd><p>The number of seconds to wait before taking the screenshot
 after resizing the page. For complicated pages, this may need to be
 increased.</p></dd>
+
+
+<dt><code>options</code></dt>
+<dd><p>Additional options passed to
+<a href="https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot" class="external-link"><code>Page.captureScreenshot</code></a>.</p></dd>
 
 
 <dt><code>wait_</code></dt>
