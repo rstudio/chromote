@@ -1227,6 +1227,33 @@ rectangle that encompasses all the DOM elements picked out by the
 selectors. Similarly, if a selector picks out multiple DOM elements, all
 of them will be in the screenshot region.
 
+### Setting width and height of the viewport (window)
+
+The default size of a `ChromoteSession` viewport is 992 by 1323 pixels.
+You can set the width and height when it is created:
+
+``` r
+b <- ChromoteSession$new(width = 390, height = 844)
+
+b$Page$navigate("https://www.r-project.org/")
+b$screenshot("narrow.png")
+```
+
+With an existing `ChromoteSession`, you can set the size with
+`b$Emulation$setVisibleSize()`:
+
+``` r
+b$Emulation$setVisibleSize(width=1600, height=900)
+b$screenshot("wide.png")
+```
+
+You can take a “Retina” (double) resolution screenshot by using
+`b$screenshot(scale=2)`:
+
+``` r
+b$screenshot("wide-2x.png", scale = 2)
+```
+
 ### Taking a screenshot of a web page after interacting with it
 
 Headless Chrome provides a remote debugging UI which you can use to
