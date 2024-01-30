@@ -9,15 +9,6 @@
 #' but this is not currently supported by chromote.
 #'
 #' @export
-#' @param timeout_ Number of seconds for \pkg{chromote} to wait for a Chrome
-#' DevTools Protocol response. If `timeout_` is [`rlang::missing_arg()`] and
-#' `timeout` is provided, `timeout_` will be set to `2 * timeout / 1000`.
-#' @param timeout Number of milliseconds for Chrome DevTools Protocol execute a
-#' method.
-#' @param width Width, in pixels, of the `Target` to create if `targetId` is
-#'   `NULL`
-#' @param height Height, in pixels, of the `Target` to create if `targetId` is
-#'   `NULL`
 #' @param targetId
 #'   [Target](https://chromedevtools.github.io/devtools-protocol/tot/Target/)
 #'   ID of an existing target to attach to. When a `targetId` is provided, the
@@ -53,6 +44,7 @@ ChromoteSession <- R6Class(
     #'   from the parent `Chromote` object. If `TRUE`, enable automatic
     #'   event enabling/disabling; if `FALSE`, disable automatic event
     #'   enabling/disabling.
+    #' @param width,height Width and height of the new window.
     #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
