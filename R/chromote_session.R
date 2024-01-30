@@ -543,6 +543,15 @@ ChromoteSession <- R6Class(
       private$init_promise_
     },
 
+    print = function(...) {
+      state <- if (private$is_active_) "active" else "closed"
+
+      cat_line("<ChromoteSession> (", state, ")")
+      cat_line("  Session ID: ", self$get_session_id())
+      cat_line("  Target ID:  ", self$get_target_id())
+      cat_line("  Parent PID: ", self$parent$get_browser()$get_process()$get_pid())
+    },
+
     #' @field parent [`Chromote`] object
     parent = NULL,
     #' @field default_timeout Default timeout in seconds for \pkg{chromote} to
