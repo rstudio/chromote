@@ -6,7 +6,7 @@
 \description{
 This represents one \emph{session} in a Chromote object. Note that in the Chrome
 DevTools Protocol a session is a debugging session connected to a \emph{target},
-a browser window/tab, or an iframe.
+which is a browser window/tab or an iframe.
 
 A single target can potentially have more than one session connected to it,
 but this is not currently supported by chromote.
