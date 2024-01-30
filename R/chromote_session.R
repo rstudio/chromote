@@ -1,9 +1,13 @@
-# This represents one _session_ in a Chromote object. Note that in the Chrome
-# DevTools Protocol a session is a debugging interface connected to a
-# _target_; a target is a browser window/tab, or an iframe. A single target
-# can have more than one session connected to it.
-
 #' ChromoteSession class
+#'
+#' @description
+#' This represents one _session_ in a Chromote object. Note that in the Chrome
+#' DevTools Protocol a session is a debugging session connected to a _target_,
+#' which is a browser window/tab or an iframe.
+#'
+#' A single target can potentially have more than one session connected to it,
+#' but this is not currently supported by chromote.
+#'
 #' @export
 #' @param timeout_ Number of seconds for \pkg{chromote} to wait for a Chrome
 #' DevTools Protocol response. If `timeout_` is [`rlang::missing_arg()`] and
@@ -76,9 +80,11 @@ ChromoteSession <- R6Class(
           wait_ = FALSE
          )$
           then(function(value) {
+            private$target_id <- value$targetId
             parent$Target$attachToTarget(value$targetId, flatten = TRUE, wait_ = FALSE)
           })
       } else {
+        private$target_id <- targetId
         p <- parent$Target$attachToTarget(targetId, flatten = TRUE, wait_ = FALSE)
       }
 
@@ -157,11 +163,9 @@ ChromoteSession <- R6Class(
     #' if (interactive()) b$view()
     #' ```
     view = function() {
-      tid <- self$Target$getTargetInfo()$targetInfo$targetId
-
       # A data frame of targets, one row per target.
       info <- fromJSON(self$parent$url("/json"))
-      path <- info$devtoolsFrontendUrl[info$id == tid]
+      path <- info$devtoolsFrontendUrl[info$id == private$target_id]
       if (length(path) == 0) {
         stop("Target info not found.")
       }
@@ -188,15 +192,12 @@ ChromoteSession <- R6Class(
     #' when the `ChromoteSession` is closed. Otherwise, block until the
     #' `ChromoteSession` has closed.
     close = function(wait_ = TRUE) {
-      p <- self$Target$getTargetInfo(wait_ = FALSE)
-      p <- p$then(function(target) {
-        tid <- target$targetInfo$targetId
-        # Even if this session calls Target.closeTarget, the response from
-        # the browser is sent without a sessionId. In order to wait for the
-        # correct browser response, we need to invoke this from the parent's
-        # browser-level methods.
-        self$parent$protocol$Target$closeTarget(tid, wait_ = FALSE)
-      })
+      # Even if this session calls Target.closeTarget, the response from
+      # the browser is sent without a sessionId. In order to wait for the
+      # correct browser response, we need to invoke this from the parent's
+      # browser-level methods.
+      p <- self$parent$protocol$Target$closeTarget(private$target_id, wait_ = FALSE)
+
       p <- p$then(function(value) {
         if (isTRUE(value$success)) {
           self$mark_closed()
@@ -421,16 +422,14 @@ ChromoteSession <- R6Class(
 
     #' @description
     #' Retrieve the session id
-    #'
-    #' ## Examples
-    #'
-    #' ```r
-    #' b <- ChromoteSession$new()
-    #' b$get_session_id()
-    #' #> [1] "05764F1D439F4292497A21C6526575DA"
-    #' ```
     get_session_id = function() {
       private$session_id
+    },
+
+    #' @description
+    #' Retrieve the target id
+    get_target_id = function() {
+      private$target_id
     },
 
     #' @description
@@ -555,6 +554,7 @@ ChromoteSession <- R6Class(
 
   private = list(
     session_id = NULL,
+    target_id = NULL,
     is_active_ = NULL,
     event_manager = NULL,
     pixel_ratio = NULL,

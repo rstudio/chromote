@@ -4,9 +4,12 @@
 \alias{ChromoteSession}
 \title{ChromoteSession class}
 \description{
-ChromoteSession class
+This represents one \emph{session} in a Chromote object. Note that in the Chrome
+DevTools Protocol a session is a debugging session connected to a \emph{target},
+which is a browser window/tab or an iframe.
 
-ChromoteSession class
+A single target can potentially have more than one session connected to it,
+but this is not currently supported by chromote.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -30,6 +33,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-screenshot_pdf}{\code{ChromoteSession$screenshot_pdf()}}
 \item \href{#method-ChromoteSession-new_session}{\code{ChromoteSession$new_session()}}
 \item \href{#method-ChromoteSession-get_session_id}{\code{ChromoteSession$get_session_id()}}
+\item \href{#method-ChromoteSession-get_target_id}{\code{ChromoteSession$get_target_id()}}
 \item \href{#method-ChromoteSession-wait_for}{\code{ChromoteSession$wait_for()}}
 \item \href{#method-ChromoteSession-debug_log}{\code{ChromoteSession$debug_log()}}
 \item \href{#method-ChromoteSession-get_child_loop}{\code{ChromoteSession$get_child_loop()}}
@@ -408,15 +412,18 @@ until the \code{ChromoteSession} has created a new session.}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-get_session_id}{}}}
 \subsection{Method \code{get_session_id()}}{
 Retrieve the session id
-\subsection{Examples}{
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{b <- ChromoteSession$new()
-b$get_session_id()
-#> [1] "05764F1D439F4292497A21C6526575DA"
-}\if{html}{\out{</div>}}
-}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_session_id()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-get_target_id"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-get_target_id}{}}}
+\subsection{Method \code{get_target_id()}}{
+Retrieve the target id
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_target_id()}\if{html}{\out{</div>}}
 }
 
 }
