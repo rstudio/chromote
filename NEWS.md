@@ -1,8 +1,6 @@
 # chromote (development version)
 
-* `ChromoteSession` now records the `targetId`. This eliminates one round-trip 
-  to the browser when viewing or closing a session, and will make it possible to
-  re-start a closed session (#94).
+* `ChromoteSession` now records the `targetId`. This eliminates one round-trip to the browser when viewing or closing a session, and will make it possible to re-start a closed session (#94).
 
 * `ChromoteSession$screenshot()` gains an `options` argument that accepts a list of additional options to be passed to the Chrome Devtools Protocol's [`Page.captureScreenshot` method](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot). (#129)
 
