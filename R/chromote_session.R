@@ -594,7 +594,7 @@ ChromoteSession <- R6Class(
 
 
 # Wrapper around ChromoteSession$new() that can return a promise
-create_session <- function(chromote,
+create_session <- function(chromote = default_chromote_object(),
                            width = 992,
                            height = 1323,
                            targetId = NULL,
