@@ -160,6 +160,7 @@ Chromote <- R6Class(
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
     new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
+      self$check_alive()
       session <- ChromoteSession$new(self, width, height, targetId, wait_ = FALSE)
 
       # ChromoteSession$new() always returns the object, but the
@@ -205,9 +206,7 @@ Chromote <- R6Class(
     #' @param sessionId Determines which [`ChromoteSession`] with the
     #' corresponding to send the command to.
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
-      if (!private$is_active_) {
-        stop("Chromote object is closed.")
-      }
+      self$check_alive()
 
       private$last_msg_id <- private$last_msg_id + 1
       msg$id <- private$last_msg_id
@@ -319,6 +318,22 @@ Chromote <- R6Class(
       private$is_active_
     },
 
+    #' @description Is connection alive? (i.e. is the websocket open?)
+    is_alive = function() {
+      self$is_active() && private$ws$readyState() %in% c(0L, 1L)
+    },
+
+    #' @description Check that a chromote instance is active and alive,
+    #'  erroring if not.
+    check_alive = function() {
+      if (!self$is_active()) {
+        stop("Chromote has been closed.")
+      }
+      if (!self$is_alive()) {
+        stop("Websocket has disconnected.")
+      }
+    },
+
     #' @description Retrieve [`Browser`]` object
     #'
     get_browser = function() {
@@ -329,6 +344,7 @@ Chromote <- R6Class(
     close = function() {
       if (private$is_active_) {
         self$Browser$close()
+        private$ws$close()
         private$is_active_ <- FALSE
         return(TRUE)
       } else {
@@ -392,9 +408,7 @@ Chromote <- R6Class(
     event_manager = NULL,
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
-      if (!private$is_active_) {
-        stop("Chromote object is closed.")
-      }
+      self$check_alive()
       private$event_manager$register_event_listener(event, callback, timeout)
     },
 
@@ -488,7 +502,7 @@ default_chromote_object <- function() {
 #' @rdname default_chromote_object
 #' @export
 has_default_chromote_object <- function() {
-  !is.null(globals$default_chromote) && globals$default_chromote$is_active()
+  !is.null(globals$default_chromote) && globals$default_chromote$is_alive()
 }
 
 #' @param x A \code{\link{Chromote}} object.

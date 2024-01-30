@@ -38,6 +38,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-invoke_event_callbacks}{\code{ChromoteSession$invoke_event_callbacks()}}
 \item \href{#method-ChromoteSession-mark_closed}{\code{ChromoteSession$mark_closed()}}
 \item \href{#method-ChromoteSession-is_active}{\code{ChromoteSession$is_active()}}
+\item \href{#method-ChromoteSession-check_active}{\code{ChromoteSession$check_active()}}
 \item \href{#method-ChromoteSession-init_promise}{\code{ChromoteSession$init_promise()}}
 }
 }
@@ -576,6 +577,16 @@ Once initialized, the value returned is \code{TRUE}. If \verb{$close()} has been
 called, this value will be \code{FALSE}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$is_active()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-check_active"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-check_active}{}}}
+\subsection{Method \code{check_active()}}{
+Check that a session is active, erroring if not.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$check_active()}\if{html}{\out{</div>}}
 }
 
 }

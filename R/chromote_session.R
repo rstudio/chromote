@@ -188,6 +188,10 @@ ChromoteSession <- R6Class(
     #' when the `ChromoteSession` is closed. Otherwise, block until the
     #' `ChromoteSession` has closed.
     close = function(wait_ = TRUE) {
+      if (!self$is_active()) {
+        return(invisible())
+      }
+
       p <- self$Target$getTargetInfo(wait_ = FALSE)
       p <- p$then(function(target) {
         tid <- target$targetInfo$targetId
@@ -494,9 +498,7 @@ ChromoteSession <- R6Class(
     #' @param timeout Number of milliseconds for Chrome DevTools Protocol
     #' execute a method.
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
-      if (!private$is_active_) {
-        stop("Session ", private$session_id, " is closed.")
-      }
+      self$check_active()
       self$parent$send_command(msg, callback, error, timeout, sessionId = private$session_id)
     },
 
@@ -534,7 +536,14 @@ ChromoteSession <- R6Class(
     #' Once initialized, the value returned is `TRUE`. If `$close()` has been
     #' called, this value will be `FALSE`.
     is_active = function() {
-      private$is_active_
+      private$is_active_ && self$parent$is_alive()
+    },
+
+    #' @description Check that a session is active, erroring if not.
+    check_active = function() {
+      if (!self$is_active()) {
+        stop("Session ", private$session_id, " has been closed.")
+      }
     },
 
     #' @description Initial promise
@@ -562,9 +571,7 @@ ChromoteSession <- R6Class(
     init_promise_ = NULL,
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
-      if (!private$is_active_) {
-        stop("Session ", private$session_id, " is closed.")
-      }
+      self$check_active()
       private$event_manager$register_event_listener(event, callback, timeout)
     }
   )

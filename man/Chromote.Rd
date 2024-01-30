@@ -57,6 +57,8 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-Chromote-debug_log}{\code{Chromote$debug_log()}}
 \item \href{#method-Chromote-url}{\code{Chromote$url()}}
 \item \href{#method-Chromote-is_active}{\code{Chromote$is_active()}}
+\item \href{#method-Chromote-is_alive}{\code{Chromote$is_alive()}}
+\item \href{#method-Chromote-check_alive}{\code{Chromote$check_alive()}}
 \item \href{#method-Chromote-get_browser}{\code{Chromote$get_browser()}}
 \item \href{#method-Chromote-close}{\code{Chromote$close()}}
 }
@@ -328,6 +330,27 @@ Once initialized, the value returned is \code{TRUE}. If \verb{$close()} has been
 called, this value will be \code{FALSE}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$is_active()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Chromote-is_alive"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-is_alive}{}}}
+\subsection{Method \code{is_alive()}}{
+Is connection alive? (i.e. is the websocket open?)
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$is_alive()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Chromote-check_alive"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-check_alive}{}}}
+\subsection{Method \code{check_alive()}}{
+Check that a chromote instance is active and alive,
+erroring if not.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$check_alive()}\if{html}{\out{</div>}}
 }
 
 }
