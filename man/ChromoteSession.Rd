@@ -33,6 +33,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-screenshot_pdf}{\code{ChromoteSession$screenshot_pdf()}}
 \item \href{#method-ChromoteSession-new_session}{\code{ChromoteSession$new_session()}}
 \item \href{#method-ChromoteSession-get_session_id}{\code{ChromoteSession$get_session_id()}}
+\item \href{#method-ChromoteSession-respawn}{\code{ChromoteSession$respawn()}}
 \item \href{#method-ChromoteSession-get_target_id}{\code{ChromoteSession$get_target_id()}}
 \item \href{#method-ChromoteSession-wait_for}{\code{ChromoteSession$wait_for()}}
 \item \href{#method-ChromoteSession-debug_log}{\code{ChromoteSession$debug_log()}}
@@ -414,6 +415,17 @@ until the \code{ChromoteSession} has created a new session.}
 Retrieve the session id
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_session_id()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-respawn"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-respawn}{}}}
+\subsection{Method \code{respawn()}}{
+Respawn a new session that connects to the same target (i.e. page)
+as this session.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$respawn()}\if{html}{\out{</div>}}
 }
 
 }
