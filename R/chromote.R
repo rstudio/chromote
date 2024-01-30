@@ -61,9 +61,9 @@ Chromote <- R6Class(
       private$register_default_event_listeners()
     },
 
-    #' @description Re-connect the websocket to the browser. Chrome
+    #' @description Re-connect the websocket to the browser. The Chrome browser
     #'   automatically closes websockets when your computer goes to sleep;
-    #'   you can use this to bring it back to live with a new connection.
+    #'   you can use this to bring it back to life with a new connection.
     #' @param multi_session Should multiple sessions be allowed?
     #' @param wait_ If `FALSE`, return a promise; if `TRUE` wait until
     #'   connection is complete.
