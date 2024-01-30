@@ -434,7 +434,7 @@ ChromoteSession <- R6Class(
       if (!private$is_active_) {
         stop("Can't respawn session; target has been closed.")
       }
-      self$parent$new_session(targetId = self$targetId)
+      self$parent$new_session(targetId = private$targetId)
     },
 
     #' @description
