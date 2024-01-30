@@ -556,8 +556,6 @@ is_missing_linux_user <- cache_value(function() {
 #' Default chromote arguments are composed of the following values (when
 #' appropriate):
 #'
-#' * [`"--disable-gpu"`](https://peter.sh/experiments/chromium-command-line-switches/#disable-gpu)
-#'   * \verb{Disables GPU hardware acceleration. If software renderer is not in place, then the GPU process won't launch.}
 #' * [`"--no-sandbox"`](https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox)
 #'   * Only added when `CI` system environment variable is set, when the
 #'     user on a Linux system is not set, or when executing inside a Docker container.
@@ -584,9 +582,6 @@ is_missing_linux_user <- cache_value(function() {
 #' @export
 default_chrome_args <- function() {
   c(
-    # Better cross platform support
-    "--disable-gpu",
-
     # > Note: --no-sandbox is not needed if you properly setup a user in the container.
     # https://developers.google.com/web/updates/2017/04/headless-chrome
     if (is_inside_ci() || is_missing_linux_user() || is_inside_docker()) {
@@ -638,7 +633,7 @@ reset_chrome_args <- function() {
 #' @examples
 #' old_chrome_args <- get_chrome_args()
 #'
-#' # Only disable the gpu and using `/dev/shm`
+#' # Disable the gpu and use `/dev/shm`
 #' set_chrome_args(c("--disable-gpu", "--disable-dev-shm-usage"))
 #'
 #' #... Make new `Chrome` or `ChromoteSession` instance
