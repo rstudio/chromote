@@ -59,6 +59,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-Chromote-is_active}{\code{Chromote$is_active()}}
 \item \href{#method-Chromote-get_browser}{\code{Chromote$get_browser()}}
 \item \href{#method-Chromote-close}{\code{Chromote$close()}}
+\item \href{#method-Chromote-print}{\code{Chromote$print()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -348,6 +349,15 @@ Retrieve \code{\link{Browser}}` object
 Close the \code{\link{Browser}} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$close()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Chromote-print"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-print}{}}}
+\subsection{Method \code{print()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$print(...)}\if{html}{\out{</div>}}
 }
 
 }

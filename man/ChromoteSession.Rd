@@ -43,6 +43,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-mark_closed}{\code{ChromoteSession$mark_closed()}}
 \item \href{#method-ChromoteSession-is_active}{\code{ChromoteSession$is_active()}}
 \item \href{#method-ChromoteSession-init_promise}{\code{ChromoteSession$init_promise()}}
+\item \href{#method-ChromoteSession-print}{\code{ChromoteSession$print()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -595,6 +596,15 @@ Initial promise
 For internal use only.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$init_promise()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-print"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-print}{}}}
+\subsection{Method \code{print()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$print(...)}\if{html}{\out{</div>}}
 }
 
 }
