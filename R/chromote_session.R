@@ -427,8 +427,9 @@ ChromoteSession <- R6Class(
     },
 
     #' @description
-    #' Respawn a new session that connects to the same target (i.e. page)
-    #' as this session.
+    #' Create a new session that connects to the same target (i.e. page)
+    #' as this session. This is useful if the session but the target still
+    #' exists.
     respawn = function() {
       if (!private$is_active_) {
         stop("Can't respawn session; target has been closed.")
