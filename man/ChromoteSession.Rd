@@ -423,7 +423,7 @@ Retrieve the session id
 \if{latex}{\out{\hypertarget{method-ChromoteSession-respawn}{}}}
 \subsection{Method \code{respawn()}}{
 Create a new session that connects to the same target (i.e. page)
-as this session. This is useful if the session but the target still
+as this session. This is useful if the session has been closed but the target still
 exists.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$respawn()}\if{html}{\out{</div>}}
