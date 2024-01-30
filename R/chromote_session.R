@@ -543,6 +543,8 @@ ChromoteSession <- R6Class(
       private$init_promise_
     },
 
+    #' @description Summarise the current state of the object.
+    #' @param ... Ignored
     print = function(...) {
       state <- if (private$is_active_) "active" else "closed"
 

@@ -336,6 +336,8 @@ Chromote <- R6Class(
       }
     },
 
+    #' @description Summarise the current state of the object.
+    #' @param ... Ignored
     print = function(...) {
       state <- if (private$is_active_) "active" else "closed"
       ps <- self$get_browser()$get_process()

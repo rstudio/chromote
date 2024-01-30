@@ -356,9 +356,17 @@ Close the \code{\link{Browser}} object
 \if{html}{\out{<a id="method-Chromote-print"></a>}}
 \if{latex}{\out{\hypertarget{method-Chromote-print}{}}}
 \subsection{Method \code{print()}}{
+Summarise the current state of the object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$print(...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Ignored}
+}
+\if{html}{\out{</div>}}
+}
 }
 }

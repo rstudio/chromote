@@ -603,9 +603,17 @@ For internal use only.
 \if{html}{\out{<a id="method-ChromoteSession-print"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-print}{}}}
 \subsection{Method \code{print()}}{
+Summarise the current state of the object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$print(...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Ignored}
+}
+\if{html}{\out{</div>}}
+}
 }
 }
