@@ -417,7 +417,13 @@ ChromoteSession <- R6Class(
     #' when the `ChromoteSession` has created a new session. Otherwise, block
     #' until the `ChromoteSession` has created a new session.
     new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
-      self$parent$new_session(width = width, height = height, targetId = targetId, wait_ = wait_)
+      create_session(
+        chromote = self$parent,
+        width = width,
+        height = height,
+        targetId = targetId,
+        wait_ = wait_
+      )
     },
 
     #' @description
@@ -434,7 +440,12 @@ ChromoteSession <- R6Class(
       if (!private$is_active_) {
         stop("Can't respawn session; target has been closed.")
       }
-      self$parent$new_session(targetId = private$targetId)
+
+      create_session(
+        chromote = self$parent,
+        targetId = private$target_id,
+        auto_events = private$auto_events
+      )
     },
 
     #' @description
@@ -580,3 +591,30 @@ ChromoteSession <- R6Class(
     }
   )
 )
+
+
+# Wrapper around ChromoteSession$new() that can return a promise
+create_session <- function(chromote,
+                           width = 992,
+                           height = 1323,
+                           targetId = NULL,
+                           wait_ = TRUE,
+                           auto_events = NULL) {
+
+  session <- ChromoteSession$new(
+    parent = chromote,
+    width = width,
+    height = height,
+    targetId,
+    auto_events = auto_events,
+    wait_ = wait_
+  )
+
+  if (wait_) {
+    session
+  } else {
+    # ChromoteSession$new() must return a ChromoteSession object so we need a
+    # side-channel to return a promise
+    session$init_promise()
+  }
+}

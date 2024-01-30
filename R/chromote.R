@@ -160,19 +160,13 @@ Chromote <- R6Class(
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
     new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
-      session <- ChromoteSession$new(self, width, height, targetId, wait_ = FALSE)
-
-      # ChromoteSession$new() always returns the object, but the
-      # initialization is async. To properly wait for initialization, we
-      # need to call b$init_promise() to get the promise; it resolves
-      # after initialization is complete.
-      p <- session$init_promise()
-
-      if (wait_) {
-        self$wait_for(p)
-      } else {
-        p
-      }
+      create_session(
+        chromote = self,
+        width = width,
+        height = height,
+        targetId = targetId,
+        wait_ = wait_
+      )
     },
 
     #' @description Retrieve all [`ChromoteSession`] objects
