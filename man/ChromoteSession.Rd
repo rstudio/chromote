@@ -4,7 +4,12 @@
 \alias{ChromoteSession}
 \title{ChromoteSession class}
 \description{
-ChromoteSession class
+This represents one \emph{session} in a Chromote object. Note that in the Chrome
+DevTools Protocol a session is a debugging session connected to a \emph{target},
+which is a browser window/tab or an iframe.
+
+A single target can potentially have more than one session connected to it,
+but this is not currently supported by chromote.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -28,6 +33,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-screenshot_pdf}{\code{ChromoteSession$screenshot_pdf()}}
 \item \href{#method-ChromoteSession-new_session}{\code{ChromoteSession$new_session()}}
 \item \href{#method-ChromoteSession-get_session_id}{\code{ChromoteSession$get_session_id()}}
+\item \href{#method-ChromoteSession-get_target_id}{\code{ChromoteSession$get_target_id()}}
 \item \href{#method-ChromoteSession-wait_for}{\code{ChromoteSession$wait_for()}}
 \item \href{#method-ChromoteSession-debug_log}{\code{ChromoteSession$debug_log()}}
 \item \href{#method-ChromoteSession-get_child_loop}{\code{ChromoteSession$get_child_loop()}}
@@ -76,11 +82,7 @@ if (interactive()) b$view()
 \item{\code{parent}}{\code{\link{Chromote}} object to use; defaults to
 \code{\link[=default_chromote_object]{default_chromote_object()}}}
 
-\item{\code{width}}{Width, in pixels, of the \code{Target} to create if \code{targetId} is
-\code{NULL}}
-
-\item{\code{height}}{Height, in pixels, of the \code{Target} to create if \code{targetId} is
-\code{NULL}}
+\item{\code{width, height}}{Width and height of the new window.}
 
 \item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target/}{Target}
 ID of an existing target to attach to. When a \code{targetId} is provided, the
@@ -247,6 +249,7 @@ b$wait_for(pa)
   scale = 1,
   show = FALSE,
   delay = 0.5,
+  options = list(),
   wait_ = TRUE
 )}\if{html}{\out{</div>}}
 }
@@ -254,7 +257,12 @@ b$wait_for(pa)
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{filename}}{File path of where to save the screenshot.}
+\item{\code{filename}}{File path of where to save the screenshot. The format of
+the screenshot is inferred from the file extension; use
+\code{options = list(format = "jpeg")} to manually choose the format. See
+\href{https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot}{\code{Page.captureScreenshot}}
+for supported formats; at the time of this release the format options
+were \code{"png"} (default), \code{"jpeg"}, or \code{"webp"}.}
 
 \item{\code{selector}}{CSS selector to use for the screenshot.}
 
@@ -275,6 +283,9 @@ value or a numeric vector of top, right, bottom, left values.}
 \item{\code{delay}}{The number of seconds to wait before taking the screenshot
 after resizing the page. For complicated pages, this may need to be
 increased.}
+
+\item{\code{options}}{Additional options passed to
+\href{https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot}{\code{Page.captureScreenshot}}.}
 
 \item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} that will resolve
 when the \code{ChromoteSession} has saved the screenshot. Otherwise, block
@@ -397,15 +408,18 @@ until the \code{ChromoteSession} has created a new session.}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-get_session_id}{}}}
 \subsection{Method \code{get_session_id()}}{
 Retrieve the session id
-\subsection{Examples}{
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{b <- ChromoteSession$new()
-b$get_session_id()
-#> [1] "05764F1D439F4292497A21C6526575DA"
-}\if{html}{\out{</div>}}
-}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_session_id()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-get_target_id"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-get_target_id}{}}}
+\subsection{Method \code{get_target_id()}}{
+Retrieve the target id
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_target_id()}\if{html}{\out{</div>}}
 }
 
 }

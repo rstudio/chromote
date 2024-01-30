@@ -8,6 +8,7 @@ chromote_session_screenshot <- function(
   scale = 1,
   show = FALSE,
   delay = 0.5,
+  options = list(),
   wait_ = TRUE
 ) {
   force(filename)
@@ -39,6 +40,19 @@ chromote_session_screenshot <- function(
     expand <- rep(expand, 4)
   }
 
+  stopifnot(
+    "`options` must be a list" = rlang::is_list(options),
+    "`options` must be named" = rlang::is_named2(options)
+  )
+  # Set up arg list from defaults & user options to pass to `Page$captureScreenshot`
+  screenshot_arg_defaults <- list(
+    fromSurface = TRUE,
+    captureBeyondViewport = TRUE
+  )
+  screenshot_args <- utils::modifyList(screenshot_arg_defaults, options)
+  if (is.null(screenshot_args$format)) {
+    screenshot_args$format <- screenshot_format(filename)
+  }
 
   # These vars are used to store information gathered from one step to use
   # in a later step.
@@ -91,18 +105,16 @@ chromote_session_screenshot <- function(
         ymin <- max(ymin, 0)
         ymax <- min(ymax, overall_height)
 
-        self$Page$captureScreenshot(
-          clip = list(
-            x = xmin,
-            y = ymin,
-            width  = xmax - xmin,
-            height = ymax - ymin,
-            scale = scale / private$pixel_ratio
-          ),
-          fromSurface = TRUE,
-          captureBeyondViewport = TRUE,
-          wait_ = FALSE
+        screenshot_args$clip <- list(
+          x = xmin,
+          y = ymin,
+          width  = xmax - xmin,
+          height = ymax - ymin,
+          scale = scale / private$pixel_ratio
         )
+        screenshot_args$wait_ <- FALSE
+
+        do.call(self$Page$captureScreenshot, screenshot_args)
       })$
       then(function(value) {
         image_data <<- value
@@ -112,18 +124,16 @@ chromote_session_screenshot <- function(
     # If cliprect was provided, use it instead of selector
     p <- p$
       then(function(value) {
-        self$Page$captureScreenshot(
-          clip = list(
-            x = cliprect[[1]],
-            y = cliprect[[2]],
-            width  = cliprect[[3]],
-            height = cliprect[[4]],
-            scale = scale / private$pixel_ratio
-          ),
-          fromSurface = TRUE,
-          captureBeyondViewport = TRUE,
-          wait_ = FALSE
+        screenshot_args$clip <- list(
+          x = cliprect[[1]],
+          y = cliprect[[2]],
+          width  = cliprect[[3]],
+          height = cliprect[[4]],
+          scale = scale / private$pixel_ratio
         )
+        screenshot_args$wait_ <- FALSE
+
+        do.call(self$Page$captureScreenshot, screenshot_args)
       })$
       then(function(value) {
         image_data <<- value
@@ -165,6 +175,28 @@ chromote_session_screenshot <- function(
   }
 }
 
+screenshot_format <- function(filename) {
+  ext <- strsplit(filename, ".", fixed = TRUE)[[1]]
+  if (length(ext) < 2) ext <- "no_ext"
+  ext <- ext[length(ext)]
+
+  switch(
+    tolower(ext),
+    png = "png",
+    jpg = ,
+    jpeg = "jpeg",
+    webp = "webp",
+    pdf = rlang::abort(
+      "Use the `screenshot_pdf()` method to capture a PDF screenshot."
+    ),
+    no_ext = rlang::abort(
+      sprintf('Could not guess screenshot format from filename "%s". Does the name include a file extension?', filename)
+    ),
+    rlang::abort(
+      sprintf('"%s" is not a supported screenshot format.', ext)
+    )
+  )
+}
 
 
 chromote_session_screenshot_pdf <- function(
