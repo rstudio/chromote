@@ -43,7 +43,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-invoke_event_callbacks}{\code{ChromoteSession$invoke_event_callbacks()}}
 \item \href{#method-ChromoteSession-mark_closed}{\code{ChromoteSession$mark_closed()}}
 \item \href{#method-ChromoteSession-is_active}{\code{ChromoteSession$is_active()}}
-\item \href{#method-ChromoteSession-init_promise}{\code{ChromoteSession$init_promise()}}
+\item \href{#method-ChromoteSession-get_init_promise}{\code{ChromoteSession$get_init_promise()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -596,14 +596,14 @@ called, this value will be \code{FALSE}.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ChromoteSession-init_promise"></a>}}
-\if{latex}{\out{\hypertarget{method-ChromoteSession-init_promise}{}}}
-\subsection{Method \code{init_promise()}}{
+\if{html}{\out{<a id="method-ChromoteSession-get_init_promise"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-get_init_promise}{}}}
+\subsection{Method \code{get_init_promise()}}{
 Initial promise
 
 For internal use only.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$init_promise()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_init_promise()}\if{html}{\out{</div>}}
 }
 
 }

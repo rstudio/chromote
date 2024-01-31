@@ -129,7 +129,7 @@ ChromoteSession <- R6Class(
         # returning p, because the call to ChromoteSession$new() always
         # returns the new object. Instead, we'll store it as
         # private$init_promise_, and the user can retrieve it with
-        # b$init_promise().
+        # b$get_init_promise().
         private$init_promise_ <- p$then(function(value) self)
       }
 
@@ -553,7 +553,7 @@ ChromoteSession <- R6Class(
     #' @description Initial promise
     #'
     #' For internal use only.
-    init_promise = function() {
+    get_init_promise = function() {
       private$init_promise_
     },
 
@@ -607,6 +607,6 @@ create_session <- function(chromote = default_chromote_object(),
   } else {
     # ChromoteSession$new() must return a ChromoteSession object so we need a
     # side-channel to return a promise
-    session$init_promise()
+    session$get_init_promise()
   }
 }
