@@ -23,12 +23,13 @@ the browser's system process.
 }
 }
 \if{html}{\out{
-<details open><summary>Inherited methods</summary>
+<details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="close"><a href='../../chromote/html/Browser.html#method-Browser-close'><code>chromote::Browser$close()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_host"><a href='../../chromote/html/Browser.html#method-Browser-get_host'><code>chromote::Browser$get_host()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_port"><a href='../../chromote/html/Browser.html#method-Browser-get_port'><code>chromote::Browser$get_port()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_process"><a href='../../chromote/html/Browser.html#method-Browser-get_process'><code>chromote::Browser$get_process()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_alive"><a href='../../chromote/html/Browser.html#method-Browser-is_alive'><code>chromote::Browser$is_alive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_local"><a href='../../chromote/html/Browser.html#method-Browser-is_local'><code>chromote::Browser$is_local()</code></a></span></li>
 </ul>
 </details>

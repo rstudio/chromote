@@ -52,7 +52,8 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-Chromote-url}{\code{Chromote$url()}}
 \item \href{#method-Chromote-is_active}{\code{Chromote$is_active()}}
 \item \href{#method-Chromote-is_alive}{\code{Chromote$is_alive()}}
-\item \href{#method-Chromote-check_alive}{\code{Chromote$check_alive()}}
+\item \href{#method-Chromote-check_active}{\code{Chromote$check_active()}}
+\item \href{#method-Chromote-reactivate}{\code{Chromote$reactivate()}}
 \item \href{#method-Chromote-get_browser}{\code{Chromote$get_browser()}}
 \item \href{#method-Chromote-close}{\code{Chromote$close()}}
 }
@@ -341,9 +342,7 @@ Create url for a given path
 \if{html}{\out{<a id="method-Chromote-is_active"></a>}}
 \if{latex}{\out{\hypertarget{method-Chromote-is_active}{}}}
 \subsection{Method \code{is_active()}}{
-Retrieve active status
-Once initialized, the value returned is \code{TRUE}. If \verb{$close()} has been
-called, this value will be \code{FALSE}.
+Is connection active? (i.e. is the websocket open?)
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$is_active()}\if{html}{\out{</div>}}
 }
@@ -353,20 +352,29 @@ called, this value will be \code{FALSE}.
 \if{html}{\out{<a id="method-Chromote-is_alive"></a>}}
 \if{latex}{\out{\hypertarget{method-Chromote-is_alive}{}}}
 \subsection{Method \code{is_alive()}}{
-Is connection alive? (i.e. is the websocket open?)
+Is the underlying browser process alive?
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$is_alive()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Chromote-check_alive"></a>}}
-\if{latex}{\out{\hypertarget{method-Chromote-check_alive}{}}}
-\subsection{Method \code{check_alive()}}{
+\if{html}{\out{<a id="method-Chromote-check_active"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-check_active}{}}}
+\subsection{Method \code{check_active()}}{
 Check that a chromote instance is active and alive,
 erroring if not.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Chromote$check_alive()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$check_active()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Chromote-reactivate"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-reactivate}{}}}
+\subsection{Method \code{reactivate()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$reactivate()}\if{html}{\out{</div>}}
 }
 
 }
