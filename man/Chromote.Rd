@@ -87,9 +87,9 @@ if \code{FALSE}, disable automatic event enabling/disabling.}
 \if{html}{\out{<a id="method-Chromote-connect"></a>}}
 \if{latex}{\out{\hypertarget{method-Chromote-connect}{}}}
 \subsection{Method \code{connect()}}{
-Re-connect the websocket to the browser. Chrome
+Re-connect the websocket to the browser. The Chrome browser
 automatically closes websockets when your computer goes to sleep;
-you can use this to bring it back to live with a new connection.
+you can use this to bring it back to life with a new connection.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$connect(multi_session = TRUE, wait_ = TRUE)}\if{html}{\out{</div>}}
 }
