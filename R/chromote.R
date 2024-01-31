@@ -1,7 +1,6 @@
 #' Chromote class
 #'
-#' This class represents the browser as a whole.
-#'
+#' @description
 #' A `Chromote` object represents the browser as a whole, and it can have
 #' multiple _targets_, which each represent a browser tab. In the Chrome
 #' DevTools Protocol, each target can have one or more debugging _sessions_ to
