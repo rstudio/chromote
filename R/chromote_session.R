@@ -555,7 +555,10 @@ ChromoteSession <- R6Class(
     #' @description Check that a session is active, erroring if not.
     check_active = function() {
       if (!self$is_active()) {
-        stop("Session ", private$session_id, " has been closed.")
+        abort(c(
+          paste("Session ", private$session_id, " has been closed."),
+          i = "Call session$respawn() to create a new session that connects to the same target."
+        ))
       }
     },
 

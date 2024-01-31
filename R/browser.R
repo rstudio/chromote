@@ -23,6 +23,9 @@ Browser <- R6Class("Browser",
     #' @description Browser process
     get_process = function() private$process,
 
+    #' @description Is the process alive?
+    is_alive = function() private$process$is_alive(),
+
     #' @description Browser Host
     get_host = function() private$host,
 

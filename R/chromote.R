@@ -174,7 +174,7 @@ Chromote <- R6Class(
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
     new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
-      self$check_alive()
+      self$check_active()
       create_session(
         chromote = self,
         width = width,
@@ -214,7 +214,7 @@ Chromote <- R6Class(
     #' @param sessionId Determines which [`ChromoteSession`] with the
     #' corresponding to send the command to.
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
-      self$check_alive()
+      self$check_active()
 
       private$last_msg_id <- private$last_msg_id + 1
       msg$id <- private$last_msg_id
@@ -319,27 +319,41 @@ Chromote <- R6Class(
       paste0("http://", private$browser$get_host(), ":", private$browser$get_port(), path)
     },
 
-    #' @description Retrieve active status
-    #' Once initialized, the value returned is `TRUE`. If `$close()` has been
-    #' called, this value will be `FALSE`.
+    #' @description Is connection active? (i.e. is the websocket open?)
     is_active = function() {
-      private$is_active_
+      self$is_alive() && private$ws$readyState() %in% c(0L, 1L)
     },
 
-    #' @description Is connection alive? (i.e. is the websocket open?)
+    #' @description Is the underlying browser process alive?
     is_alive = function() {
-      self$is_active() && private$ws$readyState() %in% c(0L, 1L)
+      private$browser$is_alive()
     },
 
     #' @description Check that a chromote instance is active and alive,
     #'  erroring if not.
-    check_alive = function() {
-      if (!self$is_active()) {
+    check_active = function() {
+      if (!self$is_alive()) {
         stop("Chromote has been closed.")
       }
-      if (!self$is_alive()) {
-        stop("Websocket has disconnected.")
+
+      if (!self$is_active()) {
+        self$reactivate()
       }
+    },
+
+    reactivate = function() {
+      inform(c(
+        "!" = "Reconnecting to chrome process.",
+        i = "All active sessions will be need to be respawned.")
+      )
+      self$connect()
+
+      # Mark all sessions as closed
+      for (session in private$sessions) {
+        session$mark_closed()
+      }
+      private$sessions <- list()
+      invisible(self)
     },
 
     #' @description Retrieve [`Browser`]` object
@@ -350,14 +364,14 @@ Chromote <- R6Class(
 
     #' @description Close the [`Browser`] object
     close = function() {
-      if (private$is_active_) {
-        self$Browser$close()
+      if (self$is_active()) {
         private$ws$close()
-        private$is_active_ <- FALSE
-        return(TRUE)
-      } else {
-        FALSE
       }
+      if (self$is_alive()) {
+        self$Browser$close()
+      }
+
+      invisible()
     },
 
     #' @field default_timeout Default timeout in seconds for \pkg{chromote} to
@@ -416,7 +430,7 @@ Chromote <- R6Class(
     event_manager = NULL,
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
-      self$check_alive()
+      self$check_active()
       private$event_manager$register_event_listener(event, callback, timeout)
     },
 
