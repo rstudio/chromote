@@ -38,16 +38,41 @@ Chromote <- R6Class(
       private$auto_events   <- auto_events
       private$multi_session <- multi_session
 
+      private$command_callbacks <- fastmap()
+
+      # Use a private event loop to drive the websocket
+      private$child_loop <- create_loop(parent = current_loop())
+
+      p <- self$connect(multi_session = multi_session, wait_ = FALSE)
+
+      # Populate methods while the connection is being established.
+      protocol_spec <- jsonlite::fromJSON(self$url("/json/protocol"), simplifyVector = FALSE)
+      self$protocol <- process_protocol(protocol_spec, self$.__enclos_env__)
+      lockBinding("protocol", self)
+      # self$protocol is a list of domains, each of which is a list of
+      # methods. Graft the entries from self$protocol onto self
+      list2env(self$protocol, self)
+
+      private$event_manager <- EventManager$new(self)
+      private$is_active_ <- TRUE
+
+      self$wait_for(p)
+
+      private$register_default_event_listeners()
+    },
+
+    #' @description Re-connect the websocket to the browser. The Chrome browser
+    #'   automatically closes websockets when your computer goes to sleep;
+    #'   you can use this to bring it back to life with a new connection.
+    #' @param multi_session Should multiple sessions be allowed?
+    #' @param wait_ If `FALSE`, return a promise; if `TRUE` wait until
+    #'   connection is complete.
+    connect = function(multi_session = TRUE, wait_ = TRUE) {
       if (multi_session) {
         chrome_info <- fromJSON(self$url("/json/version"))
       } else {
         chrome_info <- fromJSON(self$url("/json"))
       }
-
-      private$command_callbacks <- fastmap()
-
-      # Use a private event loop to drive the websocket
-      private$child_loop <- create_loop(parent = current_loop())
 
       with_loop(private$child_loop, {
         private$ws <- WebSocket$new(
@@ -81,23 +106,13 @@ Chromote <- R6Class(
           })
 
         private$ws$connect()
-
-        # Populate methods while the connection is being established.
-        protocol_spec <- jsonlite::fromJSON(self$url("/json/protocol"), simplifyVector = FALSE)
-        self$protocol <- process_protocol(protocol_spec, self$.__enclos_env__)
-        lockBinding("protocol", self)
-
-        # self$protocol is a list of domains, each of which is a list of
-        # methods. Graft the entries from self$protocol onto self
-        list2env(self$protocol, self)
-
-        private$event_manager <- EventManager$new(self)
-        private$is_active_ <- TRUE
-
-        self$wait_for(p)
-
-        private$register_default_event_listeners()
       })
+
+      if (wait_) {
+        invisible(self$wait_for(p))
+      } else {
+        p
+      }
     },
 
     #' @description Display the current session in the `browser`
