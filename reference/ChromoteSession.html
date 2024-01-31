@@ -92,6 +92,7 @@ wait for a Chrome DevTools Protocol response.</p></dd>
 <li><p><a href="#method-ChromoteSession-screenshot_pdf"><code>ChromoteSession$screenshot_pdf()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-new_session"><code>ChromoteSession$new_session()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-get_session_id"><code>ChromoteSession$get_session_id()</code></a></p></li>
+<li><p><a href="#method-ChromoteSession-respawn"><code>ChromoteSession$respawn()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-get_target_id"><code>ChromoteSession$get_target_id()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-wait_for"><code>ChromoteSession$wait_for()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-debug_log"><code>ChromoteSession$debug_log()</code></a></p></li>
@@ -101,7 +102,7 @@ wait for a Chrome DevTools Protocol response.</p></dd>
 <li><p><a href="#method-ChromoteSession-invoke_event_callbacks"><code>ChromoteSession$invoke_event_callbacks()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-mark_closed"><code>ChromoteSession$mark_closed()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-is_active"><code>ChromoteSession$is_active()</code></a></p></li>
-<li><p><a href="#method-ChromoteSession-init_promise"><code>ChromoteSession$init_promise()</code></a></p></li>
+<li><p><a href="#method-ChromoteSession-get_init_promise"><code>ChromoteSession$get_init_promise()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-ChromoteSession-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Create a new <code>ChromoteSession</code> object.</p><div class="section">
@@ -513,10 +514,20 @@ until the <code>ChromoteSession</code> has created a new session.</p></dd>
 </div>
 
 
+</div><p></p><hr><a id="method-ChromoteSession-respawn"></a><div class="section">
+<h3 id="method-respawn-">Method <code>respawn()</code><a class="anchor" aria-label="anchor" href="#method-respawn-"></a></h3>
+<p>Create a new session that connects to the same target (i.e. page)
+as this session. This is useful if the session has been closed but the target still
+exists.</p><div class="section">
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">respawn</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
 </div><p></p><hr><a id="method-ChromoteSession-get_target_id"></a><div class="section">
 <h3 id="method-get-target-id-">Method <code>get_target_id()</code><a class="anchor" aria-label="anchor" href="#method-get-target-id-"></a></h3>
 <p>Retrieve the target id</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_target_id</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -540,7 +551,7 @@ resolve.</p><div class="section">
 <span><span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span>, callback_ <span class="op">=</span> <span class="va">str</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 <div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -567,7 +578,7 @@ resolve.</p><div class="section">
 <span><span class="va">b</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">debug_messages</span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 <div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">debug_log</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -584,7 +595,7 @@ resolve.</p><div class="section">
 <h3 id="method-get-child-loop-">Method <code>get_child_loop()</code><a class="anchor" aria-label="anchor" href="#method-get-child-loop-"></a></h3>
 <p><span class="pkg">later</span> loop.</p>
 <p>For expert async usage only.</p><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_child_loop</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -593,7 +604,7 @@ resolve.</p><div class="section">
 <h3 id="method-send-command-">Method <code>send_command()</code><a class="anchor" aria-label="anchor" href="#method-send-command-"></a></h3>
 <p>Send command through Chrome DevTools Protocol.</p>
 <p>For expert use only.</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">send_command</span><span class="op">(</span></span>
 <span>  <span class="va">msg</span>,</span>
 <span>  callback <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -628,7 +639,7 @@ execute a method.</p></dd>
 <h3 id="method-get-auto-events-">Method <code>get_auto_events()</code><a class="anchor" aria-label="anchor" href="#method-get-auto-events-"></a></h3>
 <p>Resolved <code>auto_events</code> value.</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_auto_events</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -637,7 +648,7 @@ execute a method.</p></dd>
 <h3 id="method-invoke-event-callbacks-">Method <code>invoke_event_callbacks()</code><a class="anchor" aria-label="anchor" href="#method-invoke-event-callbacks-"></a></h3>
 <p>Immediately call all event callback methods.</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">invoke_event_callbacks</span><span class="op">(</span><span class="va">event</span>, <span class="va">params</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -658,7 +669,7 @@ execute a method.</p></dd>
 <h3 id="method-mark-closed-">Method <code>mark_closed()</code><a class="anchor" aria-label="anchor" href="#method-mark-closed-"></a></h3>
 <p>Disable callbacks for a given session.</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
+<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">mark_closed</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -668,17 +679,17 @@ execute a method.</p></dd>
 <p>Retrieve active status
 Once initialized, the value returned is <code>TRUE</code>. If <code>$close()</code> has been
 called, this value will be <code>FALSE</code>.</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">is_active</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 
-</div><p></p><hr><a id="method-ChromoteSession-init_promise"></a><div class="section">
-<h3 id="method-init-promise-">Method <code>init_promise()</code><a class="anchor" aria-label="anchor" href="#method-init-promise-"></a></h3>
+</div><p></p><hr><a id="method-ChromoteSession-get_init_promise"></a><div class="section">
+<h3 id="method-get-init-promise-">Method <code>get_init_promise()</code><a class="anchor" aria-label="anchor" href="#method-get-init-promise-"></a></h3>
 <p>Initial promise</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">init_promise</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_init_promise</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 
