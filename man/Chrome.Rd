@@ -4,11 +4,6 @@
 \alias{Chrome}
 \title{Local Chrome process}
 \description{
-Local Chrome process
-
-Local Chrome process
-}
-\details{
 This is a subclass of \code{\link{Browser}} that represents a local browser. It extends
 the \code{\link{Browser}} class with a \code{\link[processx:process]{processx::process}} object, which represents
 the browser's system process.

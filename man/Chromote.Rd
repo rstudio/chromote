@@ -4,13 +4,6 @@
 \alias{Chromote}
 \title{Chromote class}
 \description{
-Chromote class
-
-Chromote class
-}
-\details{
-This class represents the browser as a whole.
-
 A \code{Chromote} object represents the browser as a whole, and it can have
 multiple \emph{targets}, which each represent a browser tab. In the Chrome
 DevTools Protocol, each target can have one or more debugging \emph{sessions} to
@@ -44,6 +37,7 @@ wait for a Chrome DevTools Protocol response.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-Chromote-new}{\code{Chromote$new()}}
+\item \href{#method-Chromote-connect}{\code{Chromote$connect()}}
 \item \href{#method-Chromote-view}{\code{Chromote$view()}}
 \item \href{#method-Chromote-get_auto_events}{\code{Chromote$get_auto_events()}}
 \item \href{#method-Chromote-get_child_loop}{\code{Chromote$get_child_loop()}}
@@ -80,6 +74,28 @@ wait for a Chrome DevTools Protocol response.}
 
 \item{\code{auto_events}}{If \code{TRUE}, enable automatic event enabling/disabling;
 if \code{FALSE}, disable automatic event enabling/disabling.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Chromote-connect"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-connect}{}}}
+\subsection{Method \code{connect()}}{
+Re-connect the websocket to the browser. The Chrome browser
+automatically closes websockets when your computer goes to sleep;
+you can use this to bring it back to life with a new connection.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$connect(multi_session = TRUE, wait_ = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{multi_session}}{Should multiple sessions be allowed?}
+
+\item{\code{wait_}}{If \code{FALSE}, return a promise; if \code{TRUE} wait until
+connection is complete.}
 }
 \if{html}{\out{</div>}}
 }

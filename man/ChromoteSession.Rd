@@ -4,9 +4,12 @@
 \alias{ChromoteSession}
 \title{ChromoteSession class}
 \description{
-ChromoteSession class
+This represents one \emph{session} in a Chromote object. Note that in the Chrome
+DevTools Protocol a session is a debugging session connected to a \emph{target},
+which is a browser window/tab or an iframe.
 
-ChromoteSession class
+A single target can potentially have more than one session connected to it,
+but this is not currently supported by chromote.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -30,6 +33,8 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-screenshot_pdf}{\code{ChromoteSession$screenshot_pdf()}}
 \item \href{#method-ChromoteSession-new_session}{\code{ChromoteSession$new_session()}}
 \item \href{#method-ChromoteSession-get_session_id}{\code{ChromoteSession$get_session_id()}}
+\item \href{#method-ChromoteSession-respawn}{\code{ChromoteSession$respawn()}}
+\item \href{#method-ChromoteSession-get_target_id}{\code{ChromoteSession$get_target_id()}}
 \item \href{#method-ChromoteSession-wait_for}{\code{ChromoteSession$wait_for()}}
 \item \href{#method-ChromoteSession-debug_log}{\code{ChromoteSession$debug_log()}}
 \item \href{#method-ChromoteSession-get_child_loop}{\code{ChromoteSession$get_child_loop()}}
@@ -39,7 +44,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-mark_closed}{\code{ChromoteSession$mark_closed()}}
 \item \href{#method-ChromoteSession-is_active}{\code{ChromoteSession$is_active()}}
 \item \href{#method-ChromoteSession-check_active}{\code{ChromoteSession$check_active()}}
-\item \href{#method-ChromoteSession-init_promise}{\code{ChromoteSession$init_promise()}}
+\item \href{#method-ChromoteSession-get_init_promise}{\code{ChromoteSession$get_init_promise()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -79,11 +84,7 @@ if (interactive()) b$view()
 \item{\code{parent}}{\code{\link{Chromote}} object to use; defaults to
 \code{\link[=default_chromote_object]{default_chromote_object()}}}
 
-\item{\code{width}}{Width, in pixels, of the \code{Target} to create if \code{targetId} is
-\code{NULL}}
-
-\item{\code{height}}{Height, in pixels, of the \code{Target} to create if \code{targetId} is
-\code{NULL}}
+\item{\code{width, height}}{Width and height of the new window.}
 
 \item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target/}{Target}
 ID of an existing target to attach to. When a \code{targetId} is provided, the
@@ -409,15 +410,30 @@ until the \code{ChromoteSession} has created a new session.}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-get_session_id}{}}}
 \subsection{Method \code{get_session_id()}}{
 Retrieve the session id
-\subsection{Examples}{
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{b <- ChromoteSession$new()
-b$get_session_id()
-#> [1] "05764F1D439F4292497A21C6526575DA"
-}\if{html}{\out{</div>}}
-}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_session_id()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-respawn"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-respawn}{}}}
+\subsection{Method \code{respawn()}}{
+Create a new session that connects to the same target (i.e. page)
+as this session. This is useful if the session has been closed but the target still
+exists.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$respawn()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-get_target_id"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-get_target_id}{}}}
+\subsection{Method \code{get_target_id()}}{
+Retrieve the target id
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_target_id()}\if{html}{\out{</div>}}
 }
 
 }
@@ -591,14 +607,14 @@ Check that a session is active, erroring if not.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ChromoteSession-init_promise"></a>}}
-\if{latex}{\out{\hypertarget{method-ChromoteSession-init_promise}{}}}
-\subsection{Method \code{init_promise()}}{
+\if{html}{\out{<a id="method-ChromoteSession-get_init_promise"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-get_init_promise}{}}}
+\subsection{Method \code{get_init_promise()}}{
 Initial promise
 
 For internal use only.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$init_promise()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_init_promise()}\if{html}{\out{</div>}}
 }
 
 }

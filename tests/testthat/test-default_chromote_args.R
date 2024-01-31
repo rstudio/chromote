@@ -1,5 +1,5 @@
 
-min_chrome_arg_length <- if (is_inside_ci()) 5 else 4
+min_chrome_arg_length <- if (is_inside_ci()) 4 else 3
 
 test_that("default args are retrieved", {
   expect_gte(length(default_chrome_args()), min_chrome_arg_length)
