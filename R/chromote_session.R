@@ -129,7 +129,7 @@ ChromoteSession <- R6Class(
         # returning p, because the call to ChromoteSession$new() always
         # returns the new object. Instead, we'll store it as
         # private$init_promise_, and the user can retrieve it with
-        # b$init_promise().
+        # b$get_init_promise().
         private$init_promise_ <- p$then(function(value) self)
       }
 
@@ -409,13 +409,35 @@ ChromoteSession <- R6Class(
     #' when the `ChromoteSession` has created a new session. Otherwise, block
     #' until the `ChromoteSession` has created a new session.
     new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
-      self$parent$new_session(width = width, height = height, targetId = targetId, wait_ = wait_)
+      create_session(
+        chromote = self$parent,
+        width = width,
+        height = height,
+        targetId = targetId,
+        wait_ = wait_
+      )
     },
 
     #' @description
     #' Retrieve the session id
     get_session_id = function() {
       private$session_id
+    },
+
+    #' @description
+    #' Create a new session that connects to the same target (i.e. page)
+    #' as this session. This is useful if the session has been closed but the target still
+    #' exists.
+    respawn = function() {
+      if (!private$is_active_) {
+        stop("Can't respawn session; target has been closed.")
+      }
+
+      create_session(
+        chromote = self$parent,
+        targetId = private$target_id,
+        auto_events = private$auto_events
+      )
     },
 
     #' @description
@@ -531,7 +553,7 @@ ChromoteSession <- R6Class(
     #' @description Initial promise
     #'
     #' For internal use only.
-    init_promise = function() {
+    get_init_promise = function() {
       private$init_promise_
     },
 
@@ -561,3 +583,30 @@ ChromoteSession <- R6Class(
     }
   )
 )
+
+
+# Wrapper around ChromoteSession$new() that can return a promise
+create_session <- function(chromote = default_chromote_object(),
+                           width = 992,
+                           height = 1323,
+                           targetId = NULL,
+                           wait_ = TRUE,
+                           auto_events = NULL) {
+
+  session <- ChromoteSession$new(
+    parent = chromote,
+    width = width,
+    height = height,
+    targetId,
+    auto_events = auto_events,
+    wait_ = wait_
+  )
+
+  if (wait_) {
+    session
+  } else {
+    # ChromoteSession$new() must return a ChromoteSession object so we need a
+    # side-channel to return a promise
+    session$get_init_promise()
+  }
+}
