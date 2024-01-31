@@ -53,7 +53,6 @@ Chromote <- R6Class(
       list2env(self$protocol, self)
 
       private$event_manager <- EventManager$new(self)
-      private$is_active_ <- TRUE
 
       self$wait_for(p)
 
@@ -384,7 +383,6 @@ Chromote <- R6Class(
   private = list(
     browser = NULL,
     ws = NULL,
-    is_active_ = NULL,
 
     # =========================================================================
     # Browser commands
