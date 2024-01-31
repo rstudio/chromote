@@ -1,6 +1,7 @@
 skip_if_no_chromote <- function() {
-  testthat::skip_on_cran()
-  testthat::skip_if(lacks_chromote(), "chromote not available")
+  skip_on_cran()
+  skip_on_os("windows") # currently hangs the test process
+  skip_if(lacks_chromote(), "chromote not available")
 }
 
 lacks_chromote <- function() {
