@@ -318,40 +318,39 @@ Chromote <- R6Class(
       paste0("http://", private$browser$get_host(), ":", private$browser$get_port(), path)
     },
 
-    #' @description Is connection active? (i.e. is the websocket open?)
+    #' @description
+    #' Is there an active websocket connection to the browser process?
     is_active = function() {
       self$is_alive() && private$ws$readyState() %in% c(0L, 1L)
     },
 
-    #' @description Is the underlying browser process alive?
+    #' @description
+    #' Is the underlying browser process running?
     is_alive = function() {
       private$browser$is_alive()
     },
 
-    #' @description Check that a chromote instance is active and alive,
-    #'  erroring if not.
+    #' @description Check that a chromote instance is active and alive.
+    #'  Will automatically reconnect if browser process is alive, but
+    #'  there's no active web socket connection.
     check_active = function() {
       if (!self$is_alive()) {
         stop("Chromote has been closed.")
       }
 
       if (!self$is_active()) {
-        self$reactivate()
-      }
-    },
+        inform(c(
+          "!" = "Reconnecting to chrome process.",
+          i = "All active sessions will be need to be respawned.")
+        )
+        self$connect()
 
-    reactivate = function() {
-      inform(c(
-        "!" = "Reconnecting to chrome process.",
-        i = "All active sessions will be need to be respawned.")
-      )
-      self$connect()
-
-      # Mark all sessions as closed
-      for (session in private$sessions) {
-        session$mark_closed(FALSE)
+        # Mark all sessions as closed
+        for (session in private$sessions) {
+          session$mark_closed(FALSE)
+        }
+        private$sessions <- list()
       }
-      private$sessions <- list()
       invisible(self)
     },
 

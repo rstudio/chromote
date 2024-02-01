@@ -540,6 +540,8 @@ ChromoteSession <- R6Class(
 
     #' @description Mark a session, and optionally, the underlying target,
     #'   as closed. For internal use only.
+    #' @param target_closed Has the underlying target been closed as well as the
+    #'   active debugging session?
     mark_closed = function(target_closed) {
       private$session_is_active <- FALSE
       private$target_is_active <- FALSE

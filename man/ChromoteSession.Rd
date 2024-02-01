@@ -576,13 +576,20 @@ For internal use only.
 \if{html}{\out{<a id="method-ChromoteSession-mark_closed"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-mark_closed}{}}}
 \subsection{Method \code{mark_closed()}}{
-Disable callbacks for a given session.
-
-For internal use only.
+Mark a session, and optionally, the underlying target,
+as closed. For internal use only.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$mark_closed()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$mark_closed(target_closed)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{target_closed}}{Has the underlying target been closed as well as the
+active debugging session?}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-is_active"></a>}}
