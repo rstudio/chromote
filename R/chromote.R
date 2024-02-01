@@ -362,8 +362,11 @@ Chromote <- R6Class(
 
     #' @description Close the [`Browser`] object
     close = function() {
+      # Must be alive to be active so we cache value before closing process
+      is_active <- self$is_active()
+
       if (self$is_alive()) {
-        if (self$is_active()) {
+        if (is_active) {
           # send a message to the browser requesting that it close
           self$Browser$close()
         } else {
@@ -372,7 +375,7 @@ Chromote <- R6Class(
         }
       }
 
-      if (self$is_active()) {
+      if (is_active) {
         private$ws$close()
       }
 
