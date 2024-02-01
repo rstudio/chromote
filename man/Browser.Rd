@@ -4,15 +4,11 @@
 \alias{Browser}
 \title{Browser base class}
 \description{
-Browser base class
-
-Browser base class
-}
-\details{
 Base class for browsers like Chrome, Chromium, etc. Defines the interface
 used by various browser implementations. It can represent a local browser
 process or one running remotely.
-
+}
+\details{
 The \code{initialize()} method of an implementation should set private$host
 and private$port. If the process is local, the \code{initialize()} method
 should also set private$process.

@@ -5,8 +5,6 @@
 \title{Remote Chrome process}
 \description{
 Remote Chrome process
-
-Remote Chrome process
 }
 \section{Super class}{
 \code{\link[chromote:Browser]{chromote::Browser}} -> \code{ChromeRemote}
