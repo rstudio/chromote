@@ -98,7 +98,8 @@ ChromoteSession <- R6Class(
 
       private$auto_events <- auto_events
       private$event_manager <- EventManager$new(self)
-      private$is_active_ <- TRUE
+      private$session_is_active <- TRUE
+      private$target_is_active <- TRUE
 
       # Find pixelRatio for screenshots
       p <- p$
@@ -117,7 +118,7 @@ ChromoteSession <- R6Class(
               warning("Chromote has received a Inspector.targetCrashed event. This means that the ChromoteSession has probably crashed.")
               # Even if no targetId nor sessionId is returned by Inspector.targetCashed
               # mark the session as closed. This will close all sessions..
-              self$mark_closed()
+              self$mark_closed(TRUE)
             })
           })
       }
@@ -184,7 +185,7 @@ ChromoteSession <- R6Class(
     #' when the `ChromoteSession` is closed. Otherwise, block until the
     #' `ChromoteSession` has closed.
     close = function(wait_ = TRUE) {
-      if (!self$is_active()) {
+      if (!private$target_is_active) {
         return(invisible())
       }
 
@@ -196,7 +197,7 @@ ChromoteSession <- R6Class(
 
       p <- p$then(function(value) {
         if (isTRUE(value$success)) {
-          self$mark_closed()
+          self$mark_closed(TRUE)
         }
         invisible(value$success)
       })
@@ -433,7 +434,7 @@ ChromoteSession <- R6Class(
     #' as this session. This is useful if the session has been closed but the target still
     #' exists.
     respawn = function() {
-      if (!private$is_active_) {
+      if (!private$target_is_active) {
         stop("Can't respawn session; target has been closed.")
       }
 
@@ -537,28 +538,33 @@ ChromoteSession <- R6Class(
       private$event_manager$invoke_event_callbacks(event, params)
     },
 
-    #' @description
-    #' Disable callbacks for a given session.
-    #'
-    #' For internal use only.
-    mark_closed = function() {
-      private$is_active_ <- FALSE
+    #' @description Mark a session, and optionally, the underlying target,
+    #'   as closed. For internal use only.
+    mark_closed = function(target_closed) {
+      private$session_is_active <- FALSE
+      private$target_is_active <- FALSE
     },
 
     #' @description Retrieve active status
     #' Once initialized, the value returned is `TRUE`. If `$close()` has been
     #' called, this value will be `FALSE`.
     is_active = function() {
-      private$is_active_ && self$parent$is_alive()
+      private$session_is_active && private$target_is_active && self$parent$is_active()
     },
 
     #' @description Check that a session is active, erroring if not.
     check_active = function() {
-      if (!self$is_active()) {
+      if (self$is_active()) {
+        return()
+      }
+
+      if (private$target_is_active) {
         abort(c(
-          paste("Session ", private$session_id, " has been closed."),
+          "Session has been closed.",
           i = "Call session$respawn() to create a new session that connects to the same target."
         ))
+      } else {
+        abort("Session and underlying target have been closed.")
       }
     },
 
@@ -581,7 +587,8 @@ ChromoteSession <- R6Class(
   private = list(
     session_id = NULL,
     target_id = NULL,
-    is_active_ = NULL,
+    session_is_active = NULL,
+    target_is_active = NULL,
     event_manager = NULL,
     pixel_ratio = NULL,
     auto_events = NULL,

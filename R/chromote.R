@@ -349,7 +349,7 @@ Chromote <- R6Class(
 
       # Mark all sessions as closed
       for (session in private$sessions) {
-        session$mark_closed()
+        session$mark_closed(FALSE)
       }
       private$sessions <- list()
       invisible(self)
@@ -449,7 +449,7 @@ Chromote <- R6Class(
           return()
 
         private$sessions[[sid]] <- NULL
-        session$mark_closed()
+        session$mark_closed(TRUE)
       })
     },
 
