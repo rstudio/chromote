@@ -559,13 +559,18 @@ ChromoteSession <- R6Class(
 
     #' @description Summarise the current state of the object.
     #' @param ... Ignored
-    print = function(...) {
-      state <- if (private$is_active_) "active" else "closed"
+    print = function(..., verbose = FALSE) {
+      if (verbose) {
+        cat(format(self, ...), sep = "\n")
+      } else {
+        state <- if (private$is_active_) "active" else "closed"
 
-      cat_line("<ChromoteSession> (", state, ")")
-      cat_line("  Session ID: ", self$get_session_id())
-      cat_line("  Target ID:  ", self$get_target_id())
-      cat_line("  Parent PID: ", self$parent$get_browser()$get_process()$get_pid())
+        cat_line("<ChromoteSession> (", state, ")")
+        cat_line("  Session ID: ", self$get_session_id())
+        cat_line("  Target ID:  ", self$get_target_id())
+        cat_line("  Parent PID: ", self$parent$get_browser()$get_process()$get_pid())
+      }
+      invisible(self)
     },
 
     #' @field parent [`Chromote`] object

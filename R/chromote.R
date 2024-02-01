@@ -346,14 +346,19 @@ Chromote <- R6Class(
 
     #' @description Summarise the current state of the object.
     #' @param ... Ignored
-    print = function(...) {
-      state <- if (private$is_active_) "active" else "closed"
-      ps <- self$get_browser()$get_process()
+    print = function(..., verbose = FALSE) {
+      if (verbose) {
+        cat(format(self, ...), sep = "\n")
+      } else {
+        state <- if (private$is_active_) "active" else "closed"
+        ps <- self$get_browser()$get_process()
 
-      cat_line("<Chromote> (", state, ")")
-      cat_line("  URL:  ", self$url())
-      cat_line("  PID:  ", ps$get_pid())
-      cat_line("  Path: ", ps$get_cmdline()[[1]])
+        cat_line("<Chromote> (", state, ")")
+        cat_line("  URL:  ", self$url())
+        cat_line("  PID:  ", ps$get_pid())
+        cat_line("  Path: ", ps$get_cmdline()[[1]])
+      }
+      invisible(self)
     },
 
     #' @field default_timeout Default timeout in seconds for \pkg{chromote} to
