@@ -380,7 +380,11 @@ Summarise the current state of the object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Ignored}
+\item{\code{...}}{Passed on to \code{format()} when \code{verbose} = TRUE}
+
+\item{\code{verbose}}{The print method defaults to a brief summary
+of the most important debugging info; use \code{verbose = TRUE} tp
+see the complex R6 object.}
 }
 \if{html}{\out{</div>}}
 }

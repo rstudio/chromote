@@ -558,7 +558,10 @@ ChromoteSession <- R6Class(
     },
 
     #' @description Summarise the current state of the object.
-    #' @param ... Ignored
+    #' @param verbose The print method defaults to a brief summary
+    #'   of the most important debugging info; use `verbose = TRUE` tp
+    #'   see the complex R6 object.
+    #' @param ... Passed on to `format()` when `verbose` = TRUE
     print = function(..., verbose = FALSE) {
       if (verbose) {
         cat(format(self, ...), sep = "\n")
