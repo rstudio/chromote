@@ -2,9 +2,9 @@
 
 * `Chromote` and `ChromoteSession` gain print methods to give you a snapshot of the most important values.
 
-* `ChromoteSession` now records the `targetId`. This eliminates one round-trip to the browser when viewing or closing a session. You can now call the `$respawn()` method if a session terminates and you want to reconnect to the same target (#94).
-
 * `--disable-gpu` is no longer included in the default Chrome arguments.
+
+* `ChromoteSession` now records the `targetId`. This eliminates one round-trip to the browser when viewing or closing a session. You can now call the `$respawn()` method if a session terminates and you want to reconnect to the same target (#94).
 
 * `ChromoteSession$screenshot()` gains an `options` argument that accepts a list of additional options to be passed to the Chrome Devtools Protocol's [`Page.captureScreenshot` method](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot). (#129)
 
