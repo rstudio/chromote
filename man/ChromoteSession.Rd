@@ -614,7 +614,7 @@ For internal use only.
 \subsection{Method \code{print()}}{
 Summarise the current state of the object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$print(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$print(..., verbose = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

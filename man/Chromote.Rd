@@ -374,7 +374,7 @@ Close the \code{\link{Browser}} object
 \subsection{Method \code{print()}}{
 Summarise the current state of the object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Chromote$print(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$print(..., verbose = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
