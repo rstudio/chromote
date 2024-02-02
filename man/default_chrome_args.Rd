@@ -32,6 +32,10 @@ list of possible arguments.
 Default chromote arguments are composed of the following values (when
 appropriate):
 \itemize{
+\item \href{https://peter.sh/experiments/chromium-command-line-switches/#disable-gpu}{\code{"--disable-gpu"}}
+\itemize{
+\item \verb{Disables GPU hardware acceleration. If software renderer is not in place, then the GPU process won't launch.}
+}
 \item \href{https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox}{\code{"--no-sandbox"}}
 \itemize{
 \item Only added when \code{CI} system environment variable is set, when the
@@ -78,7 +82,7 @@ passed when initializing. Returns the updated defaults.
 \examples{
 old_chrome_args <- get_chrome_args()
 
-# Disable the gpu and use `/dev/shm`
+# Only disable the gpu and using `/dev/shm`
 set_chrome_args(c("--disable-gpu", "--disable-dev-shm-usage"))
 
 #... Make new `Chrome` or `ChromoteSession` instance
