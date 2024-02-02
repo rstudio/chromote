@@ -43,6 +43,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-invoke_event_callbacks}{\code{ChromoteSession$invoke_event_callbacks()}}
 \item \href{#method-ChromoteSession-mark_closed}{\code{ChromoteSession$mark_closed()}}
 \item \href{#method-ChromoteSession-is_active}{\code{ChromoteSession$is_active()}}
+\item \href{#method-ChromoteSession-check_active}{\code{ChromoteSession$check_active()}}
 \item \href{#method-ChromoteSession-get_init_promise}{\code{ChromoteSession$get_init_promise()}}
 \item \href{#method-ChromoteSession-print}{\code{ChromoteSession$print()}}
 }
@@ -576,13 +577,20 @@ For internal use only.
 \if{html}{\out{<a id="method-ChromoteSession-mark_closed"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-mark_closed}{}}}
 \subsection{Method \code{mark_closed()}}{
-Disable callbacks for a given session.
-
-For internal use only.
+Mark a session, and optionally, the underlying target,
+as closed. For internal use only.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$mark_closed()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$mark_closed(target_closed)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{target_closed}}{Has the underlying target been closed as well as the
+active debugging session?}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-is_active"></a>}}
@@ -593,6 +601,16 @@ Once initialized, the value returned is \code{TRUE}. If \verb{$close()} has been
 called, this value will be \code{FALSE}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$is_active()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-check_active"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-check_active}{}}}
+\subsection{Method \code{check_active()}}{
+Check that a session is active, erroring if not.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$check_active()}\if{html}{\out{</div>}}
 }
 
 }

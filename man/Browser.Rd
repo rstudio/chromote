@@ -18,6 +18,7 @@ should also set private$process.
 \itemize{
 \item \href{#method-Browser-is_local}{\code{Browser$is_local()}}
 \item \href{#method-Browser-get_process}{\code{Browser$get_process()}}
+\item \href{#method-Browser-is_alive}{\code{Browser$is_alive()}}
 \item \href{#method-Browser-get_host}{\code{Browser$get_host()}}
 \item \href{#method-Browser-get_port}{\code{Browser$get_port()}}
 \item \href{#method-Browser-close}{\code{Browser$close()}}
@@ -42,6 +43,16 @@ Returns TRUE if the browser is running locally, FALSE if it's remote.
 Browser process
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Browser$get_process()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Browser-is_alive"></a>}}
+\if{latex}{\out{\hypertarget{method-Browser-is_alive}{}}}
+\subsection{Method \code{is_alive()}}{
+Is the process alive?
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Browser$is_alive()}\if{html}{\out{</div>}}
 }
 
 }

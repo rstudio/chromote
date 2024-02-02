@@ -98,7 +98,8 @@ ChromoteSession <- R6Class(
 
       private$auto_events <- auto_events
       private$event_manager <- EventManager$new(self)
-      private$is_active_ <- TRUE
+      private$session_is_active <- TRUE
+      private$target_is_active <- TRUE
 
       # Find pixelRatio for screenshots
       p <- p$
@@ -117,7 +118,7 @@ ChromoteSession <- R6Class(
               warning("Chromote has received a Inspector.targetCrashed event. This means that the ChromoteSession has probably crashed.")
               # Even if no targetId nor sessionId is returned by Inspector.targetCashed
               # mark the session as closed. This will close all sessions..
-              self$mark_closed()
+              self$mark_closed(TRUE)
             })
           })
       }
@@ -184,6 +185,10 @@ ChromoteSession <- R6Class(
     #' when the `ChromoteSession` is closed. Otherwise, block until the
     #' `ChromoteSession` has closed.
     close = function(wait_ = TRUE) {
+      if (!private$target_is_active) {
+        return(invisible())
+      }
+
       # Even if this session calls Target.closeTarget, the response from
       # the browser is sent without a sessionId. In order to wait for the
       # correct browser response, we need to invoke this from the parent's
@@ -192,7 +197,7 @@ ChromoteSession <- R6Class(
 
       p <- p$then(function(value) {
         if (isTRUE(value$success)) {
-          self$mark_closed()
+          self$mark_closed(TRUE)
         }
         invisible(value$success)
       })
@@ -429,7 +434,7 @@ ChromoteSession <- R6Class(
     #' as this session. This is useful if the session has been closed but the target still
     #' exists.
     respawn = function() {
-      if (!private$is_active_) {
+      if (!private$target_is_active) {
         stop("Can't respawn session; target has been closed.")
       }
 
@@ -507,9 +512,7 @@ ChromoteSession <- R6Class(
     #' @param timeout Number of milliseconds for Chrome DevTools Protocol
     #' execute a method.
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
-      if (!private$is_active_) {
-        stop("Session ", private$session_id, " is closed.")
-      }
+      self$check_active()
       self$parent$send_command(msg, callback, error, timeout, sessionId = private$session_id)
     },
 
@@ -535,19 +538,36 @@ ChromoteSession <- R6Class(
       private$event_manager$invoke_event_callbacks(event, params)
     },
 
-    #' @description
-    #' Disable callbacks for a given session.
-    #'
-    #' For internal use only.
-    mark_closed = function() {
-      private$is_active_ <- FALSE
+    #' @description Mark a session, and optionally, the underlying target,
+    #'   as closed. For internal use only.
+    #' @param target_closed Has the underlying target been closed as well as the
+    #'   active debugging session?
+    mark_closed = function(target_closed) {
+      private$session_is_active <- FALSE
+      private$target_is_active <- target_closed
     },
 
     #' @description Retrieve active status
     #' Once initialized, the value returned is `TRUE`. If `$close()` has been
     #' called, this value will be `FALSE`.
     is_active = function() {
-      private$is_active_
+      private$session_is_active && private$target_is_active && self$parent$is_active()
+    },
+
+    #' @description Check that a session is active, erroring if not.
+    check_active = function() {
+      if (self$is_active()) {
+        return()
+      }
+
+      if (private$target_is_active) {
+        abort(c(
+          "Session has been closed.",
+          i = "Call session$respawn() to create a new session that connects to the same target."
+        ))
+      } else {
+        abort("Session and underlying target have been closed.")
+      }
     },
 
     #' @description Initial promise
@@ -588,16 +608,15 @@ ChromoteSession <- R6Class(
   private = list(
     session_id = NULL,
     target_id = NULL,
-    is_active_ = NULL,
+    session_is_active = NULL,
+    target_is_active = NULL,
     event_manager = NULL,
     pixel_ratio = NULL,
     auto_events = NULL,
     init_promise_ = NULL,
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
-      if (!private$is_active_) {
-        stop("Session ", private$session_id, " is closed.")
-      }
+      self$check_active()
       private$event_manager$register_event_listener(event, callback, timeout)
     }
   )
