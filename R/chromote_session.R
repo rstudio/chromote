@@ -544,7 +544,7 @@ ChromoteSession <- R6Class(
     #'   active debugging session?
     mark_closed = function(target_closed) {
       private$session_is_active <- FALSE
-      private$target_is_active <- target_closed
+      private$target_is_active <- !target_closed
     },
 
     #' @description Retrieve active status
@@ -586,11 +586,19 @@ ChromoteSession <- R6Class(
       if (verbose) {
         cat(format(self, ...), sep = "\n")
       } else {
-        state <- if (private$is_active_) "active" else "closed"
+        if (self$is_active()) {
+          state <- "session + target active"
+        } else if (private$target_is_active) {
+          state <- "target active"
+        } else {
+          state <- "closed"
+        }
 
         cat_line("<ChromoteSession> (", state, ")")
-        cat_line("  Session ID: ", self$get_session_id())
-        cat_line("  Target ID:  ", self$get_target_id())
+        if (self$is_active())
+          cat_line("  Session ID: ", self$get_session_id())
+        if (private$target_is_active)
+          cat_line("  Target ID:  ", self$get_target_id())
         cat_line("  Parent PID: ", self$parent$get_browser()$get_process()$get_pid())
       }
       invisible(self)

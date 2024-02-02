@@ -391,13 +391,22 @@ Chromote <- R6Class(
       if (verbose) {
         cat(format(self, ...), sep = "\n")
       } else {
-        state <- if (private$is_active_) "active" else "closed"
+        if (self$is_active()) {
+          state <- "active + alive"
+        } else if (self$is_alive()) {
+          state <- "alive"
+        } else {
+          state <- "closed"
+        }
+
         ps <- self$get_browser()$get_process()
 
         cat_line("<Chromote> (", state, ")")
-        cat_line("  URL:  ", self$url())
-        cat_line("  PID:  ", ps$get_pid())
-        cat_line("  Path: ", ps$get_cmdline()[[1]])
+        if (self$is_alive()) {
+          cat_line("  URL:  ", self$url())
+          cat_line("  PID:  ", ps$get_pid())
+          cat_line("  Path: ", ps$get_cmdline()[[1]])
+        }
       }
       invisible(self)
     },
