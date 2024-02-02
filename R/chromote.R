@@ -53,7 +53,6 @@ Chromote <- R6Class(
       list2env(self$protocol, self)
 
       private$event_manager <- EventManager$new(self)
-      private$is_active_ <- TRUE
 
       self$wait_for(p)
 
@@ -174,6 +173,7 @@ Chromote <- R6Class(
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
     new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
+      self$check_active()
       create_session(
         chromote = self,
         width = width,
@@ -213,9 +213,7 @@ Chromote <- R6Class(
     #' @param sessionId Determines which [`ChromoteSession`] with the
     #' corresponding to send the command to.
     send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
-      if (!private$is_active_) {
-        stop("Chromote object is closed.")
-      }
+      self$check_active()
 
       private$last_msg_id <- private$last_msg_id + 1
       msg$id <- private$last_msg_id
@@ -320,11 +318,40 @@ Chromote <- R6Class(
       paste0("http://", private$browser$get_host(), ":", private$browser$get_port(), path)
     },
 
-    #' @description Retrieve active status
-    #' Once initialized, the value returned is `TRUE`. If `$close()` has been
-    #' called, this value will be `FALSE`.
+    #' @description
+    #' Is there an active websocket connection to the browser process?
     is_active = function() {
-      private$is_active_
+      self$is_alive() && private$ws$readyState() %in% c(0L, 1L)
+    },
+
+    #' @description
+    #' Is the underlying browser process running?
+    is_alive = function() {
+      private$browser$is_alive()
+    },
+
+    #' @description Check that a chromote instance is active and alive.
+    #'  Will automatically reconnect if browser process is alive, but
+    #'  there's no active web socket connection.
+    check_active = function() {
+      if (!self$is_alive()) {
+        stop("Chromote has been closed.")
+      }
+
+      if (!self$is_active()) {
+        inform(c(
+          "!" = "Reconnecting to chrome process.",
+          i = "All active sessions will be need to be respawned.")
+        )
+        self$connect()
+
+        # Mark all sessions as closed
+        for (session in private$sessions) {
+          session$mark_closed(FALSE)
+        }
+        private$sessions <- list()
+      }
+      invisible(self)
     },
 
     #' @description Retrieve [`Browser`]` object
@@ -335,13 +362,24 @@ Chromote <- R6Class(
 
     #' @description Close the [`Browser`] object
     close = function() {
-      if (private$is_active_) {
-        self$Browser$close()
-        private$is_active_ <- FALSE
-        return(TRUE)
-      } else {
-        FALSE
+      # Must be alive to be active so we cache value before closing process
+      is_active <- self$is_active()
+
+      if (self$is_alive()) {
+        if (is_active) {
+          # send a message to the browser requesting that it close
+          self$Browser$close()
+        } else {
+          # terminate the process
+          private$browser$close()
+        }
       }
+
+      if (is_active) {
+        private$ws$close()
+      }
+
+      invisible()
     },
 
     #' @field default_timeout Default timeout in seconds for \pkg{chromote} to
@@ -354,7 +392,6 @@ Chromote <- R6Class(
   private = list(
     browser = NULL,
     ws = NULL,
-    is_active_ = NULL,
 
     # =========================================================================
     # Browser commands
@@ -400,9 +437,7 @@ Chromote <- R6Class(
     event_manager = NULL,
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
-      if (!private$is_active_) {
-        stop("Chromote object is closed.")
-      }
+      self$check_active()
       private$event_manager$register_event_listener(event, callback, timeout)
     },
 
@@ -416,7 +451,7 @@ Chromote <- R6Class(
           return()
 
         private$sessions[[sid]] <- NULL
-        session$mark_closed()
+        session$mark_closed(TRUE)
       })
     },
 
@@ -496,7 +531,7 @@ default_chromote_object <- function() {
 #' @rdname default_chromote_object
 #' @export
 has_default_chromote_object <- function() {
-  !is.null(globals$default_chromote) && globals$default_chromote$is_active()
+  !is.null(globals$default_chromote) && globals$default_chromote$is_alive()
 }
 
 #' @param x A \code{\link{Chromote}} object.
