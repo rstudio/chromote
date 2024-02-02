@@ -600,24 +600,25 @@ is_missing_linux_user <- cache_value(function() {
 #' appropriate):
 #'
 #' * [`"--disable-gpu"`](https://peter.sh/experiments/chromium-command-line-switches/#disable-gpu)
-#'   * \verb{Disables GPU hardware acceleration. If software renderer is not in place, then the GPU process won't launch.}
+#'   * Only added on Windows.
+#'   * Disables GPU hardware acceleration. If software renderer is not in place, then the GPU process won't launch.
 #' * [`"--no-sandbox"`](https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox)
 #'   * Only added when `CI` system environment variable is set, when the
 #'     user on a Linux system is not set, or when executing inside a Docker container.
-#'   * \verb{Disables the sandbox for all process types that are normally sandboxed. Meant to be used as a browser-level switch for testing purposes only}
+#'   * Disables the sandbox for all process types that are normally sandboxed. Meant to be used as a browser-level switch for testing purposes only
 #' * [`"--disable-dev-shm-usage"`](https://peter.sh/experiments/chromium-command-line-switches/#disable-dev-shm-usage)
 #'   * Only added when `CI` system environment variable is set or when inside a docker instance.
-#'   * \verb{The /dev/shm partition is too small in certain VM environments, causing Chrome to fail or crash}
+#'   * The `/dev/shm` partition is too small in certain VM environments, causing Chrome to fail or crash.
 #' * [`"--force-color-profile=srgb"`](https://peter.sh/experiments/chromium-command-line-switches/#force-color-profile)
 #'   * This means that screenshots taken on a laptop plugged into an external
 #'     monitor will often have subtly different colors than one taken when
 #'     the laptop is using its built-in monitor. This problem will be even
 #'     more likely across machines.
-#'   * \verb{Force all monitors to be treated as though they have the specified color profile.}
+#'   * Force all monitors to be treated as though they have the specified color profile.
 #' * [`"--disable-extensions"`](https://peter.sh/experiments/chromium-command-line-switches/#disable-extensions)
-#'   * \verb{Disable extensions.}
+#'   * Disable extensions.
 #' * [`"--mute-audio"`](https://peter.sh/experiments/chromium-command-line-switches/#mute-audio)
-#'   * \verb{Mutes audio sent to the audio device so it is not audible during automated testing}
+#'   * Mutes audio sent to the audio device so it is not audible during automated testing.
 #'
 #' @return A character vector of default command-line arguments to be used with
 #'   every new [`ChromoteSession`]

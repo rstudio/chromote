@@ -34,18 +34,19 @@ appropriate):
 \itemize{
 \item \href{https://peter.sh/experiments/chromium-command-line-switches/#disable-gpu}{\code{"--disable-gpu"}}
 \itemize{
-\item \verb{Disables GPU hardware acceleration. If software renderer is not in place, then the GPU process won't launch.}
+\item Only added on Windows.
+\item Disables GPU hardware acceleration. If software renderer is not in place, then the GPU process won't launch.
 }
 \item \href{https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox}{\code{"--no-sandbox"}}
 \itemize{
 \item Only added when \code{CI} system environment variable is set, when the
 user on a Linux system is not set, or when executing inside a Docker container.
-\item \verb{Disables the sandbox for all process types that are normally sandboxed. Meant to be used as a browser-level switch for testing purposes only}
+\item Disables the sandbox for all process types that are normally sandboxed. Meant to be used as a browser-level switch for testing purposes only
 }
 \item \href{https://peter.sh/experiments/chromium-command-line-switches/#disable-dev-shm-usage}{\code{"--disable-dev-shm-usage"}}
 \itemize{
 \item Only added when \code{CI} system environment variable is set or when inside a docker instance.
-\item \verb{The /dev/shm partition is too small in certain VM environments, causing Chrome to fail or crash}
+\item The \verb{/dev/shm} partition is too small in certain VM environments, causing Chrome to fail or crash.
 }
 \item \href{https://peter.sh/experiments/chromium-command-line-switches/#force-color-profile}{\code{"--force-color-profile=srgb"}}
 \itemize{
@@ -53,15 +54,15 @@ user on a Linux system is not set, or when executing inside a Docker container.
 monitor will often have subtly different colors than one taken when
 the laptop is using its built-in monitor. This problem will be even
 more likely across machines.
-\item \verb{Force all monitors to be treated as though they have the specified color profile.}
+\item Force all monitors to be treated as though they have the specified color profile.
 }
 \item \href{https://peter.sh/experiments/chromium-command-line-switches/#disable-extensions}{\code{"--disable-extensions"}}
 \itemize{
-\item \verb{Disable extensions.}
+\item Disable extensions.
 }
 \item \href{https://peter.sh/experiments/chromium-command-line-switches/#mute-audio}{\code{"--mute-audio"}}
 \itemize{
-\item \verb{Mutes audio sent to the audio device so it is not audible during automated testing}
+\item Mutes audio sent to the audio device so it is not audible during automated testing.
 }
 }
 }
