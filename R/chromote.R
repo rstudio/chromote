@@ -627,8 +627,8 @@ is_missing_linux_user <- cache_value(function() {
 #' @export
 default_chrome_args <- function() {
   c(
-    # Better cross platform support
-    "--disable-gpu",
+    # Needed for tests to terminate on CI
+    if (is_windows()) "--disable-gpu",
 
     # > Note: --no-sandbox is not needed if you properly setup a user in the container.
     # https://developers.google.com/web/updates/2017/04/headless-chrome
