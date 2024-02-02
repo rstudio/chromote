@@ -682,7 +682,7 @@ reset_chrome_args <- function() {
 #' @examples
 #' old_chrome_args <- get_chrome_args()
 #'
-#' # Only disable the gpu and using `/dev/shm`
+#' # Disable the gpu and use of `/dev/shm`
 #' set_chrome_args(c("--disable-gpu", "--disable-dev-shm-usage"))
 #'
 #' #... Make new `Chrome` or `ChromoteSession` instance
