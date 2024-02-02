@@ -544,7 +544,7 @@ ChromoteSession <- R6Class(
     #'   active debugging session?
     mark_closed = function(target_closed) {
       private$session_is_active <- FALSE
-      private$target_is_active <- FALSE
+      private$target_is_active <- target_closed
     },
 
     #' @description Retrieve active status
