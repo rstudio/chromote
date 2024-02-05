@@ -628,23 +628,27 @@ is_missing_linux_user <- cache_value(function() {
 #' Default chromote arguments are composed of the following values (when
 #' appropriate):
 #'
+#' * [`"--disable-gpu"`](https://peter.sh/experiments/chromium-command-line-switches/#disable-gpu)
+#'   * Only added on Windows, as empirically it appears to be needed
+#'     (if not, check runs on GHA never terminate).
+#'   * Disables GPU hardware acceleration. If software renderer is not in place, then the GPU process won't launch.
 #' * [`"--no-sandbox"`](https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox)
 #'   * Only added when `CI` system environment variable is set, when the
 #'     user on a Linux system is not set, or when executing inside a Docker container.
-#'   * \verb{Disables the sandbox for all process types that are normally sandboxed. Meant to be used as a browser-level switch for testing purposes only}
+#'   * Disables the sandbox for all process types that are normally sandboxed. Meant to be used as a browser-level switch for testing purposes only
 #' * [`"--disable-dev-shm-usage"`](https://peter.sh/experiments/chromium-command-line-switches/#disable-dev-shm-usage)
 #'   * Only added when `CI` system environment variable is set or when inside a docker instance.
-#'   * \verb{The /dev/shm partition is too small in certain VM environments, causing Chrome to fail or crash}
+#'   * The `/dev/shm` partition is too small in certain VM environments, causing Chrome to fail or crash.
 #' * [`"--force-color-profile=srgb"`](https://peter.sh/experiments/chromium-command-line-switches/#force-color-profile)
 #'   * This means that screenshots taken on a laptop plugged into an external
 #'     monitor will often have subtly different colors than one taken when
 #'     the laptop is using its built-in monitor. This problem will be even
 #'     more likely across machines.
-#'   * \verb{Force all monitors to be treated as though they have the specified color profile.}
+#'   * Force all monitors to be treated as though they have the specified color profile.
 #' * [`"--disable-extensions"`](https://peter.sh/experiments/chromium-command-line-switches/#disable-extensions)
-#'   * \verb{Disable extensions.}
+#'   * Disable extensions.
 #' * [`"--mute-audio"`](https://peter.sh/experiments/chromium-command-line-switches/#mute-audio)
-#'   * \verb{Mutes audio sent to the audio device so it is not audible during automated testing}
+#'   * Mutes audio sent to the audio device so it is not audible during automated testing.
 #'
 #' @return A character vector of default command-line arguments to be used with
 #'   every new [`ChromoteSession`]
@@ -654,6 +658,9 @@ is_missing_linux_user <- cache_value(function() {
 #' @export
 default_chrome_args <- function() {
   c(
+    # Empirically, appears to be needed for check runs to terminate on GHA
+    if (is_windows()) "--disable-gpu",
+
     # > Note: --no-sandbox is not needed if you properly setup a user in the container.
     # https://developers.google.com/web/updates/2017/04/headless-chrome
     if (is_inside_ci() || is_missing_linux_user() || is_inside_docker()) {
@@ -705,7 +712,7 @@ reset_chrome_args <- function() {
 #' @examples
 #' old_chrome_args <- get_chrome_args()
 #'
-#' # Disable the gpu and use `/dev/shm`
+#' # Disable the gpu and use of `/dev/shm`
 #' set_chrome_args(c("--disable-gpu", "--disable-dev-shm-usage"))
 #'
 #' #... Make new `Chrome` or `ChromoteSession` instance
