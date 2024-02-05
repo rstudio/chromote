@@ -1,5 +1,7 @@
 # chromote (development version)
 
+* `Chromote` and `ChromoteSession` gain print methods to give you a snapshot of the most important values.
+
 * `Chromote` gains a new `is_alive()` method equivalent to the old `is_active()` method; i.e. it reports on if there is an active chrome process running in the background.
 
 * Breaking change: `Chromote$is_active()` method now reports if there is an active connection to the underlying chrome instance, rather than whether or not that instance is alive (#94).

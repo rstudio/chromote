@@ -55,6 +55,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-Chromote-check_active}{\code{Chromote$check_active()}}
 \item \href{#method-Chromote-get_browser}{\code{Chromote$get_browser()}}
 \item \href{#method-Chromote-close}{\code{Chromote$close()}}
+\item \href{#method-Chromote-print}{\code{Chromote$print()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -388,5 +389,26 @@ Close the \code{\link{Browser}} object
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$close()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Chromote-print"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-print}{}}}
+\subsection{Method \code{print()}}{
+Summarise the current state of the object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$print(..., verbose = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Passed on to \code{format()} when \code{verbose} = TRUE}
+
+\item{\code{verbose}}{The print method defaults to a brief summary
+of the most important debugging info; use \code{verbose = TRUE} tp
+see the complex R6 object.}
+}
+\if{html}{\out{</div>}}
+}
 }
 }

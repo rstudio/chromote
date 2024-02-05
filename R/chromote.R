@@ -382,6 +382,35 @@ Chromote <- R6Class(
       invisible()
     },
 
+    #' @description Summarise the current state of the object.
+    #' @param verbose The print method defaults to a brief summary
+    #'   of the most important debugging info; use `verbose = TRUE` tp
+    #'   see the complex R6 object.
+    #' @param ... Passed on to `format()` when `verbose` = TRUE
+    print = function(..., verbose = FALSE) {
+      if (verbose) {
+        cat(format(self, ...), sep = "\n")
+      } else {
+        if (self$is_active()) {
+          state <- "active + alive"
+        } else if (self$is_alive()) {
+          state <- "alive"
+        } else {
+          state <- "closed"
+        }
+
+        ps <- self$get_browser()$get_process()
+
+        cat_line("<Chromote> (", state, ")")
+        if (self$is_alive()) {
+          cat_line("  URL:  ", self$url())
+          cat_line("  PID:  ", ps$get_pid())
+          cat_line("  Path: ", ps$get_cmdline()[[1]])
+        }
+      }
+      invisible(self)
+    },
+
     #' @field default_timeout Default timeout in seconds for \pkg{chromote} to
     #' wait for a Chrome DevTools Protocol response.
     default_timeout = 10,

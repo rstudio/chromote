@@ -45,6 +45,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-is_active}{\code{ChromoteSession$is_active()}}
 \item \href{#method-ChromoteSession-check_active}{\code{ChromoteSession$check_active()}}
 \item \href{#method-ChromoteSession-get_init_promise}{\code{ChromoteSession$get_init_promise()}}
+\item \href{#method-ChromoteSession-print}{\code{ChromoteSession$print()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -624,5 +625,26 @@ For internal use only.
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_init_promise()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-print"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-print}{}}}
+\subsection{Method \code{print()}}{
+Summarise the current state of the object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$print(..., verbose = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Passed on to \code{format()} when \code{verbose} = TRUE}
+
+\item{\code{verbose}}{The print method defaults to a brief summary
+of the most important debugging info; use \code{verbose = TRUE} tp
+see the complex R6 object.}
+}
+\if{html}{\out{</div>}}
+}
 }
 }
