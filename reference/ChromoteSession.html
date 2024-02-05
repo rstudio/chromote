@@ -104,6 +104,7 @@ wait for a Chrome DevTools Protocol response.</p></dd>
 <li><p><a href="#method-ChromoteSession-is_active"><code>ChromoteSession$is_active()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-check_active"><code>ChromoteSession$check_active()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-get_init_promise"><code>ChromoteSession$get_init_promise()</code></a></p></li>
+<li><p><a href="#method-ChromoteSession-print"><code>ChromoteSession$print()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-ChromoteSession-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Create a new <code>ChromoteSession</code> object.</p><div class="section">
@@ -710,6 +711,28 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_init_promise</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+
+</div><p></p><hr><a id="method-ChromoteSession-print"></a><div class="section">
+<h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
+<p>Summarise the current state of the object.</p><div class="section">
+<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="va">...</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>...</code></dt>
+<dd><p>Passed on to <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code> when <code>verbose</code> = TRUE</p></dd>
+
+
+<dt><code>verbose</code></dt>
+<dd><p>The print method defaults to a brief summary
+of the most important debugging info; use <code>verbose = TRUE</code> tp
+see the complex R6 object.</p></dd>
+
+
+</dl><p></p></div>
+</div>
 
 </div>
 
