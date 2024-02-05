@@ -34,7 +34,8 @@ appropriate):
 \itemize{
 \item \href{https://peter.sh/experiments/chromium-command-line-switches/#disable-gpu}{\code{"--disable-gpu"}}
 \itemize{
-\item Only added on Windows.
+\item Only added on Windows, as empirically it appears to be needed
+(if not, check runs on GHA never terminate).
 \item Disables GPU hardware acceleration. If software renderer is not in place, then the GPU process won't launch.
 }
 \item \href{https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox}{\code{"--no-sandbox"}}

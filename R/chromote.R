@@ -600,7 +600,8 @@ is_missing_linux_user <- cache_value(function() {
 #' appropriate):
 #'
 #' * [`"--disable-gpu"`](https://peter.sh/experiments/chromium-command-line-switches/#disable-gpu)
-#'   * Only added on Windows.
+#'   * Only added on Windows, as empirically it appears to be needed
+#'     (if not, check runs on GHA never terminate).
 #'   * Disables GPU hardware acceleration. If software renderer is not in place, then the GPU process won't launch.
 #' * [`"--no-sandbox"`](https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox)
 #'   * Only added when `CI` system environment variable is set, when the
@@ -628,7 +629,7 @@ is_missing_linux_user <- cache_value(function() {
 #' @export
 default_chrome_args <- function() {
   c(
-    # Needed for tests to terminate on CI
+    # Empirically, appears to be needed for check runs to terminate on GHA
     if (is_windows()) "--disable-gpu",
 
     # > Note: --no-sandbox is not needed if you properly setup a user in the container.
