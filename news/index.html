@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">chromote</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,13 +45,13 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="chromote-development-version">chromote (development version)<a class="anchor" aria-label="anchor" href="#chromote-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="chromote-020">chromote 0.2.0<a class="anchor" aria-label="anchor" href="#chromote-020"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<h3 id="breaking-changes-0-2-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-2-0"></a></h3>
 <ul><li>Breaking change: <code>Chromote$is_active()</code> method now reports if there is an active connection to the underlying chrome instance, rather than whether or not that instance is alive (<a href="https://github.com/rstudio/chromote/issues/94" class="external-link">#94</a>).</li>
 </ul></div>
 <div class="section level3">
-<h3 id="improvements-and-bug-fixes-development-version">Improvements and bug fixes<a class="anchor" aria-label="anchor" href="#improvements-and-bug-fixes-development-version"></a></h3>
+<h3 id="improvements-and-bug-fixes-0-2-0">Improvements and bug fixes<a class="anchor" aria-label="anchor" href="#improvements-and-bug-fixes-0-2-0"></a></h3>
 <ul><li><p><code>Chromote</code> and <code>ChromoteSession</code> gain print methods to give you a snapshot of the most important values (<a href="https://github.com/rstudio/chromote/issues/140" class="external-link">#140</a>).</p></li>
 <li><p><code>Chromote</code> gains a new <code>is_alive()</code> method equivalent to the old <code>is_active()</code> method; i.e. it reports on if there is an active chrome process running in the background (<a href="https://github.com/rstudio/chromote/issues/136" class="external-link">#136</a>).</p></li>
 <li><p><code>ChromoteSession</code> now records the <code>targetId</code>. This eliminates one round-trip to the browser when viewing or closing a session. You can now call the <code>$respawn()</code> method if a session terminates and you want to reconnect to the same target (<a href="https://github.com/rstudio/chromote/issues/94" class="external-link">#94</a>).</p></li>
