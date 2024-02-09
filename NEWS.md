@@ -1,18 +1,22 @@
 # chromote (development version)
 
-* `Chromote` and `ChromoteSession` gain print methods to give you a snapshot of the most important values.
-
-* `Chromote` gains a new `is_alive()` method equivalent to the old `is_active()` method; i.e. it reports on if there is an active chrome process running in the background.
+## Breaking changes
 
 * Breaking change: `Chromote$is_active()` method now reports if there is an active connection to the underlying chrome instance, rather than whether or not that instance is alive (#94).
 
-* `--disable-gpu` is no longer included in the default Chrome arguments, except on windows where empirically it appears to be necessary (otherwise GHA check runs never terminate).
+## Improvements and bug fixes
+
+* `Chromote` and `ChromoteSession` gain print methods to give you a snapshot of the most important values (#140).
+
+* `Chromote` gains a new `is_alive()` method equivalent to the old `is_active()` method; i.e. it reports on if there is an active chrome process running in the background (#136).
 
 * `ChromoteSession` now records the `targetId`. This eliminates one round-trip to the browser when viewing or closing a session. You can now call the `$respawn()` method if a session terminates and you want to reconnect to the same target (#94).
 
-* `ChromoteSession$screenshot()` gains an `options` argument that accepts a list of additional options to be passed to the Chrome Devtools Protocol's [`Page.captureScreenshot` method](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot). (#129)
+* `ChromoteSession$screenshot()` gains an `options` argument that accepts a list of additional options to be passed to the Chrome Devtools Protocol's [`Page.captureScreenshot` method](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot) (#129).
 
-* `ChromoteSession$screenshot()` will now infer the image format from the `filename` extension. Alternatively, you can specify the `format` in the list passed to `options`. (#130)
+* `ChromoteSession$screenshot()` will now infer the image format from the `filename` extension. Alternatively, you can specify the `format` in the list passed to `options` (#130).
+
+* `--disable-gpu` is no longer included in the default Chrome arguments, except on windows where empirically it appears to be necessary (otherwise GHA check runs never terminate) (#142).
 
 # chromote 0.1.2
 
