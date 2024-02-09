@@ -1,4 +1,4 @@
-# chromote (development version)
+# chromote 0.2.0
 
 ## Breaking changes
 
