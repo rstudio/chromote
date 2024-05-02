@@ -199,7 +199,7 @@ launch_chrome_impl <- function(path, args, port) {
         if (file.info(stdout_file)$size > 0) {
           paste0(
             "\nThe following log file may contain more information:\n",
-            stdout_file,
+            stdout_file
           )
         }
       )
