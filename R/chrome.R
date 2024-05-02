@@ -187,13 +187,24 @@ launch_chrome_impl <- function(path, args, port) {
   end <- Sys.time() + timeout
   while (!connected && Sys.time() < end) {
     if (!p$is_alive()) {
+      error_logs <- paste(readLines(p$get_error_file()), collapse = "\n")
+      stdout_file <- p$get_output_file()
+      
       stop(
-        "Failed to start chrome. Error: ",
-        paste(readLines(p$get_error_file()), collapse = "\n"),
-        "\nMore details may be found in the following log file:\n",
-        p$get_output_file()
+        if (nzchar(error_logs)) {
+          paste0("Failed to start chrome. Error:\n", error_logs)
+        } else {
+          "Failed to start chrome. (No error messages were printed.)"
+        },
+        if (file.info(stdout_file)$size > 0) {
+          paste0(
+            "\nThe following log file may contain more information:\n",
+            stdout_file,
+          )
+        }
       )
     }
+    
     tryCatch(
       {
         # Find port number from output
