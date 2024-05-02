@@ -189,7 +189,9 @@ launch_chrome_impl <- function(path, args, port) {
     if (!p$is_alive()) {
       stop(
         "Failed to start chrome. Error: ",
-        paste(readLines(p$get_error_file()), collapse = "\n")
+        paste(readLines(p$get_error_file()), collapse = "\n"),
+        "\nMore details may be found in the following log file:\n",
+        p$get_output_file()
       )
     }
     tryCatch(
