@@ -310,6 +310,10 @@ value, which looks like this:
     $timestamp
     [1] 699232.3
 
+> **Note:** This sequence of commands, with `Page$navigate()` and then
+> `Page$loadEventFired()` will not work 100% of the time. See [Loading a
+> Page Reliably](#loading-a-page-reliably) for more information.
+
 > **Technical note:** Chromote insulates the user from some of the
 > details of how the CDP implements event notifications. Event
 > notifications are not sent from the browser to the R process by
@@ -919,62 +923,34 @@ b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)$
 There will be a short delay after running the code before the value is
 printed.
 
-If you want to schedule a chain of promises and then wait for them to
-resolve, you can once again use the `wait_for()` method. For example:
+However, even this is not perfectly reliable, because in some cases, the
+browser will navigate to the page before it receives the
+`loadEventFired` command from Chromote. If that happens, the load even
+will have already happened before the browser starts waiting for it, and
+it will hang. The correct way to deal with this is to issue the
+`loadEventFired` command *before* navigating to the page, and then wait
+for the `loadEventFired` promise to resolve.
 
 ``` r
-p <- b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)$
-  then(function(value) {
-    b$Page$loadEventFired(wait_ = FALSE)
-  })
+# This is the correct way to wait for a page to load with async and then chain more commands
+p <- b$Page$loadEventFired(wait_ = FALSE)
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
+
+# A promise chain of more commands after the page has loaded
+p$then(function(value) {
+  str(value)
+})
+```
+
+If you want to block until the page has loaded, you can once again use
+`wait_for()`. For example:
+
+``` r
+p <- b$Page$loadEventFired(wait_ = FALSE)
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
 
 # wait_for returns the last value in the chain, so we can call str() on it
 str(b$wait_for(p))
-#> List of 1
-#>  $ timestamp: num 683
-```
-
-This particular example has a twist to it: After sending the
-`Page.navigate` command, the R process doesn’t really need to wait for
-browser’s response before it starts waiting for the
-`Page.loadEventFired` event. So instead of chaining, you could just do
-this:
-
-``` r
-p <- promise(function(resolve, reject) {
-  b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
-  resolve(b$Page$loadEventFired(wait_ = FALSE))
-})
-
-str(b$wait_for(p))
-#> List of 1
-#>  $ timestamp: num 683
-```
-
-Essentially, the `Page.navigate` command gets sent off and we don’t need
-to wait for the browser’s reply. We can tell R to immediately start
-waiting for the `Page.loadEventFired` event.
-
-We can simplify it by not wrapping both method calls in a promise. We
-can just fire off the navigation command, and then directly use the
-promise that’s returned by the event method:
-
-``` r
-b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
-p <- b$Page$loadEventFired(wait_ = FALSE)
-str(b$wait_for(p))
-#> List of 1
-#>  $ timestamp: num 683
-```
-
-And we can make it yet simpler by firing off the navigation command and
-then calling `b$Page$loadEventFired()` in synchronous mode (with the
-default `wait_=TRUE`), which already calls `wait_for()`.
-
-``` r
-b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
-x <- b$Page$loadEventFired()
-str(x)
 #> List of 1
 #>  $ timestamp: num 683
 ```
@@ -1132,13 +1108,14 @@ at all with the viewer.)
 browsers. In the example above, the browser may finish navigating to the
 web site before the R process receives the response message for
 `$navigate()`, and therefore before R starts waiting for
-`Page.loadEventFired`. In order to avoid these timing problems, it may
-be better to write code like this:
+`Page.loadEventFired`. In order to avoid these timing problems, it is
+better to write code like this:
 
 ``` r
 {
+  p <- b$Page$loadEventFired(wait_ = FALSE)
   b$Page$navigate("https://www.whatismybrowser.com/", wait_ = FALSE)
-  b$Page$loadEventFired()
+  b$wait_for(p)
 }
 b$screenshot("browser.png")
 ```
@@ -1187,6 +1164,58 @@ b$Runtime$evaluate('alert("this is the first tab")')
 
 ## Examples
 
+### Loading a page reliably
+
+In many cases, the commands `Page$navigate()` and then
+`$Page$loadEventFired()` will not reliably block until the page loads.
+For example:
+
+``` r
+# Not reliable
+b$Page$navigate("https://www.r-project.org/")
+b$Page$loadEventFired()  # Block until page has loaded
+```
+
+This is because the browser might successfully navigate to the page
+before it receives the `loadEventFired` command from R.
+
+In order to navigate to a page reliably, you must issue the
+`loadEventFired` command first in async mode, then issue the `navigate`
+command, and then wait for the `loadEventFired` promise to resolve. (If
+it has already resolved at this point, then the code will continue.)
+
+``` r
+# Reliable method 1: for use with synchronous API
+p <- b$Page$loadEventFired(wait_ = FALSE)  # Get the promise for the loadEventFired
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
+
+# Block until p resolves
+b$wait_for(p)
+
+# Add more synchronous commands here
+b$screenshot("browser.png")
+```
+
+The above code uses the async API to do the waiting, but then assumes
+that you want to write subsequent code with the synchronous API.
+
+If you want to go fully async, then instead of calling `wait_for(p)`,
+you would simply chain more promises from `p`, using `$then()`.
+
+``` r
+# Reliable method 2: for use with asynchronous API
+p <- b$Page$loadEventFired(wait_ = FALSE)  # Get the promise for the loadEventFired
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
+
+# Chain more async commands after the page has loaded
+p$then(function(value) {
+  b$screenshot("browser.png", wait_ = FALSE)
+})
+```
+
+This is explained in more detail in the [Async Events](#async-events)
+section.
+
 ### Taking a screenshot of a web page
 
 Take a screenshot of the viewport and display it using the
@@ -1197,17 +1226,17 @@ Chrome DevTools Protocol.
 ``` r
 b <- ChromoteSession$new()
 
-# ==== Synchronous version ====
+# ==== Semi-synchronous version ====
 # Run the next two lines together, without any delay in between.
-b$Page$navigate("https://www.r-project.org/")
-b$Page$loadEventFired()
-
+p <- b$Page$loadEventFired(wait_ = FALSE)
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
+b$wait_for(p)
 b$screenshot(show = TRUE)  # Saves to screenshot.png and displays in viewer
 
 # ==== Async version ====
+p <- b$Page$loadEventFired(wait_ = FALSE)
 b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
-b$Page$loadEventFired(wait_ = FALSE)$
-  then(function(value) {
+p$then(function(value) {
     b$screenshot(show = TRUE)
   })
 ```
@@ -1300,9 +1329,9 @@ screenshot_p <- function(url, filename = NULL) {
   }
 
   b <- ChromoteSession$new()
+  p <- b$Page$loadEventFired(wait_ = FALSE)
   b$Page$navigate(url, wait_ = FALSE)
-  b$Page$loadEventFired(wait_ = FALSE)$
-    then(function(value) {
+  p$then(function(value) {
       b$screenshot(filename, wait_ = FALSE)
     })$
     then(function(value) {
@@ -1382,9 +1411,9 @@ b$screenshot(show = TRUE)
 
 # ==== Async version ====
 b$Network$setUserAgentOverride(userAgent = "My fake browser", wait_ = FALSE)
+p <- b$Page$loadEventFired(wait_ = FALSE)
 b$Page$navigate("http://scooterlabs.com/echo", wait_ = FALSE)
-b$Page$loadEventFired(wait_ = FALSE)$
-  then(function(value) {
+p$then(function(value) {
     b$screenshot(show = TRUE)
   })
 ```
@@ -1405,9 +1434,9 @@ x$result$value
 
 
 # ==== Async version ====
+p <- b$Page$loadEventFired(wait_ = FALSE)
 b$Page$navigate("https://www.whatismybrowser.com/", wait_ = FALSE)
-b$Page$loadEventFired(wait_ = FALSE)$
-  then(function(value) {
+p$then(function(value) {
     b$Runtime$evaluate(
       'document.querySelector(".corset .string-major a").innerText'
     )
@@ -1432,9 +1461,9 @@ b$DOM$getOuterHTML(x$nodeId)
 
 
 # ==== Async version ====
+p <- b$Page$loadEventFired(wait_ = FALSE)
 b$Page$navigate("https://www.whatismybrowser.com/", wait_ = FALSE)
-b$Page$loadEventFired(wait_ = FALSE)$
-  then(function(value) {
+p$then(function(value) {
     b$DOM$getDocument()
   })$
   then(function(value) {
