@@ -275,6 +275,9 @@
 <div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="sc">$</span>timestamp</span>
 <span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>[<span class="dv">1</span>] <span class="fl">699232.3</span></span></code></pre></div>
 <blockquote>
+<p><strong>Note:</strong> This sequence of commands, with <code>Page$navigate()</code> and then <code>Page$loadEventFired()</code> will not work 100% of the time. See <a href="#loading-a-page-reliably">Loading a Page Reliably</a> for more information.</p>
+</blockquote>
+<blockquote>
 <p><strong>Technical note:</strong> Chromote insulates the user from some of the details of how the CDP implements event notifications. Event notifications are not sent from the browser to the R process by default; you must first send a command to enable event notifications for a domain. For example <code>Page.enable</code> enables event notifications for the <code>Page</code> domain – the browser will send messages for <em>all</em> <code>Page</code> events. (See the Events section in <a href="https://chromedevtools.github.io/devtools-protocol/tot/Page/" class="external-link">this page</a>). These notifications will continue to be sent until the browser receives a <code>Page.disable</code> command.</p>
 <p>By default, Chromote hides this implementation detail. When you call <code>b$Page$loadEventFired()</code>, Chromote sends a <code>Page.enable</code> command automatically, and then waits until it receives the <code>Page.loadEventFired</code> event notification. Then it sends a <code>Page.disable</code> command.</p>
 <p>Note that in asynchronous mode, the behavior is slightly more sophisticated: it maintains a counter of how many outstanding events it is waiting for in a given domain. When that count goes from 0 to 1, it sends the <code>X.enable</code> command; when the count goes from 1 to 0, it sends the <code>X.disable</code> command. For more information, see the <a href="#async-events">Async events</a> section.</p>
@@ -635,51 +638,34 @@
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>There will be a short delay after running the code before the value is printed.</p>
-<p>If you want to schedule a chain of promises and then wait for them to resolve, you can once again use the <code>wait_for()</code> method. For example:</p>
+<p>However, even this is not perfectly reliable, because in some cases, the browser will navigate to the page before it receives the <code>loadEventFired</code> command from Chromote. If that happens, the load even will have already happened before the browser starts waiting for it, and it will hang. The correct way to deal with this is to issue the <code>loadEventFired</code> command <em>before</em> navigating to the page, and then wait for the <code>loadEventFired</code> promise to resolve.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span></span>
-<span>  <span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># This is the correct way to wait for a page to load with async and then chain more commands</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># A promise chain of more commands after the page has loaded</span></span>
+<span><span class="va">p</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p>If you want to block until the page has loaded, you can once again use <code>wait_for()</code>. For example:</p>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># wait_for returns the last value in the chain, so we can call str() on it</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; List of 1</span></span>
-<span><span class="co">#&gt;  $ timestamp: num 683</span></span></code></pre></div>
-<p>This particular example has a twist to it: After sending the <code>Page.navigate</code> command, the R process doesn’t really need to wait for browser’s response before it starts waiting for the <code>Page.loadEventFired</code> event. So instead of chaining, you could just do this:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/promises/reference/promise.html" class="external-link">promise</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">resolve</span>, <span class="va">reject</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>  <span class="fu">resolve</span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; List of 1</span></span>
-<span><span class="co">#&gt;  $ timestamp: num 683</span></span></code></pre></div>
-<p>Essentially, the <code>Page.navigate</code> command gets sent off and we don’t need to wait for the browser’s reply. We can tell R to immediately start waiting for the <code>Page.loadEventFired</code> event.</p>
-<p>We can simplify it by not wrapping both method calls in a promise. We can just fire off the navigation command, and then directly use the promise that’s returned by the event method:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; List of 1</span></span>
-<span><span class="co">#&gt;  $ timestamp: num 683</span></span></code></pre></div>
-<p>And we can make it yet simpler by firing off the navigation command and then calling <code>b$Page$loadEventFired()</code> in synchronous mode (with the default <code>wait_=TRUE</code>), which already calls <code>wait_for()</code>.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 1</span></span>
 <span><span class="co">#&gt;  $ timestamp: num 683</span></span></code></pre></div>
 <blockquote>
 <p><strong>Technical note:</strong> The Chrome DevTools Protocol itself does not automatically enable event notifications. Normally, you would have to call the <code>Page.enable</code> method to turn on event notifications for the Page domain. However, Chromote saves you from needing to do this step by keeping track of how many callbacks there are for each domain. When the number of event callbacks for a domain goes from 0 to 1, Chromote automatically calls <code>$enable()</code> for that domain, and when it goes from 1 to 0, it it calls <code>$disable()</code>.</p>
 </blockquote>
 <p>In addition to async events with promises, they can also be used with regular callbacks. For example:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>callback_ <span class="op">=</span> <span class="va">str</span><span class="op">)</span></span></code></pre></div>
 <p>This tells Chromote to call <code><a href="https://rdrr.io/r/utils/str.html" class="external-link">str()</a></code> (which prints to the console) on the message value every single time that a <code>Page.loadEventFired</code> event message is received. It will continue doing this indefinitely. (Calling an event method this way also increments the event callback counter.)</p>
 <p>When an event method is called with a callback, the return value is a function which will cancel the callback, so that it will no longer fire. (The canceller function also decrements the event callback counter. If you lose the canceller function, there is no way to decrement the callback counter back to 0.)</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cancel_load_event_callback</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>callback_ <span class="op">=</span> <span class="va">str</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Each of these will cause the callback to fire.</span></span>
@@ -702,14 +688,14 @@
 </h2>
 <p>Chromote will look in specific places for the Chrome web browser, depending on platform. This is done by the <code>chromote:::find_chrome()</code> function.</p>
 <p>If you wish to use a different browser from the default, you can set the <code>CHROMOTE_CHROME</code> environment variable, either with <code>Sys.setenv(CHROMOTE_CHROME="/path/to/browser")</code>.</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>CHROMOTE_CHROME <span class="op">=</span> <span class="st">"/Applications/Chromium.app/Contents/MacOS/Chromium"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span></code></pre></div>
 <p>Another way is create a <code>Chromote</code> object and explicitly specify the browser, then spawn <code>ChromoteSession</code>s from it.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/Chromote.html">Chromote</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  browser <span class="op">=</span> <span class="va"><a href="reference/Chrome.html">Chrome</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>path <span class="op">=</span> <span class="st">"/Applications/Chromium.app/Contents/MacOS/Chromium"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -718,7 +704,7 @@
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">$</span><span class="fu">new_session</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span></code></pre></div>
 <p>Yet another way is to create a <code>Chromote</code> object with a specified browser, then set it as the default Chromote object.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/Chromote.html">Chromote</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  browser <span class="op">=</span> <span class="va"><a href="reference/Chrome.html">Chrome</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>path <span class="op">=</span> <span class="st">"/Applications/Chromium.app/Contents/MacOS/Chromium"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -735,18 +721,18 @@
 </h2>
 <p>Chromote can control a browser running on a remote host. To start the browser, open a terminal on the remote host and run one of the following, depending on your platform:</p>
 <p><strong>Warning: Depending on how the remote machine is configured, the Chrome debug server might be accessible to anyone on the Internet. Proceed with caution.</strong></p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a><span class="co"># Mac</span></span>
-<span id="cb43-2"><a href="#cb43-2" tabindex="-1"></a><span class="st">"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"</span> <span class="sc">--</span>headless \</span>
-<span id="cb43-3"><a href="#cb43-3" tabindex="-1"></a>  <span class="sc">--</span>remote<span class="sc">-</span>debugging<span class="sc">-</span>address<span class="ot">=</span><span class="dv">0</span>.<span class="dv">0</span>.<span class="fl">0.0</span> <span class="sc">--</span>remote<span class="sc">-</span>debugging<span class="sc">-</span>port<span class="ot">=</span><span class="dv">9222</span></span>
-<span id="cb43-4"><a href="#cb43-4" tabindex="-1"></a></span>
-<span id="cb43-5"><a href="#cb43-5" tabindex="-1"></a><span class="co"># Linux</span></span>
-<span id="cb43-6"><a href="#cb43-6" tabindex="-1"></a>google<span class="sc">-</span>chrome <span class="sc">--</span>headless <span class="sc">--</span>remote<span class="sc">-</span>debugging<span class="sc">-</span>address<span class="ot">=</span><span class="dv">0</span>.<span class="dv">0</span>.<span class="fl">0.0</span> <span class="sc">--</span>remote<span class="sc">-</span>debugging<span class="sc">-</span>port<span class="ot">=</span><span class="dv">9222</span></span>
-<span id="cb43-7"><a href="#cb43-7" tabindex="-1"></a></span>
-<span id="cb43-8"><a href="#cb43-8" tabindex="-1"></a><span class="co"># Windows</span></span>
-<span id="cb43-9"><a href="#cb43-9" tabindex="-1"></a><span class="st">"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"</span>  <span class="sc">--</span>headless \</span>
-<span id="cb43-10"><a href="#cb43-10" tabindex="-1"></a>  <span class="sc">--</span>remote<span class="sc">-</span>debugging<span class="sc">-</span>address<span class="ot">=</span><span class="dv">0</span>.<span class="dv">0</span>.<span class="fl">0.0</span> <span class="sc">--</span>remote<span class="sc">-</span>debugging<span class="sc">-</span>port<span class="ot">=</span><span class="dv">9222</span></span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="co"># Mac</span></span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a><span class="st">"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"</span> <span class="sc">--</span>headless \</span>
+<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a>  <span class="sc">--</span>remote<span class="sc">-</span>debugging<span class="sc">-</span>address<span class="ot">=</span><span class="dv">0</span>.<span class="dv">0</span>.<span class="fl">0.0</span> <span class="sc">--</span>remote<span class="sc">-</span>debugging<span class="sc">-</span>port<span class="ot">=</span><span class="dv">9222</span></span>
+<span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a><span class="co"># Linux</span></span>
+<span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a>google<span class="sc">-</span>chrome <span class="sc">--</span>headless <span class="sc">--</span>remote<span class="sc">-</span>debugging<span class="sc">-</span>address<span class="ot">=</span><span class="dv">0</span>.<span class="dv">0</span>.<span class="fl">0.0</span> <span class="sc">--</span>remote<span class="sc">-</span>debugging<span class="sc">-</span>port<span class="ot">=</span><span class="dv">9222</span></span>
+<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" tabindex="-1"></a><span class="co"># Windows</span></span>
+<span id="cb41-9"><a href="#cb41-9" tabindex="-1"></a><span class="st">"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"</span>  <span class="sc">--</span>headless \</span>
+<span id="cb41-10"><a href="#cb41-10" tabindex="-1"></a>  <span class="sc">--</span>remote<span class="sc">-</span>debugging<span class="sc">-</span>address<span class="ot">=</span><span class="dv">0</span>.<span class="dv">0</span>.<span class="fl">0.0</span> <span class="sc">--</span>remote<span class="sc">-</span>debugging<span class="sc">-</span>port<span class="ot">=</span><span class="dv">9222</span></span></code></pre></div>
 <p>Then, in your local R session, create a Chromote object with the <code>host</code> and <code>port</code> (you will need to use the correct IP address). Once it’s created, you can spawn a session off of it which you can control as normal:</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/Chromote.html">Chromote</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  browser <span class="op">=</span> <span class="va"><a href="reference/ChromeRemote.html">ChromeRemote</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>host <span class="op">=</span> <span class="st">"10.0.0.5"</span>, port <span class="op">=</span> <span class="fl">9222</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -760,11 +746,12 @@
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"browser.png"</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"browser_string.png"</span>, selector <span class="op">=</span> <span class="st">".string-major"</span><span class="op">)</span></span></code></pre></div>
 <p>When you use <code>$view()</code> on the remote browser, your local browser may block scripts for security reasons, which means that you won’t be able to view the remote browser. If your local browser is Chrome, there will be a shield-shaped icon in the location bar that you can click in order to enable loading the scripts. (Note: Some browsers don’t seem to work at all with the viewer.)</p>
-<p><strong>Technical note:</strong> There seem to be some timing issues with remote browsers. In the example above, the browser may finish navigating to the web site before the R process receives the response message for <code>$navigate()</code>, and therefore before R starts waiting for <code>Page.loadEventFired</code>. In order to avoid these timing problems, it may be better to write code like this:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<p><strong>Technical note:</strong> There seem to be some timing issues with remote browsers. In the example above, the browser may finish navigating to the web site before the R process receives the response message for <code>$navigate()</code>, and therefore before R starts waiting for <code>Page.loadEventFired</code>. In order to avoid these timing problems, it is better to write code like this:</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">{</span></span>
+<span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>  <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"browser.png"</span><span class="op">)</span></span></code></pre></div>
 <p>This tells it to fire off the <code>Page.navigate</code> command and <em>not</em> wait for it, and then immediately start waiting for <code>Page.loadEventFired</code> event.</p>
@@ -772,18 +759,18 @@
 <h3 id="attaching-to-existing-tabs">Attaching to existing tabs<a class="anchor" aria-label="anchor" href="#attaching-to-existing-tabs"></a>
 </h3>
 <p>In the examples above, we connected to an existing browser, but created a new tab to attach to. It’s also possible to attach to an existing browser <em>and</em> and existing tab. In Chrome debugging terminology a tab is called a “Target”, and there is a command to retrieve the list of current Targets:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r</span><span class="op">$</span><span class="va">Target</span><span class="op">$</span><span class="fu">getTargets</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Every target has a unique identifier string associated with it called the <code>targetId</code>; <code>"9DAE349A3A533718ED9E17441BA5159B"</code> is an example of one.</p>
 <p>Here we define a function that retrieves the ID of the first Target (tab) from a Chromote object:</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">first_id</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">r</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ts</span> <span class="op">&lt;-</span> <span class="va">r</span><span class="op">$</span><span class="va">Target</span><span class="op">$</span><span class="fu">getTargets</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">targetInfos</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
 <span>  <span class="va">r</span><span class="op">$</span><span class="va">Target</span><span class="op">$</span><span class="fu">getTargets</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">targetInfos</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">targetId</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>The following code shows an alert box in the first tab, whatever it is:</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rc</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromeRemote.html">ChromeRemote</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>host <span class="op">=</span> <span class="st">"localhost"</span>, port <span class="op">=</span> <span class="fl">9222</span><span class="op">)</span></span>
 <span><span class="va">r</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/Chromote.html">Chromote</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>browser <span class="op">=</span> <span class="va">rc</span><span class="op">)</span></span>
 <span><span class="va">tid</span> <span class="op">&lt;-</span> <span class="fu">first_id</span><span class="op">(</span><span class="va">r</span><span class="op">)</span></span>
@@ -796,27 +783,60 @@
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
 <div class="section level3">
+<h3 id="loading-a-page-reliably">Loading a page reliably<a class="anchor" aria-label="anchor" href="#loading-a-page-reliably"></a>
+</h3>
+<p>In many cases, the commands <code>Page$navigate()</code> and then <code>$Page$loadEventFired()</code> will not reliably block until the page loads. For example:</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Not reliable</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span><span class="op">)</span>  <span class="co"># Block until page has loaded</span></span></code></pre></div>
+<p>This is because the browser might successfully navigate to the page before it receives the <code>loadEventFired</code> command from R.</p>
+<p>In order to navigate to a page reliably, you must issue the <code>loadEventFired</code> command first in async mode, then issue the <code>navigate</code> command, and then wait for the <code>loadEventFired</code> promise to resolve. (If it has already resolved at this point, then the code will continue.)</p>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Reliable method 1: for use with synchronous API</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># Get the promise for the loadEventFired</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Block until p resolves</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Add more synchronous commands here</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"browser.png"</span><span class="op">)</span></span></code></pre></div>
+<p>The above code uses the async API to do the waiting, but then assumes that you want to write subsequent code with the synchronous API.</p>
+<p>If you want to go fully async, then instead of calling <code>wait_for(p)</code>, you would simply chain more promises from <code>p</code>, using <code>$then()</code>.</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Reliable method 2: for use with asynchronous API</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># Get the promise for the loadEventFired</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Chain more async commands after the page has loaded</span></span>
+<span><span class="va">p</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"browser.png"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p>This is explained in more detail in the <a href="#async-events">Async Events</a> section.</p>
+</div>
+<div class="section level3">
 <h3 id="taking-a-screenshot-of-a-web-page">Taking a screenshot of a web page<a class="anchor" aria-label="anchor" href="#taking-a-screenshot-of-a-web-page"></a>
 </h3>
 <p>Take a screenshot of the viewport and display it using the <a href="https://github.com/r-lib/showimage#readme" class="external-link">showimage</a> package. This uses Chromote’s <code>$screenshot()</code> method, which wraps up many calls to the Chrome DevTools Protocol.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># ==== Synchronous version ====</span></span>
+<span><span class="co"># ==== Semi-synchronous version ====</span></span>
 <span><span class="co"># Run the next two lines together, without any delay in between.</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span>show <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># Saves to screenshot.png and displays in viewer</span></span>
 <span></span>
 <span><span class="co"># ==== Async version ====</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span></span>
-<span>  <span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">p</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span>show <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>It is also possible to use selectors to specify what to screenshot, as well as the region (“content”, “border”, “padding”, or “margin”).</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Using CSS selectors, choosing the region, and using scaling</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"s1.png"</span>, selector <span class="op">=</span> <span class="st">".sidebar"</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"s2.png"</span>, selector <span class="op">=</span> <span class="st">".sidebar"</span>, region <span class="op">=</span> <span class="st">"margin"</span><span class="op">)</span></span>
@@ -827,38 +847,38 @@
 <h3 id="setting-width-and-height-of-the-viewport-window">Setting width and height of the viewport (window)<a class="anchor" aria-label="anchor" href="#setting-width-and-height-of-the-viewport-window"></a>
 </h3>
 <p>The default size of a <code>ChromoteSession</code> viewport is 992 by 1323 pixels. You can set the width and height when it is created:</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">390</span>, height <span class="op">=</span> <span class="fl">844</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"narrow.png"</span><span class="op">)</span></span></code></pre></div>
 <p>With an existing <code>ChromoteSession</code>, you can set the size with <code>b$Emulation$setVisibleSize()</code>:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span><span class="op">$</span><span class="va">Emulation</span><span class="op">$</span><span class="fu">setVisibleSize</span><span class="op">(</span>width<span class="op">=</span><span class="fl">1600</span>, height<span class="op">=</span><span class="fl">900</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"wide.png"</span><span class="op">)</span></span></code></pre></div>
 <p>You can take a “Retina” (double) resolution screenshot by using <code>b$screenshot(scale=2)</code>:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"wide-2x.png"</span>, scale <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="taking-a-screenshot-of-a-web-page-after-interacting-with-it">Taking a screenshot of a web page after interacting with it<a class="anchor" aria-label="anchor" href="#taking-a-screenshot-of-a-web-page-after-interacting-with-it"></a>
 </h3>
 <p>Headless Chrome provides a remote debugging UI which you can use to interact with the web page. The ChromoteSession’s <code>$view()</code> method opens a regular browser and navigates to the remote debugging UI.</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.google.com"</span><span class="op">)</span> <span class="co"># Or just type the URL in the navigation bar</span></span></code></pre></div>
 <p>At this point, you can interact with the web page by typing in text and clicking on things.</p>
 <p>Then take a screenshot:</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="taking-screenshots-of-web-pages-in-parallel">Taking screenshots of web pages in parallel<a class="anchor" aria-label="anchor" href="#taking-screenshots-of-web-pages-in-parallel"></a>
 </h3>
 <p>With async code, it’s possible to navigate to and take screenshots of multiple websites in parallel.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/promises/" class="external-link">promises</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">urls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -877,9 +897,9 @@
 <span>  <span class="op">}</span></span>
 <span></span>
 <span>  <span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="va">url</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>  <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span></span>
-<span>    <span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">p</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="va">filename</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>    <span class="op">}</span><span class="op">)</span><span class="op">$</span></span>
 <span>    <span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
@@ -908,7 +928,7 @@
 <h3 id="setting-custom-headers">Setting custom headers<a class="anchor" aria-label="anchor" href="#setting-custom-headers"></a>
 </h3>
 <p>Currently setting custom headers requires a little extra work because it requires <code>Network.enable</code> be called before using it. In the future we’ll streamline things so that it will happen automatically.</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co"># Currently need to manually enable Network domain notifications. Calling</span></span>
 <span><span class="co"># b$Network$enable() would do it, but calling it directly will bypass the</span></span>
@@ -945,7 +965,7 @@
 <h3 id="custom-user-agent">Custom User-Agent<a class="anchor" aria-label="anchor" href="#custom-user-agent"></a>
 </h3>
 <p>Synchronous version:</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ==== Synchronous version ====</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Network</span><span class="op">$</span><span class="fu">setUserAgentOverride</span><span class="op">(</span>userAgent <span class="op">=</span> <span class="st">"My fake browser"</span><span class="op">)</span></span>
 <span></span>
@@ -955,9 +975,9 @@
 <span></span>
 <span><span class="co"># ==== Async version ====</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Network</span><span class="op">$</span><span class="fu">setUserAgentOverride</span><span class="op">(</span>userAgent <span class="op">=</span> <span class="st">"My fake browser"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://scooterlabs.com/echo"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span></span>
-<span>  <span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">p</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span>show <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -965,7 +985,7 @@
 <h3 id="extracting-text-from-a-web-page">Extracting text from a web page<a class="anchor" aria-label="anchor" href="#extracting-text-from-a-web-page"></a>
 </h3>
 <p>One way to extract text from a page is to tell the browser to run JavaScript code that does it:</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ==== Synchronous version ====</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span>
 <span></span>
@@ -976,9 +996,9 @@
 <span></span>
 <span></span>
 <span><span class="co"># ==== Async version ====</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span></span>
-<span>  <span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">p</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">b</span><span class="op">$</span><span class="va">Runtime</span><span class="op">$</span><span class="fu">evaluate</span><span class="op">(</span></span>
 <span>      <span class="st">'document.querySelector(".corset .string-major a").innerText'</span></span>
 <span>    <span class="op">)</span></span>
@@ -987,7 +1007,7 @@
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">value</span><span class="op">$</span><span class="va">result</span><span class="op">$</span><span class="va">value</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>Another way is to use CDP commands to extract content from the DOM. This does not require executing JavaScript in the browser’s context, but it is also not as flexible as JavaScript.</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ==== Synchronous version ====</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">getDocument</span><span class="op">(</span><span class="op">)</span></span>
@@ -998,9 +1018,9 @@
 <span></span>
 <span></span>
 <span><span class="co"># ==== Async version ====</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span></span>
-<span>  <span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">p</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">getDocument</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span><span class="op">$</span></span>
 <span>  <span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1027,18 +1047,18 @@
 <p>There are two ways to capture the cookies.</p>
 <p><strong>Method 1:</strong> The first method uses the headless browser’s viewer. This can be a bit inconvenient because it requires going through the entire login process, even if you have already logged in with a normal browser.</p>
 <p>First navigate to the page:</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://beta.rstudioconnect.com/content/123456/"</span><span class="op">)</span></span></code></pre></div>
 <p>Next, log in interactively via the viewer. Once that’s done, use Chromote to capture the cookies.</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cookies</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Network</span><span class="op">$</span><span class="fu">getCookies</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">cookies</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">cookies</span>, <span class="st">"cookies.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>After saving the cookies, you can restart R and navigate to the page, using the cookies.</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
@@ -1050,17 +1070,17 @@
 <p><strong>Method 2:</strong> The second method captures the cookies using a normal browser. This is can be more convenient because, if you are already logged in, you don’t need to do it again. This requires a Chromium-based browser, and it requires running DevTools-in-DevTools on that browser.</p>
 <p>First, navigate to the page in your browser. Then press CMD-Option-I (Mac) or Ctrl-Shift-I (Windows/Linux). The developer tools panel will open. Make sure to undock the developer tools so that they are in their own window. Then press CMD-Option-I or Ctrl-Shift-I again. A second developer tools window will open. (See <a href="https://stackoverflow.com/questions/12291138/how-do-you-inspect-the-web-inspector-in-chrome/12291163#12291163" class="external-link">this SO answer</a> for detailed instructions.)</p>
 <p>In the second developer tools window, run the following:</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a><span class="kw">var</span> cookies <span class="op">=</span> <span class="cf">await</span> Main<span class="op">.</span><span class="fu">sendOverProtocol</span>(<span class="st">'Network.getCookies'</span><span class="op">,</span> {})</span>
-<span id="cb64-2"><a href="#cb64-2" tabindex="-1"></a><span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(cookies)</span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a><span class="kw">var</span> cookies <span class="op">=</span> <span class="cf">await</span> Main<span class="op">.</span><span class="fu">sendOverProtocol</span>(<span class="st">'Network.getCookies'</span><span class="op">,</span> {})</span>
+<span id="cb65-2"><a href="#cb65-2" tabindex="-1"></a><span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(cookies)</span></code></pre></div>
 <p>This will return a JSON string representing the cookies for that page. For example:</p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a><span class="ot">[</span><span class="fu">{</span><span class="dt">"cookies"</span><span class="fu">:</span><span class="ot">[</span><span class="fu">{</span><span class="dt">"name"</span><span class="fu">:</span><span class="st">"AWSALB"</span><span class="fu">,</span><span class="dt">"value"</span><span class="fu">:</span><span class="st">"T3dNdcdnMasdf/cNn0j+JHMVkZ3RI8mitnAggd9AlPsaWJdsfoaje/OowIh0qe3dDPiHc0mSafe5jNH+1Aeinfalsd30AejBZDYwE"</span><span class="fu">,</span><span class="dt">"domain"</span><span class="fu">:</span><span class="st">"beta.rstudioconnect.com"</span><span class="fu">,</span><span class="dt">"path"</span><span class="fu">:</span><span class="st">"/"</span><span class="fu">,</span><span class="dt">"expires"</span><span class="fu">:</span><span class="fl">1594632233.96943</span><span class="fu">,</span><span class="dt">"size"</span><span class="fu">:</span><span class="dv">130</span><span class="fu">,</span><span class="dt">"httpOnly"</span><span class="fu">:</span><span class="kw">false</span><span class="fu">,</span><span class="dt">"secure"</span><span class="fu">:</span><span class="kw">false</span><span class="fu">,</span><span class="dt">"session"</span><span class="fu">:</span><span class="kw">false</span><span class="fu">}</span><span class="ot">]</span><span class="fu">}</span><span class="ot">]</span></span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb66-1"><a href="#cb66-1" tabindex="-1"></a><span class="ot">[</span><span class="fu">{</span><span class="dt">"cookies"</span><span class="fu">:</span><span class="ot">[</span><span class="fu">{</span><span class="dt">"name"</span><span class="fu">:</span><span class="st">"AWSALB"</span><span class="fu">,</span><span class="dt">"value"</span><span class="fu">:</span><span class="st">"T3dNdcdnMasdf/cNn0j+JHMVkZ3RI8mitnAggd9AlPsaWJdsfoaje/OowIh0qe3dDPiHc0mSafe5jNH+1Aeinfalsd30AejBZDYwE"</span><span class="fu">,</span><span class="dt">"domain"</span><span class="fu">:</span><span class="st">"beta.rstudioconnect.com"</span><span class="fu">,</span><span class="dt">"path"</span><span class="fu">:</span><span class="st">"/"</span><span class="fu">,</span><span class="dt">"expires"</span><span class="fu">:</span><span class="fl">1594632233.96943</span><span class="fu">,</span><span class="dt">"size"</span><span class="fu">:</span><span class="dv">130</span><span class="fu">,</span><span class="dt">"httpOnly"</span><span class="fu">:</span><span class="kw">false</span><span class="fu">,</span><span class="dt">"secure"</span><span class="fu">:</span><span class="kw">false</span><span class="fu">,</span><span class="dt">"session"</span><span class="fu">:</span><span class="kw">false</span><span class="fu">}</span><span class="ot">]</span><span class="fu">}</span><span class="ot">]</span></span></code></pre></div>
 <p>Copy that string to the clipboard. In your R session, you can paste it to this code, surrounded by single-quotes:</p>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cookie_json</span> <span class="op">&lt;-</span> <span class="st">'[{"cookies":[{"name":"AWSALB","value":"T3dNdcdnMasdf/cNn0j+JHMVkZ3RI8mitnAggd9AlPsaWJdsfoaje/OowIh0qe3dDPiHc0mSafe5jNH+1Aeinfalsd30AejBZDYwE","domain":"beta.rstudioconnect.com","path":"/","expires":1594632233.96943,"size":130,"httpOnly":false,"secure":false,"session":false}]}]'</span></span>
 <span></span>
 <span><span class="va">cookies</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">cookie_json</span>, simplifyVector <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>Then you can use Chromote to navigate to the page and take a screenshot.</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
