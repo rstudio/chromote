@@ -1,5 +1,8 @@
 # chromote (development version)
 
+* chromote sessions allow you to call `enable()` methods manually event when
+  `auto_events` is `FALSE`. If an `enable()` method is called, chromote will
+  not call it again automatically, until you manually `disable()` it (#144).
 # chromote 0.2.0
 
 ## Breaking changes
