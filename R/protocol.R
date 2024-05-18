@@ -43,7 +43,7 @@ get_items <- function(domain, type = c("commands", "events")) {
 command_to_function <- function(command, domain_name, env) {
   new_function(
     args = gen_command_args(command$parameters),
-    body = gen_command_body(paste0(domain_name, ".", command$name), command$parameters),
+    body = gen_command_body(domain_name, command$name, command$parameters),
     env  = env
   )
   # TODO:
@@ -79,7 +79,8 @@ gen_command_args <- function(params) {
 
 # Returns a function body for a command.
 # method_name is something like "Browser.getVersion"
-gen_command_body <- function(method_name, params) {
+gen_command_body <- function(domain_name, command_name, params) {
+  method_name <- paste0(domain_name, ".", command_name)
 
   # Construct expressions for checking missing args
   required_params <- params[!fetch_key_l(params, "optional", default = FALSE)]
@@ -105,6 +106,15 @@ gen_command_body <- function(method_name, params) {
       expr({})
     }
 
+  # If a domain is manualy enabled or disabled, opt out of auto events for that domain
+  enable_event_expr <- if (identical(command_name, "enable")) {
+    expr({private$manually_enable(!!domain_name)})
+  } else if (identical(command_name, "disable")) {
+    expr({private$manually_disable(!!domain_name)})
+  } else {
+    expr({})
+  }
+
   # Construct parameters for message
   param_list <- lapply(params, function(param) {
     as.symbol(param$name)
@@ -125,6 +135,7 @@ gen_command_body <- function(method_name, params) {
     if (!identical(wait_, TRUE) && !identical(wait_, FALSE))
       stop("`wait_` must be TRUE or FALSE.")
 
+    !!!enable_event_expr
 
     # Check for missing non-optional args
     !!!check_missing_exprs

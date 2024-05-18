@@ -13,6 +13,9 @@ EventManager <- R6Class("EventManager",
         is.function(domain$enable)
       })
 
+      private$manually_enabled <- rep(FALSE, length(session$protocol))
+      names(private$manually_enabled) <- names(session$protocol)
+
       private$event_callbacks <- fastmap()
     },
 
@@ -44,6 +47,15 @@ EventManager <- R6Class("EventManager",
       p
     },
 
+
+    manually_enable = function(domain) {
+      private$manually_enabled[[domain]] <- TRUE
+    },
+
+    manually_disable = function(domain) {
+      private$manually_enabled[[domain]] <- FALSE
+    },
+
     invoke_event_callbacks = function(event, params) {
       callbacks <- private$event_callbacks$get(event)
       if (is.null(callbacks) || callbacks$size() == 0)
@@ -58,11 +70,13 @@ EventManager <- R6Class("EventManager",
       private$event_callbacks$remove(event)
     }
   ),
-
   private = list(
     # The ChromoteSession or Chromote object that owns this EventManager.
     session = NULL,
     event_callbacks = NULL,
+    # Keeps track of whether a domain is manually enabled or not. If it is, we opt out of
+    # auto events.
+    manually_enabled = NULL,
     # For keeping count of the number of callbacks for each domain; if
     # auto_events is TRUE, then when the count goes from 0 to 1 or 1 to 0 for
     # a given domain, it will automatically enable or disable events for that
@@ -124,10 +138,13 @@ EventManager <- R6Class("EventManager",
       # method.)
       if (private$session$get_auto_events() &&
           private$event_callback_counts[[domain]] == 1 &&
-          isTRUE(private$event_enable_domains[[domain]]))
+          isTRUE(private$event_enable_domains[[domain]]) &&
+          !isTRUE(private$manually_enabled[[domain]]))
       {
         private$session$debug_log("Enabling events for ", domain)
         private$session[[domain]]$enable()
+        # We are not manually enabling this domain, so make sure that this continues to be FALSE.
+        private$manually_enabled[[domain]] <- FALSE
       }
 
       invisible(private$event_callback_counts[[domain]])
@@ -141,7 +158,8 @@ EventManager <- R6Class("EventManager",
       # enable events for this domain.
       if (private$session$get_auto_events() &&
           private$event_callback_counts[[domain]] == 0 &&
-          isTRUE(private$event_enable_domains[[domain]]))
+          isTRUE(private$event_enable_domains[[domain]]) &&
+          !isTRUE(private$manually_enabled[[domain]]))
       {
         private$session$debug_log("Disabling events for ", domain)
         private$session[[domain]]$disable()

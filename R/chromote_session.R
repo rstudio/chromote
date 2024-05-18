@@ -626,6 +626,14 @@ ChromoteSession <- R6Class(
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
       self$check_active()
       private$event_manager$register_event_listener(event, callback, timeout)
+    },
+
+    manually_enable = function(domain) {
+      private$event_manager$manually_enable(domain)
+    },
+
+    manually_disable = function(domain) {
+      private$event_manager$manually_disable(domain)
     }
   )
 )
