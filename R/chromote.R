@@ -603,7 +603,7 @@ is_inside_ci <- function() {
 
 
 is_linux <- function() {
-  Sys.info()[["sysname"]] == "Linux"
+  Sys.info()[["sysname"]] %in% c("Linux", "OpenBSD")
 }
 is_missing_linux_user <- cache_value(function() {
   is_linux() &&
