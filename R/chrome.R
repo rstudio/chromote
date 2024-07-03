@@ -127,7 +127,8 @@ find_chrome_linux <- function() {
     "chromium-browser",
     "chromium",
     "google-chrome-beta",
-    "google-chrome-unstable"
+    "google-chrome-unstable",
+    "chrome"
   )
 
   for (path in possible_names) {
