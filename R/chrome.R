@@ -87,7 +87,14 @@ find_chrome <- function() {
     } else if (is_linux()) {
       inform_if_chrome_not_found(
         find_chrome_linux(),
-        searched_for = "`google-chrome` and `chromium-browser` were",
+        searched_for = "`google-chrome`, `chromium-browser` and `chrome` were",
+        extra_advice = "or adding one of these executables to your PATH"
+      )
+
+    } else if (is_openbsd()) {
+      inform_if_chrome_not_found(
+        find_chrome_linux(),
+        searched_for = "`google-chrome`, `chromium-browser` and `chrome` were",
         extra_advice = "or adding one of these executables to your PATH"
       )
 
@@ -127,7 +134,8 @@ find_chrome_linux <- function() {
     "chromium-browser",
     "chromium",
     "google-chrome-beta",
-    "google-chrome-unstable"
+    "google-chrome-unstable",
+    "chrome"
   )
 
   for (path in possible_names) {
