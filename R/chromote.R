@@ -602,9 +602,6 @@ is_inside_ci <- function() {
 }
 
 
-is_linux <- function() {
-  Sys.info()[["sysname"]] == "Linux"
-}
 is_missing_linux_user <- cache_value(function() {
   is_linux() &&
     system("id", ignore.stdout = TRUE) != 0
