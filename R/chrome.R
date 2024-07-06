@@ -84,14 +84,7 @@ find_chrome <- function() {
     } else if (is_windows()) {
       inform_if_chrome_not_found(find_chrome_windows())
 
-    } else if (is_linux()) {
-      inform_if_chrome_not_found(
-        find_chrome_linux(),
-        searched_for = "`google-chrome`, `chromium-browser` and `chrome` were",
-        extra_advice = "or adding one of these executables to your PATH"
-      )
-
-    } else if (is_openbsd()) {
+    } else if (is_linux() || is_openbsd()) {
       inform_if_chrome_not_found(
         find_chrome_linux(),
         searched_for = "`google-chrome`, `chromium-browser` and `chrome` were",
