@@ -12,6 +12,8 @@ is_mac     <- function() Sys.info()[['sysname']] == 'Darwin'
 
 is_linux   <- function() Sys.info()[['sysname']] == 'Linux'
 
+is_openbsd <- function() Sys.info()[['sysname']] == "OpenBSD"
+
 # =============================================================================
 # Vectors
 # =============================================================================
