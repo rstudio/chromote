@@ -291,7 +291,8 @@ ChromoteSession <- R6Class(
     #'   for supported formats; at the time of this release the format options
     #'   were `"png"` (default), `"jpeg"`, or `"webp"`.
     #' @param selector CSS selector to use for the screenshot.
-    #' @param cliprect A list containing `x`, `y`, `width`, and `height`. See
+    #' @param cliprect An unnamed vector or list containing values for `top`,
+    #'   `left`, `width`, and `height`, in that order. See
     #' [`Page.Viewport`](https://chromedevtools.github.io/devtools-protocol/tot/Page/#type-Viewport)
     #' for more information. If provided, `selector` and `expand` will be
     #' ignored. To provide a scale, use the `scale` parameter.

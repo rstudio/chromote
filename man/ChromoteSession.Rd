@@ -269,7 +269,8 @@ were \code{"png"} (default), \code{"jpeg"}, or \code{"webp"}.}
 
 \item{\code{selector}}{CSS selector to use for the screenshot.}
 
-\item{\code{cliprect}}{A list containing \code{x}, \code{y}, \code{width}, and \code{height}. See
+\item{\code{cliprect}}{An unnamed vector or list containing values for \code{top},
+\code{left}, \code{width}, and \code{height}, in that order. See
 \href{https://chromedevtools.github.io/devtools-protocol/tot/Page/#type-Viewport}{\code{Page.Viewport}}
 for more information. If provided, \code{selector} and \code{expand} will be
 ignored. To provide a scale, use the \code{scale} parameter.}
