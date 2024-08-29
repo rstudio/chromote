@@ -84,7 +84,7 @@
 </h2>
 <p>This will start a headless browser and open an interactive viewer for it in a normal browser, so that you can see what the headless browser is doing.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -867,7 +867,7 @@
 <p>With async code, it’s possible to navigate to and take screenshots of multiple websites in parallel.</p>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/promises/" class="external-link">promises</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">urls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"https://www.r-project.org/"</span>,</span>
 <span>  <span class="st">"https://github.com/"</span>,</span>
@@ -1035,7 +1035,7 @@
 <p><strong>Method 1:</strong> The first method uses the headless browser’s viewer. This can be a bit inconvenient because it requires going through the entire login process, even if you have already logged in with a normal browser.</p>
 <p>First navigate to the page:</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://beta.rstudioconnect.com/content/123456/"</span><span class="op">)</span></span></code></pre></div>
@@ -1046,7 +1046,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">cookies</span>, <span class="st">"cookies.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>After saving the cookies, you can restart R and navigate to the page, using the cookies.</p>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">cookies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"cookies.rds"</span><span class="op">)</span></span>
@@ -1068,7 +1068,7 @@
 <span><span class="va">cookies</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">cookie_json</span>, simplifyVector <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>Then you can use Chromote to navigate to the page and take a screenshot.</p>
 <div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Network</span><span class="op">$</span><span class="fu">setCookies</span><span class="op">(</span>cookies <span class="op">=</span> <span class="va">cookies</span><span class="op">$</span><span class="va">cookies</span><span class="op">)</span></span>
