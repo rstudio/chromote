@@ -18,7 +18,7 @@ Headless mode for Chrome. Can be \code{"old"} or \code{"new"}. See
 \href{https://developer.chrome.com/docs/chromium/new-headless}{Chrome Headless mode}
 for more details.
 \item \code{chromote.timeout} \cr
-Timeout for Chrome to launch or connect. Default is \code{10} seconds.
+Timeout (in seconds) for Chrome to launch or connect. Default is \code{10}.
 \item \code{chromote.launch.echo_cmd} \cr
 Echo the command used to launch Chrome to the console for debugging.
 Default is \code{FALSE}.
