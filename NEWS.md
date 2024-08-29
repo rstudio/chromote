@@ -1,5 +1,7 @@
 # chromote 0.3.1
 
+* Fixed a typo that caused `launch_chrome()` to throw an error. (#175)
+
 # chromote 0.3.0
 
 * The headless mode used by Chrome can now be selected with the `chromote.headless` option or `CHROMOTE_HEADLESS` environment variable. 
