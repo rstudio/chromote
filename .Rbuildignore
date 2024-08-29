@@ -11,3 +11,4 @@
 ^revdep$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^_dev$
