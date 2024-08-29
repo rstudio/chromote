@@ -34,7 +34,12 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="chromote-development-version">chromote (development version)<a class="anchor" aria-label="anchor" href="#chromote-development-version"></a></h2>
-</div>
+<ul><li>
+<p>The headless mode used by Chrome can now be selected with the <code>chromote.headless</code> option or <code>CHROMOTE_HEADLESS</code> environment variable.</p>
+<p>In Chrome v128, a <a href="https://developer.chrome.com/docs/chromium/new-headless" class="external-link">new headless mode</a> became the default. The new mode uses the same browser engine as the regular Chrome browser, whereas the old headless mode is built on a separate architecture. The old headless mode may be faster to launch and is still well-suited to many of the tasks for which chromote is used.</p>
+<p>For now, to avoid disruption, chromote defaults to using the old headless mode. In the future, chromote will follow Chrome and default to <code>"new"</code> headless mode. (And at some point, Chrome intends to remove the old headless mode which is now offered as <a href="https://developer.chrome.com/blog/chrome-headless-shell" class="external-link">a separate binary</a>.) To test the new headless mode, use <code>options(chromote.headless = "new")</code> or <code>CHROMOTE_HEADLESS="new"</code> (in <code>.Renviron</code> or via <code><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv()</a></code>). (<a href="https://github.com/rstudio/chromote/issues/172" class="external-link">#172</a>)</p>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="chromote-020">chromote 0.2.0<a class="anchor" aria-label="anchor" href="#chromote-020"></a></h2><p class="text-muted">CRAN release: 2024-02-12</p>
 <div class="section level3">
