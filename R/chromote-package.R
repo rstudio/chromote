@@ -18,7 +18,7 @@
 #'   [Chrome Headless mode](https://developer.chrome.com/docs/chromium/new-headless)
 #'   for more details.
 #' * `chromote.timeout` \cr
-#'   Timeout for Chrome to launch or connect. Default is `10` seconds.
+#'   Timeout (in seconds) for Chrome to launch or connect. Default is `10`.
 #' * `chromote.launch.echo_cmd` \cr
 #'   Echo the command used to launch Chrome to the console for debugging.
 #'   Default is `FALSE`.
