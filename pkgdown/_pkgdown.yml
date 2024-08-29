@@ -20,6 +20,7 @@ reference:
 - title: Default settings
   # desc:  ~
   contents:
+  - chromote-options
   - default_chrome_args
   - default_chromote_object
 
