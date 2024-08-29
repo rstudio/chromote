@@ -1,5 +1,11 @@
 # chromote (development version)
 
+* The headless mode used by Chrome can now be selected with the `chromote.headless` option or `CHROMOTE_HEADLESS` environment variable. 
+
+  In Chrome v128, a [new headless mode](https://developer.chrome.com/docs/chromium/new-headless) became the default. The new mode uses the same browser engine as the regular Chrome browser, whereas the old headless mode is built on a separate architecture. The old headless mode may be faster to launch and is still well-suited to many of the tasks for which chromote is used.
+
+  For now, to avoid disruption, chromote defaults to using the old headless mode. To test the new headless mode, use `options(chromote.headless = "new")` or `CHROMOTE_HEADLESS="new"` (in `.Renviron` or via `Sys.setenv()`). (#172)
+
 # chromote 0.2.0
 
 ## Breaking changes
