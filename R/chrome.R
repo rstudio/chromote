@@ -160,6 +160,32 @@ inform_if_chrome_not_found <- function(
   NULL
 }
 
+chrome_headless_mode <- function() {
+  opt <- getOption("chromote.headless", NULL)
+  env <- Sys.getenv("CHROMOTE_HEADLESS", NULL)
+  
+  # TODO Chrome v128 changed the default from --headless=old to --headless=new
+  # in 2024-08. Old headless mode was effectively a separate browser render,
+  # and while more performant did not share the same browser implementation as
+  # headful Chrome. New headless mode will likely be useful to some, but in most
+  # chromote use cases -- printing to PDF and testing -- we are not ready to
+  # move to the new mode. We'll use `--headless=old` as the default for now
+  # until the new mode is more stable, or until we add support for downloading
+  # specific versions of Chrome. (See rstudio/chromote#171)
+  default_mode <- "old"
+  mode <- tolower(opt %||% env %||% default_mode)
+
+  if (!mode %in% c("old", "new")) {
+    used <- if (!is.null(opt)) "chromote.headless" else "CHROMOTE_HEADLESS"
+    rlang::inform(
+      sprintf('Invalid value for `%s`. Using `"%s"`.', used, default_mode)
+    )
+    mode <- default_mode
+  }
+
+  sprintf("--headless=%s", mode)
+}
+
 launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
   if (is.null(path)) {
     stop("Invalid path to Chrome")
@@ -173,14 +199,15 @@ launch_chrome_impl <- function(path, args, port) {
   p <- process$new(
     command = path,
     args = c(
-      "--headless",
+      chrome_headless_mode(),
       paste0("--remote-debugging-port=", port),
       paste0("--remote-allow-origins=http://127.0.0.1:", port),
       args
     ),
     supervise = TRUE,
     stdout = tempfile("chrome-stdout-", fileext = ".log"),
-    stderr = tempfile("chrome-stderr-", fileext = ".log")
+    stderr = tempfile("chrome-stderr-", fileext = ".log"),
+    echo_cmd = getOption("chromote.launch.echo_cmd", FALSE)
   )
 
   connected <- FALSE
