@@ -1,4 +1,4 @@
-# chromote (development version)
+# chromote 0.3.1
 
 # chromote 0.3.0
 
