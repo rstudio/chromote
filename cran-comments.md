@@ -1,3 +1,6 @@
+We apologize for re-submitting so quickly. We realized we introduced a serious
+bug in the last release and a quick fix is essential.
+
 ## R CMD check results
 
 0 errors | 0 warnings | 0 notes

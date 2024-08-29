@@ -162,7 +162,8 @@ inform_if_chrome_not_found <- function(
 
 chrome_headless_mode <- function() {
   opt <- getOption("chromote.headless", NULL)
-  env <- Sys.getenv("CHROMOTE_HEADLESS", NULL)
+  env <- Sys.getenv("CHROMOTE_HEADLESS", "")
+  env <- if (nzchar(env)) env else NULL
   
   # TODO Chrome v128 changed the default from --headless=old to --headless=new
   # in 2024-08. Old headless mode was effectively a separate browser render,

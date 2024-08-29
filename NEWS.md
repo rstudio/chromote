@@ -1,4 +1,6 @@
-# chromote (development version)
+# chromote 0.3.1
+
+* Fixed a typo that caused `launch_chrome()` to throw an error. (#175)
 
 # chromote 0.3.0
 
