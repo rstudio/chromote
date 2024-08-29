@@ -1,3 +1,5 @@
+# chromote (development version)
+
 # chromote 0.3.0
 
 * The headless mode used by Chrome can now be selected with the `chromote.headless` option or `CHROMOTE_HEADLESS` environment variable. 
