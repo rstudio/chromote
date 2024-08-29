@@ -172,12 +172,15 @@ chrome_headless_mode <- function() {
   # move to the new mode. We'll use `--headless=old` as the default for now
   # until the new mode is more stable, or until we add support for downloading
   # specific versions of Chrome. (See rstudio/chromote#171)
-  mode <- tolower(opt %||% env %||% "old")
+  default_mode <- "old"
+  mode <- tolower(opt %||% env %||% default_mode)
 
   if (!mode %in% c("old", "new")) {
     used <- if (!is.null(opt)) "chromote.headless" else "CHROMOTE_HEADLESS"
-    rlang::inform(sprintf('Invalid value for `%s`. Using `"old"`.', used))
-    mode <- "old"
+    rlang::inform(
+      sprintf('Invalid value for `%s`. Using `"%s"`.', used, default_mode)
+    )
+    mode <- default_mode
   }
 
   sprintf("--headless=%s", mode)
