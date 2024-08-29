@@ -5,6 +5,8 @@ Authors@R: c(
     person("Winston", "Chang", , "winston@posit.co", role = c("aut", "cre")),
     person("Barret", "Schloerke", , "barret@posit.co", role = "aut",
            comment = c(ORCID = "0000-0001-9986-114X")),
+    person("Garrick", "Aden-Buie", , "garrick@posit.co", role = "aut",
+           comment = c(ORCID = "0000-0002-7111-0077")),
     person("Posit Software, PBC", role = c("cph", "fnd"))
   )
 Description: An implementation of the 'Chrome DevTools Protocol', for
