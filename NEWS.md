@@ -10,6 +10,9 @@
 
   For now, to avoid disruption, chromote defaults to using the old headless mode. In the future, chromote will follow Chrome and default to `"new"` headless mode. (And at some point, Chrome intends to remove the old headless mode which is now offered as [a separate binary](https://developer.chrome.com/blog/chrome-headless-shell).) To test the new headless mode, use `options(chromote.headless = "new")` or `CHROMOTE_HEADLESS="new"` (in `.Renviron` or via `Sys.setenv()`). (#172)
 
+* chromote sessions allow you to call `enable()` methods manually event when
+  `auto_events` is `FALSE`. If an `enable()` method is called, chromote will
+  not call it again automatically, until you manually `disable()` it (#144).
 # chromote 0.2.0
 
 ## Breaking changes
