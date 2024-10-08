@@ -124,22 +124,20 @@ Chromote <- R6Class(
       browse_url(path = NULL, self)
     },
 
-    #' @description
-    #' Enable automatic event enabling/disabling.
+    #' @description Enable automatic event enabling/disabling.
     #'
-    #' @param The specific domains to enable `auto_events` for. By default, all domains will
-    #'   have `auto_events` enabled.
+    #' @param domains The specific domains to enable `auto_events` for. By
+    #'   default, all domains will have `auto_events` enabled.
     enable_auto_events = function(domains = TRUE) {
       domains <- check_auto_events(domains, self$protocol)
 
       private$auto_events <- union(domains, private$auto_events)
     },
 
-    #' @description
-    #' Disable automatic event enabling/disabling.
+    #' @description Disable automatic event enabling/disabling.
     #'
-    #' @param The specific domains to disable `auto_events` for. By default, all domains will
-    #'   have `auto_events` disabled.
+    #' @param domains The specific domains to disable `auto_events` for. By
+    #'   default, all domains will have `auto_events` disabled.
     disable_auto_events = function(domains = TRUE) {
       domains <- check_auto_events(domains, self$protocol)
 

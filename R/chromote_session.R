@@ -518,12 +518,11 @@ ChromoteSession <- R6Class(
       self$parent$send_command(msg, callback, error, timeout, sessionId = private$session_id)
     },
 
-    #' @description
-    #' Enable automatic event enabling/disabling.
+    #' @description Enable automatic event enabling/disabling.
     #'
-    #' @param The specific domains to enable `auto_events` for. By default, all domains will
-    #'   have `auto_events` enabled. Set to `NULL` to use the `auto_events` value from
-    #'   the parent [Chromote] object.
+    #' @param domains The specific domains to enable `auto_events` for. By
+    #'   default, all domains will have `auto_events` enabled. Set to `NULL` to
+    #'   use the `auto_events` value from the parent [Chromote] object.
     enable_auto_events = function(domains = TRUE) {
       domains <- check_auto_events(domains, self$protocol, allow_null = TRUE)
 
@@ -538,12 +537,11 @@ ChromoteSession <- R6Class(
       }
     },
 
-    #' @description
-    #' Disable automatic event enabling/disabling.
+    #' @description Disable automatic event enabling/disabling.
     #'
-    #' @param The specific domains to disable `auto_events` for. By default, all domains will
-    #'   have `auto_events` disabled. Set to `NULL` to use the `auto_events` value from
-    #'   the parent [Chromote] object.
+    #' @param domains The specific domains to disable `auto_events` for. by
+    #'   default, all domains will have `auto_events` disabled. Set to `NULL`
+    #'   to use the `auto_events` value from the parent [Chromote] object.
     disable_auto_events = function(domains = TRUE) {
       domains <- check_auto_events(domains, self$protocol, allow_null = TRUE)
 

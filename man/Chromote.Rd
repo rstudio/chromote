@@ -39,6 +39,8 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-Chromote-new}{\code{Chromote$new()}}
 \item \href{#method-Chromote-connect}{\code{Chromote$connect()}}
 \item \href{#method-Chromote-view}{\code{Chromote$view()}}
+\item \href{#method-Chromote-enable_auto_events}{\code{Chromote$enable_auto_events()}}
+\item \href{#method-Chromote-disable_auto_events}{\code{Chromote$disable_auto_events()}}
 \item \href{#method-Chromote-get_auto_events}{\code{Chromote$get_auto_events()}}
 \item \href{#method-Chromote-get_child_loop}{\code{Chromote$get_child_loop()}}
 \item \href{#method-Chromote-wait_for}{\code{Chromote$wait_for()}}
@@ -74,7 +76,8 @@ wait for a Chrome DevTools Protocol response.}
 \item{\code{multi_session}}{Should multiple sessions be allowed?}
 
 \item{\code{auto_events}}{If \code{TRUE}, enable automatic event enabling/disabling;
-if \code{FALSE}, disable automatic event enabling/disabling.}
+if \code{FALSE}, disable automatic event enabling/disabling. Alternatively,
+supply a character vector of domains to enable \code{auto_events} for.}
 }
 \if{html}{\out{</div>}}
 }
@@ -114,6 +117,42 @@ using your \code{\link{Chrome}} browser. When not using a \code{\link{Chrome}} b
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$view()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Chromote-enable_auto_events"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-enable_auto_events}{}}}
+\subsection{Method \code{enable_auto_events()}}{
+Enable automatic event enabling/disabling.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$enable_auto_events(domains = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domains}}{The specific domains to enable \code{auto_events} for. By
+default, all domains will have \code{auto_events} enabled.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Chromote-disable_auto_events"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-disable_auto_events}{}}}
+\subsection{Method \code{disable_auto_events()}}{
+Disable automatic event enabling/disabling.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$disable_auto_events(domains = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domains}}{The specific domains to disable \code{auto_events} for. By
+default, all domains will have \code{auto_events} disabled.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Chromote-get_auto_events"></a>}}
