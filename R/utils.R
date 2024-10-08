@@ -76,6 +76,30 @@ find_domain <- function(event) {
   sub("\\.[^.]+", "", event)
 }
 
+check_auto_events <- function(auto_events, protocol, allow_null = FALSE) {
+  if (allow_null && is.null(auto_events)) {
+    return(NULL)
+  }
+
+  # All the domains that can be enabled
+  accepted_auto_events <- names(Filter(function(domain) {
+    is.function(domain$enable)
+  }, protocol))
+
+  if (is.logical(auto_events)) {
+    # TRUE enables auto_events for all domains, FALSE does the opposite
+    if (auto_events) accepted_auto_events else character()
+  } else {
+    bad_auto_events <- setdiff(auto_events, accepted_auto_events)
+
+    if (length(bad_auto_events) > 0) {
+      stop(paste0("Invalid auto_events: ", paste(bad_auto_events, collapse = ", ")))
+    }
+
+    auto_events
+  }
+}
+
 
 # =============================================================================
 # Browser
