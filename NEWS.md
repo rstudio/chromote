@@ -1,3 +1,7 @@
+# chromote (development version)
+
+* Chrome v132 and later no longer support [old headless mode](https://developer.chrome.com/blog/removing-headless-old-from-chrome). As such, `chromote` no longer defaults to using `--headless=old` and now uses `--headless` when running Chrome. You can still use the `chromote.headless` option or `CHROMOTE_HEADLESS` environment variable to configure the `--headless` flag if you're using an older version of Chrome. (#187)
+
 # chromote 0.3.1
 
 * Fixed a typo that caused `launch_chrome()` to throw an error. (#175)

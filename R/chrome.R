@@ -170,20 +170,16 @@ chrome_headless_mode <- function() {
   # and while more performant did not share the same browser implementation as
   # headful Chrome. New headless mode will likely be useful to some, but in most
   # chromote use cases -- printing to PDF and testing -- we are not ready to
-  # move to the new mode. We'll use `--headless=old` as the default for now
-  # until the new mode is more stable, or until we add support for downloading
-  # specific versions of Chrome. (See rstudio/chromote#171)
-  default_mode <- "old"
-  mode <- tolower(opt %||% env %||% default_mode)
+  # move to the new mode. Even once removed, the option may be useful if we
+  # add support downloading specific versions of Chrome. (See rstudio/chromote#171)
+  # 2025-01-16: Chrome v132 removed headless mode (rstudio/chromote#187)
+  mode <- opt %||% env
 
-  if (!mode %in% c("old", "new")) {
-    used <- if (!is.null(opt)) "chromote.headless" else "CHROMOTE_HEADLESS"
-    rlang::inform(
-      sprintf('Invalid value for `%s`. Using `"%s"`.', used, default_mode)
-    )
-    mode <- default_mode
+  if (is.null(mode)) {
+    return("--headless")
   }
 
+  # Just pass headless along directly, Chrome will error if needed
   sprintf("--headless=%s", mode)
 }
 
