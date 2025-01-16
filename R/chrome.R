@@ -310,14 +310,28 @@ launch_chrome_impl <- function(path, args, port) {
   end <- Sys.time() + timeout
   while (!connected && Sys.time() < end) {
     if (!p$is_alive()) {
-      error_logs <- paste(readLines(p$get_error_file()), collapse = "\n")
+      error_logs_path <- p$get_error_file()
+      error_logs <- paste(readLines(error_logs_path), collapse = "\n")
       stdout_file <- p$get_output_file()
-      
+
+      verify <- chrome_verify(path)
+
       stop(
-        if (nzchar(error_logs)) {
-          paste0("Failed to start chrome. Error:\n", error_logs)
+        "Failed to start chrome. ",
+        if (verify$status == 0) {
+          "Chrome is available on your system, so this error may be a configuration issue. "
         } else {
-          "Failed to start chrome. (No error messages were printed.)"
+          "Chrome does not appear to be runnable on your system. "
+        },
+        "Try `chromote_info()` to check and verify your settings. ",
+        if (nzchar(error_logs)) {
+          sprintf(
+            "\nLog file: %s\nError:\n%s",
+            error_logs_path,
+            trimws(error_logs)
+          )
+        } else {
+          "No error messages were logged."
         },
         if (file.info(stdout_file)$size > 0) {
           paste0(
