@@ -237,7 +237,11 @@ print.chromote_info <- function(x, ...) {
   cat0("\n---- Chrome ----")
 
   if (is.null(x$path)) {
-    cat0("   Path: !! Could not find Chrome, see ?find_chrome() !!")
+    cat0(
+      "   Path: !! ",
+      wrap("Could not find Chrome, is it installed on this system?", 12)
+    )
+    cat0("         !! ", wrap("If yes, see `?find_chrome()` for help.", 12))
     return(invisible(x))
   }
 
