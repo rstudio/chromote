@@ -21,6 +21,7 @@ reference:
   # desc:  ~
   contents:
   - chromote-options
+  - chromote_info
   - default_chrome_args
   - default_chromote_object
 

@@ -99,6 +99,66 @@ find_chrome <- function() {
   path
 }
 
+chrome_verify <- function(path = find_chrome()) {
+  processx::run(
+    command = path,
+    args = c("--headless", "--version"),
+    timeout = 2,
+    error_on_status = FALSE
+  )
+}
+
+#' Show information about the chromote package and Chrome browser
+#'
+#' This function gathers information about the operating system, R version,
+#' chromote package version, environment variables, Chrome path, and Chrome
+#' arguments. It also verifies the Chrome installation and retrieves its version.
+#'
+#' @return A list containing the following elements:
+#' \describe{
+#'   \item{os}{The operating system platform.}
+#'   \item{version_r}{The version of R.}
+#'   \item{version_chromote}{The version of the chromote package.}
+#'   \item{envvar}{The value of the `CHROMOTE_CHROME` environment variable.}
+#'   \item{path}{The path to the Chrome browser.}
+#'   \item{args}{A vector of Chrome arguments.}
+#'   \item{version}{The version of Chrome (if verification is successful).}
+#'   \item{error}{The error message (if verification fails).}
+#'   \item{.check}{A list with the status and output of the Chrome verification.}
+#' }
+#'
+#' @examples
+#' chromote_info()
+#'
+#' @export
+chromote_info <- function() {
+  info <- structure(
+    list(
+      os = as.character(R.version["platform"]),
+      version_r = R.version.string,
+      version_chromote = as.character(packageVersion("chromote")),
+      envvar = Sys.getenv("CHROMOTE_CHROME", ""),
+      path = find_chrome(),
+      args = c(chrome_headless_mode(), get_chrome_args())
+    ),
+    class = c("chromote_info", "list")
+  )
+
+  if (is.null(info$path)) {
+    return(info)
+  }
+
+  info$.check <- chrome_verify(info$path)
+
+  if (info$.check$status == 0) {
+    info$version <- trimws(info$.check$stdout)
+  } else {
+    info$error <- info$.check$stderr
+  }
+
+  info
+}
+
 find_chrome_windows <- function() {
   tryCatch(
     {
@@ -158,6 +218,44 @@ inform_if_chrome_not_found <- function(
   )
 
   NULL
+}
+
+#' @export
+print.chromote_info <- function(x, ...) {
+  cat0 <- function(...) cat(..., "\n", sep = "")
+  wrap <- function(x, nchar = 9) {
+    x <- strwrap(x, width = getOption("width") - nchar, exdent = nchar)
+    paste(x, collapse = "\n")
+  }
+
+  cat0("---- {chromote} ----")
+
+  cat0("   System: ", x$os)
+  cat0("R version: ", x$version_r)
+  cat0(" chromote: ", x$version_chromote)
+
+  cat0("\n---- Chrome ----")
+
+  if (is.null(x$path)) {
+    cat0("   Path: !! Could not find Chrome, see ?find_chrome() !!")
+    return(invisible(x))
+  }
+
+  cat0(
+    "   Path: ",
+    x$path,
+    if (identical(x$path, x$envvar)) " (set by CHROMOTE_CHROME envvar)"
+  )
+  cat0("Version: ", x$version %||% "(unknown)")
+  cat0("   Args: ", wrap(paste(x$args, collapse = " ")))
+  if (x$.check$timeout) {
+    cat0("  Error: Timed out.")
+    cat0("  Error message:")
+    cat0(x$error)
+  } else if (!is.null(x$error)) {
+    cat0("  Error: ", x$error)
+  }
+  invisible(x)
 }
 
 chrome_headless_mode <- function() {
