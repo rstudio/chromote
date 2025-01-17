@@ -114,8 +114,8 @@ chrome_verify_windows <- function(path = find_chrome()) {
   # Returns something similar to chrome_verify() for Windows, without actually
   # launching chrome, since `--version` doesn't work there.
 
-  status <- function(code = 0, stdout = "", stderr = "", timeout = FALSE) {
-    list(status = code, stdout = stdout, stderr = stderr, timeout = timeout)
+  status <- function(code = 0, stdout = "", stderr = "") {
+    list(status = code, stdout = stdout, stderr = stderr, timeout = FALSE)
   }
 
   path <- normalizePath(path)
@@ -149,8 +149,10 @@ chrome_verify_windows <- function(path = find_chrome()) {
   output <- output[nzchar(output)]
 
   version <- grep("^Version=", output, value = TRUE)
+  version <- sub("Version=", "", version)
+  version <- paste(version, collapse = ", ") # since we could have a vector of versions
 
-  status(stdout = sub("Version=", "", version))
+  status(stdout = version)
 }
 
 #' Show information about the chromote package and Chrome browser
