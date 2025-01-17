@@ -97,6 +97,202 @@ find_chrome <- function() {
   path
 }
 
+chrome_verify <- function(path = find_chrome()) {
+  if (is_windows()) {
+    return(chrome_verify_windows())
+  }
+
+  processx::run(
+    command = path,
+    args = c("--headless", "--version"),
+    timeout = 2,
+    error_on_status = FALSE
+  )
+}
+
+chrome_verify_windows <- function(path = find_chrome()) {
+  # Returns something similar to chrome_verify() for Windows, without actually
+  # launching chrome, since `--version` doesn't work there.
+
+  status <- function(code = 0, stdout = "", stderr = "") {
+    list(status = code, stdout = stdout, stderr = stderr, timeout = FALSE)
+  }
+
+  path <- normalizePath(path)
+  if (!file.exists(path)) {
+    return(status(-1, stderr = sprintf("%s does not exist", path)))
+  }
+
+  has_powershell <- nzchar(Sys.which("powershell"))
+  has_wmic <- nzchar(Sys.which("wmic"))
+  status_unknown_version <- status(
+    stdout = "Unknown (please manually verify the Chrome version)"
+  )
+
+  if (!has_powershell && !has_wmic) {
+    return(status_unknown_version)
+  }
+
+  version <- ""
+
+  if (has_powershell) {
+    version <- chrome_windows_version_powershell(path)
+  }
+
+  if (!nzchar(version) && has_wmic) {
+    version <- chrome_windows_version_wmic(path)
+  }
+
+  if (identical(version, "")) {
+    return(status_unknown_version)
+  }
+
+  status(stdout = version)
+}
+
+chrome_windows_version_powershell <- function(path) {
+  # Uses PowerShell to get the Chrome version
+  command <- sprintf("(Get-Item \"%s\").VersionInfo.FileVersion", path)
+  output <- system2(
+    "powershell",
+    c("-Command", shQuote(command)),
+    stdout = TRUE
+  )
+
+  if (identical(output, "")) {
+    return("")
+  }
+
+  output <- trimws(output)
+  output[nzchar(output)][[1]]
+}
+
+chrome_windows_version_wmic <- function(path) {
+  # Uses WMIC to get the Chrome version
+  wmic_cmd <- sprintf(
+    'wmic datafile where "name=\'%s\'" get version /value',
+    gsub("\\\\", "\\\\\\\\", path)
+  )
+
+  output <- tryCatch(
+    system(wmic_cmd, intern = TRUE),
+    error = function(err) ""
+  )
+
+  if (identical(output, "")) {
+    return("")
+  }
+
+  # Returns possibly several lines, one of which looks like
+  # "Version=128.0.6613.85\r"
+  output <- trimws(output)
+  version <- grep("^Version=", output, value = TRUE)
+  version <- sub("Version=", "", version)
+  version <- paste(version, collapse = ", ") # might have more than one line
+
+  return(version)
+}
+
+#' Show information about the chromote package and Chrome browser
+#'
+#' This function gathers information about the operating system, R version,
+#' chromote package version, environment variables, Chrome path, and Chrome
+#' arguments. It also verifies the Chrome installation and retrieves its version.
+#'
+#' @return A list containing the following elements:
+#' \describe{
+#'   \item{os}{The operating system platform.}
+#'   \item{version_r}{The version of R.}
+#'   \item{version_chromote}{The version of the chromote package.}
+#'   \item{envvar}{The value of the `CHROMOTE_CHROME` environment variable.}
+#'   \item{path}{The path to the Chrome browser.}
+#'   \item{args}{A vector of Chrome arguments.}
+#'   \item{version}{The version of Chrome (if verification is successful).}
+#'   \item{error}{The error message (if verification fails).}
+#'   \item{.check}{A list with the status and output of the Chrome verification.}
+#' }
+#'
+#' @examples
+#' chromote_info()
+#'
+#' @export
+chromote_info <- function() {
+  pkg_version <- as.character(utils::packageVersion("chromote"))
+  pkg_ref <- utils::packageDescription("chromote")$RemotePkgRef
+
+  if (!is.null(pkg_ref) && !identical("chromote", pkg_ref)) {
+    pkg_version <- sprintf("%s (%s)", pkg_version, pkg_ref)
+  }
+
+  info <- structure(
+    list(
+      os = as.character(R.version["platform"]),
+      version_r = R.version.string,
+      version_chromote = pkg_version,
+      envvar = Sys.getenv("CHROMOTE_CHROME", ""),
+      path = find_chrome(),
+      args = c(chrome_headless_mode(), get_chrome_args())
+    ),
+    class = c("chromote_info", "list")
+  )
+
+  if (is.null(info$path)) {
+    return(info)
+  }
+
+  info$.check <- chrome_verify(info$path)
+
+  if (info$.check$status == 0) {
+    info$version <- trimws(info$.check$stdout)
+  } else {
+    info$error <- info$.check$stderr
+  }
+
+  info
+}
+
+#' @export
+print.chromote_info <- function(x, ...) {
+  cat0 <- function(...) cat(..., "\n", sep = "")
+  wrap <- function(x, nchar = 9) {
+    x <- strwrap(x, width = getOption("width") - nchar, exdent = nchar)
+    paste(x, collapse = "\n")
+  }
+
+  cat0("---- {chromote} ----")
+
+  cat0("   System: ", x$os)
+  cat0("R version: ", x$version_r)
+  cat0(" chromote: ", x$version_chromote)
+
+  cat0("\n---- Chrome ----")
+
+  if (is.null(x$path)) {
+    cat0(
+      "Path: !! ",
+      wrap("Could not find Chrome, is it installed on this system?")
+    )
+    cat0("      !! ", wrap("If yes, see `?find_chrome()` for help."))
+    return(invisible(x))
+  }
+
+  cat0(
+    "   Path: ",
+    x$path,
+    if (identical(x$path, x$envvar)) " (set by CHROMOTE_CHROME envvar)"
+  )
+  cat0("Version: ", x$version %||% "(unknown)")
+  cat0("   Args: ", wrap(paste(x$args, collapse = " ")))
+  if (x$.check$timeout) {
+    cat0("  Error: Timed out.")
+    cat0("  Error message:")
+    cat0(x$error)
+  } else if (!is.null(x$error)) {
+    cat0("  Error: ", x$error)
+  }
+  invisible(x)
+}
+
 find_chrome_windows <- function() {
   tryCatch(
     {
@@ -213,14 +409,26 @@ launch_chrome_impl <- function(path, args, port) {
   end <- Sys.time() + timeout
   while (!connected && Sys.time() < end) {
     if (!p$is_alive()) {
-      error_logs <- paste(readLines(p$get_error_file()), collapse = "\n")
+      error_logs_path <- p$get_error_file()
+      error_logs <- paste(readLines(error_logs_path), collapse = "\n")
       stdout_file <- p$get_output_file()
 
       stop(
-        if (nzchar(error_logs)) {
-          paste0("Failed to start chrome. Error:\n", error_logs)
+        "Failed to start chrome. ",
+        if (verify$status == 0) {
+          "Chrome is available on your system, so this error may be a configuration issue. "
         } else {
-          "Failed to start chrome. (No error messages were printed.)"
+          "Chrome does not appear to be runnable on your system. "
+        },
+        "Try `chromote_info()` to check and verify your settings. ",
+        if (nzchar(error_logs)) {
+          sprintf(
+            "\nLog file: %s\nError:\n%s",
+            error_logs_path,
+            trimws(error_logs)
+          )
+        } else {
+          "No error messages were logged."
         },
         if (file.info(stdout_file)$size > 0) {
           paste0(
