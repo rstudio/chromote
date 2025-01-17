@@ -136,7 +136,7 @@ chrome_verify_windows <- function(path = find_chrome()) {
   output <- ""
 
   if (has_powershell) {
-    command <- sprintf("(Get-Item \"%s%\").VersionInfo.FileVersion", path)
+    command <- sprintf("(Get-Item \"%s\").VersionInfo.FileVersion", path)
     output <- system2(
       "powershell",
       c("-Command", shQuote(command)),
