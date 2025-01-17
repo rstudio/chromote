@@ -181,11 +181,18 @@ chrome_verify_windows <- function(path = find_chrome()) {
 #'
 #' @export
 chromote_info <- function() {
+  pkg_version <- as.character(utils::packageVersion("chromote"))
+  pkg_ref <- utils::packageDescription("chromote")$RemotePkgRef
+
+  if (!is.null(pkg_ref) && !identical("chromote", pkg_ref)) {
+    pkg_version <- sprintf("%s (%s)", pkg_version, pkg_ref)
+  }
+
   info <- structure(
     list(
       os = as.character(R.version["platform"]),
       version_r = R.version.string,
-      version_chromote = as.character(utils::packageVersion("chromote")),
+      version_chromote = pkg_version,
       envvar = Sys.getenv("CHROMOTE_CHROME", ""),
       path = find_chrome(),
       args = c(chrome_headless_mode(), get_chrome_args())
