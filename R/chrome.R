@@ -185,7 +185,7 @@ chromote_info <- function() {
     list(
       os = as.character(R.version["platform"]),
       version_r = R.version.string,
-      version_chromote = as.character(packageVersion("chromote")),
+      version_chromote = as.character(utils::packageVerson("chromote")),
       envvar = Sys.getenv("CHROMOTE_CHROME", ""),
       path = find_chrome(),
       args = c(chrome_headless_mode(), get_chrome_args())
