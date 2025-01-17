@@ -8,9 +8,9 @@ cat_line <- function(...) {
 
 is_windows <- function() .Platform$OS.type == "windows"
 
-is_mac     <- function() Sys.info()[['sysname']] == 'Darwin'
+is_mac <- function() Sys.info()[['sysname']] == 'Darwin'
 
-is_linux   <- function() Sys.info()[['sysname']] == 'Linux'
+is_linux <- function() Sys.info()[['sysname']] == 'Linux'
 
 is_openbsd <- function() Sys.info()[['sysname']] == "OpenBSD"
 
@@ -46,11 +46,9 @@ fetch_key_l <- function(x, key, default = stop("Key not present")) {
   vapply(x, get_key, key, default = default, FUN.VALUE = FALSE)
 }
 
-
 drop_nulls <- function(x) {
   x[!vapply(x, is.null, TRUE)]
 }
-
 
 # =============================================================================
 # Text
@@ -66,7 +64,6 @@ truncate <- function(x, n = 1000, message = "[truncated]") {
   x
 }
 
-
 # =============================================================================
 # Protocol-related stuff
 # =============================================================================
@@ -75,7 +72,6 @@ truncate <- function(x, n = 1000, message = "[truncated]") {
 find_domain <- function(event) {
   sub("\\.[^.]+", "", event)
 }
-
 
 # =============================================================================
 # Browser
@@ -98,7 +94,6 @@ browse_url <- function(path, chromote) {
     utils::browseURL(url)
   }
 }
-
 
 # =============================================================================
 # Random Ports
@@ -155,7 +150,8 @@ with_random_port <- function(
     err_fatal <- NULL
 
     # Try to run `startup` with the random port
-    tryCatch({
+    tryCatch(
+      {
         res <- startup(port = port, ...)
         success <- TRUE
       },

@@ -22,8 +22,6 @@ magrittr::"%>%"
 #' @export
 magrittr::"%T>%"
 
-
-
 #' @importFrom promises promise
 #' @export
 promises::promise
@@ -40,9 +38,12 @@ promises::catch
 #' @export
 promises::finally
 
-promise_timeout <- function(p, timeout, loop = current_loop(),
-                            timeout_message = NULL)
-{
+promise_timeout <- function(
+  p,
+  timeout,
+  loop = current_loop(),
+  timeout_message = NULL
+) {
   promise(function(resolve, reject) {
     cancel_timer <- later_with_interrupt(
       function() {

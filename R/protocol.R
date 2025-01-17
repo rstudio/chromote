@@ -1,6 +1,8 @@
 #' @import rlang
 
-utils::globalVariables(c("self", "private", "callback_", "error_", "timeout", "timeout_", "wait_"))
+utils::globalVariables(
+  c("self", "private", "callback_", "error_", "timeout", "timeout_", "wait_")
+)
 
 # Given a protocol spec (essentially, the Chrome DevTools Protocol JSON
 # converted to an R object), returns a list of domains of the DevTools
@@ -17,10 +19,20 @@ process_protocol <- function(protocol, env) {
 
   domains <- lapply(domains, function(domain) {
     commands <- get_items(domain, "commands")
-    commands <- lapply(commands, command_to_function, domain_name = domain$domain, env = env)
+    commands <- lapply(
+      commands,
+      command_to_function,
+      domain_name = domain$domain,
+      env = env
+    )
 
     events <- get_items(domain, "events")
-    events <- lapply(events, event_to_function, domain_name = domain$domain, env = env)
+    events <- lapply(
+      events,
+      event_to_function,
+      domain_name = domain$domain,
+      env = env
+    )
 
     c(commands, events)
   })
@@ -43,8 +55,11 @@ get_items <- function(domain, type = c("commands", "events")) {
 command_to_function <- function(command, domain_name, env) {
   new_function(
     args = gen_command_args(command$parameters),
-    body = gen_command_body(paste0(domain_name, ".", command$name), command$parameters),
-    env  = env
+    body = gen_command_body(
+      paste0(domain_name, ".", command$name),
+      command$parameters
+    ),
+    env = env
   )
   # TODO:
   # * Add type-checking
@@ -64,45 +79,46 @@ gen_command_args <- function(params) {
   args <- c(
     args,
     callback_ = list(NULL),
-    error_    = list(NULL),
-    timeout_  =
-    if ("timeout" %in% names(args)) {
+    error_ = list(NULL),
+    timeout_ = if ("timeout" %in% names(args)) {
       expr(missing_arg())
     } else {
       expr(self$default_timeout)
     },
-    wait_     = TRUE
+    wait_ = TRUE
   )
   args
 }
 
-
 # Returns a function body for a command.
 # method_name is something like "Browser.getVersion"
 gen_command_body <- function(method_name, params) {
-
   # Construct expressions for checking missing args
   required_params <- params[!fetch_key_l(params, "optional", default = FALSE)]
   check_missing_exprs <- lapply(required_params, function(param) {
     name <- as.symbol(param$name)
     check_missing <- expr(
-      if (missing(!!name)) stop("Missing required argument ", !!(expr_text(name)))
+      if (missing(!!name))
+        stop("Missing required argument ", !!(expr_text(name)))
     )
   })
 
   timeout_default_expr <-
     if ("timeout" %in% lapply(params, `[[`, "name")) {
       # Set the wall time of chromote to twice that of the execution time.
-      expr({if (is_missing(timeout_)) {
-        timeout_ <-
-          if (is.null(timeout)) {
-            self$default_timeout
-          } else {
-            2 * timeout / 1000
-          }
-      }})
+      expr({
+        if (is_missing(timeout_)) {
+          timeout_ <-
+            if (is.null(timeout)) {
+              self$default_timeout
+            } else {
+              2 * timeout / 1000
+            }
+        }
+      })
     } else {
-      expr({})
+      expr({
+      })
     }
 
   # Construct parameters for message
@@ -125,7 +141,6 @@ gen_command_body <- function(method_name, params) {
     if (!identical(wait_, TRUE) && !identical(wait_, FALSE))
       stop("`wait_` must be TRUE or FALSE.")
 
-
     # Check for missing non-optional args
     !!!check_missing_exprs
 
@@ -136,8 +151,8 @@ gen_command_body <- function(method_name, params) {
     p <- self$send_command(
       msg,
       callback = callback_,
-      error    = error_,
-      timeout  = timeout_
+      error = error_,
+      timeout = timeout_
     )
 
     if (wait_) {
@@ -148,17 +163,15 @@ gen_command_body <- function(method_name, params) {
   })
 }
 
-
-
 event_to_function <- function(event, domain_name, env) {
   new_function(
     args = list(
       callback_ = NULL,
-      timeout_  = expr(self$default_timeout),
-      wait_     = TRUE
+      timeout_ = expr(self$default_timeout),
+      wait_ = TRUE
     ),
     body = gen_event_body(paste0(domain_name, ".", event$name)),
-    env  = env
+    env = env
   )
 }
 
@@ -191,8 +204,6 @@ gen_event_body <- function(method_name) {
     }
   })
 }
-
-
 
 # Given a protocol object, reassign the environment for all functions.
 protocol_reassign_envs <- function(protocol, env) {
