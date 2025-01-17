@@ -5,8 +5,7 @@
 #' the [`Browser`] class with a [`processx::process`] object, which represents
 #' the browser's system process.
 #' @export
-Chrome <- R6Class(
-  "Chrome",
+Chrome <- R6Class("Chrome",
   inherit = Browser,
   public = list(
     #' @description Create a new Chrome object.
@@ -81,14 +80,17 @@ find_chrome <- function() {
   path <-
     if (is_mac()) {
       inform_if_chrome_not_found(find_chrome_mac())
+
     } else if (is_windows()) {
       inform_if_chrome_not_found(find_chrome_windows())
+
     } else if (is_linux() || is_openbsd()) {
       inform_if_chrome_not_found(
         find_chrome_linux(),
         searched_for = "`google-chrome`, `chromium-browser` and `chrome` were",
         extra_advice = "or adding one of these executables to your PATH"
       )
+
     } else {
       message("Platform currently not supported")
       NULL
@@ -209,9 +211,7 @@ chromote_info <- function() {
 find_chrome_windows <- function() {
   tryCatch(
     {
-      path <- utils::readRegistry(
-        "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe\\"
-      )
+      path <- utils::readRegistry("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe\\")
       path[["(Default)"]]
     },
     error = function(e) {
@@ -258,8 +258,7 @@ inform_if_chrome_not_found <- function(
   if (!is.null(path)) return(invisible(path))
 
   message(
-    searched_for,
-    " not found. ",
+    searched_for, " not found. ",
     "Try setting the `CHROMOTE_CHROME` environment variable to the executable ",
     "of a Chromium-based browser, such as Google Chrome, Chromium or Brave",
     if (nzchar(extra_advice)) " ",
@@ -270,68 +269,30 @@ inform_if_chrome_not_found <- function(
   NULL
 }
 
-#' @export
-print.chromote_info <- function(x, ...) {
-  cat0 <- function(...) cat(..., "\n", sep = "")
-  wrap <- function(x, nchar = 9) {
-    x <- strwrap(x, width = getOption("width") - nchar, exdent = nchar)
-    paste(x, collapse = "\n")
-  }
-
-  cat0("---- {chromote} ----")
-
-  cat0("   System: ", x$os)
-  cat0("R version: ", x$version_r)
-  cat0(" chromote: ", x$version_chromote)
-
-  cat0("\n---- Chrome ----")
-
-  if (is.null(x$path)) {
-    cat0(
-      "Path: !! ",
-      wrap("Could not find Chrome, is it installed on this system?")
-    )
-    cat0("      !! ", wrap("If yes, see `?find_chrome()` for help."))
-    return(invisible(x))
-  }
-
-  cat0(
-    "   Path: ",
-    x$path,
-    if (identical(x$path, x$envvar)) " (set by CHROMOTE_CHROME envvar)"
-  )
-  cat0("Version: ", x$version %||% "(unknown)")
-  cat0("   Args: ", wrap(paste(x$args, collapse = " ")))
-  if (x$.check$timeout) {
-    cat0("  Error: Timed out.")
-    cat0("  Error message:")
-    cat0(x$error)
-  } else if (!is.null(x$error)) {
-    cat0("  Error: ", x$error)
-  }
-  invisible(x)
-}
-
 chrome_headless_mode <- function() {
   opt <- getOption("chromote.headless", NULL)
   env <- Sys.getenv("CHROMOTE_HEADLESS", "")
   env <- if (nzchar(env)) env else NULL
-
+  
   # TODO Chrome v128 changed the default from --headless=old to --headless=new
   # in 2024-08. Old headless mode was effectively a separate browser render,
   # and while more performant did not share the same browser implementation as
   # headful Chrome. New headless mode will likely be useful to some, but in most
   # chromote use cases -- printing to PDF and testing -- we are not ready to
-  # move to the new mode. Even once removed, the option may be useful if we
-  # add support downloading specific versions of Chrome. (See rstudio/chromote#171)
-  # 2025-01-16: Chrome v132 removed headless mode (rstudio/chromote#187)
-  mode <- opt %||% env
+  # move to the new mode. We'll use `--headless=old` as the default for now
+  # until the new mode is more stable, or until we add support for downloading
+  # specific versions of Chrome. (See rstudio/chromote#171)
+  default_mode <- "old"
+  mode <- tolower(opt %||% env %||% default_mode)
 
-  if (is.null(mode)) {
-    return("--headless")
+  if (!mode %in% c("old", "new")) {
+    used <- if (!is.null(opt)) "chromote.headless" else "CHROMOTE_HEADLESS"
+    rlang::inform(
+      sprintf('Invalid value for `%s`. Using `"%s"`.', used, default_mode)
+    )
+    mode <- default_mode
   }
 
-  # Just pass headless along directly, Chrome will error if needed
   sprintf("--headless=%s", mode)
 }
 
@@ -364,28 +325,14 @@ launch_chrome_impl <- function(path, args, port) {
   end <- Sys.time() + timeout
   while (!connected && Sys.time() < end) {
     if (!p$is_alive()) {
-      error_logs_path <- p$get_error_file()
-      error_logs <- paste(readLines(error_logs_path), collapse = "\n")
+      error_logs <- paste(readLines(p$get_error_file()), collapse = "\n")
       stdout_file <- p$get_output_file()
-
-      verify <- chrome_verify(path)
-
+      
       stop(
-        "Failed to start chrome. ",
-        if (verify$status == 0) {
-          "Chrome is available on your system, so this error may be a configuration issue. "
-        } else {
-          "Chrome does not appear to be runnable on your system. "
-        },
-        "Try `chromote_info()` to check and verify your settings. ",
         if (nzchar(error_logs)) {
-          sprintf(
-            "\nLog file: %s\nError:\n%s",
-            error_logs_path,
-            trimws(error_logs)
-          )
+          paste0("Failed to start chrome. Error:\n", error_logs)
         } else {
-          "No error messages were logged."
+          "Failed to start chrome. (No error messages were printed.)"
         },
         if (file.info(stdout_file)$size > 0) {
           paste0(
@@ -395,7 +342,7 @@ launch_chrome_impl <- function(path, args, port) {
         }
       )
     }
-
+    
     tryCatch(
       {
         # Find port number from output
@@ -403,24 +350,18 @@ launch_chrome_impl <- function(path, args, port) {
         output <- output[grepl("^DevTools listening on ws://", output)]
         if (length(output) != 1) stop() # Just break out of the tryCatch
 
-        output_port <- sub(
-          "^DevTools listening on ws://[0-9\\.]+:(\\d+)/.*",
-          "\\1",
-          output
-        )
+        output_port <- sub("^DevTools listening on ws://[0-9\\.]+:(\\d+)/.*", "\\1", output)
         output_port <- as.integer(output_port)
         if (is.na(output_port) || output_port != port) stop()
 
         con <- url(paste0("http://127.0.0.1:", port, "/json/protocol"), "rb")
-        if (!isOpen(con)) break # Failed to connect
+        if (!isOpen(con)) break  # Failed to connect
 
         connected <- TRUE
         close(con)
       },
-      warning = function(e) {
-      },
-      error = function(e) {
-      }
+      warning = function(e) {},
+      error = function(e) {}
     )
 
     Sys.sleep(0.1)
@@ -435,9 +376,10 @@ launch_chrome_impl <- function(path, args, port) {
 
   list(
     process = p,
-    port = port
+    port    = port
   )
 }
+
 
 #' Remote Chrome process
 #'
@@ -445,8 +387,7 @@ launch_chrome_impl <- function(path, args, port) {
 #' Remote Chrome process
 #'
 #' @export
-ChromeRemote <- R6Class(
-  "ChromeRemote",
+ChromeRemote <- R6Class("ChromeRemote",
   inherit = Browser,
   public = list(
     #' @description Create a new ChromeRemote object.
