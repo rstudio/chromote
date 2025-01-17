@@ -131,10 +131,8 @@ EventManager <- R6Class(
         private$event_callback_counts[[domain]] <- 0
       }
 
-      private$event_callback_counts[[domain]] <- private$event_callback_counts[[
-        domain
-      ]] +
-        1
+      private$event_callback_counts[[domain]] <-
+        private$event_callback_counts[[domain]] + 1
 
       private$session$debug_log(
         "Callbacks for ",
@@ -159,10 +157,8 @@ EventManager <- R6Class(
     },
 
     dec_event_callback_count = function(domain) {
-      private$event_callback_counts[[domain]] <- private$event_callback_counts[[
-        domain
-      ]] -
-        1
+      private$event_callback_counts[[domain]] <-
+        private$event_callback_counts[[domain]] - 1
 
       private$session$debug_log(
         "Callbacks for ",
