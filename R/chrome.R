@@ -321,20 +321,16 @@ chrome_headless_mode <- function() {
   # and while more performant did not share the same browser implementation as
   # headful Chrome. New headless mode will likely be useful to some, but in most
   # chromote use cases -- printing to PDF and testing -- we are not ready to
-  # move to the new mode. We'll use `--headless=old` as the default for now
-  # until the new mode is more stable, or until we add support for downloading
-  # specific versions of Chrome. (See rstudio/chromote#171)
-  default_mode <- "old"
-  mode <- tolower(opt %||% env %||% default_mode)
+  # move to the new mode. Even once removed, the option may be useful if we
+  # add support downloading specific versions of Chrome. (See rstudio/chromote#171)
+  # 2025-01-16: Chrome v132 removed headless mode (rstudio/chromote#187)
+  mode <- opt %||% env
 
-  if (!mode %in% c("old", "new")) {
-    used <- if (!is.null(opt)) "chromote.headless" else "CHROMOTE_HEADLESS"
-    rlang::inform(
-      sprintf('Invalid value for `%s`. Using `"%s"`.', used, default_mode)
-    )
-    mode <- default_mode
+  if (is.null(mode)) {
+    return("--headless")
   }
 
+  # Just pass headless along directly, Chrome will error if needed
   sprintf("--headless=%s", mode)
 }
 
@@ -367,14 +363,28 @@ launch_chrome_impl <- function(path, args, port) {
   end <- Sys.time() + timeout
   while (!connected && Sys.time() < end) {
     if (!p$is_alive()) {
-      error_logs <- paste(readLines(p$get_error_file()), collapse = "\n")
+      error_logs_path <- p$get_error_file()
+      error_logs <- paste(readLines(error_logs_path), collapse = "\n")
       stdout_file <- p$get_output_file()
-      
+
+      verify <- chrome_verify(path)
+
       stop(
-        if (nzchar(error_logs)) {
-          paste0("Failed to start chrome. Error:\n", error_logs)
+        "Failed to start chrome. ",
+        if (verify$status == 0) {
+          "Chrome is available on your system, so this error may be a configuration issue. "
         } else {
-          "Failed to start chrome. (No error messages were printed.)"
+          "Chrome does not appear to be runnable on your system. "
+        },
+        "Try `chromote_info()` to check and verify your settings. ",
+        if (nzchar(error_logs)) {
+          sprintf(
+            "\nLog file: %s\nError:\n%s",
+            error_logs_path,
+            trimws(error_logs)
+          )
+        } else {
+          "No error messages were logged."
         },
         if (file.info(stdout_file)$size > 0) {
           paste0(
