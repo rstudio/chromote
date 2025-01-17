@@ -123,33 +123,53 @@ chrome_verify_windows <- function(path = find_chrome()) {
     return(status(-1, stderr = sprintf("%s does not exist", path)))
   }
 
-  wmic_cmd <- sprintf(
-    'wmic datafile where "name=\'%s\'" get version /value',
-    gsub("\\\\", "\\\\\\\\", path)
+  has_powershell <- nzchar(Sys.which("powershell"))
+  has_wmic <- nzchar(Sys.which("wmic"))
+  status_unknown_version <- status(
+    stdout = "Unknown (please manually verify the Chrome version)"
   )
 
-  output <-
-    tryCatch(
-      system(wmic_cmd, intern = TRUE),
-      error = function(err) {
-        ""
-      }
+  if (!has_powershell && !has_wmic) {
+    return(status_unknown_version)
+  }
+
+  output <- ""
+
+  if (has_powershell) {
+    command <- sprintf("(Get-Item \"%s%\").VersionInfo.FileVersion", path)
+    output <- system2(
+      "powershell",
+      c("-Command", shQuote(command)),
+      stdout = TRUE
+    )
+  } else {
+    # wmic
+    wmic_cmd <- sprintf(
+      'wmic datafile where "name=\'%s\'" get version /value',
+      gsub("\\\\", "\\\\\\\\", path)
     )
 
+    output <-
+      tryCatch(
+        system(wmic_cmd, intern = TRUE),
+        error = function(err) ""
+      )
+  }
+
   if (identical(output, "")) {
-    return(
-      status(stdout = "Unknown (please manually verify the Chrome version)")
-    )
+    return(status_unknown_version)
   }
 
   # Returns possibly several lines, one of which looks like
   # "Version=128.0.6613.85\r"
 
   output <- trimws(output)
-  output <- output[nzchar(output)]
+  version <- output[nzchar(output)]
 
-  version <- grep("^Version=", output, value = TRUE)
-  version <- sub("Version=", "", version)
+  if (has_wmic) {
+    version <- grep("^Version=", version, value = TRUE)
+    version <- sub("Version=", "", version)
+  }
   version <- paste(version, collapse = ", ") # since we could have a vector of versions
 
   status(stdout = version)
