@@ -70,27 +70,36 @@ ChromoteSession <- R6Class(
           width = width,
           height = height,
           wait_ = FALSE
-         )$
-          then(function(value) {
-            private$target_id <- value$targetId
-            parent$Target$attachToTarget(value$targetId, flatten = TRUE, wait_ = FALSE)
-          })
+        )$then(function(value) {
+          private$target_id <- value$targetId
+          parent$Target$attachToTarget(
+            value$targetId,
+            flatten = TRUE,
+            wait_ = FALSE
+          )
+        })
       } else {
         private$target_id <- targetId
-        p <- parent$Target$attachToTarget(targetId, flatten = TRUE, wait_ = FALSE)
+        p <- parent$Target$attachToTarget(
+          targetId,
+          flatten = TRUE,
+          wait_ = FALSE
+        )
       }
 
-      p <- p$
-        then(function(value) {
-          private$session_id <- value$sessionId
-          self$parent$register_session(self)
-        })
+      p <- p$then(function(value) {
+        private$session_id <- value$sessionId
+        self$parent$register_session(self)
+      })
 
       # Whenever a command method (like x$Page$navigate()) is executed, it calls
       # x$send_command(). This object's send_command() method calls the parent's
       # send_command() method with a sessionId -- that is how the command is
       # scoped to this session.
-      self$protocol <- protocol_reassign_envs(parent$protocol, env = self$.__enclos_env__)
+      self$protocol <- protocol_reassign_envs(
+        parent$protocol,
+        env = self$.__enclos_env__
+      )
       lockBinding("protocol", self)
 
       # Graft the entries from self$protocol onto self
@@ -102,25 +111,28 @@ ChromoteSession <- R6Class(
       private$target_is_active <- TRUE
 
       # Find pixelRatio for screenshots
-      p <- p$
-        then(function(value) {
-          self$Runtime$evaluate("window.devicePixelRatio", wait_ = FALSE)
-        })$
-        then(function(value) {
-          private$pixel_ratio <- value$result$value
-        })
+      p <- p$then(function(value) {
+        self$Runtime$evaluate("window.devicePixelRatio", wait_ = FALSE)
+      })$then(function(value) {
+        private$pixel_ratio <- value$result$value
+      })
 
       # When a target crashes, raise a warning.
       if (!is.null(self$Inspector$targetCrashed)) {
-        p <- p$
-          then(function(value) {
-            self$Inspector$targetCrashed(timeout_ = NULL, wait_ = FALSE, function(value) {
-              warning("Chromote has received a Inspector.targetCrashed event. This means that the ChromoteSession has probably crashed.")
+        p <- p$then(function(value) {
+          self$Inspector$targetCrashed(
+            timeout_ = NULL,
+            wait_ = FALSE,
+            function(value) {
+              warning(
+                "Chromote has received a Inspector.targetCrashed event. This means that the ChromoteSession has probably crashed."
+              )
               # Even if no targetId nor sessionId is returned by Inspector.targetCashed
               # mark the session as closed. This will close all sessions..
               self$mark_closed(TRUE)
-            })
-          })
+            }
+          )
+        })
       }
 
       if (wait_) {
@@ -133,9 +145,7 @@ ChromoteSession <- R6Class(
         # b$get_init_promise().
         private$init_promise_ <- p$then(function(value) self)
       }
-
     },
-
 
     #' @description Display the current session in the [`Chromote`] browser.
     #'
@@ -193,7 +203,10 @@ ChromoteSession <- R6Class(
       # the browser is sent without a sessionId. In order to wait for the
       # correct browser response, we need to invoke this from the parent's
       # browser-level methods.
-      p <- self$parent$protocol$Target$closeTarget(private$target_id, wait_ = FALSE)
+      p <- self$parent$protocol$Target$closeTarget(
+        private$target_id,
+        wait_ = FALSE
+      )
 
       p <- p$then(function(value) {
         if (isTRUE(value$success)) {
@@ -322,7 +335,8 @@ ChromoteSession <- R6Class(
       wait_ = TRUE
     ) {
       chromote_session_screenshot(
-        self, private,
+        self,
+        private,
         filename = filename,
         selector = selector,
         cliprect = cliprect,
@@ -382,7 +396,8 @@ ChromoteSession <- R6Class(
       wait_ = TRUE
     ) {
       chromote_session_screenshot_pdf(
-        self, private,
+        self,
+        private,
         filename = filename,
         pagesize = pagesize,
         margins = margins,
@@ -414,7 +429,12 @@ ChromoteSession <- R6Class(
     #' @param wait_ If `FALSE`, return a [promises::promise()] that will resolve
     #' when the `ChromoteSession` has created a new session. Otherwise, block
     #' until the `ChromoteSession` has created a new session.
-    new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
+    new_session = function(
+      width = 992,
+      height = 1323,
+      targetId = NULL,
+      wait_ = TRUE
+    ) {
       create_session(
         chromote = self$parent,
         width = width,
@@ -512,9 +532,20 @@ ChromoteSession <- R6Class(
     #' @param error Method to run if an error occurs.
     #' @param timeout Number of milliseconds for Chrome DevTools Protocol
     #' execute a method.
-    send_command = function(msg, callback = NULL, error = NULL, timeout = NULL) {
+    send_command = function(
+      msg,
+      callback = NULL,
+      error = NULL,
+      timeout = NULL
+    ) {
       self$check_active()
-      self$parent$send_command(msg, callback, error, timeout, sessionId = private$session_id)
+      self$parent$send_command(
+        msg,
+        callback,
+        error,
+        timeout,
+        sessionId = private$session_id
+      )
     },
 
     #' @description
@@ -552,7 +583,9 @@ ChromoteSession <- R6Class(
     #' Once initialized, the value returned is `TRUE`. If `$close()` has been
     #' called, this value will be `FALSE`.
     is_active = function() {
-      private$session_is_active && private$target_is_active && self$parent$is_active()
+      private$session_is_active &&
+        private$target_is_active &&
+        self$parent$is_active()
     },
 
     #' @description Check that a session is active, erroring if not.
@@ -562,10 +595,12 @@ ChromoteSession <- R6Class(
       }
 
       if (private$target_is_active) {
-        abort(c(
-          "Session has been closed.",
-          i = "Call session$respawn() to create a new session that connects to the same target."
-        ))
+        abort(
+          c(
+            "Session has been closed.",
+            i = "Call session$respawn() to create a new session that connects to the same target."
+          )
+        )
       } else {
         abort("Session and underlying target have been closed.")
       }
@@ -596,11 +631,13 @@ ChromoteSession <- R6Class(
         }
 
         cat_line("<ChromoteSession> (", state, ")")
-        if (self$is_active())
-          cat_line("  Session ID: ", self$get_session_id())
+        if (self$is_active()) cat_line("  Session ID: ", self$get_session_id())
         if (private$target_is_active)
           cat_line("  Target ID:  ", self$get_target_id())
-        cat_line("  Parent PID: ", self$parent$get_browser()$get_process()$get_pid())
+        cat_line(
+          "  Parent PID: ",
+          self$parent$get_browser()$get_process()$get_pid()
+        )
       }
       invisible(self)
     },
@@ -631,15 +668,15 @@ ChromoteSession <- R6Class(
   )
 )
 
-
 # Wrapper around ChromoteSession$new() that can return a promise
-create_session <- function(chromote = default_chromote_object(),
-                           width = 992,
-                           height = 1323,
-                           targetId = NULL,
-                           wait_ = TRUE,
-                           auto_events = NULL) {
-
+create_session <- function(
+  chromote = default_chromote_object(),
+  width = 992,
+  height = 1323,
+  targetId = NULL,
+  wait_ = TRUE,
+  auto_events = NULL
+) {
   session <- ChromoteSession$new(
     parent = chromote,
     width = width,

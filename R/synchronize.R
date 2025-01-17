@@ -8,8 +8,7 @@ push_interrupt_domain <- function(domain) {
 
 pop_interrupt_domain <- function() {
   n_domains <- length(promise_globals$interrupt_domains)
-  if (length(n_domains) == 0)
-    return(NULL)
+  if (length(n_domains) == 0) return(NULL)
 
   domain <- promise_globals$interrupt_domains[[n_domains]]
   promise_globals$interrupt_domains[[n_domains]] <- NULL
@@ -24,7 +23,6 @@ current_interrupt_domain <- function() {
 
   promise_globals$interrupt_domains[[length(promise_globals$interrupt_domains)]]
 }
-
 
 create_interrupt_domain <- function() {
   domain <- new_promise_domain(
@@ -89,7 +87,10 @@ create_interrupt_domain <- function() {
         promise_globals$synchronized <- 0L
       }
       promise_globals$synchronized <- promise_globals$synchronized + 1L
-      on.exit(promise_globals$synchronized <- promise_globals$synchronized - 1L, add = TRUE)
+      on.exit(
+        promise_globals$synchronized <- promise_globals$synchronized - 1L,
+        add = TRUE
+      )
 
       force(expr)
     },
@@ -98,7 +99,6 @@ create_interrupt_domain <- function() {
 
   domain
 }
-
 
 # This function takes a promise and blocks until it is resolved. It runs the
 # promise's callbacks in the provided event loop. If the promise is
@@ -116,15 +116,13 @@ synchronize <- function(expr, loop) {
         if (is.promising(result)) {
           value <- NULL
           type <- NULL
-          result$
-            then(function(val) {
-              value <<- val
-              type <<- "success"
-            })$
-            catch(function(reason) {
-              value <<- reason
-              type <<- "error"
-            })
+          result$then(function(val) {
+            value <<- val
+            type <<- "success"
+          })$catch(function(reason) {
+            value <<- reason
+            type <<- "error"
+          })
 
           while (is.null(type) && !domain$interrupted) {
             run_now(loop = loop)
@@ -141,7 +139,9 @@ synchronize <- function(expr, loop) {
       },
       interrupt = function(e) {
         domain$interrupted <<- TRUE
-        message("Attempting to interrupt gracefully; press Esc/Ctrl+C to force interrupt")
+        message(
+          "Attempting to interrupt gracefully; press Esc/Ctrl+C to force interrupt"
+        )
         while (!loop_empty(loop = loop)) {
           run_now(loop = loop)
         }
@@ -151,7 +151,6 @@ synchronize <- function(expr, loop) {
   })
 }
 
-
 # A wrapper for later() which polls for interrupts. If an interrupt has
 # occurred either while running another callback, or when run_now() is
 # waiting, the interrupt will be detected and (1) the scheduled `func` will be
@@ -160,7 +159,8 @@ later_with_interrupt <- function(
   func,
   delay = 0,
   loop = current_loop(),
-  on_interrupt = function() {},
+  on_interrupt = function() {
+  },
   interrupt_domain = current_interrupt_domain(),
   poll_interval = 0.1
 ) {
@@ -215,8 +215,6 @@ later_with_interrupt <- function(
 # Add later::interrupt() function, so that later can know that an interrupt
 #   happened.
 # Add option to later() to make the callback uninterruptable.
-
-
 
 generateInterrupt <- function() {
   tools::pskill(Sys.getpid(), tools::SIGINT)
