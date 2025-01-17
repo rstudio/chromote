@@ -33,8 +33,8 @@ Chromote <- R6Class(
       multi_session = TRUE,
       auto_events = TRUE
     ) {
-      private$browser       <- browser
-      private$auto_events   <- auto_events
+      private$browser <- browser
+      private$auto_events <- auto_events
       private$multi_session <- multi_session
 
       private$command_callbacks <- fastmap()
@@ -45,7 +45,10 @@ Chromote <- R6Class(
       p <- self$connect(multi_session = multi_session, wait_ = FALSE)
 
       # Populate methods while the connection is being established.
-      protocol_spec <- jsonlite::fromJSON(self$url("/json/protocol"), simplifyVector = FALSE)
+      protocol_spec <- jsonlite::fromJSON(
+        self$url("/json/protocol"),
+        simplifyVector = FALSE
+      )
       self$protocol <- process_protocol(protocol_spec, self$.__enclos_env__)
       lockBinding("protocol", self)
       # self$protocol is a list of domains, each of which is a list of
@@ -88,20 +91,21 @@ Chromote <- R6Class(
         # promise_timeout() directly here, then it will error out because
         # there isn't a current interrupt domain. Hopefully we can remove this
         # delay and extra wrapper stuff.
-        p <- promise_resolve(TRUE)$
-          then(function(value) {
-            promise_timeout(
-              promise(function(resolve, reject) {
-                private$ws$onOpen(resolve)
-              }),
-              timeout = getOption("chromote.timeout", 10),
-              timeout_message = paste0(
-                "Chromote: timed out waiting for WebSocket connection to browser. ",
-                "Use `options(chromote.timeout = ", getOption("chromote.timeout", 10), ")` ",
-                "to increase the timeout."
-              )
+        p <- promise_resolve(TRUE)$then(function(value) {
+          promise_timeout(
+            promise(function(resolve, reject) {
+              private$ws$onOpen(resolve)
+            }),
+            timeout = getOption("chromote.timeout", 10),
+            timeout_message = paste0(
+              "Chromote: timed out waiting for WebSocket connection to browser. ",
+              "Use `options(chromote.timeout = ",
+              getOption("chromote.timeout", 10),
+              ")` ",
+              "to increase the timeout."
             )
-          })
+          )
+        })
 
         private$ws$connect()
       })
@@ -172,7 +176,12 @@ Chromote <- R6Class(
     #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
-    new_session = function(width = 992, height = 1323, targetId = NULL, wait_ = TRUE) {
+    new_session = function(
+      width = 992,
+      height = 1323,
+      targetId = NULL,
+      wait_ = TRUE
+    ) {
       self$check_active()
       create_session(
         chromote = self,
@@ -212,7 +221,13 @@ Chromote <- R6Class(
     #' execute a method.
     #' @param sessionId Determines which [`ChromoteSession`] with the
     #' corresponding to send the command to.
-    send_command = function(msg, callback = NULL, error = NULL, timeout = NULL, sessionId = NULL) {
+    send_command = function(
+      msg,
+      callback = NULL,
+      error = NULL,
+      timeout = NULL,
+      sessionId = NULL
+    ) {
       self$check_active()
 
       private$last_msg_id <- private$last_msg_id + 1
@@ -232,15 +247,24 @@ Chromote <- R6Class(
       })
 
       p <- p$catch(function(e) {
-        stop("code: ", e$code,
-             "\n  message: ", e$message,
-             if (!is.null(e$data)) paste0("\n  data: ", e$data)
+        stop(
+          "code: ",
+          e$code,
+          "\n  message: ",
+          e$message,
+          if (!is.null(e$data)) paste0("\n  data: ", e$data)
         )
       })
 
       if (!is.null(timeout) && !is.infinite(timeout)) {
-        p <- promise_timeout(p, timeout, loop = private$child_loop,
-          timeout_message = paste0("Chromote: timed out waiting for response to command ", msg$method)
+        p <- promise_timeout(
+          p,
+          timeout,
+          loop = private$child_loop,
+          timeout_message = paste0(
+            "Chromote: timed out waiting for response to command ",
+            msg$method
+          )
         )
       }
 
@@ -274,8 +298,7 @@ Chromote <- R6Class(
     # method will print out the current debugging state.
     #' @param value If `TRUE`, enable debugging. If `FALSE`, disable debugging.
     debug_messages = function(value = NULL) {
-      if (is.null(value))
-        return(private$debug_messages_)
+      if (is.null(value)) return(private$debug_messages_)
 
       if (!(identical(value, TRUE) || identical(value, FALSE)))
         stop("value must be TRUE or FALSE")
@@ -315,7 +338,13 @@ Chromote <- R6Class(
       if (!is.null(path) && substr(path, 1, 1) != "/") {
         stop('path must be NULL or a string that starts with "/"')
       }
-      paste0("http://", private$browser$get_host(), ":", private$browser$get_port(), path)
+      paste0(
+        "http://",
+        private$browser$get_host(),
+        ":",
+        private$browser$get_port(),
+        path
+      )
     },
 
     #' @description
@@ -339,9 +368,11 @@ Chromote <- R6Class(
       }
 
       if (!self$is_active()) {
-        inform(c(
-          "!" = "Reconnecting to chrome process.",
-          i = "All active sessions will be need to be respawned.")
+        inform(
+          c(
+            "!" = "Reconnecting to chrome process.",
+            i = "All active sessions will be need to be respawned."
+          )
         )
         self$connect()
 
@@ -430,7 +461,8 @@ Chromote <- R6Class(
 
     add_command_callback = function(id, callback, error) {
       id <- as.character(id)
-      private$command_callbacks$set(id,
+      private$command_callbacks$set(
+        id,
         list(
           callback = callback,
           error = error
@@ -442,14 +474,12 @@ Chromote <- R6Class(
     invoke_command_callback = function(id, value, error) {
       id <- as.character(id)
 
-      if (!private$command_callbacks$has(id))
-        return()
+      if (!private$command_callbacks$has(id)) return()
 
       handlers <- private$command_callbacks$get(id)
 
       if (!is.null(error)) {
         handlers$error(error)
-
       } else if (!is.null(value)) {
         handlers$callback(value)
       }
@@ -458,7 +488,6 @@ Chromote <- R6Class(
     remove_command_callback = function(id) {
       private$command_callbacks$remove(as.character(id))
     },
-
 
     # =========================================================================
     # Browser events
@@ -476,8 +505,7 @@ Chromote <- R6Class(
       self$protocol$Target$detachedFromTarget(function(msg) {
         sid <- msg$sessionId
         session <- private$sessions[[sid]]
-        if (is.null(session))
-          return()
+        if (is.null(session)) return()
 
         private$sessions[[sid]] <- NULL
         session$mark_closed(TRUE)
@@ -509,11 +537,9 @@ Chromote <- R6Class(
 
           session$invoke_event_callbacks(data$method, data$params)
         })
-
       } else if (!is.null(data$id)) {
         # This is a response to a command.
         private$invoke_command_callback(data$id, data$result, data$error)
-
       } else {
         message("Don't know how to handle message: ", msg$data)
       }
@@ -531,7 +557,6 @@ Chromote <- R6Class(
     child_loop = NULL
   )
 )
-
 
 globals$default_chromote <- NULL
 
@@ -573,9 +598,6 @@ set_default_chromote_object <- function(x) {
   globals$default_chromote <- x
 }
 
-
-
-
 cache_value <- function(fn) {
   value <- NULL
   function() {
@@ -589,11 +611,11 @@ cache_value <- function(fn) {
 # This should not change over time. Cache it
 is_inside_docker <- cache_value(function() {
   file.exists("/.dockerenv") ||
-  (
-    is_linux() &&
-    file.exists("/proc/self/cgroup") &&
-    any(grepl("docker", readLines("/proc/self/cgroup"), fixed = TRUE))
-  )
+    (
+      is_linux() &&
+        file.exists("/proc/self/cgroup") &&
+        any(grepl("docker", readLines("/proc/self/cgroup"), fixed = TRUE))
+    )
 })
 
 # This is a _fast_ function. Do not cache it.
@@ -601,14 +623,10 @@ is_inside_ci <- function() {
   !identical(Sys.getenv("CI", unset = ""), "")
 }
 
-
 is_missing_linux_user <- cache_value(function() {
   is_linux() &&
     system("id", ignore.stdout = TRUE) != 0
 })
-
-
-
 
 #' Default Chrome arguments
 #'
@@ -728,7 +746,9 @@ set_chrome_args <- function(args) {
   if (length(default_args) == 0) {
     return(set_args(NULL))
   }
-  if (anyNA(default_args) || !any(vapply(default_args, is.character, logical(1)))) {
+  if (
+    anyNA(default_args) || !any(vapply(default_args, is.character, logical(1)))
+  ) {
     stop("`set_chrome_args()` only accepts a character vector or `NULL`")
   }
 

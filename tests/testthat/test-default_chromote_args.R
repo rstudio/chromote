@@ -1,4 +1,3 @@
-
 min_chrome_arg_length <- 3 + is_inside_ci() + is_windows()
 
 test_that("default args are retrieved", {
@@ -8,7 +7,12 @@ test_that("default args are retrieved", {
 test_that("default args can be reset", {
   # safety
   cur_args <- get_chrome_args()
-  on.exit({ set_chrome_args(cur_args) }, add = TRUE)
+  on.exit(
+    {
+      set_chrome_args(cur_args)
+    },
+    add = TRUE
+  )
 
   reset_chrome_args()
 
@@ -32,7 +36,12 @@ test_that("default args can be reset", {
 test_that("default args can be overwritten", {
   # safety
   cur_args <- get_chrome_args()
-  on.exit({ set_chrome_args(cur_args) }, add = TRUE)
+  on.exit(
+    {
+      set_chrome_args(cur_args)
+    },
+    add = TRUE
+  )
 
   reset_chrome_args()
 
@@ -45,7 +54,12 @@ test_that("default args can be overwritten", {
 test_that("type checking", {
   # safety
   cur_args <- get_chrome_args()
-  on.exit({ set_chrome_args(cur_args) }, add = TRUE)
+  on.exit(
+    {
+      set_chrome_args(cur_args)
+    },
+    add = TRUE
+  )
 
   expect_error(set_chrome_args(NA))
   expect_error(set_chrome_args(NaN))

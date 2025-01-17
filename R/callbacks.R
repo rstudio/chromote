@@ -1,4 +1,3 @@
-
 # The data structure for storing callbacks is essentially a queue: items are
 # added to the end, and removed from the front. Occasionally a callback will
 # be manually removed from the middle of the queue. For each callback that's
@@ -48,10 +47,13 @@ Callbacks <- R6Class(
       }
 
       if (length(errors) != 0) {
-        warning(paste0(
-          length(errors), " errors occurred while executing callbacks:\n  ",
-          paste(errors, collapse = "\n  ")
-        ))
+        warning(
+          paste0(
+            length(errors),
+            " errors occurred while executing callbacks:\n  ",
+            paste(errors, collapse = "\n  ")
+          )
+        )
       }
     },
     clear = function() {

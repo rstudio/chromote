@@ -1,4 +1,5 @@
-EventManager <- R6Class("EventManager",
+EventManager <- R6Class(
+  "EventManager",
   public = list(
     initialize = function(session) {
       private$session <- session
@@ -9,9 +10,12 @@ EventManager <- R6Class("EventManager",
 
       # Find out which domains require the <domain>.enable command to enable
       # event notifications.
-      private$event_enable_domains <- lapply(session$protocol, function(domain) {
-        is.function(domain$enable)
-      })
+      private$event_enable_domains <- lapply(
+        session$protocol,
+        function(domain) {
+          is.function(domain$enable)
+        }
+      )
 
       private$event_callbacks <- fastmap()
     },
@@ -22,19 +26,33 @@ EventManager <- R6Class("EventManager",
       # Note: If callback is specified, then timeout is ignored. Also, returns
       # a function for deregistering the callback, instead of a promise.
       if (!is.null(callback)) {
-        deregister_callback_fn <- private$add_event_callback(event, callback, once = FALSE)
+        deregister_callback_fn <- private$add_event_callback(
+          event,
+          callback,
+          once = FALSE
+        )
         return(invisible(deregister_callback_fn))
       }
 
       deregister_callback_fn <- NULL
       p <- promise(function(resolve, reject) {
-        deregister_callback_fn <<- private$add_event_callback(event, resolve, once = TRUE)
+        deregister_callback_fn <<- private$add_event_callback(
+          event,
+          resolve,
+          once = TRUE
+        )
       })
 
       if (!is.null(timeout) && !is.infinite(timeout)) {
         # !!! TODO: Fix loop !!!
-        p <- promise_timeout(p, timeout, loop = private$session$get_child_loop(),
-          timeout_message = paste0("Chromote: timed out waiting for event ", event)
+        p <- promise_timeout(
+          p,
+          timeout,
+          loop = private$session$get_child_loop(),
+          timeout_message = paste0(
+            "Chromote: timed out waiting for event ",
+            event
+          )
         )
       }
 
@@ -46,8 +64,7 @@ EventManager <- R6Class("EventManager",
 
     invoke_event_callbacks = function(event, params) {
       callbacks <- private$event_callbacks$get(event)
-      if (is.null(callbacks) || callbacks$size() == 0)
-        return()
+      if (is.null(callbacks) || callbacks$size() == 0) return()
 
       callbacks$invoke(params)
     },
@@ -99,8 +116,7 @@ EventManager <- R6Class("EventManager",
       deregister_and_dec <- function() {
         # Make sure that if this is called multiple times that it doesn't keep
         # having effects.
-        if (deregister_called)
-          return()
+        if (deregister_called) return()
         deregister_called <<- TRUE
 
         deregister_callback()
@@ -115,17 +131,24 @@ EventManager <- R6Class("EventManager",
         private$event_callback_counts[[domain]] <- 0
       }
 
-      private$event_callback_counts[[domain]] <- private$event_callback_counts[[domain]] + 1
+      private$event_callback_counts[[domain]] <-
+        private$event_callback_counts[[domain]] + 1
 
-      private$session$debug_log("Callbacks for ", domain, "++: ", private$event_callback_counts[[domain]])
+      private$session$debug_log(
+        "Callbacks for ",
+        domain,
+        "++: ",
+        private$event_callback_counts[[domain]]
+      )
 
       # If we're doing auto events and we're going from 0 to 1, enable events
       # for this domain. (Some domains do not require or have an .enable
       # method.)
-      if (private$session$get_auto_events() &&
+      if (
+        private$session$get_auto_events() &&
           private$event_callback_counts[[domain]] == 1 &&
-          isTRUE(private$event_enable_domains[[domain]]))
-      {
+          isTRUE(private$event_enable_domains[[domain]])
+      ) {
         private$session$debug_log("Enabling events for ", domain)
         private$session[[domain]]$enable()
       }
@@ -134,15 +157,22 @@ EventManager <- R6Class("EventManager",
     },
 
     dec_event_callback_count = function(domain) {
-      private$event_callback_counts[[domain]] <- private$event_callback_counts[[domain]] - 1
+      private$event_callback_counts[[domain]] <-
+        private$event_callback_counts[[domain]] - 1
 
-      private$session$debug_log("Callbacks for ", domain, "--: ", private$event_callback_counts[[domain]])
+      private$session$debug_log(
+        "Callbacks for ",
+        domain,
+        "--: ",
+        private$event_callback_counts[[domain]]
+      )
       # If we're doing auto events and we're going from 1 to 0, disable
       # enable events for this domain.
-      if (private$session$get_auto_events() &&
+      if (
+        private$session$get_auto_events() &&
           private$event_callback_counts[[domain]] == 0 &&
-          isTRUE(private$event_enable_domains[[domain]]))
-      {
+          isTRUE(private$event_enable_domains[[domain]])
+      ) {
         private$session$debug_log("Disabling events for ", domain)
         private$session[[domain]]$disable()
       }
