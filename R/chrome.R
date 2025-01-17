@@ -208,6 +208,48 @@ chromote_info <- function() {
   info
 }
 
+#' @export
+print.chromote_info <- function(x, ...) {
+  cat0 <- function(...) cat(..., "\n", sep = "")
+  wrap <- function(x, nchar = 9) {
+    x <- strwrap(x, width = getOption("width") - nchar, exdent = nchar)
+    paste(x, collapse = "\n")
+  }
+
+  cat0("---- {chromote} ----")
+
+  cat0("   System: ", x$os)
+  cat0("R version: ", x$version_r)
+  cat0(" chromote: ", x$version_chromote)
+
+  cat0("\n---- Chrome ----")
+
+  if (is.null(x$path)) {
+    cat0(
+      "Path: !! ",
+      wrap("Could not find Chrome, is it installed on this system?")
+    )
+    cat0("      !! ", wrap("If yes, see `?find_chrome()` for help."))
+    return(invisible(x))
+  }
+
+  cat0(
+    "   Path: ",
+    x$path,
+    if (identical(x$path, x$envvar)) " (set by CHROMOTE_CHROME envvar)"
+  )
+  cat0("Version: ", x$version %||% "(unknown)")
+  cat0("   Args: ", wrap(paste(x$args, collapse = " ")))
+  if (x$.check$timeout) {
+    cat0("  Error: Timed out.")
+    cat0("  Error message:")
+    cat0(x$error)
+  } else if (!is.null(x$error)) {
+    cat0("  Error: ", x$error)
+  }
+  invisible(x)
+}
+
 find_chrome_windows <- function() {
   tryCatch(
     {
