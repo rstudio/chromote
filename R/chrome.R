@@ -133,46 +133,64 @@ chrome_verify_windows <- function(path = find_chrome()) {
     return(status_unknown_version)
   }
 
-  output <- ""
+  version <- ""
 
   if (has_powershell) {
-    command <- sprintf("(Get-Item \"%s\").VersionInfo.FileVersion", path)
-    output <- system2(
-      "powershell",
-      c("-Command", shQuote(command)),
-      stdout = TRUE
-    )
-  } else {
-    # wmic
-    wmic_cmd <- sprintf(
-      'wmic datafile where "name=\'%s\'" get version /value',
-      gsub("\\\\", "\\\\\\\\", path)
-    )
-
-    output <-
-      tryCatch(
-        system(wmic_cmd, intern = TRUE),
-        error = function(err) ""
-      )
+    version <- chrome_windows_version_powershell(path)
   }
 
-  if (identical(output, "")) {
+  if (!nzchar(version) && has_wmic) {
+    version <- chrome_windows_version_wmic(path)
+  }
+
+  if (identical(version, "")) {
     return(status_unknown_version)
+  }
+
+  status(stdout = version)
+}
+
+chrome_windows_version_powershell <- function(path) {
+  # Uses PowerShell to get the Chrome version
+  command <- sprintf("(Get-Item \"%s\").VersionInfo.FileVersion", path)
+  output <- system2(
+    "powershell",
+    c("-Command", shQuote(command)),
+    stdout = TRUE
+  )
+
+  if (identical(output, "")) {
+    return("")
+  }
+
+  output <- trimws(output)
+  output[nzchar(output)][[1]]
+}
+
+chrome_windows_version_wmic <- function(path) {
+  # Uses WMIC to get the Chrome version
+  wmic_cmd <- sprintf(
+    'wmic datafile where "name=\'%s\'" get version /value',
+    gsub("\\\\", "\\\\\\\\", path)
+  )
+
+  output <- tryCatch(
+    system(wmic_cmd, intern = TRUE),
+    error = function(err) ""
+  )
+
+  if (identical(output, "")) {
+    return("")
   }
 
   # Returns possibly several lines, one of which looks like
   # "Version=128.0.6613.85\r"
-
   output <- trimws(output)
-  version <- output[nzchar(output)]
+  version <- grep("^Version=", output, value = TRUE)
+  version <- sub("Version=", "", version)
+  version <- paste(version, collapse = ", ") # might have more than one line
 
-  if (has_wmic) {
-    version <- grep("^Version=", version, value = TRUE)
-    version <- sub("Version=", "", version)
-  }
-  version <- paste(version, collapse = ", ") # since we could have a vector of versions
-
-  status(stdout = version)
+  return(version)
 }
 
 #' Show information about the chromote package and Chrome browser
