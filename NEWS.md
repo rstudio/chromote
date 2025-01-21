@@ -4,6 +4,8 @@
 
 * Added `chromote_info()`, a new utility function to print out key information about chromote and Chrome. Useful when debugging chromote or reporting an issue. (#190)
 
+* chromote now uses a consistent prefix for logs, e.g `{tempdir}/chrome-{id}-stdout.log` and `{tempdir}/chrome-{id}-stderr.log`. chromote also now uses `--crash-dumps-dir` to set a session-specific temp directory. (#194)
+
 # chromote 0.3.1
 
 * Fixed a typo that caused `launch_chrome()` to throw an error. (#175)
