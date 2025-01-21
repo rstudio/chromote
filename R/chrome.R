@@ -390,7 +390,7 @@ launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
 }
 
 launch_chrome_impl <- function(path, args, port) {
-  # Create temp folders for logs and crashes, grouped by chromote session
+  # Create temp locations for logs and crashes, grouped by chromote session
   tmp_session <- tempfile("chrome-", fileext = "%s")
   path_dir_crash <- sprintf(tmp_session, "-crashpad")
   path_stdout <- sprintf(tmp_session, "-stdout.log")
