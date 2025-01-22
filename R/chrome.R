@@ -420,6 +420,8 @@ launch_chrome_impl <- function(path, args, port) {
       error_logs <- paste(readLines(error_logs_path), collapse = "\n")
       stdout_file <- p$get_output_file()
 
+      verify <- chrome_verify()
+
       stop(
         "Failed to start chrome. ",
         if (verify$status == 0) {
