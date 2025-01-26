@@ -29,11 +29,11 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/rstudio/chromote/blob/rc-v0.4.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/rstudio/chromote/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.0" id="chromote-040">chromote 0.4.0<a class="anchor" aria-label="anchor" href="#chromote-040"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.0" id="chromote-040">chromote 0.4.0<a class="anchor" aria-label="anchor" href="#chromote-040"></a></h2><p class="text-muted">CRAN release: 2025-01-24</p>
 <ul><li><p>Chrome v132 and later no longer support <a href="https://developer.chrome.com/blog/removing-headless-old-from-chrome" class="external-link">old headless mode</a>. As such, <code>chromote</code> no longer defaults to using <code>--headless=old</code> and now uses <code>--headless</code> when running Chrome. You can still use the <code>chromote.headless</code> option or <code>CHROMOTE_HEADLESS</code> environment variable to configure the <code>--headless</code> flag if you’re using an older version of Chrome. (<a href="https://github.com/rstudio/chromote/issues/187" class="external-link">#187</a>)</p></li>
 <li><p>Added <code><a href="../reference/chromote_info.html">chromote_info()</a></code>, a new utility function to print out key information about chromote and Chrome. Useful when debugging chromote or reporting an issue. (<a href="https://github.com/rstudio/chromote/issues/190" class="external-link">#190</a>)</p></li>
 <li><p>chromote now uses a consistent prefix for logs, e.g <code>{tempdir}/chrome-{id}-stdout.log</code> and <code>{tempdir}/chrome-{id}-stderr.log</code>. chromote also now uses <code>--crash-dumps-dir</code> to set a session-specific temp directory. (<a href="https://github.com/rstudio/chromote/issues/194" class="external-link">#194</a>)</p></li>
