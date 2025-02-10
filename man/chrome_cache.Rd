@@ -38,6 +38,8 @@ find the most recent release matching that version. Use
 \item{platform}{A character string specifying the platform(s) to list. If
 \code{NULL} (default), the platform will be automatically detected, or if
 \code{"all"}, then binaries for all platforms will be listed.}
+
+\item{ask}{Whether to ask before removing files.}
 }
 \value{
 A character vector of paths.

@@ -249,6 +249,8 @@ chrome_cache_path_installed <- function(
   versions[versions$version == version, ]$path
 }
 
+#' @param ask Whether to ask before removing files.
+#'
 #' @rdname chrome_cache
 #' @export
 chrome_cache_remove <- function(version, binary, platform = NULL, ask = TRUE) {
@@ -384,7 +386,7 @@ chrome_cache_ensure_binary <- function(
 
   dir.create(cache_path, recursive = TRUE, showWarnings = FALSE)
   zip_path <- chrome_cache_path("chrome.zip")
-  download.file(url, zip_path, mode = "wb")
+  utils::download.file(url, zip_path, mode = "wb")
 
   zip::unzip(zip_path, exdir = cache_path)
 
@@ -576,7 +578,7 @@ req_parse_headers <- function(req) {
   parsed_headers <- strsplit(headers, "\r\n")[[1]]
   parsed_headers <- parsed_headers[parsed_headers != ""]
   parsed_headers <- strsplit(parsed_headers, ": ")
-  parsed_headers <- setNames(
+  parsed_headers <- rlang::set_names(
     lapply(parsed_headers, `[`, 2),
     sapply(parsed_headers, `[`, 1)
   )

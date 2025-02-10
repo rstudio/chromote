@@ -27,7 +27,8 @@ Imports:
     R6,
     rlang,
     utils,
-    websocket (>= 1.2.0)
+    websocket (>= 1.2.0),
+    zip
 Suggests:
     showimage,
     testthat (>= 3.0.0)
