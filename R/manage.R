@@ -390,20 +390,20 @@ chrome_cache_ensure_binary <- function(
 
   cli::cli_progress_done()
 
-  # TODO: Run `setup.exe` on Windows
-  # TODO: Don't ensure, instead just check that the binary is executable
   if (!ensure_user_exec(binary_path)) {
-    # TODO: Throw here because something went wrong when extracting
-    cli::cli_inform(
+    cli::cli_abort(
       c(
-        "Unable to make the downloaded binary user-executable.",
+        "Extracted {.code {binary}} binary does not have execution permissions.",
         "i" = "You may need to manually adjust the permissions of {.path {binary_path}}."
       )
     )
-  } else {
-    unlink(zip_path)
   }
 
+  if (binary == "chrome" && platform %in% c("win32", "win64")) {
+    chrome_install_windows_run_setup(binary_path)
+  }
+
+  unlink(zip_path)
   resolved
 }
 
@@ -648,15 +648,22 @@ download_json_cached <- function(url, update_cached = TRUE) {
   path_local
 }
 
-ensure_user_exec <- function(file_path) {
-  current_mode <- file.info(file_path)$mode
+ensure_user_exec <- function(path) {
+  current_mode <- file.info(path)$mode
   user_perm <- as.numeric(as.character(current_mode))
 
-  if ((user_perm %/% 100) %% 2 == 0) {
-    new_perm <- user_perm + 100
-    res <- Sys.chmod(file_path, mode = paste0("0", new_perm))
-    return(res)
+  # If user permissions is even, the file is not executable
+  !((user_perm %/% 100) %% 2 == 0)
+}
+
+chrome_install_windows_run_setup <- function(path) {
+  path_setup <- file.path(dirname(path), "setup.exe")
+  if (!file.exists(path_setup)) {
+    return()
   }
 
-  TRUE
+  processx::run(
+    path_setup,
+    args = sprintf("--configure-browser-in-directory=%s", dirname(path))
+  )
 }
