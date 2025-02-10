@@ -16,6 +16,7 @@ URL: https://rstudio.github.io/chromote/,
     https://github.com/rstudio/chromote
 BugReports: https://github.com/rstudio/chromote/issues
 Imports:
+    cli,
     curl,
     fastmap,
     jsonlite,
