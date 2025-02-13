@@ -45,7 +45,7 @@ try_chromote_info <- function() {
   }
 
   info$path <- sub(normalizePath("~/"), "~", info$path)
-  info
+  list(path = info$path, version = info$version)
 }
 
 test_that("with_chrome_version() works", {
