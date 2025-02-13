@@ -554,16 +554,18 @@ guess_platform <- function() {
   os <- Sys.info()["sysname"]
   arch <- Sys.info()["machine"]
 
-  if (os == "Linux" && arch == "x86_64") {
+  is_arch_x86_64 <- grepl("^x86[_-]64$", arch)
+
+  if (os == "Linux" && is_arch_x86_64) {
     return("linux64")
   } else if (os == "Darwin") {
     if (arch == "arm64") {
       return("mac-arm64")
-    } else if (arch == "x86_64") {
+    } else if (is_arch_x86_64) {
       return("mac-x64")
     }
   } else if (os == "Windows") {
-    if (arch == "x86_64") {
+    if (is_arch_x86_64) {
       return("win64")
     } else if (arch == "x86") {
       return("win32")
