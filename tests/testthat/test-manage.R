@@ -43,6 +43,8 @@ try_chromote_info <- function() {
   if (!is.null(info$error)) {
     rlang::abort(c("Could not resolve full `chromote_info()`.", i = info$error))
   }
+
+  info$path <- sub(normalizePath("~/"), "~", info$path)
   info
 }
 

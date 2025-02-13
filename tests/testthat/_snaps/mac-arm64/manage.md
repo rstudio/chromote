@@ -9,7 +9,7 @@
        chromote: 0.4.0.9000
       
       ---- Chrome ----
-         Path: /Users/garrick/Library/Caches/org.R-project.R/R/chromote/chrome/128.0.6612.0/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing (set by CHROMOTE_CHROME envvar)
+         Path: ~/Library/Caches/org.R-project.R/R/chromote/chrome/128.0.6612.0/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing
       Version: Google Chrome for Testing 128.0.6612.0
          Args: --headless --force-color-profile=srgb --disable-extensions
                --mute-audio
