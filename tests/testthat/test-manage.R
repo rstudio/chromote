@@ -53,4 +53,14 @@ test_that("with_chrome_version() works", {
     with_chrome_version("128.0.6612.0", with_retries(try_chromote_info)),
     variant = guess_platform()
   )
+
+  with_chrome_version("128.0.6612.0", {
+    b <- ChromoteSession$new()
+    withr::defer(b$close())
+
+    expect_match(
+      b$Runtime$evaluate("navigator.appVersion")$result$value,
+      "HeadlessChrome/128"
+    )
+  })
 })
