@@ -736,8 +736,19 @@ chrome_install_windows_run_setup <- function(path) {
     return()
   }
 
-  processx::run(
-    path_setup,
-    args = sprintf("--configure-browser-in-directory=%s", dirname(path))
+  tryCatch(
+    {
+      processx::run(
+        path_setup,
+        args = sprintf("--configure-browser-in-directory=%s", dirname(path))
+      )
+    },
+    error = function(err) {
+      cli::cli_warn(
+        "Running Chrome's {.field setup.exe} failed, which may not mean anything or it may mean that you need to manually resolve permissions errors.",
+        parent = err
+      )
+      return()
+    }
   )
 }
