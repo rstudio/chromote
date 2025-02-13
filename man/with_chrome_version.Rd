@@ -12,7 +12,8 @@ with_chrome_version(
   code,
   ...,
   binary = c("chrome", "chrome-headless-shell", "chromedriver"),
-  platform = NULL
+  platform = NULL,
+  quiet = TRUE
 )
 
 local_chrome_version(
@@ -20,6 +21,7 @@ local_chrome_version(
   binary = c("chrome", "chrome-headless-shell", "chromedriver"),
   platform = NULL,
   ...,
+  quiet = FALSE,
   .local_envir = parent.frame()
 )
 
@@ -50,6 +52,10 @@ use. Must be one of \code{"chrome"}, \code{"chrome-headless-shell"}, or
 
 \item{platform}{A character string specifying the platform. If \code{NULL}
 (default), the platform will be automatically detected.}
+
+\item{quiet}{Whether to print a message indicating which version and binary
+of Chrome is being used. By default, this message is suppressed for
+\code{\link[=with_chrome_version]{with_chrome_version()}} and enabled for \code{\link[=local_chrome_version]{local_chrome_version()}}.}
 
 \item{.local_envir}{\verb{[environment]}\cr The environment to use for scoping.}
 

@@ -29,6 +29,9 @@
 #'   `"chromedriver"`. Default is `"chrome"`.
 #' @param platform A character string specifying the platform. If `NULL`
 #'   (default), the platform will be automatically detected.
+#' @param quiet Whether to print a message indicating which version and binary
+#'   of Chrome is being used. By default, this message is suppressed for
+#'   [with_chrome_version()] and enabled for [local_chrome_version()].
 #' @inheritParams withr::local_envvar
 #' @inheritDotParams withr::local_envvar
 #'
@@ -43,13 +46,15 @@ with_chrome_version <- function(
   code,
   ...,
   binary = c("chrome", "chrome-headless-shell", "chromedriver"),
-  platform = NULL
+  platform = NULL,
+  quiet = TRUE
 ) {
   local_chrome_version(
     version = version,
     binary = binary,
     platform = platform,
-    ...
+    ...,
+    quiet = quiet
   )
   code
 }
@@ -62,12 +67,14 @@ local_chrome_version <- function(
   binary = c("chrome", "chrome-headless-shell", "chromedriver"),
   platform = NULL,
   ...,
+  quiet = FALSE,
   .local_envir = parent.frame()
 ) {
   if (identical(version, "system")) {
-    cli::cli_inform(
-      "chromote will now use {.strong the system-wide installation} of Chrome."
-    )
+    if (!quiet)
+      cli::cli_inform(
+        "chromote will now use {.strong the system-wide installation} of Chrome."
+      )
     return(local_chromote_chrome("", ..., .local_envir = .local_envir))
   }
 
@@ -79,9 +86,11 @@ local_chrome_version <- function(
     platform = platform
   )
 
-  cli::cli_inform(
-    "chromote will now use version {.field {resolved$version}} of {.code {resolved$binary}} for {resolved$platform}."
-  )
+  if (!quiet && !identical(version, resolved$version)) {
+    cli::cli_inform(
+      "chromote will now use version {.field {resolved$version}} of {.code {resolved$binary}} for {resolved$platform}."
+    )
+  }
 
   local_chromote_chrome(resolved$path, ..., .local_envir = .local_envir)
 }
