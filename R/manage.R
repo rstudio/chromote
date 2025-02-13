@@ -266,6 +266,7 @@ chrome_versions_path_cache <- function(...) {
 chromote_cache_path <- function(...) {
   cache_base <- normalizePath(
     tools::R_user_dir("chromote", which = "cache"),
+    mustWork = FALSE,
     winslash = "/"
   )
   file.path(cache_base, ...)
