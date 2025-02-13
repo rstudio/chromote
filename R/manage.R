@@ -264,7 +264,11 @@ chrome_versions_path_cache <- function(...) {
 
 # Not exported
 chromote_cache_path <- function(...) {
-  file.path(tools::R_user_dir("chromote", which = "cache"), ...)
+  cache_base <- normalizePath(
+    tools::R_user_dir("chromote", which = "cache"),
+    winslash = "/"
+  )
+  file.path(cache_base, ...)
 }
 
 #' @rdname chrome_versions
@@ -700,11 +704,15 @@ download_json_cached <- function(url, update_cached = TRUE) {
 
     # Set the local file's modified time to the last-modified
     headers <- req_parse_headers(req)
-    last_modified <- as.POSIXct(
-      headers[["last-modified"]],
-      format = "%a, %d %b %Y %H:%M:%S GMT",
-      tz = "GMT"
-    )
+    names(headers) <- tolower(names(headers))
+    withr::with_locale(new = c("LC_TIME" = "en_US"), {
+      last_modified <- as.POSIXct(
+        "Thu, 13 Feb 2025 17:09:17 GMT",
+        format = "%a, %d %b %Y %H:%M:%S GMT",
+        tz = "GMT"
+      )
+      last_modified
+    })
     Sys.setFileTime(path_local, last_modified)
   } else {
     stop("Could not download ", url, ": Status code ", req$status_code)
