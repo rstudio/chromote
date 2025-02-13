@@ -39,6 +39,6 @@ reference:
     via the [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing)
     service.
   contents:
-  - chrome_use_version
-  - chrome_list_versions
-  - chrome_cache
+  - with_chrome_version
+  - chrome_versions_list
+  - chrome_versions
