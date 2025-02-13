@@ -57,13 +57,51 @@ test_that("with_chrome_version() works", {
   )
 
   with_chrome_version("128.0.6612.0", {
-    chromote <- Chromote$new()
-    b <- ChromoteSession$new(chromote)
-    withr::defer(b$close())
+    b <- ChromoteSession$new()
 
     expect_match(
       b$Runtime$evaluate("navigator.appVersion")$result$value,
       "HeadlessChrome/128"
     )
   })
+})
+
+test_that("with_chrome_version() manages Chromote object", {
+  chrome_versions_add("128.0.6612.0", "chrome")
+  chrome_versions_add("129.0.6668.100", "chrome-headless-shell")
+
+  expect_closed <- function(chromote_obj) {
+    max_wait <- Sys.time() + 5
+    while (chromote_obj$is_alive() && Sys.time() < max_wait) {
+      Sys.sleep(0.1)
+    }
+    expect_false(!!chromote_obj$is_alive())
+  }
+
+  chomote_128 <- NULL
+
+  with_chrome_version("128.0.6612.0", {
+    expect_equal(find_chrome(), chrome_versions_path("128.0.6612.0"))
+    chromote_128 <- default_chromote_object()
+    chromote_129 <- NULL
+
+    with_chrome_version("129.0.6668.100", binary = "chrome-headless-shell", {
+      expect_equal(
+        find_chrome(),
+        chrome_versions_path("129.0.6668.100", "chrome-headless-shell")
+      )
+      chromote_129 <- default_chromote_object()
+
+      expect_true(chromote_129$is_alive())
+      expect_equal(chromote_129$get_browser()$get_path(), find_chrome())
+      expect_true(!identical(chromote_129, chromote_128))
+    })
+
+    expect_equal(default_chromote_object(), chromote_128)
+
+    expect_closed(chromote_129)
+    expect_true(chromote_128$is_alive())
+  })
+
+  expect_closed(chromote_128)
 })

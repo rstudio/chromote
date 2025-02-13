@@ -102,6 +102,32 @@ local_chrome_version <- function(
 #'   current scope.
 #' @export
 local_chromote_chrome <- function(path, ..., .local_envir = parent.frame()) {
+  old_default_chromote_object <-
+    if (has_default_chromote_object()) default_chromote_object() else NULL
+
+  withr::defer(
+    {
+      if (has_default_chromote_object()) {
+        current <- default_chromote_object()
+        current$close()
+      }
+
+      if (is.null(old_default_chromote_object)) {
+        globals$default_chromote <- NULL
+      } else if (old_default_chromote_object$is_alive()) {
+        set_default_chromote_object(old_default_chromote_object)
+      } else {
+        globals$default_chromote <- NULL
+      }
+    },
+    envir = .local_envir
+  )
+
+  # Unset current default so that next ChromoteSession uses a new Chromote obj,
+  # but `set_default_chromote_object()` requires a chromote obj that we don't
+  # want to create yet.
+  globals$default_chromote <- NULL
+
   withr::local_envvar(
     list(CHROMOTE_CHROME = path),
     .local_envir = .local_envir,
