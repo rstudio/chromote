@@ -54,7 +54,7 @@ use. Must be one of \code{"chrome"}, \code{"chrome-headless-shell"}, or
 \item{.local_envir}{\verb{[environment]}\cr The environment to use for scoping.}
 
 \item{path}{A direct path to the Chrome (or Chrome-based) binary. See
-\code{\link[=find_chrome]{find_chrome()}} for details or \code{\link[=chrome_cache_path_installed]{chrome_cache_path_installed()}} for paths
+\code{\link[=find_chrome]{find_chrome()}} for details or \code{\link[=chrome_versions_path]{chrome_versions_path()}} for paths
 from the chromote-managed cache.}
 }
 \value{

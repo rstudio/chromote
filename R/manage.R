@@ -73,7 +73,7 @@ local_chrome_version <- function(
 
   binary <- check_binary(binary)
 
-  resolved <- chrome_cache_ensure_binary(
+  resolved <- chrome_versions_ensure(
     version = version,
     binary = binary,
     platform = platform
@@ -87,7 +87,7 @@ local_chrome_version <- function(
 }
 
 #' @param path A direct path to the Chrome (or Chrome-based) binary. See
-#'   [find_chrome()] for details or [chrome_cache_path_installed()] for paths
+#'   [find_chrome()] for details or [chrome_versions_path()] for paths
 #'   from the chromote-managed cache.
 #' @describeIn with_chrome_version Use a specific Chrome, by path, within the
 #'   current scope.
@@ -164,13 +164,13 @@ chrome_get_versions <- function(update_cached = TRUE) {
 
 #' List installed or available Chrome binary versions
 #'
-#' By default lists the installed Chrome versions in the [chrome_cache_path()],
+#' By default lists the installed Chrome versions in the [chrome_versions_path_cache()],
 #' or list all Chrome versions available via Google's
 #' [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing)
 #' service.
 #'
 #' @examplesIf rlang::is_interactive()
-#' chrome_list_versions()
+#' chrome_versions_list()
 #'
 #' @param which Whether to list `"installed"` local binaries or to list `"all"`
 #'   chrome versions available from online sources.
@@ -184,10 +184,10 @@ chrome_get_versions <- function(update_cached = TRUE) {
 #' @returns Returns a [data.frame()] of Chrome for Testing versions with
 #'   columns: `version`, `revision`, `binary`, `platform`, `url` (where the
 #'   binary can be downloaded), and--if `which = "installed"`--the local path to
-#'   the binary in the [chrome_cache_path()].
+#'   the binary in the [chrome_versions_path_cache()].
 #'
 #' @export
-chrome_list_versions <- function(
+chrome_versions_list <- function(
   which = c("installed", "all"),
   binary = c("all", "chrome", "chrome-headless-shell", "chromedriver"),
   platform = NULL
@@ -204,11 +204,11 @@ chrome_list_versions <- function(
     return(versions)
   }
 
-  installed <- dir(chrome_cache_path(), include.dirs = TRUE)
+  installed <- dir(chrome_versions_path_cache(), include.dirs = TRUE)
   installed <- intersect(installed, unique(versions$version))
 
   versions <- versions[versions$version %in% installed, ]
-  versions$path <- chrome_cache_path(
+  versions$path <- chrome_versions_path_cache(
     versions$version,
     Map(
       chrome_relative_exe,
@@ -220,47 +220,47 @@ chrome_list_versions <- function(
   versions[file.exists(versions$path), ]
 }
 
-#' Chromote cache path helpers
+#' Chrome versions cache helpers
 #'
 #' @description
-#' These functions help interact with \pkg{chromote}'s cache, primarily used to
-#' cache Chrome for Testing binaries:
+#' These functions help interact with the cache used by \pkg{chromote}'s for
+#' storing versioned Chrome for Testing binaries:
 #'
-#' * `chromote_cache_path()`: Returns the path to the general \pkg{chromote}
-#'   cache.
-#' * `chrome_cache_path()`: Returns the path to the cache used for Chrome
-#'   binaries (inside the general cache).
-#' * `chrome_cache_path_installed()`: Returns a path or paths to specific Chrome
+#' * `chrome_versions_path()`: Returns a path or paths to specific Chrome
 #'   binaries in the cache.
-#' * `chromem_cache_remove()`: Remove specific versions and binaries from the
+#' * `chrome_versions_add()`: Add a specific version to the Chrome versions
+#'   cache.
+#' * `chrome_versions_remove()`: Remove specific versions and binaries from the
 #'   Chrome cache. The `version`, `binary` and `platform` arguments can each
 #'   take `"all"` to remove all installed copies of that version, binary or
 #'   platform.
+#' * `chrome_versions_path_cache()`: Returns the path to the cache directory
+#'   used for Chrome binaries.
+#'
+#' @seealso [chrome_versions_list()]
 #'
 #' @param ... Additional path parts.
-#' @inheritParams chrome_list_versions
+#' @inheritParams chrome_versions_list
 #' @inheritParams with_chrome_version
 #'
-#' @return A character vector of paths.
-#' @name chrome_cache
-#' @aliases chromote_cache
+#' @return A character vector of Chrome binary paths.
+#' @name chrome_versions
 NULL
 
-#' @rdname chrome_cache
+#' @rdname chrome_versions
 #' @export
+chrome_versions_path_cache <- function(...) {
+  chromote_cache_path("chrome", ...)
+}
+
+# Not exported
 chromote_cache_path <- function(...) {
   file.path(tools::R_user_dir("chromote", which = "cache"), ...)
 }
 
-#' @rdname chrome_cache
+#' @rdname chrome_versions
 #' @export
-chrome_cache_path <- function(...) {
-  chromote_cache_path("chrome", ...)
-}
-
-#' @rdname chrome_cache
-#' @export
-chrome_cache_path_installed <- function(
+chrome_versions_path <- function(
   version = "latest",
   binary = "chrome",
   platform = NULL
@@ -268,7 +268,7 @@ chrome_cache_path_installed <- function(
   platform <- check_platform(platform)
   binary <- check_binary(binary)
 
-  versions <- chrome_list_versions(
+  versions <- chrome_versions_list(
     which = "installed",
     binary = binary,
     platform = platform
@@ -281,7 +281,7 @@ chrome_cache_path_installed <- function(
     cli::cli_abort(
       c(
         "Version {.field {version_og}} of {.code {binary}} for {platform} is not installed.",
-        "i" = 'Use {.run chromote::chrome_cache_add("{version_og}", "{binary}", "{platform}")} to install, or {.run chromote::chrome_list_versions()} to list locally cached versions.'
+        "i" = 'Use {.run chromote::chrome_cache_add("{version_og}", "{binary}", "{platform}")} to install, or {.run chromote::chrome_versions_list()} to list locally cached versions.'
       )
     )
   }
@@ -289,24 +289,29 @@ chrome_cache_path_installed <- function(
   versions[versions$version == version, ]$path
 }
 
-#' @rdname chrome_cache
+#' @rdname chrome_versions
 #' @export
-chrome_cache_add <- function(version, binary, platform = NULL) {
-  res <- chrome_cache_ensure_binary(version, binary, platform)
+chrome_versions_add <- function(version, binary, platform = NULL) {
+  res <- chrome_versions_ensure(version, binary, platform)
 
   res[["path"]]
 }
 
 #' @param ask Whether to ask before removing files.
 #'
-#' @rdname chrome_cache
+#' @rdname chrome_versions
 #' @export
-chrome_cache_remove <- function(version, binary, platform = NULL, ask = TRUE) {
+chrome_versions_remove <- function(
+  version,
+  binary,
+  platform = NULL,
+  ask = TRUE
+) {
   force(version)
   binary <- check_binary(binary, multiple = TRUE, allow_all = TRUE)
   platform <- check_platform(platform, multiple = TRUE, allow_all = TRUE)
 
-  versions <- chrome_list_versions(
+  versions <- chrome_versions_list(
     "installed",
     binary = binary,
     platform = platform
@@ -322,7 +327,7 @@ chrome_cache_remove <- function(version, binary, platform = NULL, ask = TRUE) {
   # versions is already filtered by binary + platform
   to_delete <- versions[versions$version %in% version, ]
 
-  dirs_delete <- chrome_cache_path(
+  dirs_delete <- chrome_versions_path_cache(
     to_delete$version,
     paste0(to_delete$binary, "-", to_delete$platform)
   )
@@ -358,7 +363,7 @@ chrome_cache_remove <- function(version, binary, platform = NULL, ask = TRUE) {
   invisible(dirs_delete)
 }
 
-chrome_cache_ensure_binary <- function(
+chrome_versions_ensure <- function(
   version = "latest",
   binary = "chrome",
   platform = NULL,
@@ -375,9 +380,9 @@ chrome_cache_ensure_binary <- function(
   binary <- check_binary(binary)
 
   versions <- if (prefer_installed) {
-    chrome_list_versions("installed", binary = binary, platform = platform)
+    chrome_versions_list("installed", binary = binary, platform = platform)
   } else {
-    chrome_list_versions("all", binary = binary, platform = platform)
+    chrome_versions_list("all", binary = binary, platform = platform)
   }
 
   versions <- versions[
@@ -390,7 +395,7 @@ chrome_cache_ensure_binary <- function(
   if (is.null(version)) {
     if (prefer_installed) {
       return(
-        chrome_cache_ensure_binary(
+        chrome_versions_ensure(
           version_og,
           binary = binary,
           platform = platform,
@@ -401,7 +406,7 @@ chrome_cache_ensure_binary <- function(
     cli::cli_abort(
       c(
         "Version {.field {version_og}} is not a known {.code {binary}} version.",
-        "i" = "Use {.run [chrome_list_versions()](chromote::chrome_list_versions())} to show all available versions."
+        "i" = "Use {.run [chrome_versions_list()](chromote::chrome_versions_list())} to show all available versions."
       )
     )
   }
@@ -410,7 +415,7 @@ chrome_cache_ensure_binary <- function(
 
   stopifnot(length(url) == 1)
 
-  cache_path <- chrome_cache_path(version)
+  cache_path <- chrome_versions_path_cache(version)
   binary_path <- file.path(cache_path, chrome_relative_exe(binary, platform))
 
   resolved <- list(
@@ -432,7 +437,7 @@ chrome_cache_ensure_binary <- function(
   )
 
   dir.create(cache_path, recursive = TRUE, showWarnings = FALSE)
-  zip_path <- chrome_cache_path("chrome.zip")
+  zip_path <- chrome_versions_path_cache("chrome.zip")
   utils::download.file(url, zip_path, mode = "wb")
 
   zip::unzip(zip_path, exdir = cache_path)
