@@ -654,6 +654,18 @@ req_parse_headers <- function(req) {
   parsed_headers
 }
 
+req_headers_last_modified <- function(headers) {
+  names(headers) <- tolower(names(headers))
+  withr::with_locale(new = c("LC_TIME" = "en_US"), {
+    last_modified <- as.POSIXct(
+      headers[["last-modified"]],
+      format = "%a, %d %b %Y %H:%M:%S GMT",
+      tz = "GMT"
+    )
+    last_modified
+  })
+}
+
 download_json_cached <- function(url, update_cached = TRUE) {
   path_cache <- chromote_cache_path()
   dir.create(path_cache, showWarnings = FALSE, recursive = TRUE)
@@ -672,11 +684,7 @@ download_json_cached <- function(url, update_cached = TRUE) {
       {
         # Fetch headers from the server
         headers <- curl_fetch_headers(url)
-        server_last_modified <- as.POSIXct(
-          headers[["last-modified"]],
-          format = "%a, %d %b %Y %H:%M:%S GMT",
-          tz = "GMT"
-        )
+        server_last_modified <- req_headers_last_modified(headers)
 
         length(server_last_modified) == 1 && local_mtime < server_last_modified
       },
@@ -704,16 +712,7 @@ download_json_cached <- function(url, update_cached = TRUE) {
     writeLines(json_content, path_local)
 
     # Set the local file's modified time to the last-modified
-    headers <- req_parse_headers(req)
-    names(headers) <- tolower(names(headers))
-    withr::with_locale(new = c("LC_TIME" = "en_US"), {
-      last_modified <- as.POSIXct(
-        "Thu, 13 Feb 2025 17:09:17 GMT",
-        format = "%a, %d %b %Y %H:%M:%S GMT",
-        tz = "GMT"
-      )
-      last_modified
-    })
+    last_modified <- req_headers_last_modified(req_parse_headers(req))
     Sys.setFileTime(path_local, last_modified)
   } else {
     stop("Could not download ", url, ": Status code ", req$status_code)
