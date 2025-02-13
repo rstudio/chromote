@@ -55,7 +55,8 @@ test_that("with_chrome_version() works", {
   )
 
   with_chrome_version("128.0.6612.0", {
-    b <- ChromoteSession$new()
+    chromote <- Chromote$new()
+    b <- ChromoteSession$new(chromote)
     withr::defer(b$close())
 
     expect_match(
