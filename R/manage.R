@@ -7,16 +7,16 @@
 #'
 #' @examplesIf rlang::is_interactive()
 #' # Use the latest version of Chrome
-#' chrome_use_version()
+#' local_chrome_version()
 #'
 #' # Use a specific version of chrome-headless-shell
-#' chrome_use_version("114.0.5735.90", binary = "chrome-headless-shell")
+#' local_chrome_version("114.0.5735.90", binary = "chrome-headless-shell")
 #'
-#' @details This function downloads the specified binary, sets up the necessary
-#'   environment, and returns the old CHROMOTE_CHROME environment variable
-#'   value. It uses the "known-good-versions" which includes all Google Chrome
-#'   for Testing versions from
-#'   https://googlechromelabs.github.io/chrome-for-testing
+#' @details This function downloads the specified binary, if not already
+#'   available and configures [find_chrome()] to use the specified binary while
+#'   evaluating `code` or within the local scope. It uses the
+#'   "known-good-versions" list from the Google Chrome for Testing versions at
+#'   <https://googlechromelabs.github.io/chrome-for-testing>.
 #'
 #' @param version A character string specifying the version to use. Default is
 #'   `"latest-installed"`, which uses the latest version you have installed via
@@ -29,27 +29,46 @@
 #'   `"chromedriver"`. Default is `"chrome"`.
 #' @param platform A character string specifying the platform. If `NULL`
 #'   (default), the platform will be automatically detected.
+#' @inheritParams withr::local_envvar
+#' @inheritDotParams withr::local_envvar
 #'
-#' @return Sets the `CHROMOTE_CHROME` environment variable and invisibly returns
-#'   the old value of the `CHROMOTE_CHROME` environment variable.
+#' @return Sets the `CHROMOTE_CHROME` environment variable and returns the
+#'   result of the `code` argument.
 #'
+#' @describeIn with_chrome_version Temporarily use a specific version of Chrome
+#'   during the evaluation of `code`.
 #' @export
-chrome_use_version <- function(
+with_chrome_version <- function(
   version = "latest-installed",
+  code,
+  ...,
   binary = c("chrome", "chrome-headless-shell", "chromedriver"),
   platform = NULL
 ) {
-  old <- Sys.getenv("CHROMOTE_CHROME", unset = "...unset...")
-  if (identical(old, "...unset...")) {
-    old <- NULL
-  }
+  local_chrome_version(
+    version = version,
+    binary = binary,
+    platform = platform,
+    ...
+  )
+  code
+}
 
+#' @describeIn with_chrome_version Use a specific version of Chrome within the
+#'   current scope.
+#' @export
+local_chrome_version <- function(
+  version = "latest-installed",
+  binary = c("chrome", "chrome-headless-shell", "chromedriver"),
+  platform = NULL,
+  ...,
+  .local_envir = parent.frame()
+) {
   if (identical(version, "system")) {
-    Sys.unsetenv("CHROMOTE_CHROME")
     cli::cli_inform(
       "chromote will now use {.strong the system-wide installation} of Chrome."
     )
-    return(invisible(old))
+    return(local_chromote_chrome("", ..., .local_envir = .local_envir))
   }
 
   binary <- check_binary(binary)
@@ -64,8 +83,29 @@ chrome_use_version <- function(
     "chromote will now use version {.field {resolved$version}} of {.code {resolved$binary}} for {resolved$platform}."
   )
 
-  Sys.setenv(CHROMOTE_CHROME = resolved$path)
-  invisible(old)
+  local_chromote_chrome(resolved$path, ..., .local_envir = .local_envir)
+}
+
+#' @param path A direct path to the Chrome (or Chrome-based) binary. See
+#'   [find_chrome()] for details or [chrome_cache_path_installed()] for paths
+#'   from the chromote-managed cache.
+#' @describeIn with_chrome_version Use a specific Chrome, by path, within the
+#'   current scope.
+#' @export
+local_chromote_chrome <- function(path, ..., .local_envir = parent.frame()) {
+  withr::local_envvar(
+    list(CHROMOTE_CHROME = path),
+    .local_envir = .local_envir,
+    ...
+  )
+}
+
+#' @describeIn with_chrome_version Temporarily use a specific Chrome version, by
+#'   path, for the evaluation of `code`.
+#' @export
+with_chromote_chrome <- function(path, code, ...) {
+  local_chromote_chrome(path, ...)
+  code
 }
 
 .chrome_versions <- new.env(parent = emptyenv())
@@ -199,7 +239,7 @@ chrome_list_versions <- function(
 #'
 #' @param ... Additional path parts.
 #' @inheritParams chrome_list_versions
-#' @inheritParams chrome_use_version
+#' @inheritParams with_chrome_version
 #'
 #' @return A character vector of paths.
 #' @name chrome_cache
@@ -241,12 +281,20 @@ chrome_cache_path_installed <- function(
     cli::cli_abort(
       c(
         "Version {.field {version_og}} of {.code {binary}} for {platform} is not installed.",
-        "i" = 'Use {.run chromote::chrome_use_version("{version_og}", "{binary}", "{platform}")} to install, or {.run chromote::chrome_list_versions()} to list locally cached versions.'
+        "i" = 'Use {.run chromote::chrome_cache_add("{version_og}", "{binary}", "{platform}")} to install, or {.run chromote::chrome_list_versions()} to list locally cached versions.'
       )
     )
   }
 
   versions[versions$version == version, ]$path
+}
+
+#' @rdname chrome_cache
+#' @export
+chrome_cache_add <- function(version, binary, platform = NULL) {
+  res <- chrome_cache_ensure_binary(version, binary, platform)
+
+  res[["path"]]
 }
 
 #' @param ask Whether to ask before removing files.
@@ -372,7 +420,6 @@ chrome_cache_ensure_binary <- function(
     platform = platform
   )
 
-  # Check if the binary already exists
   if (file.exists(binary_path)) {
     return(resolved)
   }

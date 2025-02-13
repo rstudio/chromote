@@ -28,6 +28,7 @@ Imports:
     rlang,
     utils,
     websocket (>= 1.2.0),
+    withr,
     zip
 Suggests:
     showimage,

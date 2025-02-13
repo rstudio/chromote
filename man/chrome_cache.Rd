@@ -6,6 +6,7 @@
 \alias{chromote_cache_path}
 \alias{chrome_cache_path}
 \alias{chrome_cache_path_installed}
+\alias{chrome_cache_add}
 \alias{chrome_cache_remove}
 \title{Chromote cache path helpers}
 \usage{
@@ -18,6 +19,8 @@ chrome_cache_path_installed(
   binary = "chrome",
   platform = NULL
 )
+
+chrome_cache_add(version, binary, platform = NULL)
 
 chrome_cache_remove(version, binary, platform = NULL, ask = TRUE)
 }
