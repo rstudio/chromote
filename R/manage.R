@@ -357,8 +357,9 @@ chrome_versions_remove <- function(
     )
     cli::cli_bullets(sprintf("{.path %s}", dirs_delete))
 
-    do_delete <- utils::askYesNo("Delete from cache?")
-    if (is.na(do_delete) || isFALSE(do_delete)) {
+    cli::cli_inform("Delete from cache?")
+    do_delete <- utils::menu(gettext(c("Yes", "No", "Cancel")))
+    if (do_delete != 1L) {
       cli::cli_inform("Canceled.")
       return(invisible(dirs_delete))
     }
