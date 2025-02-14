@@ -393,22 +393,9 @@ Chromote <- R6Class(
 
     #' @description Close the [`Browser`] object
     close = function() {
-      # Must be alive to be active so we cache value before closing process
-      is_active <- self$is_active()
-
-      if (self$is_alive()) {
-        if (is_active) {
-          # send a message to the browser requesting that it close
-          self$Browser$close()
-        } else {
-          # terminate the process
-          private$browser$close()
-        }
-      }
-
-      if (is_active) {
-        private$ws$close()
-      }
+      # Fully terminate: close the websocket and SIGTERM the browser process
+      private$ws$close()
+      private$browser$close()
 
       invisible()
     },
