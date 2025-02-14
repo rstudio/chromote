@@ -395,7 +395,7 @@ Close the \code{\link{Browser}} object
 \if{html}{\out{<a id="method-Chromote-stop"></a>}}
 \if{latex}{\out{\hypertarget{method-Chromote-stop}{}}}
 \subsection{Method \code{stop()}}{
-Stop the \code{\link{Browser}} process
+Forcefully stop the \code{\link{Browser}} process
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$stop()}\if{html}{\out{</div>}}
 }
