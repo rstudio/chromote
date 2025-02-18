@@ -514,6 +514,17 @@ chrome_versions_ensure <- function(
 
   cli::cli_progress_done()
 
+  if (!file.exists(binary_path)) {
+    cli::cli_abort(
+      c(
+        "The Chrome binary was not found at the expected path.",
+        "x" = "Expected {.path {binary_path}}",
+        "i" = "The downloaded zip was not deleted: {.path {zip_path}}",
+        "i" = "If the problem persists, please report this issue to {.href [rstudio/chromote](https://github.com/rstudio/chromote/issues/new)}."
+      )
+    )
+  }
+
   if (!ensure_user_exec(binary_path)) {
     cli::cli_abort(
       c(
