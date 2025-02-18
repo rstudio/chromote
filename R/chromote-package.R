@@ -35,3 +35,25 @@ NULL
 #' @importFrom websocket WebSocket
 ## usethis namespace: end
 NULL
+
+# inlined from `lifecycle::badge()` and only supports the experimental badge.
+# Use `usethis::use_lifecycle()` to add additional badges.
+lifecycle_badge <- function(stage) {
+  stage <- rlang::arg_match0(
+    stage,
+    c("experimental") #, "stable", "superseded", "deprecated")
+  )
+  stage_name <- substr(stage, 1, 1) <- toupper(substr(stage, 1, 1))
+
+  url <- paste0("https://lifecycle.r-lib.org/articles/stages.html#", stage)
+
+  html <- sprintf(
+    "\\href{%s}{\\figure{%s}{options: alt='[%s]'}}",
+    url,
+    file.path(sprintf("lifecycle-%s.svg", stage)),
+    stage_name
+  )
+
+  text <- sprintf("\\strong{[%s]}", stage_name)
+  sprintf("\\ifelse{html}{%s}{%s}", html, text)
+}

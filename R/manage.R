@@ -1,9 +1,16 @@
 #' Use a specific version of Chrome or related binaries
 #'
+#' @description
+#' `r lifecycle_badge("experimental")`
+#'
 #' This function downloads and sets up a specific version of Chrome, using the
 #' [Google Chrome for Testing builds](https://googlechromelabs.github.io/chrome-for-testing)
 #' for `chrome`, `chrome-headless-shell` or `chromedriver` for use with
 #' chromote.
+#'
+#' Managed Chrome installations is an experimental feature introduced in
+#' chromote v0.5.0 and inspired by similar features in
+#' [playwright](https://playwright.dev/).
 #'
 #' @examplesIf rlang::is_interactive()
 #' # Use the latest version of Chrome
@@ -199,10 +206,17 @@ chrome_get_versions <- function(update_cached = TRUE) {
 
 #' List installed or available Chrome binary versions
 #'
+#' @description
+#' `r lifecycle_badge("experimental")`
+#'
 #' By default lists the installed Chrome versions in the [chrome_versions_path_cache()],
 #' or list all Chrome versions available via Google's
 #' [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing)
 #' service.
+#'
+#' Managed Chrome installations is an experimental feature introduced in
+#' chromote v0.5.0 and inspired by similar features in
+#' [playwright](https://playwright.dev/).
 #'
 #' @examplesIf rlang::is_interactive()
 #' chrome_versions_list()
@@ -258,6 +272,8 @@ chrome_versions_list <- function(
 #' Chrome versions cache helpers
 #'
 #' @description
+#' `r lifecycle_badge("experimental")`
+#'
 #' These functions help interact with the cache used by \pkg{chromote}'s for
 #' storing versioned Chrome for Testing binaries:
 #'
@@ -271,6 +287,10 @@ chrome_versions_list <- function(
 #'   platform.
 #' * `chrome_versions_path_cache()`: Returns the path to the cache directory
 #'   used for Chrome binaries.
+#'
+#' Managed Chrome installations is an experimental feature introduced in
+#' chromote v0.5.0 and inspired by similar features in
+#' [playwright](https://playwright.dev/).
 #'
 #' @seealso [chrome_versions_list()]
 #'

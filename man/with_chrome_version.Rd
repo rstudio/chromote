@@ -68,10 +68,16 @@ Sets the \code{CHROMOTE_CHROME} environment variable and returns the
 result of the \code{code} argument.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#Experimental}{\figure{lifecycle-Experimental.svg}{options: alt='[E]'}}}{\strong{[E]}}
+
 This function downloads and sets up a specific version of Chrome, using the
 \href{https://googlechromelabs.github.io/chrome-for-testing}{Google Chrome for Testing builds}
 for \code{chrome}, \code{chrome-headless-shell} or \code{chromedriver} for use with
 chromote.
+
+Managed Chrome installations is an experimental feature introduced in
+chromote v0.5.0 and inspired by similar features in
+\href{https://playwright.dev/}{playwright}.
 }
 \details{
 This function downloads the specified binary, if not already

@@ -40,6 +40,8 @@ find the most recent release matching that version. Use
 A character vector of Chrome binary paths.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#Experimental}{\figure{lifecycle-Experimental.svg}{options: alt='[E]'}}}{\strong{[E]}}
+
 These functions help interact with the cache used by \pkg{chromote}'s for
 storing versioned Chrome for Testing binaries:
 \itemize{
@@ -54,6 +56,10 @@ platform.
 \item \code{chrome_versions_path_cache()}: Returns the path to the cache directory
 used for Chrome binaries.
 }
+
+Managed Chrome installations is an experimental feature introduced in
+chromote v0.5.0 and inspired by similar features in
+\href{https://playwright.dev/}{playwright}.
 }
 \seealso{
 \code{\link[=chrome_versions_list]{chrome_versions_list()}}
