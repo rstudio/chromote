@@ -63,7 +63,7 @@ with_chrome_version <- function(
     ...,
     quiet = quiet
   )
-  code
+  force(code)
 }
 
 #' @describeIn with_chrome_version Use a specific version of Chrome within the
@@ -147,7 +147,7 @@ local_chromote_chrome <- function(path, ..., .local_envir = parent.frame()) {
 #' @export
 with_chromote_chrome <- function(path, code, ...) {
   local_chromote_chrome(path, ...)
-  code
+  force(code)
 }
 
 .chrome_versions <- new.env(parent = emptyenv())
@@ -341,7 +341,7 @@ chrome_versions_path <- function(
     cli::cli_abort(
       c(
         "Version {.field {version_og}} of {.code {binary}} for {platform} is not installed.",
-        "i" = 'Use {.run chromote::chrome_cache_add("{version_og}", "{binary}", "{platform}")} to install, or {.run chromote::chrome_versions_list()} to list locally cached versions.'
+        "i" = 'Use {.run chromote::chrome_versions_add("{version_og}", "{binary}", "{platform}")} to install, or {.run chromote::chrome_versions_list()} to list locally cached versions.'
       )
     )
   }
@@ -499,7 +499,9 @@ chrome_versions_ensure <- function(
 
   dir.create(cache_path, recursive = TRUE, showWarnings = FALSE)
   zip_path <- chrome_versions_path_cache("chrome.zip")
-  utils::download.file(url, zip_path, mode = "wb")
+  withr::with_options(list(timeout = max(20 * 60, getOption("timeout"))), {
+    utils::download.file(url, zip_path, mode = "wb")
+  })
 
   zip::unzip(zip_path, exdir = cache_path)
 
@@ -749,7 +751,7 @@ download_json_cached <- function(url, update_cached = TRUE) {
     )
 
     # Compare local file time with server's last-modified
-    if (is_local_stale) {
+    if (!is_local_stale) {
       # message("Source URL not modified, using cached version")
       return(path_local)
     }
