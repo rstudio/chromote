@@ -1,5 +1,10 @@
 # chromote (development version)
 
+* chromote now includes experimental features to download versioned binaries of Chrome and `chrome-headless-shell` for Mac (x64 or arm64), Windows (32- or 64-bit) or Linux (x86-64) from the [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing) service. (#198)
+  * Use `with_chrome_version()` or `local_chrome_version()` to temporarily switch to a specific version of Chrome. The appropriate binary will be downloaded automatically if not yet available locally. 
+  * Use `chrome_versions_list()` to list installed or available versions of Chrome. 
+  * Or use `chrome_versions_add()` and `chrome_versions_remove()` to manually add or remove a specific version of Chrome from chromote's cache.
+
 # chromote 0.4.0
 
 * Chrome v132 and later no longer support [old headless mode](https://developer.chrome.com/blog/removing-headless-old-from-chrome). As such, `chromote` no longer defaults to using `--headless=old` and now uses `--headless` when running Chrome. You can still use the `chromote.headless` option or `CHROMOTE_HEADLESS` environment variable to configure the `--headless` flag if you're using an older version of Chrome. (#187)
