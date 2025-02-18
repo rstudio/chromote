@@ -782,17 +782,21 @@ download_json_cached <- function(url, update_cached = TRUE) {
 
   req <- curl::curl_fetch_memory(url)
 
-  if (req$status_code == 200) {
-    # message("Source URL was updated, downloading new content")
-    json_content <- rawToChar(req$content)
-    writeLines(json_content, path_local)
-
-    # Set the local file's modified time to the last-modified
-    last_modified <- req_headers_last_modified(req_parse_headers(req))
-    Sys.setFileTime(path_local, last_modified)
-  } else {
-    stop("Could not download ", url, ": Status code ", req$status_code)
+  if (!req$status_code == 200) {
+    cli::cli_abort(
+      "Could not download {.url {url}}. Status code: {.field {req$status_code}}",
+      status = req$status_code,
+      request = req
+    )
   }
+
+  # message("Source URL was updated, downloading new content")
+  json_content <- rawToChar(req$content)
+  writeLines(json_content, path_local)
+
+  # Set the local file's modified time to the last-modified
+  last_modified <- req_headers_last_modified(req_parse_headers(req))
+  Sys.setFileTime(path_local, last_modified)
 
   path_local
 }
