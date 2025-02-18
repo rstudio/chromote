@@ -76,7 +76,7 @@ for \code{chrome}, \code{chrome-headless-shell} or \code{chromedriver} for use w
 chromote.
 
 Managed Chrome installations is an experimental feature introduced in
-chromote v0.5.0 and inspired by similar features in
+chromote v0.5.0 and was inspired by similar features in
 \href{https://playwright.dev/}{playwright}.
 }
 \details{

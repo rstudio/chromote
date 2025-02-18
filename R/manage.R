@@ -9,7 +9,7 @@
 #' chromote.
 #'
 #' Managed Chrome installations is an experimental feature introduced in
-#' chromote v0.5.0 and inspired by similar features in
+#' chromote v0.5.0 and was inspired by similar features in
 #' [playwright](https://playwright.dev/).
 #'
 #' @examplesIf rlang::is_interactive()
@@ -215,7 +215,7 @@ chrome_get_versions <- function(update_cached = TRUE) {
 #' service.
 #'
 #' Managed Chrome installations is an experimental feature introduced in
-#' chromote v0.5.0 and inspired by similar features in
+#' chromote v0.5.0 and was inspired by similar features in
 #' [playwright](https://playwright.dev/).
 #'
 #' @examplesIf rlang::is_interactive()
@@ -289,7 +289,7 @@ chrome_versions_list <- function(
 #'   used for Chrome binaries.
 #'
 #' Managed Chrome installations is an experimental feature introduced in
-#' chromote v0.5.0 and inspired by similar features in
+#' chromote v0.5.0 and was inspired by similar features in
 #' [playwright](https://playwright.dev/).
 #'
 #' @seealso [chrome_versions_list()]
