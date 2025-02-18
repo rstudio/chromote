@@ -39,12 +39,8 @@ find the most recent release matching that version. Use
 
 \item{code}{\code{[any]}\cr Code to execute in the temporary environment}
 
-\item{...}{
-  Arguments passed on to \code{\link[withr:with_envvar]{withr::local_envvar}}
-  \describe{
-    \item{\code{action}}{should new values \code{"replace"}, \code{"prefix"} or
-\code{"suffix"} existing variables with the same name.}
-  }}
+\item{...}{Ignored, used to required named arguments and for future feature
+expansion.}
 
 \item{binary}{A character string specifying which binary to
 use. Must be one of \code{"chrome"}, \code{"chrome-headless-shell"}, or

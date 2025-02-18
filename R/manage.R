@@ -40,7 +40,8 @@
 #'   of Chrome is being used. By default, this message is suppressed for
 #'   [with_chrome_version()] and enabled for [local_chrome_version()].
 #' @inheritParams withr::local_envvar
-#' @inheritDotParams withr::local_envvar
+#' @param ... Ignored, used to required named arguments and for future feature
+#'   expansion.
 #'
 #' @return Sets the `CHROMOTE_CHROME` environment variable and returns the
 #'   result of the `code` argument.
@@ -56,11 +57,12 @@ with_chrome_version <- function(
   platform = NULL,
   quiet = TRUE
 ) {
+  rlang::check_dots_empty()
+
   local_chrome_version(
     version = version,
     binary = binary,
     platform = platform,
-    ...,
     quiet = quiet
   )
   force(code)
@@ -77,12 +79,14 @@ local_chrome_version <- function(
   quiet = FALSE,
   .local_envir = parent.frame()
 ) {
+  rlang::check_dots_empty()
+
   if (identical(version, "system")) {
     if (!quiet)
       cli::cli_inform(
         "chromote will now use {.strong the system-wide installation} of Chrome."
       )
-    return(local_chromote_chrome("", ..., .local_envir = .local_envir))
+    return(local_chromote_chrome("", .local_envir = .local_envir))
   }
 
   binary <- check_binary(binary)
@@ -99,7 +103,7 @@ local_chrome_version <- function(
     )
   }
 
-  local_chromote_chrome(resolved$path, ..., .local_envir = .local_envir)
+  local_chromote_chrome(resolved$path, .local_envir = .local_envir)
 }
 
 #' @param path A direct path to the Chrome (or Chrome-based) binary. See
@@ -109,6 +113,8 @@ local_chrome_version <- function(
 #'   current scope.
 #' @export
 local_chromote_chrome <- function(path, ..., .local_envir = parent.frame()) {
+  rlang::check_dots_empty()
+
   old_default_chromote_object <-
     if (has_default_chromote_object()) default_chromote_object() else NULL
 
@@ -138,7 +144,7 @@ local_chromote_chrome <- function(path, ..., .local_envir = parent.frame()) {
   withr::local_envvar(
     list(CHROMOTE_CHROME = path),
     .local_envir = .local_envir,
-    ...
+    action = "replace"
   )
 }
 
@@ -146,7 +152,8 @@ local_chromote_chrome <- function(path, ..., .local_envir = parent.frame()) {
 #'   path, for the evaluation of `code`.
 #' @export
 with_chromote_chrome <- function(path, code, ...) {
-  local_chromote_chrome(path, ...)
+  rlang::check_dots_empty()
+  local_chromote_chrome(path)
   force(code)
 }
 
