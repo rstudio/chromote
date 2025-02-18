@@ -629,6 +629,10 @@ match_version <- function(version, available_versions = NULL) {
     version <- as.character(version)
   }
 
+  if (length(available_versions) == 0) {
+    return(NULL)
+  }
+
   if (is.null(available_versions)) {
     available_versions <- unique(chrome_get_versions()$version)
   }
