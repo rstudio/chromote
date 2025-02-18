@@ -543,6 +543,8 @@ chrome_versions_ensure <- function(
 }
 
 chrome_relative_exe <- function(binary, platform) {
+  check_binary(binary)
+
   switch(
     binary,
     chrome = chrome_relative_exe_chrome(platform),
@@ -555,6 +557,7 @@ chrome_relative_exe <- function(binary, platform) {
 
 chrome_relative_exe_chrome_headless_shell <- function(platform) {
   # chrome-headless-shell: https://github.com/puppeteer/puppeteer/blob/main/packages/browsers/src/browser-data/chrome-headless-shell.ts
+  check_platform(platform)
   dir_binary <- paste0("chrome-headless-shell-", platform)
 
   switch(
@@ -569,6 +572,7 @@ chrome_relative_exe_chrome_headless_shell <- function(platform) {
 
 chrome_relative_exe_chrome <- function(platform) {
   # chrome: https://github.com/puppeteer/puppeteer/blob/main/packages/browsers/src/browser-data/chrome.ts
+  check_platform(platform)
   dir_binary <- paste0("chrome-", platform)
 
   switch(
@@ -591,6 +595,7 @@ chrome_relative_exe_chrome <- function(platform) {
 
 chrome_relative_exe_chromedriver <- function(platform) {
   # chromedriver: https://github.com/puppeteer/puppeteer/blob/main/packages/browsers/src/browser-data/chromedriver.ts
+  check_platform(platform)
   dir_binary <- paste0("chromedriver-", platform)
 
   switch(
