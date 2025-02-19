@@ -413,6 +413,14 @@ Chromote <- R6Class(
       invisible()
     },
 
+    #' @description Forcefully stop the [`Browser`] process
+    stop = function() {
+      private$ws$close()
+      private$browser$close()
+
+      invisible()
+    },
+
     #' @description Summarise the current state of the object.
     #' @param verbose The print method defaults to a brief summary
     #'   of the most important debugging info; use `verbose = TRUE` tp

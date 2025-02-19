@@ -16,6 +16,7 @@ URL: https://rstudio.github.io/chromote/,
     https://github.com/rstudio/chromote
 BugReports: https://github.com/rstudio/chromote/issues
 Imports:
+    cli,
     curl,
     fastmap,
     jsonlite,
@@ -26,7 +27,9 @@ Imports:
     R6,
     rlang,
     utils,
-    websocket (>= 1.2.0)
+    websocket (>= 1.2.0),
+    withr,
+    zip
 Suggests:
     showimage,
     testthat (>= 3.0.0)
