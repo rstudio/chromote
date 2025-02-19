@@ -13,7 +13,8 @@ globals <- new.env()
 #' should also set private$process.
 #'
 #' @export
-Browser <- R6Class("Browser",
+Browser <- R6Class(
+  "Browser",
   public = list(
     # Returns TRUE if the browser is running locally, FALSE if it's remote.
     #' @description Is local browser?
