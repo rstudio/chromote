@@ -145,7 +145,7 @@ EventManager <- R6Class(
       # for this domain. (Some domains do not require or have an .enable
       # method.)
       if (
-        domain %in% private$session$get_auto_events() &&
+        (domain %in% private$session$get_auto_events()) &&
           private$event_callback_counts[[domain]] == 1 &&
           isTRUE(private$event_enable_domains[[domain]])
       ) {
@@ -169,7 +169,7 @@ EventManager <- R6Class(
       # If we're doing auto events and we're going from 1 to 0, disable
       # enable events for this domain.
       if (
-        domain %in% private$session$get_auto_events() &&
+        (domain %in% private$session$get_auto_events()) &&
           private$event_callback_counts[[domain]] == 0 &&
           isTRUE(private$event_enable_domains[[domain]])
       ) {

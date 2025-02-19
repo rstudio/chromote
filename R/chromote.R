@@ -56,7 +56,11 @@ Chromote <- R6Class(
       # methods. Graft the entries from self$protocol onto self
       list2env(self$protocol, self)
 
-      private$auto_events <- check_auto_events(auto_events, self$protocol, allow_null = TRUE)
+      private$auto_events <- check_auto_events(
+        auto_events,
+        self$protocol,
+        allow_null = TRUE
+      )
 
       private$event_manager <- EventManager$new(self)
 
