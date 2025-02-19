@@ -27,7 +27,8 @@ Chromote <- R6Class(
     #' @param browser A [`Browser`] object
     #' @param multi_session Should multiple sessions be allowed?
     #' @param auto_events If `TRUE`, enable automatic event enabling/disabling;
-    #'   if `FALSE`, disable automatic event enabling/disabling.
+    #'   if `FALSE`, disable automatic event enabling/disabling. Alternatively,
+    #'   supply a character vector of domains to enable `auto_events` for.
     initialize = function(
       browser = Chrome$new(),
       multi_session = TRUE,
@@ -54,6 +55,12 @@ Chromote <- R6Class(
       # self$protocol is a list of domains, each of which is a list of
       # methods. Graft the entries from self$protocol onto self
       list2env(self$protocol, self)
+
+      private$auto_events <- check_auto_events(
+        auto_events,
+        self$protocol,
+        allow_null = TRUE
+      )
 
       private$event_manager <- EventManager$new(self)
 
@@ -124,6 +131,26 @@ Chromote <- R6Class(
     #' `options(browser=)` to change the default behavior of [`browseURL()`].
     view = function() {
       browse_url(path = NULL, self)
+    },
+
+    #' @description Enable automatic event enabling/disabling.
+    #'
+    #' @param domains The specific domains to enable `auto_events` for. By
+    #'   default, all domains will have `auto_events` enabled.
+    enable_auto_events = function(domains = TRUE) {
+      domains <- check_auto_events(domains, self$protocol)
+
+      private$auto_events <- union(domains, private$auto_events)
+    },
+
+    #' @description Disable automatic event enabling/disabling.
+    #'
+    #' @param domains The specific domains to disable `auto_events` for. By
+    #'   default, all domains will have `auto_events` disabled.
+    disable_auto_events = function(domains = TRUE) {
+      domains <- check_auto_events(domains, self$protocol)
+
+      private$auto_events <- setdiff(private$auto_events, domains)
     },
 
     #' @description
@@ -460,6 +487,7 @@ Chromote <- R6Class(
   private = list(
     browser = NULL,
     ws = NULL,
+    auto_events = NULL,
 
     # =========================================================================
     # Browser commands
