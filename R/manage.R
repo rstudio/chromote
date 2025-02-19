@@ -40,11 +40,11 @@
 #'   of Chrome is being used. By default, this message is suppressed for
 #'   [with_chrome_version()] and enabled for [local_chrome_version()].
 #' @inheritParams withr::local_envvar
-#' @param ... Ignored, used to required named arguments and for future feature
+#' @param ... Ignored, used to require named arguments and for future feature
 #'   expansion.
 #'
-#' @return Sets the `CHROMOTE_CHROME` environment variable and returns the
-#'   result of the `code` argument.
+#' @return Temporarily sets the `CHROMOTE_CHROME` environment variable and
+#'   returns the result of the `code` argument.
 #'
 #' @describeIn with_chrome_version Temporarily use a specific version of Chrome
 #'   during the evaluation of `code`.

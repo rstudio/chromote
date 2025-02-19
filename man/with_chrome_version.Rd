@@ -39,7 +39,7 @@ find the most recent release matching that version. Use
 
 \item{code}{\code{[any]}\cr Code to execute in the temporary environment}
 
-\item{...}{Ignored, used to required named arguments and for future feature
+\item{...}{Ignored, used to require named arguments and for future feature
 expansion.}
 
 \item{binary}{A character string specifying which binary to
@@ -60,8 +60,8 @@ of Chrome is being used. By default, this message is suppressed for
 from the chromote-managed cache.}
 }
 \value{
-Sets the \code{CHROMOTE_CHROME} environment variable and returns the
-result of the \code{code} argument.
+Temporarily sets the \code{CHROMOTE_CHROME} environment variable and
+returns the result of the \code{code} argument.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#Experimental}{\figure{lifecycle-Experimental.svg}{options: alt='[E]'}}}{\strong{[E]}}
