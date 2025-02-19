@@ -117,6 +117,7 @@ wait for a Chrome DevTools Protocol response.</p></dd>
 <li><p><a href="#method-Chromote-check_active"><code>Chromote$check_active()</code></a></p></li>
 <li><p><a href="#method-Chromote-get_browser"><code>Chromote$get_browser()</code></a></p></li>
 <li><p><a href="#method-Chromote-close"><code>Chromote$close()</code></a></p></li>
+<li><p><a href="#method-Chromote-stop"><code>Chromote$stop()</code></a></p></li>
 <li><p><a href="#method-Chromote-print"><code>Chromote$print()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-Chromote-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
@@ -438,10 +439,18 @@ there's no active web socket connection.</p><div class="section">
 </div>
 
 
+</div><p></p><hr><a id="method-Chromote-stop"></a><div class="section">
+<h3 id="method-stop-">Method <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code><a class="anchor" aria-label="anchor" href="#method-stop-"></a></h3>
+<p>Forcefully stop the <code><a href="Browser.html">Browser</a></code> process</p><div class="section">
+<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Chromote</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
 </div><p></p><hr><a id="method-Chromote-print"></a><div class="section">
 <h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
 <p>Summarise the current state of the object.</p><div class="section">
-<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
+<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Chromote</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="va">...</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
