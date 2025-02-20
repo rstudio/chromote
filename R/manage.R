@@ -732,7 +732,7 @@ req_parse_headers <- function(req) {
 
 req_headers_last_modified <- function(headers) {
   names(headers) <- tolower(names(headers))
-  withr::with_locale(new = c("LC_TIME" = "en_US"), {
+  withr::with_locale(new = c("LC_TIME" = "C"), {
     last_modified <- as.POSIXct(
       headers[["last-modified"]],
       format = "%a, %d %b %Y %H:%M:%S GMT",
