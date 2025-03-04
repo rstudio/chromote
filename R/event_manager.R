@@ -73,6 +73,32 @@ EventManager <- R6Class(
       # Removes ALL callbacks for a given event. In the future it might be
       # useful to implement finer control.
       private$event_callbacks$remove(event)
+    },
+
+    track_domain_event_activation = function(command) {
+      if (!private$session$get_auto_events()) return()
+
+      # Tracks calls to domain-event enabling commands, like `Fetch.enable` or
+      # `Fetch.disable`. When `auto_events = TRUE`, we automatically call
+      # `.enable` for a domain for commands that require listening to events,
+      # calling `.disable` automatically at the end. When `.enable` is called
+      # manually, however, we turn off this behavior until `.disable` is called.
+      command <- strsplit(command, ".", fixed = TRUE)[[1]]
+      if (length(command) != 2) return(invisible())
+
+      domain <- command[1]
+      event <- command[2]
+
+      switch(
+        event,
+        enable = {
+          private$event_domain_manually_enabled[[domain]] <- TRUE
+        },
+        disable = {
+          private$event_domain_manually_enabled[[domain]] <- FALSE
+        },
+        invisible()
+      )
     }
   ),
 
@@ -89,6 +115,40 @@ EventManager <- R6Class(
     # Some domains require a <domain>.event command to enable event
     # notifications, others do not. (Not really sure why.)
     event_enable_domains = NULL,
+
+    event_domain_manually_enabled = list(),
+
+    maybe_event_domain_enable = function(domain) {
+      # If we're doing auto events
+      if (!private$session$get_auto_events()) return()
+      # and this domain requires events (not all domains require or have an .enable method)
+      if (!isTRUE(private$event_enable_domains[[domain]])) return()
+      # and events were not already manually enabled
+      if (isTRUE(private$event_domain_manually_enabled[[domain]])) return()
+      # and we're going from 0 to 1 callbacks in this domain
+      if (private$event_callback_counts[[domain]] != 1) return()
+
+      # ...then automatically enable events.
+      private$session$debug_log("Enabling events for ", domain)
+      private$session[[domain]]$enable()
+      # We enabled this domain, not the user, so this stays FALSE
+      private$event_domain_manually_enabled[[domain]] <- FALSE
+    },
+
+    maybe_event_domain_disable = function(domain) {
+      # If we're doing auto events
+      if (!private$session$get_auto_events()) return()
+      # and the domain requires events
+      if (!isTRUE(private$event_enable_domains[[domain]])) return()
+      # and events were not manually enabled for the domain
+      if (isTRUE(private$event_domain_manually_enabled[[domain]])) return()
+      # and we're going from 1 to 0
+      if (private$event_callback_counts[[domain]] > 0) return()
+
+      # ...then disable events for this domain.
+      private$session$debug_log("Disabling events for ", domain)
+      private$session[[domain]]$disable()
+    },
 
     add_event_callback = function(event, callback, once) {
       if (!private$event_callbacks$has(event)) {
@@ -141,17 +201,7 @@ EventManager <- R6Class(
         private$event_callback_counts[[domain]]
       )
 
-      # If we're doing auto events and we're going from 0 to 1, enable events
-      # for this domain. (Some domains do not require or have an .enable
-      # method.)
-      if (
-        private$session$get_auto_events() &&
-          private$event_callback_counts[[domain]] == 1 &&
-          isTRUE(private$event_enable_domains[[domain]])
-      ) {
-        private$session$debug_log("Enabling events for ", domain)
-        private$session[[domain]]$enable()
-      }
+      private$maybe_event_domain_enable(domain)
 
       invisible(private$event_callback_counts[[domain]])
     },
@@ -166,16 +216,8 @@ EventManager <- R6Class(
         "--: ",
         private$event_callback_counts[[domain]]
       )
-      # If we're doing auto events and we're going from 1 to 0, disable
-      # enable events for this domain.
-      if (
-        private$session$get_auto_events() &&
-          private$event_callback_counts[[domain]] == 0 &&
-          isTRUE(private$event_enable_domains[[domain]])
-      ) {
-        private$session$debug_log("Disabling events for ", domain)
-        private$session[[domain]]$disable()
-      }
+
+      private$maybe_event_domain_disable(domain)
 
       invisible(private$event_callback_counts[[domain]])
     }
