@@ -1070,13 +1070,9 @@ Currently setting custom headers requires a little extra work because it require
 
 ```R
 b <- ChromoteSession$new()
-# Currently need to manually enable Network domain notifications. Calling
-# b$Network$enable() would do it, but calling it directly will bypass the
-# callback counting and the notifications could get automatically disabled by a
-# different Network event. We'll enable notifications for the Network domain by
-# listening for a particular event. We'll also store a callback that will
-# decrement the callback counter, so that we can disable notifications ater.
-disable_network_notifications <- b$Network$responseReceived(function (msg) NULL)
+# Manually enable Network domain notifications
+b$Network$enable()
+
 b$Network$setExtraHTTPHeaders(headers = list(
   foo = "bar",
   header1 = "value1"
@@ -1096,10 +1092,9 @@ b$Network$setExtraHTTPHeaders(headers = list(a=1)[0])
 b$Page$navigate("http://scooterlabs.com/echo")
 b$screenshot(show = TRUE)
 
-
-# Disable extra headers entirely, by decrementing Network callback counter,
-# which will disable Network notifications.
-disable_network_notifications()
+# Disable extra headers entirely, disabling Network notifications. (If you call
+# a Network command, chromote's auto_events will re-enable notifications.)
+b$Network$disable()
 ```
 
 ### Custom User-Agent
