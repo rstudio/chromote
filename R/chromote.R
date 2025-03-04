@@ -619,11 +619,9 @@ cache_value <- function(fn) {
 # This should not change over time. Cache it
 is_inside_docker <- cache_value(function() {
   file.exists("/.dockerenv") ||
-    (
-      is_linux() &&
-        file.exists("/proc/self/cgroup") &&
-        any(grepl("docker", readLines("/proc/self/cgroup"), fixed = TRUE))
-    )
+    (is_linux() &&
+      file.exists("/proc/self/cgroup") &&
+      any(grepl("docker", readLines("/proc/self/cgroup"), fixed = TRUE)))
 })
 
 # This is a _fast_ function. Do not cache it.
