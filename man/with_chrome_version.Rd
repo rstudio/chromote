@@ -8,7 +8,7 @@
 \title{Use a specific version of Chrome or related binaries}
 \usage{
 with_chrome_version(
-  version = "latest-installed",
+  version = "latest-stable",
   code,
   ...,
   binary = c("chrome", "chrome-headless-shell", "chromedriver"),
@@ -17,7 +17,7 @@ with_chrome_version(
 )
 
 local_chrome_version(
-  version = "latest-installed",
+  version = "latest-stable",
   binary = c("chrome", "chrome-headless-shell", "chromedriver"),
   platform = NULL,
   ...,
@@ -30,12 +30,31 @@ local_chromote_chrome(path, ..., .local_envir = parent.frame())
 with_chromote_chrome(path, code, ...)
 }
 \arguments{
-\item{version}{A character string specifying the version to use. Default is
-\code{"latest-installed"}, which uses the latest version you have installed via
-chromote. To use the current latest version, downloading the binary if
-necessary. If you specify a partial version, e.g. \code{"132"}, chromote will
-find the most recent release matching that version. Use
-\code{version = "system"} to revert back to using the system-installed Chrome.}
+\item{version}{A character string specifying the version to use. The default
+value is \code{"latest-stable"} to follow the latest stable release of Chrome.
+For robust results, and to avoid frequently downloading new versions of
+Chrome, use a fully qualified version number, e.g. \code{"133.0.6943.141"}.
+
+If you specify a partial version, e.g. \code{"133"}, chromote will find the most
+recent release matching that version, preferring to use the latest
+\emph{installed} release that matches the partially-specified version. chromote
+also supports a few special version names:
+\itemize{
+\item \code{"latest-installed"}: The latest version currently installed locally in
+chromote's cache. If you don't have any installed versions of the binary,
+chromote uses \code{"latest"}.
+\item \code{"latest"}: The most recent Chrome for Testing release, which may be a
+beta or canary release.
+\item \code{"latest-stable"}, \code{"latest-beta"}, \code{"latest-extended"},
+\code{"latest-canary"} or \code{"latest-dev"}: Installs the latest release from one
+of Chrome's version channels, queried from the
+\href{https://developer.chrome.com/docs/web-platform/versionhistory/reference#platform-identifiers}{VersionHistory API}.
+\code{"latest-stable"} is the default value of \code{with_chrome_version()} and
+\code{local_chrome_version()}.
+\item \code{"system"}: Use the system-wide installation of Chrome.
+}
+
+Chromote also supports}
 
 \item{code}{\code{[any]}\cr Code to execute in the temporary environment}
 
