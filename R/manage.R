@@ -846,8 +846,8 @@ download_json_cached <- function(url, update_cached = TRUE, filename = NULL) {
           length(server_last_modified) == 1 &&
             local_mtime < server_last_modified
         } else {
-          # otherwise cache for 10 minutes
-          (local_mtime + 60 * 10) < Sys.time()
+          # otherwise cache for 8 hours
+          (local_mtime + 60 * 60 * 8) < Sys.time()
         }
       },
       error = function(err) {
