@@ -467,7 +467,9 @@ chrome_versions_ensure <- function(
   platform <- check_platform(platform)
   binary <- check_binary(binary)
 
-  if (identical(version, "latest-installed")) {
+  requested_latest_installed <- identical(version, "latest-installed")
+
+  if (requested_latest_installed) {
     prefer_installed <- TRUE
     version <- "latest"
   } else if (identical(version, "latest")) {
@@ -494,7 +496,7 @@ chrome_versions_ensure <- function(
     if (prefer_installed) {
       return(
         chrome_versions_ensure(
-          version_og,
+          if (requested_latest_installed) "latest-stable" else version_og,
           binary = binary,
           platform = platform,
           prefer_installed = FALSE
