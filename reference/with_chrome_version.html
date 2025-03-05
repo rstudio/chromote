@@ -61,7 +61,7 @@ chromote v0.5.0 and was inspired by similar features in
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">with_chrome_version</span><span class="op">(</span></span>
-<span>  version <span class="op">=</span> <span class="st">"latest-installed"</span>,</span>
+<span>  version <span class="op">=</span> <span class="st">"latest-stable"</span>,</span>
 <span>  <span class="va">code</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  binary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chrome"</span>, <span class="st">"chrome-headless-shell"</span>, <span class="st">"chromedriver"</span><span class="op">)</span>,</span>
@@ -70,7 +70,7 @@ chromote v0.5.0 and was inspired by similar features in
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">local_chrome_version</span><span class="op">(</span></span>
-<span>  version <span class="op">=</span> <span class="st">"latest-installed"</span>,</span>
+<span>  version <span class="op">=</span> <span class="st">"latest-stable"</span>,</span>
 <span>  binary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chrome"</span>, <span class="st">"chrome-headless-shell"</span>, <span class="st">"chromedriver"</span><span class="op">)</span>,</span>
 <span>  platform <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
@@ -88,12 +88,26 @@ chromote v0.5.0 and was inspired by similar features in
 
 
 <dl><dt id="arg-version">version<a class="anchor" aria-label="anchor" href="#arg-version"></a></dt>
-<dd><p>A character string specifying the version to use. Default is
-<code>"latest-installed"</code>, which uses the latest version you have installed via
-chromote. To use the current latest version, downloading the binary if
-necessary. If you specify a partial version, e.g. <code>"132"</code>, chromote will
-find the most recent release matching that version. Use
-<code>version = "system"</code> to revert back to using the system-installed Chrome.</p></dd>
+<dd><p>A character string specifying the version to use. The default
+value is <code>"latest-stable"</code> to follow the latest stable release of Chrome.
+For robust results, and to avoid frequently downloading new versions of
+Chrome, use a fully qualified version number, e.g. <code>"133.0.6943.141"</code>.</p>
+<p>If you specify a partial version, e.g. <code>"133"</code>, chromote will find the most
+recent release matching that version, preferring to use the latest
+<em>installed</em> release that matches the partially-specified version. chromote
+also supports a few special version names:</p><ul><li><p><code>"latest-installed"</code>: The latest version currently installed locally in
+chromote's cache. If you don't have any installed versions of the binary,
+chromote uses <code>"latest"</code>.</p></li>
+<li><p><code>"latest"</code>: The most recent Chrome for Testing release, which may be a
+beta or canary release.</p></li>
+<li><p><code>"latest-stable"</code>, <code>"latest-beta"</code>, <code>"latest-extended"</code>,
+<code>"latest-canary"</code> or <code>"latest-dev"</code>: Installs the latest release from one
+of Chrome's version channels, queried from the
+<a href="https://developer.chrome.com/docs/web-platform/versionhistory/reference#platform-identifiers" class="external-link">VersionHistory API</a>.
+<code>"latest-stable"</code> is the default value of <code>with_chrome_version()</code> and
+<code>local_chrome_version()</code>.</p></li>
+<li><p><code>"system"</code>: Use the system-wide installation of Chrome.</p></li>
+</ul><p>Chromote also supports</p></dd>
 
 
 <dt id="arg-code">code<a class="anchor" aria-label="anchor" href="#arg-code"></a></dt>
