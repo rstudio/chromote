@@ -25,12 +25,30 @@
 #'   "known-good-versions" list from the Google Chrome for Testing versions at
 #'   <https://googlechromelabs.github.io/chrome-for-testing>.
 #'
-#' @param version A character string specifying the version to use. Default is
-#'   `"latest-installed"`, which uses the latest version you have installed via
-#'   chromote. To use the current latest version, downloading the binary if
-#'   necessary. If you specify a partial version, e.g. `"132"`, chromote will
-#'   find the most recent release matching that version. Use
-#'   `version = "system"` to revert back to using the system-installed Chrome.
+#' @param version A character string specifying the version to use. The default
+#'   value is `"latest-stable"` to follow the latest stable release of Chrome.
+#'   For robust results, and to avoid frequently downloading new versions of
+#'   Chrome, use a fully qualified version number, e.g. `"133.0.6943.141"`.
+#'
+#'   If you specify a partial version, e.g. `"133"`, chromote will find the most
+#'   recent release matching that version, preferring to use the latest
+#'   *installed* release that matches the partially-specified version. chromote
+#'   also supports a few special version names:
+#'
+#'   * `"latest-installed"`: The latest version currently installed locally in
+#'     chromote's cache. If you don't have any installed versions of the binary,
+#'     chromote uses `"latest"`.
+#'   * `"latest"`: The most recent Chrome for Testing release, which may be a
+#'     beta or canary release.
+#'   * `"latest-stable"`, `"latest-beta"`, `"latest-extended"`,
+#'     `"latest-canary"` or `"latest-dev"`: Installs the latest release from one
+#'     of Chrome's version channels, queried from the
+#'     [VersionHistory API](https://developer.chrome.com/docs/web-platform/versionhistory/reference#platform-identifiers).
+#'     `"latest-stable"` is the default value of `with_chrome_version()` and
+#'     `local_chrome_version()`.
+#'   * `"system"`: Use the system-wide installation of Chrome.
+#'
+#'   Chromote also supports
 #' @param binary A character string specifying which binary to
 #'   use. Must be one of `"chrome"`, `"chrome-headless-shell"`, or
 #'   `"chromedriver"`. Default is `"chrome"`.
@@ -50,7 +68,7 @@
 #'   during the evaluation of `code`.
 #' @export
 with_chrome_version <- function(
-  version = "latest-installed",
+  version = "latest-stable",
   code,
   ...,
   binary = c("chrome", "chrome-headless-shell", "chromedriver"),
@@ -72,7 +90,7 @@ with_chrome_version <- function(
 #'   current scope.
 #' @export
 local_chrome_version <- function(
-  version = "latest-installed",
+  version = "latest-stable",
   binary = c("chrome", "chrome-headless-shell", "chromedriver"),
   platform = NULL,
   ...,
@@ -302,6 +320,8 @@ chrome_versions_list <- function(
 #' @seealso [chrome_versions_list()]
 #'
 #' @param ... Additional path parts.
+#' @param version A character string specifying the version to list, add or
+#'   remove.
 #' @inheritParams chrome_versions_list
 #' @inheritParams with_chrome_version
 #'
@@ -378,6 +398,13 @@ chrome_versions_remove <- function(
   binary <- check_binary(binary, multiple = TRUE, allow_all = TRUE)
   platform <- check_platform(platform, multiple = TRUE, allow_all = TRUE)
 
+  if (grepl("latest|system", version)) {
+    cli::cli_abort(c(
+      "{.fn chrome_versions_remove} does not support deleting versions by keyword.",
+      "i" = "Please use {.run chromote::chrome_versions_list()} to list installed versions."
+    ))
+  }
+
   versions <- chrome_versions_list(
     "installed",
     binary = binary,
@@ -437,15 +464,20 @@ chrome_versions_ensure <- function(
   platform = NULL,
   prefer_installed = TRUE
 ) {
-  if (identical(version, "latest-installed")) {
+  platform <- check_platform(platform)
+  binary <- check_binary(binary)
+
+  requested_latest_installed <- identical(version, "latest-installed")
+
+  if (requested_latest_installed) {
     prefer_installed <- TRUE
     version <- "latest"
   } else if (identical(version, "latest")) {
     prefer_installed <- FALSE
+  } else if (grepl("^latest-", version)) {
+    version <- chrome_resolve_latest_channel(version, platform)
+    prefer_installed <- TRUE
   }
-
-  platform <- check_platform(platform)
-  binary <- check_binary(binary)
 
   versions <- if (prefer_installed) {
     chrome_versions_list("installed", binary = binary, platform = platform)
@@ -464,7 +496,7 @@ chrome_versions_ensure <- function(
     if (prefer_installed) {
       return(
         chrome_versions_ensure(
-          version_og,
+          if (requested_latest_installed) "latest-stable" else version_og,
           binary = binary,
           platform = platform,
           prefer_installed = FALSE
@@ -683,7 +715,7 @@ match_version <- function(version, available_versions = NULL) {
   }
 
   if (identical(version, "latest")) {
-    return(max(available_versions))
+    return(max(numeric_version(available_versions)))
   }
 
   available_versions <- numeric_version(unique(available_versions))
@@ -732,6 +764,11 @@ req_parse_headers <- function(req) {
 
 req_headers_last_modified <- function(headers) {
   names(headers) <- tolower(names(headers))
+
+  if (!"last-modified" %in% names(headers)) {
+    return(NULL)
+  }
+
   withr::with_locale(new = c("LC_TIME" = "C"), {
     last_modified <- as.POSIXct(
       headers[["last-modified"]],
@@ -742,11 +779,54 @@ req_headers_last_modified <- function(headers) {
   })
 }
 
-download_json_cached <- function(url, update_cached = TRUE) {
+chrome_resolve_latest_channel <- function(
+  channel,
+  platform = guess_platform()
+) {
+  channel <- sub("latest-", "", channel)
+
+  path_json <- download_json_cached(
+    chrome_version_history_url(channel, platform),
+    filename = sprintf("chrome-version-history_%s_%s.json", platform, channel)
+  )
+
+  res <- jsonlite::fromJSON(path_json)$versions
+
+  testing_versions <- chrome_versions_list("all", "chrome", platform)
+
+  available_versions <- intersect(res$version, testing_versions$version)
+
+  as.character(match_version("latest", available_versions))
+}
+
+chrome_version_history_url <- function(
+  channel = c("stable", "beta", "extended", "dev", "canary"),
+  platform = guess_platform()
+) {
+  channel <- rlang::arg_match(channel)
+  platform <- check_platform(platform)
+
+  platform <- switch(
+    platform,
+    win32 = "win",
+    win64 = "win64",
+    "mac-x64" = "mac",
+    "mac-arm64" = "mac_arm64",
+    "linux64" = "linux"
+  )
+
+  sprintf(
+    "https://versionhistory.googleapis.com/v1/chrome/platforms/%s/channels/%s/versions",
+    platform,
+    channel
+  )
+}
+
+download_json_cached <- function(url, update_cached = TRUE, filename = NULL) {
   path_cache <- chromote_cache_path()
   dir.create(path_cache, showWarnings = FALSE, recursive = TRUE)
 
-  path_local <- file.path(path_cache, basename(url))
+  path_local <- file.path(path_cache, filename %||% basename(url))
 
   # Check if local file exists and get its modified time
   if (file.exists(path_local)) {
@@ -762,7 +842,13 @@ download_json_cached <- function(url, update_cached = TRUE) {
         headers <- curl_fetch_headers(url)
         server_last_modified <- req_headers_last_modified(headers)
 
-        length(server_last_modified) == 1 && local_mtime < server_last_modified
+        if (!is.null(server_last_modified)) {
+          length(server_last_modified) == 1 &&
+            local_mtime < server_last_modified
+        } else {
+          # otherwise cache for 8 hours
+          (local_mtime + 60 * 60 * 8) < Sys.time()
+        }
       },
       error = function(err) {
         rlang::inform(
@@ -796,7 +882,9 @@ download_json_cached <- function(url, update_cached = TRUE) {
 
   # Set the local file's modified time to the last-modified
   last_modified <- req_headers_last_modified(req_parse_headers(req))
-  Sys.setFileTime(path_local, last_modified)
+  if (!is.null(last_modified)) {
+    Sys.setFileTime(path_local, last_modified)
+  }
 
   path_local
 }

@@ -19,12 +19,8 @@ chrome_versions_remove(version, binary, platform = NULL, ask = TRUE)
 \arguments{
 \item{...}{Additional path parts.}
 
-\item{version}{A character string specifying the version to use. Default is
-\code{"latest-installed"}, which uses the latest version you have installed via
-chromote. To use the current latest version, downloading the binary if
-necessary. If you specify a partial version, e.g. \code{"132"}, chromote will
-find the most recent release matching that version. Use
-\code{version = "system"} to revert back to using the system-installed Chrome.}
+\item{version}{A character string specifying the version to list, add or
+remove.}
 
 \item{binary}{A character string specifying which binary to list. Defaults to
 \code{"all"} to show all binaries, or can be one or more of of \code{"chrome"},
