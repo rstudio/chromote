@@ -48,15 +48,6 @@ ChromoteSession <- R6Class(
     #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
-    #' @param new_window Whether to open the session as a new Tab in an existing
-    #'   window (`new_window = FALSE`) or as a new window (`new_window = TRUE`).
-    #'   The default value of `NULL` is used to follow the default value of the
-    #'   version of Chrome in use.
-    #'
-    #'   Note that `new_window` is not supported by `chrome-headless-shell` or
-    #'   Chrome prior to version 128. For Chrome later than v134, you cannot use
-    #'   `new_window = TRUE` if a window is not already open, i.e. you've
-    #'   already called `ChromoteSession$new()` once to create the window.
     #' @param mobile Whether to emulate mobile device. When `TRUE`, Chrome
     #'   updates settings to emulate browsing on a mobile phone; this includes
     #'   viewport meta tag, overlay scrollbars, text autosizing and more. The
@@ -70,7 +61,6 @@ ChromoteSession <- R6Class(
       targetId = NULL,
       wait_ = TRUE,
       auto_events = NULL,
-      new_window = NULL,
       mobile = FALSE
     ) {
       self$parent <- parent
@@ -85,7 +75,6 @@ ChromoteSession <- R6Class(
           "about:blank",
           width = width,
           height = height,
-          newWindow = new_window,
           wait_ = FALSE
         )$then(function(value) {
           private$target_id <- value$targetId

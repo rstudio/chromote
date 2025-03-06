@@ -76,7 +76,6 @@ if (interactive()) b$view()
   targetId = NULL,
   wait_ = TRUE,
   auto_events = NULL,
-  new_window = NULL,
   mobile = FALSE
 )}\if{html}{\out{</div>}}
 }
@@ -103,16 +102,6 @@ return a \code{ChromoteSession} object directly.}
 from the parent \code{Chromote} object. If \code{TRUE}, enable automatic
 event enabling/disabling; if \code{FALSE}, disable automatic event
 enabling/disabling.}
-
-\item{\code{new_window}}{Whether to open the session as a new Tab in an existing
-window (\code{new_window = FALSE}) or as a new window (\code{new_window = TRUE}).
-The default value of \code{NULL} is used to follow the default value of the
-version of Chrome in use.
-
-Note that \code{new_window} is not supported by \code{chrome-headless-shell} or
-Chrome prior to version 128. For Chrome later than v134, you cannot use
-\code{new_window = TRUE} if a window is not already open, i.e. you've
-already called \code{ChromoteSession$new()} once to create the window.}
 
 \item{\code{mobile}}{Whether to emulate mobile device. When \code{TRUE}, Chrome
 updates settings to emulate browsing on a mobile phone; this includes
