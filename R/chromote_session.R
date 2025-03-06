@@ -71,6 +71,16 @@ ChromoteSession <- R6Class(
       # Create a session from the Chromote. Basically the same code as
       # new_session(), but this is synchronous.
       if (is.null(targetId)) {
+        # In earlier versions of chromote (< 0.5.0), we set `width` and `height`
+        # in `Target.createTarget`. With legacy (old) headless mode, each new
+        # session was essentially a tab in a new window. With new headless mode,
+        # introduced with Chrome v128, new tabs are created in existing windows.
+        # For Chrome v128-v133, `width` and `height` in `Target.createTarget`
+        # were ignored completely, and for v134+ they only have an effect when
+        # creating a new window, i.e. for the first ChromoteSession. We now use
+        # `Emulation.setDeviceMetricsOverride` below to set the viewport
+        # dimensions, which works across all versions of Chrome/headless-shell
+        # regardless of the parent window size.
         p <- parent$Target$createTarget("about:blank", wait_ = FALSE)$then(
           function(value) {
             private$target_id <- value$targetId
@@ -121,12 +131,12 @@ ChromoteSession <- R6Class(
       })
 
       if (is.null(targetId)) {
-        # In Chrome v128-v133, `width` and `height` in `Target.createTarget` are
-        # ignored. For v134+ (latest stable as of 2025-03-06), they only have
-        # an effect when creating a new window, which is disabled by default.
-        # Regardless, width/height here override device emulation for this
-        # particular tab independently of the Chrome window dimensions. IOW,
-        # `window.innerWidth` and `.innerHeight` will match these dims.
+        # `Emulation.setDeviceMetricsOverride` is equivalent to turning on
+        # responsive preview in developer tools and lets us adjust the size of
+        # the viewport for the active session. This avoids setting the size of
+        # the parent browser window and ensures that the viewport of the current
+        # tab has dimensions that exactly match the requested `width` and
+        # `height`.
         p <- p$then(function(value) {
           self$Emulation$setDeviceMetricsOverride(
             width = width,
