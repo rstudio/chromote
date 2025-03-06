@@ -5,6 +5,12 @@
   * Use `chrome_versions_list()` to list installed or available versions of Chrome. 
   * Or use `chrome_versions_add()` and `chrome_versions_remove()` to manually add or remove a specific version of Chrome from chromote's cache.
 
+* `ChromoteSession$new()` gains a `new_window` argument, which can be used with Chrome version 128 and later to open the session as a tab in an existing window `new_window = FALSE` or as a tab in a new window (`new_window = TRUE`). (#205)
+
+* `ChromoteSession$new()` gains a `mobile` argument that can be used to set the device emulation in that session to emulate a mobile browser. The default is `mobile = FALSE`, which matches previous behavior. (#205)
+
+* `ChromoteSession$new()` now sets `width` and `height` using [Emulation.setDeviceMetricsOverride](https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#method-setDeviceMetricsOverride), which works for all Chrome binaries and versions. This fixes an issue with `width` and `height` being ignored for Chrome versions 128-133. (#205)
+
 # chromote 0.4.0
 
 * Chrome v132 and later no longer support [old headless mode](https://developer.chrome.com/blog/removing-headless-old-from-chrome). As such, `chromote` no longer defaults to using `--headless=old` and now uses `--headless` when running Chrome. You can still use the `chromote.headless` option or `CHROMOTE_HEADLESS` environment variable to configure the `--headless` flag if you're using an older version of Chrome. (#187)
