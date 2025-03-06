@@ -25,7 +25,7 @@ Imports:
     processx,
     promises (>= 1.1.1),
     R6,
-    rlang,
+    rlang (>= 1.1.0),
     utils,
     websocket (>= 1.2.0),
     withr,
