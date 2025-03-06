@@ -144,6 +144,9 @@ gen_command_body <- function(method_name, params) {
     # Check for missing non-optional args
     !!!check_missing_exprs
 
+    # Tracks state of `{domain}.enable` and `.disable` commands
+    private$event_manager$track_domain_event_activation(!!method_name)
+
     msg <- list(
       method = !!method_name,
       params = drop_nulls(list(!!!param_list))
