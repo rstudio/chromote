@@ -48,6 +48,20 @@ ChromoteSession <- R6Class(
     #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
+    #' @param new_window Whether to open the session as a new Tab in an existing
+    #'   window (`new_window = FALSE`) or as a new window (`new_window = TRUE`).
+    #'   The default value of `NULL` is used to follow the default value of the
+    #'   version of Chrome in use.
+    #'
+    #'   Note that `new_window` is not supported by `chrome-headless-shell` or
+    #'   Chrome prior to version 128. For Chrome later than v134, you cannot use
+    #'   `new_window = TRUE` if a window is not already open, i.e. you've
+    #'   already called `ChromoteSession$new()` once to create the window.
+    #' @param mobile Whether to emulate mobile device. When `TRUE`, Chrome
+    #'   updates settings to emulate browsing on a mobile phone; this includes
+    #'   viewport meta tag, overlay scrollbars, text autosizing and more. The
+    #'   default is `FALSE`.
+    #'
     #' @return A new `ChromoteSession` object.
     initialize = function(
       parent = default_chromote_object(),
@@ -55,7 +69,9 @@ ChromoteSession <- R6Class(
       height = 1323,
       targetId = NULL,
       wait_ = TRUE,
-      auto_events = NULL
+      auto_events = NULL,
+      new_window = NULL,
+      mobile = FALSE
     ) {
       self$parent <- parent
       lockBinding("parent", self) # do not allow `$parent` to be set!
@@ -69,6 +85,7 @@ ChromoteSession <- R6Class(
           "about:blank",
           width = width,
           height = height,
+          newWindow = new_window,
           wait_ = FALSE
         )$then(function(value) {
           private$target_id <- value$targetId
@@ -116,6 +133,24 @@ ChromoteSession <- R6Class(
       })$then(function(value) {
         private$pixel_ratio <- value$result$value
       })
+
+      if (is.null(targetId)) {
+        # In Chrome v128-v133, `width` and `height` in `Target.createTarget` are
+        # ignored. For v134+ (latest stable as of 2025-03-06), they only have
+        # an effect when creating a new window, which is disabled by default.
+        # Regardless, width/height here override device emulation for this
+        # particular tab independently of the Chrome window dimensions. IOW,
+        # `window.innerWidth` and `.innerHeight` will match these dims.
+        p <- p$then(function(value) {
+          self$Emulation$setDeviceMetricsOverride(
+            width = width,
+            height = height,
+            deviceScaleFactor = private$pixel_ratio,
+            mobile = mobile,
+            wait_ = FALSE
+          )
+        })
+      }
 
       # When a target crashes, raise a warning.
       if (!is.null(self$Inspector$targetCrashed)) {
