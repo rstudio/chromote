@@ -119,7 +119,8 @@ wait for a Chrome DevTools Protocol response.</p></dd>
 <span>  height <span class="op">=</span> <span class="fl">1323</span>,</span>
 <span>  targetId <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  wait_ <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  auto_events <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  auto_events <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mobile <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -131,7 +132,8 @@ wait for a Chrome DevTools Protocol response.</p></dd>
 
 
 <dt><code>width, height</code></dt>
-<dd><p>Width and height of the new window.</p></dd>
+<dd><p>Width and height of the new window in integer pixel
+values.</p></dd>
 
 
 <dt><code>targetId</code></dt>
@@ -153,6 +155,13 @@ return a <code>ChromoteSession</code> object directly.</p></dd>
 from the parent <code>Chromote</code> object. If <code>TRUE</code>, enable automatic
 event enabling/disabling; if <code>FALSE</code>, disable automatic event
 enabling/disabling.</p></dd>
+
+
+<dt><code>mobile</code></dt>
+<dd><p>Whether to emulate mobile device. When <code>TRUE</code>, Chrome
+updates settings to emulate browsing on a mobile phone; this includes
+viewport meta tag, overlay scrollbars, text autosizing and more. The
+default is <code>FALSE</code>.</p></dd>
 
 
 </dl><p></p></div>

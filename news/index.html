@@ -34,11 +34,14 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="chromote-development-version">chromote (development version)<a class="anchor" aria-label="anchor" href="#chromote-development-version"></a></h2>
-<ul><li>chromote now includes experimental features to download versioned binaries of Chrome and <code>chrome-headless-shell</code> for Mac (x64 or arm64), Windows (32- or 64-bit) or Linux (x86-64) from the <a href="https://googlechromelabs.github.io/chrome-for-testing" class="external-link">Chrome for Testing</a> service. (<a href="https://github.com/rstudio/chromote/issues/198" class="external-link">#198</a>)
+<ul><li>
+<p>chromote now includes experimental features to download versioned binaries of Chrome and <code>chrome-headless-shell</code> for Mac (x64 or arm64), Windows (32- or 64-bit) or Linux (x86-64) from the <a href="https://googlechromelabs.github.io/chrome-for-testing" class="external-link">Chrome for Testing</a> service. (<a href="https://github.com/rstudio/chromote/issues/198" class="external-link">#198</a>)</p>
 <ul><li>Use <code><a href="../reference/with_chrome_version.html">with_chrome_version()</a></code> or <code><a href="../reference/with_chrome_version.html">local_chrome_version()</a></code> to temporarily switch to a specific version of Chrome. The appropriate binary will be downloaded automatically if not yet available locally.</li>
 <li>Use <code><a href="../reference/chrome_versions_list.html">chrome_versions_list()</a></code> to list installed or available versions of Chrome.</li>
 <li>Or use <code><a href="../reference/chrome_versions.html">chrome_versions_add()</a></code> and <code><a href="../reference/chrome_versions.html">chrome_versions_remove()</a></code> to manually add or remove a specific version of Chrome from chromote’s cache.</li>
 </ul></li>
+<li><p><code>ChromoteSession$new()</code> gains a <code>mobile</code> argument that can be used to set the device emulation in that session to emulate a mobile browser. The default is <code>mobile = FALSE</code>, which matches previous behavior. (<a href="https://github.com/rstudio/chromote/issues/205" class="external-link">#205</a>)</p></li>
+<li><p><code>ChromoteSession$new()</code> now sets <code>width</code> and <code>height</code> using <a href="https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#method-setDeviceMetricsOverride" class="external-link">Emulation.setDeviceMetricsOverride</a>, which works for all Chrome binaries and versions. This fixes an issue with <code>width</code> and <code>height</code> being ignored for Chrome versions 128-133. (<a href="https://github.com/rstudio/chromote/issues/205" class="external-link">#205</a>)</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="chromote-040">chromote 0.4.0<a class="anchor" aria-label="anchor" href="#chromote-040"></a></h2><p class="text-muted">CRAN release: 2025-01-24</p>
