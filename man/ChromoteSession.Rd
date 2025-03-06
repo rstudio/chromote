@@ -75,7 +75,8 @@ if (interactive()) b$view()
   height = 1323,
   targetId = NULL,
   wait_ = TRUE,
-  auto_events = NULL
+  auto_events = NULL,
+  mobile = FALSE
 )}\if{html}{\out{</div>}}
 }
 
@@ -85,7 +86,8 @@ if (interactive()) b$view()
 \item{\code{parent}}{\code{\link{Chromote}} object to use; defaults to
 \code{\link[=default_chromote_object]{default_chromote_object()}}}
 
-\item{\code{width, height}}{Width and height of the new window.}
+\item{\code{width, height}}{Width and height of the new window in integer pixel
+values.}
 
 \item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target/}{Target}
 ID of an existing target to attach to. When a \code{targetId} is provided, the
@@ -101,6 +103,11 @@ return a \code{ChromoteSession} object directly.}
 from the parent \code{Chromote} object. If \code{TRUE}, enable automatic
 event enabling/disabling; if \code{FALSE}, disable automatic event
 enabling/disabling.}
+
+\item{\code{mobile}}{Whether to emulate mobile device. When \code{TRUE}, Chrome
+updates settings to emulate browsing on a mobile phone; this includes
+viewport meta tag, overlay scrollbars, text autosizing and more. The
+default is \code{FALSE}.}
 }
 \if{html}{\out{</div>}}
 }

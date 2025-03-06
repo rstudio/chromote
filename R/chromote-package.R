@@ -27,7 +27,7 @@
 NULL
 
 ## usethis namespace: start
-#' @import promises later
+#' @import promises later rlang
 #' @importFrom fastmap fastmap
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom processx process

@@ -44,10 +44,16 @@ ChromoteSession <- R6Class(
     #'   from the parent `Chromote` object. If `TRUE`, enable automatic
     #'   event enabling/disabling; if `FALSE`, disable automatic event
     #'   enabling/disabling.
-    #' @param width,height Width and height of the new window.
+    #' @param width,height Width and height of the new window in integer pixel
+    #'   values.
     #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
+    #' @param mobile Whether to emulate mobile device. When `TRUE`, Chrome
+    #'   updates settings to emulate browsing on a mobile phone; this includes
+    #'   viewport meta tag, overlay scrollbars, text autosizing and more. The
+    #'   default is `FALSE`.
+    #'
     #' @return A new `ChromoteSession` object.
     initialize = function(
       parent = default_chromote_object(),
@@ -55,8 +61,15 @@ ChromoteSession <- R6Class(
       height = 1323,
       targetId = NULL,
       wait_ = TRUE,
-      auto_events = NULL
+      auto_events = NULL,
+      mobile = FALSE
     ) {
+      check_number_whole(width)
+      check_number_whole(height)
+      check_logical(auto_events, allow_null = TRUE)
+      check_logical(mobile)
+      check_logical(wait_)
+
       self$parent <- parent
       lockBinding("parent", self) # do not allow `$parent` to be set!
 
@@ -65,19 +78,26 @@ ChromoteSession <- R6Class(
       # Create a session from the Chromote. Basically the same code as
       # new_session(), but this is synchronous.
       if (is.null(targetId)) {
-        p <- parent$Target$createTarget(
-          "about:blank",
-          width = width,
-          height = height,
-          wait_ = FALSE
-        )$then(function(value) {
-          private$target_id <- value$targetId
-          parent$Target$attachToTarget(
-            value$targetId,
-            flatten = TRUE,
-            wait_ = FALSE
-          )
-        })
+        # In earlier versions of chromote (< 0.5.0), we set `width` and `height`
+        # in `Target.createTarget`. With legacy (old) headless mode, each new
+        # session was essentially a tab in a new window. With new headless mode,
+        # introduced with Chrome v128, new tabs are created in existing windows.
+        # For Chrome v128-v133, `width` and `height` in `Target.createTarget`
+        # were ignored completely, and for v134+ they only have an effect when
+        # creating a new window, i.e. for the first ChromoteSession. We now use
+        # `Emulation.setDeviceMetricsOverride` below to set the viewport
+        # dimensions, which works across all versions of Chrome/headless-shell
+        # regardless of the parent window size.
+        p <- parent$Target$createTarget("about:blank", wait_ = FALSE)$then(
+          function(value) {
+            private$target_id <- value$targetId
+            parent$Target$attachToTarget(
+              value$targetId,
+              flatten = TRUE,
+              wait_ = FALSE
+            )
+          }
+        )
       } else {
         private$target_id <- targetId
         p <- parent$Target$attachToTarget(
@@ -116,6 +136,24 @@ ChromoteSession <- R6Class(
       })$then(function(value) {
         private$pixel_ratio <- value$result$value
       })
+
+      if (is.null(targetId)) {
+        # `Emulation.setDeviceMetricsOverride` is equivalent to turning on
+        # responsive preview in developer tools and lets us adjust the size of
+        # the viewport for the active session. This avoids setting the size of
+        # the parent browser window and ensures that the viewport of the current
+        # tab has dimensions that exactly match the requested `width` and
+        # `height`.
+        p <- p$then(function(value) {
+          self$Emulation$setDeviceMetricsOverride(
+            width = width,
+            height = height,
+            deviceScaleFactor = private$pixel_ratio,
+            mobile = mobile,
+            wait_ = FALSE
+          )
+        })
+      }
 
       # When a target crashes, raise a warning.
       if (!is.null(self$Inspector$targetCrashed)) {
