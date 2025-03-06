@@ -43,7 +43,8 @@ ChromoteSession <- R6Class(
     #' @param auto_events If `NULL` (the default), use the `auto_events` setting
     #'   from the parent `Chromote` object. If `TRUE`, enable automatic
     #'   event enabling/disabling; if `FALSE`, disable automatic event
-    #'   enabling/disabling.
+    #'   enabling/disabling. Alternatively, supply a character vector of
+    #'   domains to enable `auto_events` for.
     #' @param width,height Width and height of the new window.
     #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
@@ -105,7 +106,7 @@ ChromoteSession <- R6Class(
       # Graft the entries from self$protocol onto self
       list2env(self$protocol, self)
 
-      private$auto_events <- auto_events
+      private$auto_events <- check_auto_events(auto_events, self$protocol)
       private$event_manager <- EventManager$new(self)
       private$session_is_active <- TRUE
       private$target_is_active <- TRUE
@@ -546,6 +547,44 @@ ChromoteSession <- R6Class(
         timeout,
         sessionId = private$session_id
       )
+    },
+
+    #' @description Enable automatic event enabling/disabling.
+    #'
+    #' @param domains The specific domains to enable `auto_events` for. By
+    #'   default, all domains will have `auto_events` enabled. Set to `NULL` to
+    #'   use the `auto_events` value from the parent [Chromote] object.
+    enable_auto_events = function(domains = TRUE) {
+      domains <- check_auto_events(domains, self$protocol, allow_null = TRUE)
+
+      if (!is.null(domains)) {
+        if (is.null(private$auto_events)) {
+          private$auto_events <- union(domains, self$parent$get_auto_events())
+        } else {
+          private$auto_events <- union(domains, private$auto_events)
+        }
+      } else {
+        private$auto_events <- NULL
+      }
+    },
+
+    #' @description Disable automatic event enabling/disabling.
+    #'
+    #' @param domains The specific domains to disable `auto_events` for. by
+    #'   default, all domains will have `auto_events` disabled. Set to `NULL`
+    #'   to use the `auto_events` value from the parent [Chromote] object.
+    disable_auto_events = function(domains = TRUE) {
+      domains <- check_auto_events(domains, self$protocol, allow_null = TRUE)
+
+      if (!is.null(domains)) {
+        if (is.null(private$auto_events)) {
+          private$auto_events <- setdiff(self$parent$get_auto_events(), domains)
+        } else {
+          private$auto_events <- setdiff(private$auto_events, domains)
+        }
+      } else {
+        private$auto_events <- NULL
+      }
     },
 
     #' @description
