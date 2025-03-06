@@ -86,7 +86,8 @@ if (interactive()) b$view()
 \item{\code{parent}}{\code{\link{Chromote}} object to use; defaults to
 \code{\link[=default_chromote_object]{default_chromote_object()}}}
 
-\item{\code{width, height}}{Width and height of the new window.}
+\item{\code{width, height}}{Width and height of the new window in integer pixel
+values.}
 
 \item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target/}{Target}
 ID of an existing target to attach to. When a \code{targetId} is provided, the

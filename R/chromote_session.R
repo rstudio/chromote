@@ -44,7 +44,8 @@ ChromoteSession <- R6Class(
     #'   from the parent `Chromote` object. If `TRUE`, enable automatic
     #'   event enabling/disabling; if `FALSE`, disable automatic event
     #'   enabling/disabling.
-    #' @param width,height Width and height of the new window.
+    #' @param width,height Width and height of the new window in integer pixel
+    #'   values.
     #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
     #'   `ChromoteSession` object. Otherwise, block during initialization, and
     #'   return a `ChromoteSession` object directly.
@@ -63,6 +64,12 @@ ChromoteSession <- R6Class(
       auto_events = NULL,
       mobile = FALSE
     ) {
+      check_number_whole(width)
+      check_number_whole(height)
+      check_logical(auto_events, allow_null = TRUE)
+      check_logical(mobile)
+      check_logical(wait_)
+
       self$parent <- parent
       lockBinding("parent", self) # do not allow `$parent` to be set!
 
