@@ -29,6 +29,8 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-new}{\code{ChromoteSession$new()}}
 \item \href{#method-ChromoteSession-view}{\code{ChromoteSession$view()}}
 \item \href{#method-ChromoteSession-close}{\code{ChromoteSession$close()}}
+\item \href{#method-ChromoteSession-get_viewport_size}{\code{ChromoteSession$get_viewport_size()}}
+\item \href{#method-ChromoteSession-set_viewport_size}{\code{ChromoteSession$set_viewport_size()}}
 \item \href{#method-ChromoteSession-screenshot}{\code{ChromoteSession$screenshot()}}
 \item \href{#method-ChromoteSession-screenshot_pdf}{\code{ChromoteSession$screenshot_pdf()}}
 \item \href{#method-ChromoteSession-new_session}{\code{ChromoteSession$new_session()}}
@@ -170,6 +172,80 @@ when the \code{ChromoteSession} is closed. Otherwise, block until the
 \code{ChromoteSession} has closed.}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-get_viewport_size"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-get_viewport_size}{}}}
+\subsection{Method \code{get_viewport_size()}}{
+Get the viewport size
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_viewport_size(wait_ = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} of a new
+\code{ChromoteSession} object. Otherwise, block during initialization, and
+return a \code{ChromoteSession} object directly.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Returns a list with values \code{width}, \code{height}, \code{zoom}
+and \code{mobile}. See \verb{$set_viewport_size()} for more details.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-set_viewport_size"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-set_viewport_size}{}}}
+\subsection{Method \code{set_viewport_size()}}{
+Set the viewport size
+
+Each ChromoteSession is associated with a page that may be one page open
+in a browser window among many. Each page can have its own viewport size,
+that can be thought of like the window size for that page.
+
+This function uses the
+\href{https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#method-setDeviceMetricsOverride}{Emulation.setDeviceMetricsOverride}
+command to set the viewport size. If you need more granular control or
+access to additional settings, use
+\verb{$Emulation$setDeviceMetricsOverride()}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$set_viewport_size(
+  width,
+  height,
+  zoom = NULL,
+  mobile = NULL,
+  wait_ = TRUE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{width, height}}{Width and height of the new window in integer pixel
+values.}
+
+\item{\code{zoom}}{The zoom level of displayed content on a device, where a
+value of 1 indicates normal size, greater than 1 indicates zoomed in,
+and less than 1 indicates zoomed out.}
+
+\item{\code{mobile}}{Whether to emulate mobile device. When \code{TRUE}, Chrome
+updates settings to emulate browsing on a mobile phone; this includes
+viewport meta tag, overlay scrollbars, text autosizing and more. The
+default is \code{FALSE}.}
+
+\item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} of a new
+\code{ChromoteSession} object. Otherwise, block during initialization, and
+return a \code{ChromoteSession} object directly.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisibly returns the previous viewport dimensions so that you
+can restore the viewport size, if desired.
 }
 }
 \if{html}{\out{<hr>}}
