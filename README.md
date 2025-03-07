@@ -1,5 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 <!-- Do not run R chunks that print any session information.
      This produces unstable output.
      Instead, copy output from a local execution
@@ -1269,10 +1270,10 @@ b$screenshot("narrow.png")
 ```
 
 With an existing `ChromoteSession`, you can set the size with
-`b$Emulation$setVisibleSize()`:
+`b$set_viewport_sze()`:
 
 ``` r
-b$Emulation$setVisibleSize(width=1600, height=900)
+b$set_viewport_size(width = 1600, height = 900)
 b$screenshot("wide.png")
 ```
 
