@@ -336,7 +336,7 @@ ChromoteSession <- R6Class(
           width = width,
           height = height,
           deviceScaleFactor = zoom %||% private$pixel_ratio,
-          mobile = mobile %||% private$is_mobile,
+          mobile = mobile %||% private$is_mobile %||% FALSE,
           wait_ = FALSE
         )
       })$then(function(value) {
