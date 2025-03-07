@@ -121,6 +121,16 @@ gen_command_body <- function(method_name, params) {
       })
     }
 
+  track_device_override_mobile <-
+    if (identical(method_name, "Emulation.setDeviceMetricsOverride")) {
+      expr({
+        private$pixel_ratio <- deviceScaleFactor
+        private$is_mobile <- mobile
+      })
+    } else {
+      expr({}) # fmt: skip
+    }
+
   # Construct parameters for message
   param_list <- lapply(params, function(param) {
     as.symbol(param$name)
@@ -143,6 +153,8 @@ gen_command_body <- function(method_name, params) {
 
     # Check for missing non-optional args
     !!!check_missing_exprs
+
+    !!!track_device_override_mobile
 
     msg <- list(
       method = !!method_name,

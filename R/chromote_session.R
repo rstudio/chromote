@@ -695,9 +695,12 @@ ChromoteSession <- R6Class(
     session_is_active = NULL,
     target_is_active = NULL,
     event_manager = NULL,
-    pixel_ratio = NULL,
     auto_events = NULL,
     init_promise_ = NULL,
+
+    # Updated when `Emulation.setDeviceMetricsOverride` is called
+    pixel_ratio = NULL,
+    is_mobile = NULL,
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
       self$check_active()
