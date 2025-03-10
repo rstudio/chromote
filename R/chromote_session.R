@@ -260,6 +260,92 @@ ChromoteSession <- R6Class(
       }
     },
 
+    #' @description Get the viewport size
+    #'
+    #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
+    #'   `ChromoteSession` object. Otherwise, block during initialization, and
+    #'   return a `ChromoteSession` object directly.
+    #'
+    #' @return Returns a list with values `width`, `height`, `zoom`
+    #'   and `mobile`. See `$set_viewport_size()` for more details.
+    get_viewport_size = function(wait_ = TRUE) {
+      check_bool(wait_)
+
+      p <- self$Runtime$evaluate(
+        "(() => ({width: window.innerWidth, height: window.innerHeight }))()",
+        returnByValue = TRUE,
+        wait_ = FALSE
+      )$then(function(value) {
+        list(
+          width = value$result$value$width,
+          height = value$result$value$height,
+          zoom = private$pixel_ratio,
+          mobile = private$is_mobile
+        )
+      })
+
+      if (wait_) self$wait_for(p) else p
+    },
+
+    #' @description Set the viewport size
+    #'
+    #' Each ChromoteSession is associated with a page that may be one page open
+    #' in a browser window among many. Each page can have its own viewport size,
+    #' that can be thought of like the window size for that page.
+    #'
+    #' This function uses the
+    #' [Emulation.setDeviceMetricsOverride](https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#method-setDeviceMetricsOverride)
+    #' command to set the viewport size. If you need more granular control or
+    #' access to additional settings, use
+    #' `$Emulation$setDeviceMetricsOverride()`.
+    #'
+    #' @param width,height Width and height of the new window in integer pixel
+    #'   values.
+    #' @param zoom The zoom level of displayed content on a device, where a
+    #'   value of 1 indicates normal size, greater than 1 indicates zoomed in,
+    #'   and less than 1 indicates zoomed out.
+    #' @param mobile Whether to emulate mobile device. When `TRUE`, Chrome
+    #'   updates settings to emulate browsing on a mobile phone; this includes
+    #'   viewport meta tag, overlay scrollbars, text autosizing and more. The
+    #'   default is `FALSE`.
+    #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
+    #'   `ChromoteSession` object. Otherwise, block during initialization, and
+    #'   return a `ChromoteSession` object directly.
+    #'
+    #' @return Invisibly returns the previous viewport dimensions so that you
+    #'   can restore the viewport size, if desired.
+    set_viewport_size = function(
+      width,
+      height,
+      zoom = NULL,
+      mobile = NULL,
+      wait_ = TRUE
+    ) {
+      check_number_whole(width)
+      check_number_whole(height)
+      check_number_decimal(zoom, allow_null = TRUE)
+      check_bool(mobile, allow_null = TRUE)
+      check_bool(wait_)
+
+      prev_bounds <- NULL
+
+      p <- self$get_viewport_size(wait_ = FALSE)$then(function(value) {
+        prev_bounds <<- value
+
+        self$Emulation$setDeviceMetricsOverride(
+          width = width,
+          height = height,
+          deviceScaleFactor = zoom %||% private$pixel_ratio,
+          mobile = mobile %||% private$is_mobile %||% FALSE,
+          wait_ = FALSE
+        )
+      })$then(function(value) {
+        invisible(prev_bounds)
+      })
+
+      if (wait_) self$wait_for(p) else p
+    },
+
     #' @description Take a PNG screenshot
     #'
     #' ## Examples
@@ -695,9 +781,12 @@ ChromoteSession <- R6Class(
     session_is_active = NULL,
     target_is_active = NULL,
     event_manager = NULL,
-    pixel_ratio = NULL,
     auto_events = NULL,
     init_promise_ = NULL,
+
+    # Updated when `Emulation.setDeviceMetricsOverride` is called
+    pixel_ratio = NULL,
+    is_mobile = NULL,
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
       self$check_active()

@@ -1269,10 +1269,10 @@ b$screenshot("narrow.png")
 ```
 
 With an existing `ChromoteSession`, you can set the size with
-`b$Emulation$setVisibleSize()`:
+`b$set_viewport_size()`:
 
 ``` r
-b$Emulation$setVisibleSize(width=1600, height=900)
+b$set_viewport_size(width = 1600, height = 900)
 b$screenshot("wide.png")
 ```
 
