@@ -76,6 +76,8 @@ wait for a Chrome DevTools Protocol response.</p></dd>
 <ul><li><p><a href="#method-ChromoteSession-new"><code>ChromoteSession$new()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-view"><code>ChromoteSession$view()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-close"><code>ChromoteSession$close()</code></a></p></li>
+<li><p><a href="#method-ChromoteSession-get_viewport_size"><code>ChromoteSession$get_viewport_size()</code></a></p></li>
+<li><p><a href="#method-ChromoteSession-set_viewport_size"><code>ChromoteSession$set_viewport_size()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-screenshot"><code>ChromoteSession$screenshot()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-screenshot_pdf"><code>ChromoteSession$screenshot_pdf()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-new_session"><code>ChromoteSession$new_session()</code></a></p></li>
@@ -226,6 +228,84 @@ when the <code>ChromoteSession</code> is closed. Otherwise, block until the
 </dl><p></p></div>
 </div>
 
+</div><p></p><hr><a id="method-ChromoteSession-get_viewport_size"></a><div class="section">
+<h3 id="method-get-viewport-size-">Method <code>get_viewport_size()</code><a class="anchor" aria-label="anchor" href="#method-get-viewport-size-"></a></h3>
+<p>Get the viewport size</p><div class="section">
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_viewport_size</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>wait_</code></dt>
+<dd><p>If <code>FALSE</code>, return a <code><a href="https://rstudio.github.io/promises/reference/promise.html" class="external-link">promises::promise()</a></code> of a new
+<code>ChromoteSession</code> object. Otherwise, block during initialization, and
+return a <code>ChromoteSession</code> object directly.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
+<p>Returns a list with values <code>width</code>, <code>height</code>, <code>zoom</code>
+and <code>mobile</code>. See <code>$set_viewport_size()</code> for more details.</p>
+</div>
+
+</div><p></p><hr><a id="method-ChromoteSession-set_viewport_size"></a><div class="section">
+<h3 id="method-set-viewport-size-">Method <code>set_viewport_size()</code><a class="anchor" aria-label="anchor" href="#method-set-viewport-size-"></a></h3>
+<p>Set the viewport size</p>
+<p>Each ChromoteSession is associated with a page that may be one page open
+in a browser window among many. Each page can have its own viewport size,
+that can be thought of like the window size for that page.</p>
+<p>This function uses the
+<a href="https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#method-setDeviceMetricsOverride" class="external-link">Emulation.setDeviceMetricsOverride</a>
+command to set the viewport size. If you need more granular control or
+access to additional settings, use
+<code>$Emulation$setDeviceMetricsOverride()</code>.</p><div class="section">
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">set_viewport_size</span><span class="op">(</span></span>
+<span>  <span class="va">width</span>,</span>
+<span>  <span class="va">height</span>,</span>
+<span>  zoom <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mobile <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  wait_ <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>width, height</code></dt>
+<dd><p>Width and height of the new window in integer pixel
+values.</p></dd>
+
+
+<dt><code>zoom</code></dt>
+<dd><p>The zoom level of displayed content on a device, where a
+value of 1 indicates normal size, greater than 1 indicates zoomed in,
+and less than 1 indicates zoomed out.</p></dd>
+
+
+<dt><code>mobile</code></dt>
+<dd><p>Whether to emulate mobile device. When <code>TRUE</code>, Chrome
+updates settings to emulate browsing on a mobile phone; this includes
+viewport meta tag, overlay scrollbars, text autosizing and more. The
+default is <code>FALSE</code>.</p></dd>
+
+
+<dt><code>wait_</code></dt>
+<dd><p>If <code>FALSE</code>, return a <code><a href="https://rstudio.github.io/promises/reference/promise.html" class="external-link">promises::promise()</a></code> of a new
+<code>ChromoteSession</code> object. Otherwise, block during initialization, and
+return a <code>ChromoteSession</code> object directly.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
+<p>Invisibly returns the previous viewport dimensions so that you
+can restore the viewport size, if desired.</p>
+</div>
+
 </div><p></p><hr><a id="method-ChromoteSession-screenshot"></a><div class="section">
 <h3 id="method-screenshot-">Method <code>screenshot()</code><a class="anchor" aria-label="anchor" href="#method-screenshot-"></a></h3>
 <p>Take a PNG screenshot</p><div class="section">
@@ -302,7 +382,7 @@ when the <code>ChromoteSession</code> is closed. Otherwise, block until the
 <span><span class="co">#&gt; Done!</span></span></code></pre><p></p></div>
 </div>
 <div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span></span>
 <span>  filename <span class="op">=</span> <span class="st">"screenshot.png"</span>,</span>
 <span>  selector <span class="op">=</span> <span class="st">"html"</span>,</span>
@@ -318,7 +398,7 @@ when the <code>ChromoteSession</code> is closed. Otherwise, block until the
 </div>
 
 <div class="section">
-<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>filename</code></dt>
 <dd><p>File path of where to save the screenshot. The format of
 the screenshot is inferred from the file extension; use
@@ -397,7 +477,7 @@ until the <code>ChromoteSession</code> has saved the screenshot.</p></dd>
 <span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.info</a></span><span class="op">(</span><span class="va">tmppdffile</span><span class="op">)</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 <div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">screenshot_pdf</span><span class="op">(</span></span>
 <span>  filename <span class="op">=</span> <span class="st">"screenshot.pdf"</span>,</span>
 <span>  pagesize <span class="op">=</span> <span class="st">"letter"</span>,</span>
@@ -412,7 +492,7 @@ until the <code>ChromoteSession</code> has saved the screenshot.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>filename</code></dt>
 <dd><p>File path of where to save the screenshot.</p></dd>
 
@@ -474,7 +554,7 @@ until the <code>ChromoteSession</code> has saved the screnshot.</p></dd>
 <span><span class="co">#&gt; [1] "https://www.r-project.org/"</span></span></code></pre><p></p></div>
 </div>
 <div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">new_session</span><span class="op">(</span></span>
 <span>  width <span class="op">=</span> <span class="fl">992</span>,</span>
 <span>  height <span class="op">=</span> <span class="fl">1323</span>,</span>
@@ -484,7 +564,7 @@ until the <code>ChromoteSession</code> has saved the screnshot.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>width, height</code></dt>
 <dd><p>Width and height of the new window.</p></dd>
 
@@ -509,7 +589,7 @@ until the <code>ChromoteSession</code> has created a new session.</p></dd>
 </div><p></p><hr><a id="method-ChromoteSession-get_session_id"></a><div class="section">
 <h3 id="method-get-session-id-">Method <code>get_session_id()</code><a class="anchor" aria-label="anchor" href="#method-get-session-id-"></a></h3>
 <p>Retrieve the session id</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_session_id</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -519,7 +599,7 @@ until the <code>ChromoteSession</code> has created a new session.</p></dd>
 <p>Create a new session that connects to the same target (i.e. page)
 as this session. This is useful if the session has been closed but the target still
 exists.</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">respawn</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -527,7 +607,7 @@ exists.</p><div class="section">
 </div><p></p><hr><a id="method-ChromoteSession-get_target_id"></a><div class="section">
 <h3 id="method-get-target-id-">Method <code>get_target_id()</code><a class="anchor" aria-label="anchor" href="#method-get-target-id-"></a></h3>
 <p>Retrieve the target id</p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_target_id</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -551,12 +631,12 @@ resolve.</p><div class="section">
 <span><span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span>, callback_ <span class="op">=</span> <span class="va">str</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 <div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>p</code></dt>
 <dd><p>A promise to resolve.</p></dd>
 
@@ -578,12 +658,12 @@ resolve.</p><div class="section">
 <span><span class="va">b</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">debug_messages</span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 <div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">debug_log</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Arguments pasted together with <code>paste0(..., collapse = "")</code>.</p></dd>
 
@@ -595,7 +675,7 @@ resolve.</p><div class="section">
 <h3 id="method-get-child-loop-">Method <code>get_child_loop()</code><a class="anchor" aria-label="anchor" href="#method-get-child-loop-"></a></h3>
 <p><span class="pkg">later</span> loop.</p>
 <p>For expert async usage only.</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_child_loop</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -604,7 +684,7 @@ resolve.</p><div class="section">
 <h3 id="method-send-command-">Method <code>send_command()</code><a class="anchor" aria-label="anchor" href="#method-send-command-"></a></h3>
 <p>Send command through Chrome DevTools Protocol.</p>
 <p>For expert use only.</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">send_command</span><span class="op">(</span></span>
 <span>  <span class="va">msg</span>,</span>
 <span>  callback <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -614,7 +694,7 @@ resolve.</p><div class="section">
 </div>
 
 <div class="section">
-<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
+<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>msg</code></dt>
 <dd><p>A JSON-serializable list containing <code>method</code>, and <code>params</code>.</p></dd>
 
@@ -639,7 +719,7 @@ execute a method.</p></dd>
 <h3 id="method-get-auto-events-">Method <code>get_auto_events()</code><a class="anchor" aria-label="anchor" href="#method-get-auto-events-"></a></h3>
 <p>Resolved <code>auto_events</code> value.</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_auto_events</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -648,12 +728,12 @@ execute a method.</p></dd>
 <h3 id="method-invoke-event-callbacks-">Method <code>invoke_event_callbacks()</code><a class="anchor" aria-label="anchor" href="#method-invoke-event-callbacks-"></a></h3>
 <p>Immediately call all event callback methods.</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">invoke_event_callbacks</span><span class="op">(</span><span class="va">event</span>, <span class="va">params</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
+<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>event</code></dt>
 <dd><p>A single event string</p></dd>
 
@@ -669,12 +749,12 @@ execute a method.</p></dd>
 <h3 id="method-mark-closed-">Method <code>mark_closed()</code><a class="anchor" aria-label="anchor" href="#method-mark-closed-"></a></h3>
 <p>Mark a session, and optionally, the underlying target,
 as closed. For internal use only.</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">mark_closed</span><span class="op">(</span><span class="va">target_closed</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
+<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>target_closed</code></dt>
 <dd><p>Has the underlying target been closed as well as the
 active debugging session?</p></dd>
@@ -688,7 +768,7 @@ active debugging session?</p></dd>
 <p>Retrieve active status
 Once initialized, the value returned is <code>TRUE</code>. If <code>$close()</code> has been
 called, this value will be <code>FALSE</code>.</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">is_active</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -696,7 +776,7 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 </div><p></p><hr><a id="method-ChromoteSession-check_active"></a><div class="section">
 <h3 id="method-check-active-">Method <code>check_active()</code><a class="anchor" aria-label="anchor" href="#method-check-active-"></a></h3>
 <p>Check that a session is active, erroring if not.</p><div class="section">
-<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">check_active</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -705,7 +785,7 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <h3 id="method-get-init-promise-">Method <code>get_init_promise()</code><a class="anchor" aria-label="anchor" href="#method-get-init-promise-"></a></h3>
 <p>Initial promise</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
+<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_init_promise</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -713,12 +793,12 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 </div><p></p><hr><a id="method-ChromoteSession-print"></a><div class="section">
 <h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
 <p>Summarise the current state of the object.</p><div class="section">
-<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
+<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="va">...</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
+<h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Passed on to <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code> when <code>verbose</code> = TRUE</p></dd>
 
