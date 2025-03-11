@@ -89,25 +89,22 @@ EventManager <- R6Class(
       domain <- command[1]
       event <- command[2]
 
-      switch(
-        event,
-        enable = {
-          private$event_domain_manually_enabled[[domain]] <- TRUE
-        },
-        disable = {
-          private$event_domain_manually_enabled[[domain]] <- FALSE
-          # When disable is called, we'll stop getting events, so our callback
-          # count will stop decreasing. If the user calls an event-driven
-          # command, we'll want auto_events to engage again, so we update the
-          # callback count threshold. This may result is us failing to turn off
-          # auto-events (because the callback count may never reach 0), but is
-          # better than never turning auto-events back on.
-          private$event_callback_count_threshold[[domain]] <- max(
-            c(0, private$event_callback_counts[[domain]]) + 1
-          )
-        },
-        invisible()
-      )
+      if (event == "enable") {
+        private$event_domain_manually_enabled[[domain]] <- TRUE
+      }
+
+      if (event == "disable") {
+        private$event_domain_manually_enabled[[domain]] <- FALSE
+        # Re-enable auto_events when the callback count increases. When disable
+        # is called, we'll stop getting events and our callback count won't
+        # decrease, so the current count + 1 becomes the new threshold.
+        private$auto_event_callback_count_threshold[[domain]] <- max(
+          1,
+          private$event_callback_counts[[domain]] + 1
+        )
+      }
+
+      invisible()
     }
   ),
 
@@ -120,6 +117,9 @@ EventManager <- R6Class(
     # a given domain, it will automatically enable or disable events for that
     # domain.
     event_callback_counts = list(),
+
+    # When auto_event, enable events when the callback count hits this threshold
+    auto_event_callback_count_threshold = list(),
 
     # Some domains require a <domain>.event command to enable event
     # notifications, others do not. (Not really sure why.)
@@ -136,7 +136,10 @@ EventManager <- R6Class(
       if (isTRUE(private$event_domain_manually_enabled[[domain]])) return()
       # and we're going from 0 to 1 callbacks in this domain
       # or to 1+ the number of callbacks when `$disable()` was last called
-      threshold <- max(c(1, private$event_callback_count_threshold[[domain]]))
+      threshold <- max(
+        1,
+        private$auto_event_callback_count_threshold[[domain]]
+      )
       if (private$event_callback_counts[[domain]] != threshold) return()
 
       # ...then automatically enable events.
