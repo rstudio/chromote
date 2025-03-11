@@ -164,7 +164,8 @@ chrome_windows_version_powershell <- function(path) {
   }
 
   output <- trimws(output)
-  output[nzchar(output)][[1]]
+  output <- output[nzchar(output)]
+  if (length(output) > 0) output[[1]] else ""
 }
 
 chrome_windows_version_wmic <- function(path) {
