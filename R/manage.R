@@ -466,6 +466,11 @@ chrome_versions_ensure <- function(
 ) {
   platform <- check_platform(platform)
   binary <- check_binary(binary)
+  if (length(version) != 1) {
+    cli::cli_abort(
+      "`version` must be a single string or integer value, not {.val {version}}."
+    )
+  }
 
   requested_latest_installed <- identical(version, "latest-installed")
 
