@@ -98,7 +98,7 @@ find_chrome <- function() {
 }
 
 chrome_verify <- function(path = find_chrome()) {
-  if (is_windows()) {
+  if (is_windows() && basename(path) != "chrome-headless-shell.exe") {
     return(chrome_verify_windows())
   }
 
