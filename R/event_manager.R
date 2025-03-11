@@ -140,7 +140,13 @@ EventManager <- R6Class(
         1,
         private$auto_event_callback_count_threshold[[domain]]
       )
-      if (private$event_callback_counts[[domain]] != threshold) return()
+      if (private$event_callback_counts[[domain]] < threshold) {
+        # The callback event count decremented somehow, update auto event threshold
+        private$auto_event_callback_count_threshold <-
+          private$event_callback_counts[[domain]] + 1
+
+        return()
+      }
 
       # ...then automatically enable events.
       private$session$debug_log("Enabling events for ", domain)
