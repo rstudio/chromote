@@ -75,7 +75,7 @@ EventManager <- R6Class(
       private$event_callbacks$remove(event)
     },
 
-    track_domain_event_activation = function(command) {
+    track_domain_manual_event_activation = function(command) {
       if (!private$session$get_auto_events()) return()
 
       # Tracks calls to domain-event enabling commands, like `Fetch.enable` or
@@ -127,7 +127,7 @@ EventManager <- R6Class(
 
     event_domain_manually_enabled = list(),
 
-    maybe_event_domain_enable = function(domain) {
+    maybe_auto_event_domain_enable = function(domain) {
       # If we're doing auto events
       if (!private$session$get_auto_events()) return()
       # and this domain requires events (not all domains require or have an .enable method)
@@ -146,7 +146,7 @@ EventManager <- R6Class(
       private$event_domain_manually_enabled[[domain]] <- FALSE
     },
 
-    maybe_event_domain_disable = function(domain) {
+    maybe_auto_event_domain_disable = function(domain) {
       # If we're doing auto events
       if (!private$session$get_auto_events()) return()
       # and the domain requires events
@@ -212,7 +212,7 @@ EventManager <- R6Class(
         private$event_callback_counts[[domain]]
       )
 
-      private$maybe_event_domain_enable(domain)
+      private$maybe_auto_event_domain_enable(domain)
 
       invisible(private$event_callback_counts[[domain]])
     },
@@ -228,7 +228,7 @@ EventManager <- R6Class(
         private$event_callback_counts[[domain]]
       )
 
-      private$maybe_event_domain_disable(domain)
+      private$maybe_auto_event_domain_disable(domain)
 
       invisible(private$event_callback_counts[[domain]])
     }
