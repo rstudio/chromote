@@ -11,6 +11,8 @@
 
 * `ChromoteSession` gains two new helper methods: `$set_viewport_size()` and `$get_viewport_size()`. These methods allow you to change the viewport size – effectively the virtual window size for a page – or to get the current viewport size. If you previously relied on `$Emulation$setVisibleSize()` (now a deprecated method in the Chrome DevTools Protocol), `$set_viewport_size()` is a good replacement as it uses [Emulation.setDeviceMetricsOverride](https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#method-setDeviceMetricsOverride) instead. (#206)
 
+* Fixed a bug in `chromote_info()` on Windows with Powershell when no version info is returned. (#207)
+
 # chromote 0.4.0
 
 * Chrome v132 and later no longer support [old headless mode](https://developer.chrome.com/blog/removing-headless-old-from-chrome). As such, `chromote` no longer defaults to using `--headless=old` and now uses `--headless` when running Chrome. You can still use the `chromote.headless` option or `CHROMOTE_HEADLESS` environment variable to configure the `--headless` flag if you're using an older version of Chrome. (#187)
