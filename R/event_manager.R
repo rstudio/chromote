@@ -150,7 +150,11 @@ EventManager <- R6Class(
           isTRUE(private$event_enable_domains[[domain]])
       ) {
         private$session$debug_log("Enabling events for ", domain)
-        private$session[[domain]]$enable()
+        args <- private$session$auto_events_enable_args(domain)
+        exec(
+          private$session[[domain]]$enable,
+          !!!args
+        )
       }
 
       invisible(private$event_callback_counts[[domain]])
@@ -181,3 +185,53 @@ EventManager <- R6Class(
     }
   )
 )
+
+# These functions power `$auto_events_enable_args()` for both `Chromote` and
+# `ChromoteSession`.
+get_auto_events_enable_args <- function(private, domain, parent = NULL) {
+  session_args <- private$auto_events_enable_args[[domain]]
+  if (!is.null(session_args) || is.null(parent)) {
+    return(session_args)
+  }
+
+  return(parent$auto_events_enable_args(domain))
+}
+
+set_auto_events_enable_args <- function(self, private, domain, dots) {
+  # Set enable args for the domain ----
+  if (identical(dots, list("NULL" = NULL))) {
+    # Unset args with `$auto_events_enable_args(domain, NULL)`
+    dots <- NULL
+  }
+
+  if (!is_function(self[[domain]]$enable)) {
+    cli::cli_abort(
+      "{.field {domain}} does not have an {.field enable} method.",
+      call = parent.frame()
+    )
+  }
+
+  known_args <- names(fn_fmls(self[[domain]]$enable))
+  unknown_args <- setdiff(names(dots), known_args)
+  if (length(unknown_args)) {
+    cli::cli_abort(
+      c(
+        "{.field {domain}.enable} does not have {cli::qty(unknown_args)}argument{?s}: {.arg {unknown_args}}.",
+        "i" = "Available arguments: {.arg {setdiff(known_args, 'wait_')}}"
+      ),
+      call = parent.frame()
+    )
+  }
+
+  if ("wait_" %in% names(dots)) {
+    cli::cli_warn(
+      "{.arg wait_} cannot be set for {.field {domain}.enable}, ignoring.",
+      call = parent.frame()
+    )
+    dots[["wait_"]] <- NULL
+  }
+
+  old <- self$auto_events_enable_args(domain)
+  private$auto_events_enable_args[[domain]] <- dots
+  invisible(old)
+}

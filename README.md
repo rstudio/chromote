@@ -338,6 +338,11 @@ value, which looks like this:
 > sends the `X.disable` command. For more information, see the [Async
 > events](#async-events) section.
 >
+> If you need to customize the arguments used by the automatically-run
+> `enable` command, you can use the `$auto_events_enable_args()` method
+> of a `Chromote` or `ChromoteSession` instance,
+> e.g. `b$auto_events_enable_args("Page", enableFileChooserOpenedEvent = TRUE)`.
+>
 > If you do not want automatic event enabling and disabling, then when
 > creating the ChromoteSession object, use
 > `ChromoteSession$new(auto_events = FALSE)`.

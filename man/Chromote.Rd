@@ -40,6 +40,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-Chromote-connect}{\code{Chromote$connect()}}
 \item \href{#method-Chromote-view}{\code{Chromote$view()}}
 \item \href{#method-Chromote-get_auto_events}{\code{Chromote$get_auto_events()}}
+\item \href{#method-Chromote-auto_events_enable_args}{\code{Chromote$auto_events_enable_args()}}
 \item \href{#method-Chromote-get_child_loop}{\code{Chromote$get_child_loop()}}
 \item \href{#method-Chromote-wait_for}{\code{Chromote$wait_for()}}
 \item \href{#method-Chromote-new_session}{\code{Chromote$new_session()}}
@@ -127,6 +128,29 @@ For internal use only.
 \if{html}{\out{<div class="r">}}\preformatted{Chromote$get_auto_events()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Chromote-auto_events_enable_args"></a>}}
+\if{latex}{\out{\hypertarget{method-Chromote-auto_events_enable_args}{}}}
+\subsection{Method \code{auto_events_enable_args()}}{
+Set or retrieve the \code{enable} command arguments for a domain. These
+arguments are used for the \code{enable} command that is called for a domain,
+e.g. \code{Fetch$enable()}, when accessing an event method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$auto_events_enable_args(domain, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain}}{A command domain, e.g. \code{"Fetch"}.}
+
+\item{\code{...}}{Arguments to use for auto-events for the domain. If not
+provided, returns the argument values currently in place for the
+domain. Use \code{NULL} to clear the enable arguments for a domain.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Chromote-get_child_loop"></a>}}
