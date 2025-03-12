@@ -71,7 +71,10 @@ test_that("ChromoteSession inherits `auto_events_enable_args` from parent", {
     Network = list(maxTotalBufferSize = 1024)
   )
 
-  parent <- Chromote$new(auto_events_enable_args = args)
+  parent <- Chromote$new()
+  for (domain in names(args)) {
+    parent$auto_events_enable_args(domain, !!!args[[domain]])
+  }
   page <- ChromoteSession$new(parent = parent)
 
   expect_equal(
@@ -108,11 +111,15 @@ test_that("ChromoteSession$new(auto_events_enable_args)", {
   args_parent <- list(DOM = list(includeWhitespace = FALSE))
   args_page <- list(DOM = list(includeWhitespace = TRUE))
 
-  parent <- Chromote$new(auto_events_enable_args = args_parent)
-  page <- ChromoteSession$new(
-    parent = parent,
-    auto_events_enable_args = args_page
-  )
+  parent <- Chromote$new()
+  for (domain in names(args_parent)) {
+    parent$auto_events_enable_args(domain, !!!args_parent[[domain]])
+  }
+
+  page <- ChromoteSession$new(parent = parent)
+  for (domain in names(args_page)) {
+    page$auto_events_enable_args(domain, !!!args_page[[domain]])
+  }
 
   expect_equal(
     page$auto_events_enable_args("DOM"),
@@ -135,34 +142,20 @@ test_that("ChromoteSession$new(auto_events_enable_args)", {
 test_that("ChromoteSession auto_events_enable_args errors", {
   skip_if_no_chromote()
 
+  chromote_session <- ChromoteSession$new()
+
   expect_snapshot(
-    ChromoteSession$new(auto_events_enable_args = NULL),
+    chromote_session$auto_events_enable_args("Browser", no_enable = TRUE),
     error = TRUE
   )
 
   expect_snapshot(
-    ChromoteSession$new(auto_events_enable_args = list("also bad")),
-    error = TRUE
-  )
-
-  expect_snapshot(
-    ChromoteSession$new(
-      auto_events_enable_args = list(Browser = list(no_enable = TRUE))
-    ),
-    error = TRUE
-  )
-
-  expect_snapshot(
-    ChromoteSession$new(
-      auto_events_enable_args = list(Animation = list(bad = TRUE))
-    ),
+    chromote_session$auto_events_enable_args("Animation", bad = TRUE),
     error = TRUE
   )
 
   expect_warning(
-    ChromoteSession$new(
-      auto_events_enable_args = list(Animation = list(wait_ = TRUE))
-    )
+    chromote_session$auto_events_enable_args("Animation", wait_ = TRUE)
   )
 })
 
