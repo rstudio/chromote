@@ -76,14 +76,11 @@ chromote_session_screenshot <- function(
   )$then(function(value) {
     # Get device pixel ratio if unknown
     if (!is.null(pixel_ratio)) {
-      return(promises::promise_resolve(NULL))
+      return(NULL)
     }
-    self$Runtime$evaluate("window.devicePixelRatio", wait_ = FALSE)
-  })$then(function(value) {
-    if (is.null(value)) {
-      return(promises::promise_resolve(NULL))
-    }
-    pixel_ratio <<- value$result$value
+    self$Runtime$evaluate("window.devicePixelRatio", wait_ = FALSE)$then(function(value)
+       pixel_ratio <<- value$result$value
+    )
   })$then(function(value) {
     # Get overall height and width of the <html> root node
     self$DOM$getDocument(wait_ = FALSE)
