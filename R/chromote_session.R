@@ -132,9 +132,7 @@ ChromoteSession <- R6Class(
 
       # Find pixelRatio for screenshots
       p <- p$then(function(value) {
-        self$Runtime$evaluate("window.devicePixelRatio", wait_ = FALSE)
-      })$then(function(value) {
-        private$pixel_ratio <- value$result$value
+        private$get_pixel_ratio()
       })
 
       if (is.null(targetId)) {
