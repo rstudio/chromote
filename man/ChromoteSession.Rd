@@ -11,6 +11,30 @@ which is a browser window/tab or an iframe.
 A single target can potentially have more than one session connected to it,
 but this is not currently supported by chromote.
 }
+\examples{
+
+## ------------------------------------------------
+## Method `ChromoteSession$auto_events_enable_args`
+## ------------------------------------------------
+
+if (interactive()) {
+  b <- ChromoteSession$new(
+    auto_events_enable_args = list(
+      Fetch = list(handleAuthRequests = TRUE)
+    )
+  )
+
+  # Get current `Fetch.enable` args
+  b$auto_events_enable_args("Fetch")
+
+  # Update the `Fetch.enable` args
+  b$auto_events_enable_args("Fetch", handleAuthRequests = FALSE)
+
+  # Reset `Fetch.enable` args
+  b$auto_events_enable_args("Fetch", NULL)
+}
+
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
@@ -42,6 +66,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-get_child_loop}{\code{ChromoteSession$get_child_loop()}}
 \item \href{#method-ChromoteSession-send_command}{\code{ChromoteSession$send_command()}}
 \item \href{#method-ChromoteSession-get_auto_events}{\code{ChromoteSession$get_auto_events()}}
+\item \href{#method-ChromoteSession-auto_events_enable_args}{\code{ChromoteSession$auto_events_enable_args()}}
 \item \href{#method-ChromoteSession-invoke_event_callbacks}{\code{ChromoteSession$invoke_event_callbacks()}}
 \item \href{#method-ChromoteSession-mark_closed}{\code{ChromoteSession$mark_closed()}}
 \item \href{#method-ChromoteSession-is_active}{\code{ChromoteSession$is_active()}}
@@ -633,6 +658,53 @@ Resolved \code{auto_events} value.
 For internal use only.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_auto_events()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-auto_events_enable_args"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-auto_events_enable_args}{}}}
+\subsection{Method \code{auto_events_enable_args()}}{
+Set or retrieve the \code{enable} command arguments for a domain. These
+arguments are used for the \code{enable} command that is called for a domain,
+e.g. \code{Fetch$enable()}, when accessing an event method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$auto_events_enable_args(domain, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain}}{A command domain, e.g. \code{"Fetch"}.}
+
+\item{\code{...}}{Arguments to use for auto-events for the domain. If not
+provided, returns the argument values currently in place for the
+domain. Use \code{NULL} to clear the enable arguments for a domain.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{if (interactive()) {
+  b <- ChromoteSession$new(
+    auto_events_enable_args = list(
+      Fetch = list(handleAuthRequests = TRUE)
+    )
+  )
+
+  # Get current `Fetch.enable` args
+  b$auto_events_enable_args("Fetch")
+
+  # Update the `Fetch.enable` args
+  b$auto_events_enable_args("Fetch", handleAuthRequests = FALSE)
+
+  # Reset `Fetch.enable` args
+  b$auto_events_enable_args("Fetch", NULL)
+}
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }

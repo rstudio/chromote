@@ -134,6 +134,25 @@ Chromote <- R6Class(
       private$auto_events
     },
 
+    #' @description
+    #' Set or retrieve the `enable` command arguments for a domain. These
+    #' arguments are used for the `enable` command that is called for a domain,
+    #' e.g. `Fetch$enable()`, when accessing an event method.
+    #'
+    #' @param domain A command domain, e.g. `"Fetch"`.
+    #' @param ... Arguments to use for auto-events for the domain. If not
+    #'   provided, returns the argument values currently in place for the
+    #'   domain. Use `NULL` to clear the enable arguments for a domain.
+    auto_events_enable_args = function(domain, ...) {
+      dots <- dots_list(..., .named = TRUE)
+
+      if (length(dots) == 0) {
+        return(get_auto_events_enable_args(private, domain, self$parent))
+      }
+
+      set_auto_events_enable_args(self, private, domain, dots)
+    },
+
     # =========================================================================
     # Event loop, promises, and synchronization
     # =========================================================================
