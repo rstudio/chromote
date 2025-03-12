@@ -78,8 +78,8 @@ chromote_session_screenshot <- function(
     if (!is.null(pixel_ratio)) {
       return(NULL)
     }
-    self$Runtime$evaluate("window.devicePixelRatio", wait_ = FALSE)$then(function(value)
-       pixel_ratio <<- value$result$value
+    self$Runtime$evaluate("window.devicePixelRatio", wait_ = FALSE)$then(
+      function(value) pixel_ratio <<- value$result$value
     )
   })$then(function(value) {
     # Get overall height and width of the <html> root node
