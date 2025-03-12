@@ -785,8 +785,20 @@ ChromoteSession <- R6Class(
     init_promise_ = NULL,
 
     # Updated when `Emulation.setDeviceMetricsOverride` is called
-    pixel_ratio = NULL,
     is_mobile = NULL,
+    pixel_ratio = NULL,
+
+    get_pixel_ratio = function() {
+      if (!is.null(private$pixel_ratio)) {
+        promise_resolve(private$pixel_ratio)
+      } else {
+        self$Runtime$evaluate("window.devicePixelRatio", wait_ = FALSE)$then(
+          function(value) {
+            (private$pixel_ratio <- value$result$value)
+          }
+        )
+      }
+    },
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
       self$check_active()

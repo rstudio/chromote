@@ -67,7 +67,7 @@ chromote_session_screenshot <- function(
   overall_width <- NULL
   overall_height <- NULL
   root_node_id <- NULL
-  pixel_ratio <- private$pixel_ratio
+  pixel_ratio <- NULL
 
   # Setup stuff for both selector and cliprect code paths.
   p <- self$Emulation$setScrollbarsHidden(
@@ -75,12 +75,7 @@ chromote_session_screenshot <- function(
     wait_ = FALSE
   )$then(function(value) {
     # Get device pixel ratio if unknown
-    if (!is.null(pixel_ratio)) {
-      return(NULL)
-    }
-    self$Runtime$evaluate("window.devicePixelRatio", wait_ = FALSE)$then(
-      function(value) pixel_ratio <<- value$result$value
-    )
+    private$get_pixel_ratio()$then(function(value) pixel_ratio <<- value)
   })$then(function(value) {
     # Get overall height and width of the <html> root node
     self$DOM$getDocument(wait_ = FALSE)
