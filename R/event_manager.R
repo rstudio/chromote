@@ -188,20 +188,6 @@ EventManager <- R6Class(
 
 # These functions power `$auto_events_enable_args()` for both `Chromote` and
 # `ChromoteSession`.
-check_auto_events_enable_args <- function(args) {
-  error_msg <- "{.arg auto_events_enable_args} must be a named list of domains and associated arguments for the {.code enable} command."
-
-  if (!is.list(args)) {
-    cli::cli_abort(error_msg, call = parent.frame())
-  }
-
-  if (length(args) > 0 && any(!nzchar(names2(args)))) {
-    cli::cli_abort(error_msg, call = parent.frame())
-  }
-
-  invisible(args)
-}
-
 get_auto_events_enable_args <- function(private, domain, parent = NULL) {
   session_args <- private$auto_events_enable_args[[domain]]
   if (!is.null(session_args) || is.null(parent)) {

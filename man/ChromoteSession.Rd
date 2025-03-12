@@ -26,8 +26,12 @@ if (interactive()) {
 
   # Get current `Fetch.enable` args
   b$auto_events_enable_args("Fetch")
+
   # Update the `Fetch.enable` args
   b$auto_events_enable_args("Fetch", handleAuthRequests = FALSE)
+
+  # Reset `Fetch.enable` args
+  b$auto_events_enable_args("Fetch", NULL)
 }
 
 }
@@ -99,7 +103,6 @@ if (interactive()) b$view()
   targetId = NULL,
   wait_ = TRUE,
   auto_events = NULL,
-  auto_events_enable_args = list(),
   mobile = FALSE
 )}\if{html}{\out{</div>}}
 }
@@ -127,14 +130,6 @@ return a \code{ChromoteSession} object directly.}
 from the parent \code{Chromote} object. If \code{TRUE}, enable automatic
 event enabling/disabling; if \code{FALSE}, disable automatic event
 enabling/disabling.}
-
-\item{\code{auto_events_enable_args}}{A list of arguments, by domain, to be used
-when calling \verb{\{Domain\}.enable} when \code{auto_events = TRUE}. For example,
-Use \code{list(Fetch = list(handleAuthRequests = TRUE))} to use
-\code{Fetch$enable(handleAuthRequests = TRUE)} when enabling \code{Fetch} events.
-By default, uses domain-specific arguments from the parent \code{Chromote}
-object; \code{ChromoteSession} arguments take precedence over parent
-arguments.}
 
 \item{\code{mobile}}{Whether to emulate mobile device. When \code{TRUE}, Chrome
 updates settings to emulate browsing on a mobile phone; this includes
@@ -684,7 +679,7 @@ e.g. \code{Fetch$enable()}, when accessing an event method.
 
 \item{\code{...}}{Arguments to use for auto-events for the domain. If not
 provided, returns the argument values currently in place for the
-domain.}
+domain. Use \code{NULL} to clear the enable arguments for a domain.}
 }
 \if{html}{\out{</div>}}
 }
@@ -699,8 +694,12 @@ domain.}
 
   # Get current `Fetch.enable` args
   b$auto_events_enable_args("Fetch")
+
   # Update the `Fetch.enable` args
   b$auto_events_enable_args("Fetch", handleAuthRequests = FALSE)
+
+  # Reset `Fetch.enable` args
+  b$auto_events_enable_args("Fetch", NULL)
 }
 
 }

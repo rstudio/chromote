@@ -65,12 +65,7 @@ wait for a Chrome DevTools Protocol response.}
 \if{latex}{\out{\hypertarget{method-Chromote-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Chromote$new(
-  browser = Chrome$new(),
-  multi_session = TRUE,
-  auto_events = TRUE,
-  auto_events_enable_args = list()
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Chromote$new(browser = Chrome$new(), multi_session = TRUE, auto_events = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -82,11 +77,6 @@ wait for a Chrome DevTools Protocol response.}
 
 \item{\code{auto_events}}{If \code{TRUE}, enable automatic event enabling/disabling;
 if \code{FALSE}, disable automatic event enabling/disabling.}
-
-\item{\code{auto_events_enable_args}}{A list of arguments, by domain, to be used
-when calling \verb{\{Domain\}.enable} when \code{auto_events = TRUE}. For example,
-Use \code{list(Fetch = list(handleAuthRequests = TRUE))} to use
-\code{Fetch$enable(handleAuthRequests = TRUE)} when enabling \code{Fetch} events.}
 }
 \if{html}{\out{</div>}}
 }
@@ -157,7 +147,7 @@ e.g. \code{Fetch$enable()}, when accessing an event method.
 
 \item{\code{...}}{Arguments to use for auto-events for the domain. If not
 provided, returns the argument values currently in place for the
-domain.}
+domain. Use \code{NULL} to clear the enable arguments for a domain.}
 }
 \if{html}{\out{</div>}}
 }

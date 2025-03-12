@@ -28,21 +28,14 @@ Chromote <- R6Class(
     #' @param multi_session Should multiple sessions be allowed?
     #' @param auto_events If `TRUE`, enable automatic event enabling/disabling;
     #'   if `FALSE`, disable automatic event enabling/disabling.
-    #' @param auto_events_enable_args A list of arguments, by domain, to be used
-    #'   when calling `{Domain}.enable` when `auto_events = TRUE`. For example,
-    #'   Use `list(Fetch = list(handleAuthRequests = TRUE))` to use
-    #'   `Fetch$enable(handleAuthRequests = TRUE)` when enabling `Fetch` events.
     initialize = function(
       browser = Chrome$new(),
       multi_session = TRUE,
-      auto_events = TRUE,
-      auto_events_enable_args = list()
+      auto_events = TRUE
     ) {
       private$browser <- browser
       private$auto_events <- auto_events
       private$multi_session <- multi_session
-
-      check_auto_events_enable_args(auto_events_enable_args)
 
       private$command_callbacks <- fastmap()
 
@@ -63,13 +56,6 @@ Chromote <- R6Class(
       list2env(self$protocol, self)
 
       private$event_manager <- EventManager$new(self)
-
-      for (domain in names(auto_events_enable_args)) {
-        self$auto_events_enable_args(
-          domain,
-          !!!auto_events_enable_args[[domain]]
-        )
-      }
 
       self$wait_for(p)
 
@@ -156,7 +142,7 @@ Chromote <- R6Class(
     #' @param domain A command domain, e.g. `"Fetch"`.
     #' @param ... Arguments to use for auto-events for the domain. If not
     #'   provided, returns the argument values currently in place for the
-    #'   domain.
+    #'   domain. Use `NULL` to clear the enable arguments for a domain.
     auto_events_enable_args = function(domain, ...) {
       dots <- dots_list(..., .named = TRUE)
 

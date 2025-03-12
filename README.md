@@ -1,5 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 <!-- Do not run R chunks that print any session information.
      This produces unstable output.
      Instead, copy output from a local execution
@@ -339,10 +340,9 @@ value, which looks like this:
 > events](#async-events) section.
 >
 > If you need to customize the arguments used by the automatically-run
-> `enable` command, you can use the `auto_events_enable_args` argument
-> of `Chromote$new()` or `ChromoteSession$new()`, or you can adjust the
-> arguments after creating the chromote session with the
-> `$auto_events_enable_args()` method.
+> `enable` command, you can use the `$auto_events_enable_args()` method
+> of a `Chromote` or `ChromoteSession` instance,
+> e.g. `b$auto_events_enable_args("Page", enableFileChooserOpenedEvent = TRUE)`.
 >
 > If you do not want automatic event enabling and disabling, then when
 > creating the ChromoteSession object, use
