@@ -271,14 +271,15 @@ ChromoteSession <- R6Class(
     get_viewport_size = function(wait_ = TRUE) {
       check_bool(wait_)
 
-      p <- self$Runtime$evaluate(
-        "(() => ({width: window.innerWidth, height: window.innerHeight }))()",
-        returnByValue = TRUE,
-        wait_ = FALSE
-      )$then(function(value) {
+      p <- self$Page$getLayoutMetrics(wait_ = FALSE)$then(function(value) {
         list(
-          width = value$result$value$width,
-          height = value$result$value$height,
+          width = value$cssVisualViewport$clientWidth,
+          height = value$cssVisualViewport$clientHeight
+        )
+      })$then(function(value) {
+        list(
+          width = value$width,
+          height = value$height,
           zoom = private$pixel_ratio %||% 0,
           mobile = private$is_mobile
         )
