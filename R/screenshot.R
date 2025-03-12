@@ -112,7 +112,7 @@ chromote_session_screenshot <- function(
         y = ymin,
         width = xmax - xmin,
         height = ymax - ymin,
-        scale = scale / private$pixel_ratio
+        scale = scale / (private$pixel_ratio %||% 1)
       )
       screenshot_args$wait_ <- FALSE
 
@@ -128,7 +128,7 @@ chromote_session_screenshot <- function(
         y = cliprect[[2]],
         width = cliprect[[3]],
         height = cliprect[[4]],
-        scale = scale / private$pixel_ratio
+        scale = scale / (private$pixel_ratio %||% 1)
       )
       screenshot_args$wait_ <- FALSE
 

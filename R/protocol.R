@@ -127,7 +127,9 @@ gen_command_body <- function(method_name, params) {
   track_device_override_mobile <-
     if (identical(method_name, "Emulation.setDeviceMetricsOverride")) {
       expr({
-        private$pixel_ratio <- !!sym("deviceScaleFactor")
+        private$pixel_ratio <- if (!!sym("deviceScaleFactor") > 0) {
+          !!sym("deviceScaleFactor")
+        }
         private$is_mobile <- !!sym("mobile")
       })
     } else {

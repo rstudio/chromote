@@ -62,3 +62,42 @@ test_that("ChromoteSession gets and sets viewport size", {
     )
   )
 })
+
+test_that("ChromoteSession with deviceScaleFactor = 0", {
+  skip_if_no_chromote()
+  skip_if_offline()
+
+  page <- ChromoteSession$new(width = 400, height = 800, mobile = TRUE)
+  # viewport requires an active page
+  page$Page$navigate("https://example.com")
+  withr::defer(page$close())
+
+  init_size <- list(
+    width = 400,
+    height = 800,
+    zoom = page$.__enclos_env__$private$pixel_ratio,
+    mobile = TRUE
+  )
+
+  expect_equal(
+    page$get_viewport_size(),
+    init_size
+  )
+
+  expect_equal(
+    page$set_viewport_size(500, 900, zoom = 0, mobile = FALSE),
+    init_size # returned invisibly
+  )
+
+  expect_null(page$.__enclos_env__$private$pixel_ratio)
+
+  expect_equal(
+    page$get_viewport_size(),
+    list(
+      width = 500,
+      height = 900,
+      zoom = 0,
+      mobile = FALSE
+    )
+  )
+})

@@ -279,7 +279,7 @@ ChromoteSession <- R6Class(
         list(
           width = value$result$value$width,
           height = value$result$value$height,
-          zoom = private$pixel_ratio,
+          zoom = private$pixel_ratio %||% 0,
           mobile = private$is_mobile
         )
       })
@@ -335,7 +335,7 @@ ChromoteSession <- R6Class(
         self$Emulation$setDeviceMetricsOverride(
           width = width,
           height = height,
-          deviceScaleFactor = zoom %||% private$pixel_ratio,
+          deviceScaleFactor = zoom %||% private$pixel_ratio %||% 0,
           mobile = mobile %||% private$is_mobile %||% FALSE,
           wait_ = FALSE
         )
