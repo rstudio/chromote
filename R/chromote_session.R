@@ -340,10 +340,10 @@ ChromoteSession <- R6Class(
           wait_ = FALSE
         )
       })$then(function(value) {
-        invisible(prev_bounds)
+        prev_bounds
       })
 
-      if (wait_) self$wait_for(p) else p
+      if (wait_) invisible(self$wait_for(p)) else p
     },
 
     #' @description Take a PNG screenshot
