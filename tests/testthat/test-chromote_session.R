@@ -62,3 +62,106 @@ test_that("ChromoteSession gets and sets viewport size", {
     )
   )
 })
+
+test_that("ChromoteSession inherits `auto_events_enable_args` from parent", {
+  skip_if_no_chromote()
+
+  args <- list(
+    Fetch = list(handleAuthRequests = TRUE),
+    Network = list(maxTotalBufferSize = 1024)
+  )
+
+  parent <- Chromote$new(auto_events_enable_args = args)
+  page <- ChromoteSession$new(parent = parent)
+
+  expect_equal(
+    page$auto_events_enable_args("Fetch"),
+    !!args[["Fetch"]]
+  )
+
+  expect_equal(
+    page$auto_events_enable_args("Network"),
+    !!args[["Network"]]
+  )
+
+  page$auto_events_enable_args("Fetch", handleAuthRequests = FALSE)
+  expect_equal(
+    page$auto_events_enable_args("Fetch"),
+    list(handleAuthRequests = FALSE)
+  )
+  expect_equal(
+    parent$auto_events_enable_args("Fetch"),
+    !!args[["Fetch"]]
+  )
+})
+
+test_that("ChromoteSession$new(auto_events_enable_args)", {
+  skip_if_no_chromote()
+
+  # b <- ChromoteSession$new()
+  # ls(b, pattern = "^[A-Z]") |>
+  #   set_names() |>
+  #   lapply(\(p) if (is_function(b[[p]]$enable)) names(fn_fmls(b[[p]]$enable))) |>
+  #   purrr::compact() |>
+  #   str()
+
+  args_parent <- list(DOM = list(includeWhitespace = FALSE))
+  args_page <- list(DOM = list(includeWhitespace = TRUE))
+
+  parent <- Chromote$new(auto_events_enable_args = args_parent)
+  page <- ChromoteSession$new(
+    parent = parent,
+    auto_events_enable_args = args_page
+  )
+
+  expect_equal(
+    page$auto_events_enable_args("DOM"),
+    !!args_page[["DOM"]]
+  )
+
+  expect_equal(
+    page$parent$auto_events_enable_args("DOM"),
+    !!args_parent[["DOM"]]
+  )
+
+  # Unset local page-specific auto events args
+  page$auto_events_enable_args("DOM", NULL)
+  expect_equal(
+    page$auto_events_enable_args("DOM"),
+    !!args_parent[["DOM"]]
+  )
+})
+
+test_that("ChromoteSession auto_events_enable_args errors", {
+  skip_if_no_chromote()
+
+  expect_snapshot(
+    ChromoteSession$new(auto_events_enable_args = NULL),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    ChromoteSession$new(auto_events_enable_args = list("also bad")),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    ChromoteSession$new(
+      auto_events_enable_args = list(Browser = list(no_enable = TRUE))
+    ),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    ChromoteSession$new(
+      auto_events_enable_args = list(Animation = list(bad = TRUE))
+    ),
+    error = TRUE
+  )
+
+  expect_warning(
+    ChromoteSession$new(
+      auto_events_enable_args = list(Animation = list(wait_ = TRUE))
+    )
+  )
+})

@@ -40,10 +40,6 @@ ChromoteSession <- R6Class(
     #'
     #' @param parent [`Chromote`] object to use; defaults to
     #'   [default_chromote_object()]
-    #' @param auto_events If `NULL` (the default), use the `auto_events` setting
-    #'   from the parent `Chromote` object. If `TRUE`, enable automatic
-    #'   event enabling/disabling; if `FALSE`, disable automatic event
-    #'   enabling/disabling.
     #' @param width,height Width and height of the new window in integer pixel
     #'   values.
     #' @param wait_ If `FALSE`, return a [promises::promise()] of a new
@@ -53,6 +49,17 @@ ChromoteSession <- R6Class(
     #'   updates settings to emulate browsing on a mobile phone; this includes
     #'   viewport meta tag, overlay scrollbars, text autosizing and more. The
     #'   default is `FALSE`.
+    #' @param auto_events If `NULL` (the default), use the `auto_events` setting
+    #'   from the parent `Chromote` object. If `TRUE`, enable automatic
+    #'   event enabling/disabling; if `FALSE`, disable automatic event
+    #'   enabling/disabling.
+    #' @param auto_events_enable_args A list of arguments, by domain, to be used
+    #'   when calling `{Domain}.enable` when `auto_events = TRUE`. For example,
+    #'   Use `list(Fetch = list(handleAuthRequests = TRUE))` to use
+    #'   `Fetch$enable(handleAuthRequests = TRUE)` when enabling `Fetch` events.
+    #'   By default, uses domain-specific arguments from the parent `Chromote`
+    #'   object; `ChromoteSession` arguments take precedence over parent
+    #'   arguments.
     #'
     #' @return A new `ChromoteSession` object.
     initialize = function(
@@ -62,6 +69,7 @@ ChromoteSession <- R6Class(
       targetId = NULL,
       wait_ = TRUE,
       auto_events = NULL,
+      auto_events_enable_args = list(),
       mobile = FALSE
     ) {
       check_number_whole(width)
@@ -69,6 +77,7 @@ ChromoteSession <- R6Class(
       check_logical(auto_events, allow_null = TRUE)
       check_logical(mobile)
       check_logical(wait_)
+      check_auto_events_enable_args(auto_events_enable_args)
 
       self$parent <- parent
       lockBinding("parent", self) # do not allow `$parent` to be set!
@@ -129,6 +138,13 @@ ChromoteSession <- R6Class(
       private$event_manager <- EventManager$new(self)
       private$session_is_active <- TRUE
       private$target_is_active <- TRUE
+
+      for (domain in names(auto_events_enable_args)) {
+        self$auto_events_enable_args(
+          domain,
+          !!!auto_events_enable_args[[domain]]
+        )
+      }
 
       # Find pixelRatio for screenshots
       p <- p$then(function(value) {
@@ -682,6 +698,39 @@ ChromoteSession <- R6Class(
       } else {
         self$parent$get_auto_events()
       }
+    },
+
+    #' @description
+    #' Set or retrieve the `enable` command arguments for a domain. These
+    #' arguments are used for the `enable` command that is called for a domain,
+    #' e.g. `Fetch$enable()`, when accessing an event method.
+    #'
+    #' @examples
+    #' if (interactive()) {
+    #'   b <- ChromoteSession$new(
+    #'     auto_events_enable_args = list(
+    #'       Fetch = list(handleAuthRequests = TRUE)
+    #'     )
+    #'   )
+    #'
+    #'   # Get current `Fetch.enable` args
+    #'   b$auto_events_enable_args("Fetch")
+    #'   # Update the `Fetch.enable` args
+    #'   b$auto_events_enable_args("Fetch", handleAuthRequests = FALSE)
+    #' }
+    #'
+    #' @param domain A command domain, e.g. `"Fetch"`.
+    #' @param ... Arguments to use for auto-events for the domain. If not
+    #'   provided, returns the argument values currently in place for the
+    #'   domain.
+    auto_events_enable_args = function(domain, ...) {
+      dots <- dots_list(..., .named = TRUE)
+
+      if (length(dots) == 0) {
+        return(get_auto_events_enable_args(private, domain, self$parent))
+      }
+
+      set_auto_events_enable_args(self, private, domain, dots)
     },
 
     #' @description
