@@ -71,7 +71,10 @@ test_that("ChromoteSession inherits `auto_events_enable_args` from parent", {
     Network = list(maxTotalBufferSize = 1024)
   )
 
-  parent <- Chromote$new(auto_events_enable_args = args)
+  parent <- Chromote$new()
+  for (domain in names(args)) {
+    parent$auto_events_enable_args(domain, !!!args[[domain]])
+  }
   page <- ChromoteSession$new(parent = parent)
 
   expect_equal(
@@ -108,11 +111,15 @@ test_that("ChromoteSession$new(auto_events_enable_args)", {
   args_parent <- list(DOM = list(includeWhitespace = FALSE))
   args_page <- list(DOM = list(includeWhitespace = TRUE))
 
-  parent <- Chromote$new(auto_events_enable_args = args_parent)
-  page <- ChromoteSession$new(
-    parent = parent,
-    auto_events_enable_args = args_page
-  )
+  parent <- Chromote$new()
+  for (domain in names(args_parent)) {
+    parent$auto_events_enable_args(domain, !!!args_parent[[domain]])
+  }
+
+  page <- ChromoteSession$new(parent = parent)
+  for (domain in names(args_page)) {
+    page$auto_events_enable_args(domain, !!!args_page[[domain]])
+  }
 
   expect_equal(
     page$auto_events_enable_args("DOM"),
@@ -135,33 +142,58 @@ test_that("ChromoteSession$new(auto_events_enable_args)", {
 test_that("ChromoteSession auto_events_enable_args errors", {
   skip_if_no_chromote()
 
+  chromote_session <- ChromoteSession$new()
+
   expect_snapshot(
-    ChromoteSession$new(auto_events_enable_args = NULL),
+    chromote_session$auto_events_enable_args("Browser", no_enable = TRUE),
     error = TRUE
   )
 
   expect_snapshot(
-    ChromoteSession$new(auto_events_enable_args = list("also bad")),
-    error = TRUE
-  )
-
-  expect_snapshot(
-    ChromoteSession$new(
-      auto_events_enable_args = list(Browser = list(no_enable = TRUE))
-    ),
-    error = TRUE
-  )
-
-  expect_snapshot(
-    ChromoteSession$new(
-      auto_events_enable_args = list(Animation = list(bad = TRUE))
-    ),
+    chromote_session$auto_events_enable_args("Animation", bad = TRUE),
     error = TRUE
   )
 
   expect_warning(
-    ChromoteSession$new(
-      auto_events_enable_args = list(Animation = list(wait_ = TRUE))
+    chromote_session$auto_events_enable_args("Animation", wait_ = TRUE)
+  )
+})
+
+test_that("ChromoteSession with deviceScaleFactor = 0", {
+  skip_if_no_chromote()
+  skip_if_offline()
+
+  page <- ChromoteSession$new(width = 400, height = 800, mobile = TRUE)
+  # viewport requires an active page
+  page$Page$navigate("https://example.com")
+  withr::defer(page$close())
+
+  init_size <- list(
+    width = 400,
+    height = 800,
+    zoom = page$.__enclos_env__$private$pixel_ratio,
+    mobile = TRUE
+  )
+
+  expect_equal(
+    page$get_viewport_size(),
+    init_size
+  )
+
+  expect_equal(
+    page$set_viewport_size(500, 900, zoom = 0, mobile = FALSE),
+    init_size # returned invisibly
+  )
+
+  expect_null(page$.__enclos_env__$private$pixel_ratio)
+
+  expect_equal(
+    page$get_viewport_size(),
+    list(
+      width = 500,
+      height = 900,
+      zoom = 0,
+      mobile = FALSE
     )
   )
 })

@@ -131,9 +131,7 @@ ChromoteSession <- R6Class(
 
       # Find pixelRatio for screenshots
       p <- p$then(function(value) {
-        self$Runtime$evaluate("window.devicePixelRatio", wait_ = FALSE)
-      })$then(function(value) {
-        private$pixel_ratio <- value$result$value
+        private$get_pixel_ratio()
       })
 
       if (is.null(targetId)) {
@@ -270,15 +268,16 @@ ChromoteSession <- R6Class(
     get_viewport_size = function(wait_ = TRUE) {
       check_bool(wait_)
 
-      p <- self$Runtime$evaluate(
-        "(() => ({width: window.innerWidth, height: window.innerHeight }))()",
-        returnByValue = TRUE,
-        wait_ = FALSE
-      )$then(function(value) {
+      p <- self$Page$getLayoutMetrics(wait_ = FALSE)$then(function(value) {
         list(
-          width = value$result$value$width,
-          height = value$result$value$height,
-          zoom = private$pixel_ratio,
+          width = value$cssVisualViewport$clientWidth,
+          height = value$cssVisualViewport$clientHeight
+        )
+      })$then(function(value) {
+        list(
+          width = value$width,
+          height = value$height,
+          zoom = private$pixel_ratio %||% 0,
           mobile = private$is_mobile
         )
       })
@@ -334,15 +333,15 @@ ChromoteSession <- R6Class(
         self$Emulation$setDeviceMetricsOverride(
           width = width,
           height = height,
-          deviceScaleFactor = zoom %||% private$pixel_ratio,
+          deviceScaleFactor = zoom %||% private$pixel_ratio %||% 0,
           mobile = mobile %||% private$is_mobile %||% FALSE,
           wait_ = FALSE
         )
       })$then(function(value) {
-        invisible(prev_bounds)
+        prev_bounds
       })
 
-      if (wait_) self$wait_for(p) else p
+      if (wait_) invisible(self$wait_for(p)) else p
     },
 
     #' @description Take a PNG screenshot
@@ -821,8 +820,20 @@ ChromoteSession <- R6Class(
     init_promise_ = NULL,
 
     # Updated when `Emulation.setDeviceMetricsOverride` is called
-    pixel_ratio = NULL,
     is_mobile = NULL,
+    pixel_ratio = NULL,
+
+    get_pixel_ratio = function() {
+      if (!is.null(private$pixel_ratio)) {
+        promise_resolve(private$pixel_ratio)
+      } else {
+        self$Runtime$evaluate("window.devicePixelRatio", wait_ = FALSE)$then(
+          function(value) {
+            (private$pixel_ratio <- value$result$value)
+          }
+        )
+      }
+    },
 
     register_event_listener = function(event, callback = NULL, timeout = NULL) {
       self$check_active()
