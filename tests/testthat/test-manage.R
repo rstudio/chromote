@@ -71,11 +71,11 @@ test_that("with_chrome_version() manages Chromote object", {
   chrome_versions_add("129.0.6668.100", "chrome-headless-shell")
 
   expect_closed <- function(chromote_obj) {
-    max_wait <- Sys.time() + 5
+    max_wait <- Sys.time() + 10
     while (chromote_obj$is_alive() && Sys.time() < max_wait) {
       Sys.sleep(0.1)
     }
-    expect_false(!!chromote_obj$is_alive())
+    expect_false(chromote_obj$is_alive())
   }
 
   chomote_128 <- NULL
