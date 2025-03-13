@@ -154,9 +154,11 @@ local_chromote_chrome <- function(path, ..., .local_envir = parent.frame()) {
     envir = .local_envir
   )
 
-  # Unset current default so that next ChromoteSession uses a new Chromote obj,
-  # but `set_default_chromote_object()` requires a chromote obj that we don't
-  # want to create yet.
+  # We always create a *new* Chromote process within `local_chromote_chrome()`
+  # that we completely clean up when the exit handlers run. We do this by
+  # unsetting the current chromote default so that next ChromoteSession uses a
+  # new Chromote obj, side-stepping `set_default_chromote_object()` because that
+  # requires a chromote obj that we don't want to create yet.
   globals$default_chromote <- NULL
 
   withr::local_envvar(

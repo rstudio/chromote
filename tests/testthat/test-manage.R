@@ -58,7 +58,7 @@ test_that("with_chrome_version() manages Chromote object", {
       Sys.sleep(0.1)
     }
     if (Sys.time() >= max_wait) {
-      message("waited the full 10 seconds for the process to close")
+      warning("Waited the full 10 seconds for the process to close")
     }
     expect_false(chromote_obj$is_alive())
   }
