@@ -1,3 +1,8 @@
+```{r}
+#| echo: false
+if (!exists("MAN_PATH")) MAN_PATH <- "man"
+```
+
 Chromote is an R implementation of the [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/). It works with Chrome, Chromium, Opera, Vivaldi, and other browsers based on [Chromium](https://www.chromium.org/). By default it uses Google Chrome (which must already be installed on the system). To use a different browser, see [Specifying which browser to use](#specifying-which-browser-to-use).
 
 Chromote is not the only R package that implements the Chrome DevTools Protocol. Here are some others:
@@ -72,7 +77,7 @@ b$screenshot()
 b$screenshot("sidebar.png", selector = ".sidebar")
 ```
 
-![](man/figures/sidebar.png)
+![](`r MAN_PATH`/figures/sidebar.png)
 
 **Note:** All members of `Chromote` and `ChromoteSession` objects which start with a capital letter (like `b$Page`, `b$DOM`, and `b$Browser`) correspond to domains from the Chrome DevTools Protocol, and are documented in the [official CDP site](https://chromedevtools.github.io/devtools-protocol/). All members which start with a lower-case letter (like `b$screenshot` and `b$close`) are not part of the Chrome DevTools Protocol, and are specific to `Chromote` and `ChromoteSession`.
 
