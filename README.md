@@ -1,6 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 <!-- Do not run R chunks that print any session information.
      This produces unstable output.
      Instead, copy output from a local execution
@@ -111,4 +110,9 @@ b$screenshot()
 b$screenshot("sidebar.png", selector = ".sidebar")
 ```
 
-![](man/figures/sidebar.png)
+<figure>
+<img src="man/figures/sidebar.png"
+alt="A screenshot of the sidebar of r-rproject.org, circa 2023." />
+<figcaption aria-hidden="true">A screenshot of the sidebar of
+r-rproject.org, circa 2023.</figcaption>
+</figure>
