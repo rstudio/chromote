@@ -73,7 +73,7 @@ b$Browser$getVersion()
 ```
 
 
-If you have the viewer open and run the following, you'll see the web page load in the viewer:
+If you have the viewer open and run the following, you'll see the web page load in the viewer[^interactive]:
 
 ```R
 b$Page$navigate("https://www.r-project.org/")
@@ -92,3 +92,5 @@ b$screenshot("sidebar.png", selector = ".sidebar")
 ```
 
 ![A screenshot of the sidebar of r-rproject.org, circa 2023.](`r MAN_PATH`/figures/sidebar.png)
+
+[^interactive]: This simple works interactively, but if you're using chromote to programmatically take screenshots you'll want to read `vignette("example-loading-page")` for a consistent and reliable approach.
