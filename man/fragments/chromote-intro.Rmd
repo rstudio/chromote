@@ -93,4 +93,4 @@ b$screenshot("sidebar.png", selector = ".sidebar")
 
 ![A screenshot of the sidebar of r-rproject.org, circa 2023.](`r MAN_PATH`/figures/sidebar.png)
 
-[^interactive]: This simple works interactively, but if you're using chromote to programmatically take screenshots you'll want to read `vignette("example-loading-page")` for a consistent and reliable approach.
+[^interactive]: This simple example works interactively, but if you're using chromote to programmatically take screenshots you'll want to read `vignette("example-loading-page")` for a consistent and reliable approach.
