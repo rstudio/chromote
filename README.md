@@ -107,7 +107,7 @@ b$Browser$getVersion()
 ```
 
 If you have the viewer open and run the following, you’ll see the web
-page load in the viewer:
+page load in the viewer[^1]:
 
 ``` r
 b$Page$navigate("https://www.r-project.org/")
@@ -136,3 +136,20 @@ alt="A screenshot of the sidebar of r-rproject.org, circa 2023." />
 <figcaption aria-hidden="true">A screenshot of the sidebar of
 r-rproject.org, circa 2023.</figcaption>
 </figure>
+
+## Learn More
+
+Learn more about using and programming with chromote:
+
+- [Get started](https://rstudio.github.io/articles/chromote.html)
+- [Commands and
+  events](https://rstudio.github.io/articles/articles/commands-and-events.html)
+- [Synchronous vs. asynchronous
+  usage](https://rstudio.github.io/articles/articles/sync-async.html)
+- [Choosing which Chrome-based browser to
+  use](https://rstudio.github.io/articles/articles/which-chrome.html)
+
+[^1]: This simple works interactively, but if you’re using chromote to
+    programmatically take screenshots you’ll want to read
+    `vignette("example-loading-page")` for a consistent and reliable
+    approach.
