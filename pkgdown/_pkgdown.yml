@@ -14,9 +14,9 @@ articles:
     navbar: ~
     contents:
       - chromote
-      - which-chrome
       - commands-and-events
       - sync-async
+      - which-chrome
   - title: Examples
     navbar: Examples
     contents:
