@@ -1,0 +1,154 @@
+---
+title: "Taking a screenshot of a web page"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Taking a screenshot of a web page}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+editor:
+  markdown:
+    wrap: sentence
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+``` r
+library(chromote)
+```
+
+## Taking a screenshot of a web page
+
+Take a screenshot of the viewport and display it using the [showimage](https://github.com/r-lib/showimage#readme) package.
+This uses Chromote's `$screenshot()` method, which wraps up many calls to the Chrome DevTools Protocol.
+
+``` r
+b <- ChromoteSession$new()
+
+# ==== Semi-synchronous version ====
+# Run the next two lines together, without any delay in between.
+p <- b$Page$loadEventFired(wait_ = FALSE)
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
+b$wait_for(p)
+b$screenshot(show = TRUE)  # Saves to screenshot.png and displays in viewer
+
+# ==== Async version ====
+p <- b$Page$loadEventFired(wait_ = FALSE)
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
+p$then(function(value) {
+    b$screenshot(show = TRUE)
+  })
+```
+
+It is also possible to use selectors to specify what to screenshot, as well as the region ("content", "border", "padding", or "margin").
+
+``` r
+# Using CSS selectors, choosing the region, and using scaling
+b$screenshot("s1.png", selector = ".sidebar")
+b$screenshot("s2.png", selector = ".sidebar", region = "margin")
+b$screenshot("s3.png", selector = ".page", region = "margin", scale = 2)
+```
+
+If a vector is passed to `selector`, it will take a screenshot with a rectangle that encompasses all the DOM elements picked out by the selectors.
+Similarly, if a selector picks out multiple DOM elements, all of them will be in the screenshot region.
+
+## Setting width and height of the viewport (window)
+
+The default size of a `ChromoteSession` viewport is 992 by 1323 pixels.
+You can set the width and height when it is created:
+
+``` r
+b <- ChromoteSession$new(width = 390, height = 844)
+
+b$Page$navigate("https://www.r-project.org/")
+b$screenshot("narrow.png")
+```
+
+With an existing `ChromoteSession`, you can set the size with `b$set_viewport_size()`:
+
+``` r
+b$set_viewport_size(width = 1600, height = 900)
+b$screenshot("wide.png")
+```
+
+You can take a "Retina" (double) resolution screenshot by using `b$screenshot(scale=2)`:
+
+``` r
+b$screenshot("wide-2x.png", scale = 2)
+```
+
+## Taking a screenshot of a web page after interacting with it
+
+Headless Chrome provides a remote debugging UI which you can use to interact with the web page.
+The ChromoteSession's `$view()` method opens a regular browser and navigates to the remote debugging UI.
+
+``` r
+b <- ChromoteSession$new()
+
+b$view()
+b$Page$navigate("https://www.google.com") # Or just type the URL in the navigation bar
+```
+
+At this point, you can interact with the web page by typing in text and clicking on things.
+
+Then take a screenshot:
+
+``` r
+b$screenshot()
+```
+
+## Taking screenshots of web pages in parallel
+
+With async code, it's possible to navigate to and take screenshots of multiple websites in parallel.
+
+``` r
+library(promises)
+library(chromote)
+urls <- c(
+  "https://www.r-project.org/",
+  "https://github.com/",
+  "https://news.ycombinator.com/"
+)
+
+screenshot_p <- function(url, filename = NULL) {
+  if (is.null(filename)) {
+    filename <- gsub("^.*://", "", url)
+    filename <- gsub("/", "_", filename)
+    filename <- gsub("\\.", "_", filename)
+    filename <- sub("_$", "", filename)
+    filename <- paste0(filename, ".png")
+  }
+
+  b <- ChromoteSession$new()
+  p <- b$Page$loadEventFired(wait_ = FALSE)
+  b$Page$navigate(url, wait_ = FALSE)
+  p$then(function(value) {
+      b$screenshot(filename, wait_ = FALSE)
+    })$
+    then(function(value) {
+      message(filename)
+    })$
+    finally(function() {
+      b$close()
+    })
+}
+
+# Screenshot multiple simultaneously
+ps <- lapply(urls, screenshot_p)
+pa <- promise_all(.list = ps)$then(function(value) {
+  message("Done!")
+})
+
+# Block the console until the screenshots finish (optional)
+cm <- default_chromote_object()
+cm$wait_for(pa)
+#> www_r-project_org.png
+#> github_com.png
+#> news_ycombinator_com.png
+#> Done!
+```

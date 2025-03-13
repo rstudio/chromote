@@ -31,6 +31,8 @@ Imports:
     withr,
     zip
 Suggests:
+    knitr,
+    rmarkdown,
     showimage,
     testthat (>= 3.0.0)
 Config/Needs/website: tidyverse/tidytemplate
@@ -43,3 +45,4 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 SystemRequirements: Google Chrome or other Chromium-based browser.
     chromium: chromium (rpm) or chromium-browser (deb)
+VignetteBuilder: knitr

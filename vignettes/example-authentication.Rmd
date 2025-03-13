@@ -1,0 +1,114 @@
+---
+title: "Websites that require authentication"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Websites that require authentication}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+editor:
+  markdown:
+    wrap: sentence
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+For websites that require authentication, you can use Chromote to get screenshots by doing the following:
+
+1.  Log in interactively and navigate to the page.
+2.  Capture cookies from the page and save them.
+3.  In a later R session, load the cookies.
+4.  Use the cookies in Chromote and navigate to the page.
+5.  Take a screenshot.
+
+There are two ways to capture the cookies.
+
+## Method 1: Manually interact with the page
+
+The first method uses the headless browser's viewer.
+This can be a bit inconvenient because it requires going through the entire login process, even if you have already logged in with a normal browser.
+
+First navigate to the page:
+
+``` r
+library(chromote)
+b <- ChromoteSession$new()
+b$view()
+b$Page$navigate("https://beta.rstudioconnect.com/content/123456/")
+```
+
+Next, log in interactively via the viewer.
+Once that's done, use Chromote to capture the cookies.
+
+``` r
+cookies <- b$Network$getCookies()
+str(cookies)
+saveRDS(cookies, "cookies.rds")
+```
+
+After saving the cookies, you can restart R and navigate to the page, using the cookies.
+
+``` r
+library(chromote)
+b <- ChromoteSession$new()
+b$view()
+cookies <- readRDS("cookies.rds")
+b$Network$setCookies(cookies = cookies$cookies)
+# Navigate to the app that requires a login
+b$Page$navigate("https://beta.rstudioconnect.com/content/123456/")
+b$screenshot()
+```
+
+## Method 2: Capture and re-use cookies
+
+The second method captures the cookies using a normal browser.
+This is can be more convenient because, if you are already logged in, you don't need to do it again.
+This requires a Chromium-based browser, and it requires running DevTools-in-DevTools on that browser.
+
+First, navigate to the page in your browser.
+Then press CMD-Option-I (Mac) or Ctrl-Shift-I (Windows/Linux).
+The developer tools panel will open.
+Make sure to undock the developer tools so that they are in their own window.
+Then press CMD-Option-I or Ctrl-Shift-I again.
+A second developer tools window will open.
+(See [this SO answer](https://stackoverflow.com/questions/12291138/how-do-you-inspect-the-web-inspector-in-chrome/12291163#12291163) for detailed instructions.)
+
+In the second developer tools window, run the following:
+
+``` js
+var cookies = await Main.sendOverProtocol('Network.getCookies', {})
+JSON.stringify(cookies)
+```
+
+This will return a JSON string representing the cookies for that page.
+For example:
+
+``` json
+[{"cookies":[{"name":"AWSALB","value":"T3dNdcdnMasdf/cNn0j+JHMVkZ3RI8mitnAggd9AlPsaWJdsfoaje/OowIh0qe3dDPiHc0mSafe5jNH+1Aeinfalsd30AejBZDYwE","domain":"beta.rstudioconnect.com","path":"/","expires":1594632233.96943,"size":130,"httpOnly":false,"secure":false,"session":false}]}]
+```
+
+Copy that string to the clipboard.
+In your R session, you can paste it to this code, surrounded by single-quotes:
+
+``` r
+cookie_json <- '[{"cookies":[{"name":"AWSALB","value":"T3dNdcdnMasdf/cNn0j+JHMVkZ3RI8mitnAggd9AlPsaWJdsfoaje/OowIh0qe3dDPiHc0mSafe5jNH+1Aeinfalsd30AejBZDYwE","domain":"beta.rstudioconnect.com","path":"/","expires":1594632233.96943,"size":130,"httpOnly":false,"secure":false,"session":false}]}]'
+
+cookies <- jsonlite::fromJSON(cookie_json, simplifyVector = FALSE)[[1]]
+```
+
+Then you can use Chromote to navigate to the page and take a screenshot.
+
+``` r
+library(chromote)
+b <- ChromoteSession$new()
+
+b$Network$setCookies(cookies = cookies$cookies)
+b$Page$navigate("https://beta.rstudioconnect.com/content/123456/")
+
+b$screenshot()
+```

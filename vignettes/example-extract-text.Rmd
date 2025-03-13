@@ -1,0 +1,96 @@
+---
+title: "Extracting text from a web page"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Extracting text from a web page}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+editor:
+  markdown:
+    wrap: sentence
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Using JavaScript
+
+One way to extract text from a page is to tell the browser to run JavaScript code that does it.
+
+### Synchronous version
+
+``` r
+library(chromote)
+b <- ChromoteSession$new()
+
+b$Page$navigate("https://www.whatismybrowser.com/")
+
+# Run JavaScript to extract text from the page
+x <- b$Runtime$evaluate('document.querySelector(".corset .string-major a").innerText')
+x$result$value
+#> [1] "Chrome 75 on macOS (Mojave)"
+```
+
+### Asynchronous version
+
+``` r
+library(chromote)
+b <- ChromoteSession$new()
+
+p <- b$Page$loadEventFired(wait_ = FALSE)
+b$Page$navigate("https://www.whatismybrowser.com/", wait_ = FALSE)
+p$then(function(value) {
+  b$Runtime$evaluate(
+    'document.querySelector(".corset .string-major a").innerText'
+  )
+})$
+then(function(value) {
+  print(value$result$value)
+})
+```
+
+## Using Chrome DevTools Procotol commands
+
+Another way is to use CDP commands to extract content from the DOM.
+This does not require executing JavaScript in the browser's context, but it is also not as flexible as JavaScript.
+
+### Synchronous version
+
+``` r
+library(chromote)
+b <- ChromoteSession$new()
+
+b$Page$navigate("https://www.whatismybrowser.com/")
+x <- b$DOM$getDocument()
+x <- b$DOM$querySelector(x$root$nodeId, ".corset .string-major a")
+b$DOM$getOuterHTML(x$nodeId)
+#> $outerHTML
+#> [1] "<a href=\"/detect/what-version-of-chrome-do-i-have\">Chrome 75 on macOS (Mojave)</a>"
+```
+
+### Asynchronous version
+
+``` r
+library(chromote)
+b <- ChromoteSession$new()
+
+p <- b$Page$loadEventFired(wait_ = FALSE)
+b$Page$navigate("https://www.whatismybrowser.com/", wait_ = FALSE)
+p$then(function(value) {
+  b$DOM$getDocument()
+})$
+then(function(value) {
+  b$DOM$querySelector(value$root$nodeId, ".corset .string-major a")
+})$
+then(function(value) {
+  b$DOM$getOuterHTML(value$nodeId)
+})$
+then(function(value) {
+  print(value)
+})
+```

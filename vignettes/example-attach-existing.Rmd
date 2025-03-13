@@ -1,0 +1,54 @@
+---
+title: "Attaching to existing tabs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Attaching to existing tabs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+editor:
+  markdown:
+    wrap: sentence
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+``` r
+library(chromote)
+r <- Chromote$new()
+```
+
+When you use `ChromoteSession$new()` or `b$new_session()`, you're typically connecting to an existing browser, but creating a new tab to attach to.
+It's also possible to attach to an existing browser *and* and existing tab.
+In Chrome debugging terminology a tab is called a "Target", and there is a command to retrieve the list of current Targets:
+
+``` r
+r$Target$getTargets()
+```
+
+Every target has a unique identifier string associated with it called the `targetId`; `"9DAE349A3A533718ED9E17441BA5159B"` is an example of one.
+
+Here we define a function that retrieves the ID of the first Target (tab) from a Chromote object:
+
+``` r
+first_id <- function(r) {
+  ts <- r$Target$getTargets()$targetInfos
+  stopifnot(length(ts) > 0)
+  r$Target$getTargets()$targetInfos[[1]]$targetId
+}
+```
+
+The following code shows an alert box in the first tab, whatever it is:
+
+``` r
+rc <- ChromeRemote$new(host = "localhost", port = 9222)
+r <- Chromote$new(browser = rc)
+tid <- first_id(r)
+b <- r$new_session(targetId = tid)
+b$Runtime$evaluate('alert("this is the first tab")')
+```

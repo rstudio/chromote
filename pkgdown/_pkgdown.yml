@@ -1,5 +1,9 @@
 url: https://rstudio.github.io/chromote
 
+authors:
+  Garrick Aden-Buie:
+    href: https://garrickadenbuie.com
+
 template:
   package: tidytemplate
   bootstrap: 5
@@ -9,6 +13,21 @@ template:
   #   navbar-background: "#e6f3fc"
   trailing_slash_redirect: true
 
+articles:
+  - title: Learn chromote
+    navbar: ~
+    contents:
+      - chromote
+      - commands-and-events
+      - sync-async
+      - which-chrome
+  - title: Examples
+    navbar: Examples
+    contents:
+      - example-loading-page
+      - example-screenshot
+      - example-extract-text
+      - starts_with("example-")
 
 reference:
 - title: Chromote Sessions

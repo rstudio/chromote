@@ -1,0 +1,64 @@
+---
+title: "Choosing which Chrome-based browser to use"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Choosing which Chrome-based browser to use}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+editor:
+  markdown:
+    wrap: sentence
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Using a Chrome-based browser that you installed
+
+Chromote will look in specific places for the Chrome web browser, depending on platform.
+This is done by the `chromote:::find_chrome()` function.
+
+If you wish to use a different browser from the default, you can set the `CHROMOTE_CHROME` environment variable, either with `Sys.setenv(CHROMOTE_CHROME="/path/to/browser")`.
+
+``` r
+library(chromote)
+Sys.setenv(CHROMOTE_CHROME = "/Applications/Chromium.app/Contents/MacOS/Chromium")
+
+b <- ChromoteSession$new()
+b$view()
+b$Page$navigate("https://www.whatismybrowser.com/")
+```
+
+Another way is create a `Chromote` object and explicitly specify the browser, then spawn `ChromoteSession`s from it.
+
+``` r
+m <- Chromote$new(
+  browser = Chrome$new(path = "/Applications/Chromium.app/Contents/MacOS/Chromium")
+)
+
+# Spawn a ChromoteSession from the Chromote object
+b <- m$new_session()
+b$Page$navigate("https://www.whatismybrowser.com/")
+```
+
+Yet another way is to create a `Chromote` object with a specified browser, then set it as the default Chromote object.
+
+``` r
+m <- Chromote$new(
+  browser = Chrome$new(path = "/Applications/Chromium.app/Contents/MacOS/Chromium")
+)
+
+# Set this Chromote object as the default. Then any
+# ChromoteSession$new() will be spawned from it.
+set_default_chromote_object(m)
+b <- ChromoteSession$new()
+b$view()
+b$Page$navigate("https://www.whatismybrowser.com/")
+```
+
+<!-- TODO: Managed Chrome for Testing versions -->
