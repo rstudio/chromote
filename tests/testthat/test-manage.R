@@ -48,24 +48,6 @@ try_chromote_info <- function() {
   list(path = info$path, version = info$version)
 }
 
-test_that("with_chrome_version() works", {
-  chrome_versions_add("128.0.6612.0", "chrome")
-
-  expect_snapshot(
-    with_chrome_version("128.0.6612.0", with_retries(try_chromote_info)),
-    variant = guess_platform()
-  )
-
-  with_chrome_version("128.0.6612.0", {
-    b <- ChromoteSession$new()
-
-    expect_match(
-      b$Runtime$evaluate("navigator.appVersion")$result$value,
-      "HeadlessChrome/128"
-    )
-  })
-})
-
 test_that("with_chrome_version() manages Chromote object", {
   chrome_versions_add("128.0.6612.0", "chrome")
   chrome_versions_add("129.0.6668.100", "chrome-headless-shell")
@@ -104,4 +86,22 @@ test_that("with_chrome_version() manages Chromote object", {
   })
 
   expect_closed(chromote_128)
+})
+
+test_that("with_chrome_version() works", {
+  chrome_versions_add("128.0.6612.0", "chrome")
+
+  expect_snapshot(
+    with_chrome_version("128.0.6612.0", with_retries(try_chromote_info)),
+    variant = guess_platform()
+  )
+
+  with_chrome_version("128.0.6612.0", {
+    b <- ChromoteSession$new()
+
+    expect_match(
+      b$Runtime$evaluate("navigator.appVersion")$result$value,
+      "HeadlessChrome/128"
+    )
+  })
 })
