@@ -1,8 +1,20 @@
 pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
-articles: {}
-last_built: 2025-03-13T13:11Z
+articles:
+  chromote: chromote.html
+  commands-and-events: commands-and-events.html
+  example-attach-existing: example-attach-existing.html
+  example-authentication: example-authentication.html
+  example-custom-headers: example-custom-headers.html
+  example-custom-user-agent: example-custom-user-agent.html
+  example-extract-text: example-extract-text.html
+  example-loading-page: example-loading-page.html
+  example-remote-hosts: example-remote-hosts.html
+  example-screenshot: example-screenshot.html
+  sync-async: sync-async.html
+  which-chrome: which-chrome.html
+last_built: 2025-03-13T17:21Z
 urls:
   reference: https://rstudio.github.io/chromote/reference
   article: https://rstudio.github.io/chromote/articles
