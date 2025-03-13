@@ -89,3 +89,9 @@ b$Page$navigate("https://www.r-project.org/")
 # Disable debug messages
 b$parent$debug_messages(FALSE)
 ```
+
+## Resource cleanup and garbage collection
+
+When Chromote starts a Chrome process, it calls `Chrome$new()`. This launches the Chrome process it using `processx::process()`, and enables a supervisor for the process. This means that if the R process stops, the supervisor will detect this and shut down any Chrome processes that were registered with the supervisor. This prevents the proliferation of Chrome processes that are no longer needed.
+
+The Chromote package will, by default, use a single Chrome process and a single `Chromote` object, and each time `ChromoteSession$new()` is called, it will spawn them from the `Chromote` object. See [The Chromote object model](#the-chromote-object-model) for more information.
