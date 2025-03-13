@@ -77,4 +77,4 @@ b$screenshot()
 b$screenshot("sidebar.png", selector = ".sidebar")
 ```
 
-![](`r MAN_PATH`/figures/sidebar.png)
+![A screenshot of the sidebar of r-rproject.org, circa 2023.](`r MAN_PATH`/figures/sidebar.png)
