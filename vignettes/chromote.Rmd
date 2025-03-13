@@ -18,7 +18,10 @@ MAN_PATH <- "../man"
 ```{r child="../man/fragments/chromote-intro.Rmd"}
 ```
 
-**Note:** All members of `Chromote` and `ChromoteSession` objects which start with a capital letter (like `b$Page`, `b$DOM`, and `b$Browser`) correspond to domains from the Chrome DevTools Protocol, and are documented in the [official CDP site](https://chromedevtools.github.io/devtools-protocol/). All members which start with a lower-case letter (like `b$screenshot` and `b$close`) are not part of the Chrome DevTools Protocol, and are specific to `Chromote` and `ChromoteSession`.
+
+> **Technincal Note** 
+>
+> All members of `Chromote` and `ChromoteSession` objects which start with a capital letter (like `b$Page`, `b$DOM`, and `b$Browser`) correspond to domains from the Chrome DevTools Protocol, and are documented in the [official CDP site](https://chromedevtools.github.io/devtools-protocol/). All members which start with a lower-case letter (like `b$screenshot` and `b$close`) are not part of the Chrome DevTools Protocol, and are specific to `Chromote` and `ChromoteSession`.
 
 Here is an example of how to use Chromote to find the position of a DOM element using [DOM.getBoxModel](https://chromedevtools.github.io/devtools-protocol/tot/DOM/#method-getBoxModel).
 
