@@ -64,8 +64,8 @@ $timestamp
 [1] 699232.3
 ```
 
-> **Note:** This sequence of commands, with `Page$navigate()` and then `Page$loadEventFired()` will not work 100% of the time.
-> See [Loading a Page Reliably](#loading-a-page-reliably) for more information.
+> **Note:** This sequence of commands, with `Page$navigate()` and then `Page$loadEventFired()` works interactively when you run the commands slowly, but it will not work 100% of the time.
+> See `vignette("example-loading-page")` for a reliable approach to page loading that works in all situations.
 
 ## Automatic Events
 
@@ -81,7 +81,7 @@ Then it sends a `Page.disable` command.
 
 Note that in asynchronous mode, the behavior is slightly more sophisticated: it maintains a counter of how many outstanding events it is waiting for in a given domain.
 When that count goes from 0 to 1, it sends the `X.enable` command; when the count goes from 1 to 0, it sends the `X.disable` command.
-For more information, see the [Async events](#async-events) section.
+For more information, see `vignette("sync-async")`.
 
 If you need to customize the arguments used by the automatically-run `enable` command, you can use the `$auto_events_enable_args()` method of a `Chromote` or `ChromoteSession` instance, e.g. `b$auto_events_enable_args("Page", enableFileChooserOpenedEvent = TRUE)`.
 

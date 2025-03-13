@@ -171,8 +171,8 @@ b1 <- cm$new_session()
 b1 <- ChromoteSession$new(parent = cm)
 ```
 
-Note that if you use either of these methods, the new `Chromote` object will *not* be set as the default that is used by future calls to `ChromoteSesssion$new()`.
-See [Specifying which browser to use](#specifying-which-browser-to-use) for information on setting the default `Chromote` object.
+Note that if you use either of these methods, the new `Chromote` object `cm` will *not* be set as the default that is used by future calls to `ChromoteSesssion$new()`.
+See `vignette("which-chrome")` for an example showing how you can set the default `Chromote` object.
 
 There are also the following classes which represent the browser at a lower level:
 
