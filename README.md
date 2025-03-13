@@ -21,8 +21,7 @@ Protocol](https://chromedevtools.github.io/devtools-protocol/). It works
 with Chrome, Chromium, Opera, Vivaldi, and other browsers based on
 [Chromium](https://www.chromium.org/). By default it uses Google Chrome
 (which must already be installed on the system). To use a different
-browser, see [Specifying which browser to
-use](#specifying-which-browser-to-use).
+browser, see `vignette("which-chrome")`.
 
 Chromote is not the only R package that implements the Chrome DevTools
 Protocol. Here are some others:
@@ -35,6 +34,27 @@ Protocol. Here are some others:
 The interface to Chromote is similar to
 [chrome-remote-interface](https://github.com/cyrus-and/chrome-remote-interface)
 for node.js.
+
+## Features
+
+- Install and use specific versions of Chrome from the [Chrome for
+  Testing](https://googlechromelabs.github.io/chrome-for-testing)
+  service.
+
+- Offers a synchronous API for ease of use and an asynchronous API for
+  more sophisticated tasks.
+
+- Full support for the Chrome DevTools Protocol for any version of
+  Chrome or any Chrome-based browser.
+
+- Includes convenience methods, like `$screenshot()` and
+  `$set_viewport_size()`, for common tasks.
+
+- Automatically reconnects to previous sessions if the connection from R
+  to Chrome is lost, for example when restarting from sleep state.
+
+- Powers many higher-level packages and functions, like `{shinytest2}`
+  and `rvest::read_html_live()`.
 
 ## Installation
 
