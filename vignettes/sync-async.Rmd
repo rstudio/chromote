@@ -42,6 +42,12 @@ When using Chromote interactively at the R console, it's usually best to just ca
 
 When you are _programming_ with Chromote instead of using it interactively, it is in many cases better to call the methods asynchronously, because it allows for better performance. In a later section, we'll see how to write asynchronous code with Chromote that can be run either synchronously or asynchronously. This provides the best of both worlds.
 
+To see this in action, we'll first start a new chromote session:
+
+```R
+library(chromote)
+b <- ChromoteSession$new()
+```
 
 ## Async commands
 
