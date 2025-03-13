@@ -1,0 +1,18 @@
+---
+title: "chromote"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{chromote}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r child="../man/fragments/chromote-intro.Rmd"}
+```
