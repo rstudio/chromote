@@ -149,7 +149,7 @@ Learn more about using and programming with chromote:
 - [Choosing which Chrome-based browser to
   use](https://rstudio.github.io/articles/articles/which-chrome.html)
 
-[^1]: This simple works interactively, but if you’re using chromote to
-    programmatically take screenshots you’ll want to read
+[^1]: This simple example works interactively, but if you’re using
+    chromote to programmatically take screenshots you’ll want to read
     `vignette("example-loading-page")` for a consistent and reliable
     approach.
