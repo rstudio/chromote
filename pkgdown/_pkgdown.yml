@@ -1,5 +1,9 @@
 url: https://rstudio.github.io/chromote
 
+authors:
+  Garrick Aden-Buie:
+    href: https://garrickadenbuie.com
+
 template:
   package: tidytemplate
   bootstrap: 5
