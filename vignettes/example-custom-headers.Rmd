@@ -5,6 +5,10 @@ vignette: >
   %\VignetteIndexEntry{Setting custom headers}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+
+editor:
+  markdown:
+    wrap: sentence
 ---
 
 ```{r, include = FALSE}
@@ -14,9 +18,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-Currently setting custom headers requires a little extra work because it requires `Network.enable` be called before using it. In the future we'll streamline things so that it will happen automatically.
+Currently setting custom headers requires a little extra work because it requires `Network.enable` be called before using it.
+In the future we'll streamline things so that it will happen automatically.
 
-```R
+``` r
 library(chromote)
 b <- ChromoteSession$new()
 # Currently need to manually enable Network domain notifications. Calling

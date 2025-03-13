@@ -5,6 +5,10 @@ vignette: >
   %\VignetteIndexEntry{Setting custom user agent}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+
+editor:
+  markdown:
+    wrap: sentence
 ---
 
 ```{r, include = FALSE}
@@ -14,15 +18,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-A user agent is a string of text that a browser sends to a web server to identify itself, including details about the browser type, operating system, and device. 
+A user agent is a string of text that a browser sends to a web server to identify itself, including details about the browser type, operating system, and device.
 
-In ⁠chromote, setting the user agent allows you to simulate requests from different browsers or devices. This is useful for testing how websites behave in various environments, scraping data by mimicking real user behavior, accessing mobile versions of sites, or bypassing restrictions some websites place on certain browsers.
+In ⁠chromote, setting the user agent allows you to simulate requests from different browsers or devices.
+This is useful for testing how websites behave in various environments, scraping data by mimicking real user behavior, accessing mobile versions of sites, or bypassing restrictions some websites place on certain browsers.
 
 You can see the user agent string provided by your browser, or a list of other user agents strings, by using a site like <https://UserAgentString.com>.
 
 ## Synchronous version
 
-```R
+``` r
 library(chromote)
 b <- ChromoteSession$new()
 
@@ -34,7 +39,7 @@ b$screenshot(show = TRUE)
 
 ## Asynchronous version
 
-```R
+``` r
 library(chromote)
 b <- ChromoteSession$new()
 
@@ -45,4 +50,3 @@ p$then(function(value) {
   b$screenshot(show = TRUE)
 })
 ```
-

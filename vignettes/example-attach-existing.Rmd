@@ -5,6 +5,10 @@ vignette: >
   %\VignetteIndexEntry{Attaching to existing tabs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+
+editor:
+  markdown:
+    wrap: sentence
 ---
 
 ```{r, include = FALSE}
@@ -14,14 +18,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-```R
+``` r
 library(chromote)
 r <- Chromote$new()
 ```
 
-When you use `ChromoteSession$new()` or `b$new_session()`, you're typically connecting to an existing browser, but creating a new tab to attach to. It's also possible to attach to an existing browser *and* and existing tab. In Chrome debugging terminology a tab is called a "Target", and there is a command to retrieve the list of current Targets:
+When you use `ChromoteSession$new()` or `b$new_session()`, you're typically connecting to an existing browser, but creating a new tab to attach to.
+It's also possible to attach to an existing browser *and* and existing tab.
+In Chrome debugging terminology a tab is called a "Target", and there is a command to retrieve the list of current Targets:
 
-```R
+``` r
 r$Target$getTargets()
 ```
 
@@ -29,7 +35,7 @@ Every target has a unique identifier string associated with it called the `targe
 
 Here we define a function that retrieves the ID of the first Target (tab) from a Chromote object:
 
-```R
+``` r
 first_id <- function(r) {
   ts <- r$Target$getTargets()$targetInfos
   stopifnot(length(ts) > 0)
@@ -39,7 +45,7 @@ first_id <- function(r) {
 
 The following code shows an alert box in the first tab, whatever it is:
 
-```R
+``` r
 rc <- ChromeRemote$new(host = "localhost", port = 9222)
 r <- Chromote$new(browser = rc)
 tid <- first_id(r)

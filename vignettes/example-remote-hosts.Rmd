@@ -5,6 +5,10 @@ vignette: >
   %\VignetteIndexEntry{Chrome on remote hosts}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+
+editor:
+  markdown:
+    wrap: sentence
 ---
 
 ```{r, include = FALSE}
@@ -14,12 +18,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-Chromote can control a browser running on a remote host. To start the browser, open a terminal on the remote host and run one of the following, depending on your platform:
+Chromote can control a browser running on a remote host.
+To start the browser, open a terminal on the remote host and run one of the following, depending on your platform:
 
 **Warning: Depending on how the remote machine is configured, the Chrome debug server might be accessible to anyone on the Internet. Proceed with caution.**
 
-```
+```         
 # Mac
 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless \
   --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
@@ -32,9 +36,10 @@ google-chrome --headless --remote-debugging-address=0.0.0.0 --remote-debugging-p
   --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
 ```
 
-Then, in your local R session, create a Chromote object with the `host` and `port` (you will need to use the correct IP address). Once it's created, you can spawn a session off of it which you can control as normal:
+Then, in your local R session, create a Chromote object with the `host` and `port` (you will need to use the correct IP address).
+Once it's created, you can spawn a session off of it which you can control as normal:
 
-```R
+``` r
 library(chromote)
 
 r <- Chromote$new(
@@ -51,11 +56,15 @@ b$screenshot("browser.png")
 b$screenshot("browser_string.png", selector = ".string-major")
 ```
 
-When you use `$view()` on the remote browser, your local browser may block scripts for security reasons, which means that you won't be able to view the remote browser. If your local browser is Chrome, there will be a shield-shaped icon in the location bar that you can click in order to enable loading the scripts. (Note: Some browsers don't seem to work at all with the viewer.)
+When you use `$view()` on the remote browser, your local browser may block scripts for security reasons, which means that you won't be able to view the remote browser.
+If your local browser is Chrome, there will be a shield-shaped icon in the location bar that you can click in order to enable loading the scripts.
+(Note: Some browsers don't seem to work at all with the viewer.)
 
-**Technical note:** There seem to be some timing issues with remote browsers. In the example above, the browser may finish navigating to the web site before the R process receives the response message for `$navigate()`, and therefore before R starts waiting for `Page.loadEventFired`. In order to avoid these timing problems, it is better to write code like this:
+**Technical note:** There seem to be some timing issues with remote browsers.
+In the example above, the browser may finish navigating to the web site before the R process receives the response message for `$navigate()`, and therefore before R starts waiting for `Page.loadEventFired`.
+In order to avoid these timing problems, it is better to write code like this:
 
-```R
+``` r
 {
   p <- b$Page$loadEventFired(wait_ = FALSE)
   b$Page$navigate("https://www.whatismybrowser.com/", wait_ = FALSE)
@@ -64,4 +73,4 @@ When you use `$view()` on the remote browser, your local browser may block scrip
 b$screenshot("browser.png")
 ```
 
-This tells it to fire off the `Page.navigate` command and _not_ wait for it, and then immediately start waiting for `Page.loadEventFired` event.
+This tells it to fire off the `Page.navigate` command and *not* wait for it, and then immediately start waiting for `Page.loadEventFired` event.

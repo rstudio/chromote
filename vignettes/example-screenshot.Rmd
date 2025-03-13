@@ -5,6 +5,10 @@ vignette: >
   %\VignetteIndexEntry{Taking a screenshot of a web page}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+
+editor:
+  markdown:
+    wrap: sentence
 ---
 
 ```{r, include = FALSE}
@@ -14,15 +18,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-```R
+``` r
 library(chromote)
 ```
 
 ## Taking a screenshot of a web page
 
-Take a screenshot of the viewport and display it using the [showimage](https://github.com/r-lib/showimage#readme) package. This uses Chromote's `$screenshot()` method, which wraps up many calls to the Chrome DevTools Protocol.
+Take a screenshot of the viewport and display it using the [showimage](https://github.com/r-lib/showimage#readme) package.
+This uses Chromote's `$screenshot()` method, which wraps up many calls to the Chrome DevTools Protocol.
 
-```R
+``` r
 b <- ChromoteSession$new()
 
 # ==== Semi-synchronous version ====
@@ -42,21 +47,22 @@ p$then(function(value) {
 
 It is also possible to use selectors to specify what to screenshot, as well as the region ("content", "border", "padding", or "margin").
 
-```R
+``` r
 # Using CSS selectors, choosing the region, and using scaling
 b$screenshot("s1.png", selector = ".sidebar")
 b$screenshot("s2.png", selector = ".sidebar", region = "margin")
 b$screenshot("s3.png", selector = ".page", region = "margin", scale = 2)
 ```
 
-If a vector is passed to `selector`, it will take a screenshot with a rectangle that encompasses all the DOM elements picked out by the selectors. Similarly, if a selector picks out multiple DOM elements, all of them will be in the screenshot region.
-
+If a vector is passed to `selector`, it will take a screenshot with a rectangle that encompasses all the DOM elements picked out by the selectors.
+Similarly, if a selector picks out multiple DOM elements, all of them will be in the screenshot region.
 
 ## Setting width and height of the viewport (window)
 
-The default size of a `ChromoteSession` viewport is 992 by 1323 pixels. You can set the width and height when it is created:
+The default size of a `ChromoteSession` viewport is 992 by 1323 pixels.
+You can set the width and height when it is created:
 
-```R
+``` r
 b <- ChromoteSession$new(width = 390, height = 844)
 
 b$Page$navigate("https://www.r-project.org/")
@@ -65,23 +71,23 @@ b$screenshot("narrow.png")
 
 With an existing `ChromoteSession`, you can set the size with `b$set_viewport_size()`:
 
-```R
+``` r
 b$set_viewport_size(width = 1600, height = 900)
 b$screenshot("wide.png")
 ```
 
 You can take a "Retina" (double) resolution screenshot by using `b$screenshot(scale=2)`:
 
-```R
+``` r
 b$screenshot("wide-2x.png", scale = 2)
 ```
 
-
 ## Taking a screenshot of a web page after interacting with it
 
-Headless Chrome provides a remote debugging UI which you can use to interact with the web page. The ChromoteSession's `$view()` method opens a regular browser and navigates to the remote debugging UI.
+Headless Chrome provides a remote debugging UI which you can use to interact with the web page.
+The ChromoteSession's `$view()` method opens a regular browser and navigates to the remote debugging UI.
 
-```R
+``` r
 b <- ChromoteSession$new()
 
 b$view()
@@ -92,7 +98,7 @@ At this point, you can interact with the web page by typing in text and clicking
 
 Then take a screenshot:
 
-```R
+``` r
 b$screenshot()
 ```
 
@@ -100,7 +106,7 @@ b$screenshot()
 
 With async code, it's possible to navigate to and take screenshots of multiple websites in parallel.
 
-```R
+``` r
 library(promises)
 library(chromote)
 urls <- c(

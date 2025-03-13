@@ -5,6 +5,10 @@ vignette: >
   %\VignetteIndexEntry{Extracting text from a web page}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+
+editor:
+  markdown:
+    wrap: sentence
 ---
 
 ```{r, include = FALSE}
@@ -20,7 +24,7 @@ One way to extract text from a page is to tell the browser to run JavaScript cod
 
 ### Synchronous version
 
-```R
+``` r
 library(chromote)
 b <- ChromoteSession$new()
 
@@ -34,7 +38,7 @@ x$result$value
 
 ### Asynchronous version
 
-```R
+``` r
 library(chromote)
 b <- ChromoteSession$new()
 
@@ -52,11 +56,12 @@ then(function(value) {
 
 ## Using Chrome DevTools Procotol commands
 
-Another way is to use CDP commands to extract content from the DOM. This does not require executing JavaScript in the browser's context, but it is also not as flexible as JavaScript.
+Another way is to use CDP commands to extract content from the DOM.
+This does not require executing JavaScript in the browser's context, but it is also not as flexible as JavaScript.
 
 ### Synchronous version
 
-```R
+``` r
 library(chromote)
 b <- ChromoteSession$new()
 
@@ -70,7 +75,7 @@ b$DOM$getOuterHTML(x$nodeId)
 
 ### Asynchronous version
 
-```R
+``` r
 library(chromote)
 b <- ChromoteSession$new()
 
