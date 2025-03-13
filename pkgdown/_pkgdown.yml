@@ -9,6 +9,21 @@ template:
   #   navbar-background: "#e6f3fc"
   trailing_slash_redirect: true
 
+articles:
+  - title: Learn chromote
+    navbar: ~
+    contents:
+      - chromote
+      - which-chrome
+      - commands-and-events
+      - sync-async
+  - title: Examples
+    navbar: Examples
+    contents:
+      - example-loading-page
+      - example-screenshot
+      - example-extract-text
+      - starts_with("example-")
 
 reference:
 - title: Chromote Sessions
