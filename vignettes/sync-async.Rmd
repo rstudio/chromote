@@ -173,10 +173,16 @@ For more information, see the [promises documentation](https://rstudio.github.io
 ``` r
 library(promises)
 
-# Regular function pipe to then()
-b$Browser$getVersion(wait_ = FALSE) %>% then(function(value) {
-  print(value$product)
-})
+# Chained method call to $then()  
+b$Browser$getVersion(wait_ = FALSE)$then(function(value) {  
+  print(value$product)  
+})  
+
+# Regular function pipe to promises::then() function 
+b$Browser$getVersion(wait_ = FALSE) |> then(function(value) {  
+  print(value$product)  
+})  
+
 
 # Promise-pipe to anonymous function, which must be wrapped in parens
 b$Browser$getVersion(wait_ = FALSE) %...>% (function(value) {
