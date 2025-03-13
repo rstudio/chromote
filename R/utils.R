@@ -85,14 +85,21 @@ browse_url <- function(path, chromote) {
   if (inherits(browser, "Chrome")) {
     # If locally available, use the local browser
     browser_path <- browser$get_path()
-    # Quote the path if using a non-windows machine
-    if (!is_windows()) browser_path <- shQuote(browser_path)
-    utils::browseURL(url, browser_path)
-  } else {
-    # Otherwise pray opening the url works as expected
-    # Users can set `options(browser=)` to override default behavior
-    utils::browseURL(url)
+    product <- chromote$Browser$getVersion(wait_ = TRUE)$product
+
+    # And if not chrome-headless-shell (which doesn't have a UI we can use)
+    if (!grepl("HeadlessChrome", product, fixed = TRUE)) {
+      # Quote the path if using a non-windows machine
+      if (!is_windows()) browser_path <- shQuote(browser_path)
+      utils::browseURL(url, browser_path)
+      return(invisible(url))
+    }
   }
+
+  # Otherwise pray opening the url works as expected
+  # Users can set `options(browser=)` to override default behavior
+  utils::browseURL(url)
+  invisible(url)
 }
 
 # =============================================================================
