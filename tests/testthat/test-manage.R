@@ -63,7 +63,12 @@ test_that("with_chrome_version() manages Chromote object", {
     expect_false(chromote_obj$is_alive())
   }
 
-  chomote_128 <- NULL
+  chromote_128 <- NULL
+
+  # Another copy of chromote 128 that we start globally, should be unaffected
+  chromote_128_global <- Chromote$new(
+    browser = Chrome$new(path = chrome_versions_path("128.0.6612.0", "chrome"))
+  )
 
   with_chrome_version("128.0.6612.0", {
     expect_equal(find_chrome(), chrome_versions_path("128.0.6612.0"))
@@ -89,6 +94,11 @@ test_that("with_chrome_version() manages Chromote object", {
   })
 
   expect_closed(chromote_128)
+
+  # The global chromote 128 process is still running
+  expect_true(chromote_128_global$is_alive())
+  chromote_128_global$stop()
+  expect_closed(chromote_128_global)
 })
 
 test_that("with_chrome_version() works", {
