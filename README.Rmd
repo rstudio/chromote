@@ -30,65 +30,6 @@ Chromote: Headless Chrome Remote Interface
 
 ## Examples
 
-### Custom User-Agent
-
-
-### Extracting text from a web page
-
-One way to extract text from a page is to tell the browser to run JavaScript code that does it:
-
-```R
-# ==== Synchronous version ====
-b$Page$navigate("https://www.whatismybrowser.com/")
-
-# Run JavaScript to extract text from the page
-x <- b$Runtime$evaluate('document.querySelector(".corset .string-major a").innerText')
-x$result$value
-#> [1] "Chrome 75 on macOS (Mojave)"
-
-
-# ==== Async version ====
-p <- b$Page$loadEventFired(wait_ = FALSE)
-b$Page$navigate("https://www.whatismybrowser.com/", wait_ = FALSE)
-p$then(function(value) {
-    b$Runtime$evaluate(
-      'document.querySelector(".corset .string-major a").innerText'
-    )
-  })$
-  then(function(value) {
-    print(value$result$value)
-  })
-```
-
-Another way is to use CDP commands to extract content from the DOM. This does not require executing JavaScript in the browser's context, but it is also not as flexible as JavaScript.
-
-```R
-# ==== Synchronous version ====
-b$Page$navigate("https://www.whatismybrowser.com/")
-x <- b$DOM$getDocument()
-x <- b$DOM$querySelector(x$root$nodeId, ".corset .string-major a")
-b$DOM$getOuterHTML(x$nodeId)
-#> $outerHTML
-#> [1] "<a href=\"/detect/what-version-of-chrome-do-i-have\">Chrome 75 on macOS (Mojave)</a>"
-
-
-# ==== Async version ====
-p <- b$Page$loadEventFired(wait_ = FALSE)
-b$Page$navigate("https://www.whatismybrowser.com/", wait_ = FALSE)
-p$then(function(value) {
-    b$DOM$getDocument()
-  })$
-  then(function(value) {
-    b$DOM$querySelector(value$root$nodeId, ".corset .string-major a")
-  })$
-  then(function(value) {
-    b$DOM$getOuterHTML(value$nodeId)
-  })$
-  then(function(value) {
-    print(value)
-  })
-```
-
 ### Websites that require authentication
 
 For websites that require authentication, you can use Chromote to get screenshots by doing the following:
