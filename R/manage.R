@@ -273,6 +273,9 @@ chrome_versions_list <- function(
   versions <- chrome_get_versions(update_cached = which == "all")
   versions <- versions[versions$binary %in% binary, ]
   versions <- versions[versions$platform %in% platform, ]
+  versions <- versions[
+    order(numeric_version(versions$version), decreasing = TRUE),
+  ]
 
   if (which == "all") {
     return(versions)
