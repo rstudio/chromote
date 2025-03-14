@@ -59,7 +59,7 @@ ChromeRemote <- R6Class(
 
     #' @description Is the remote service alive?
     is_alive = function() {
-      url <- sprintf("https://%s:%s/json/version", private$host, private$port)
+      url <- sprintf("http://%s:%s/json/version", private$host, private$port)
 
       tryCatch(
         {
