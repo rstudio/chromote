@@ -459,6 +459,7 @@ Chromote <- R6Class(
               log("browser process is still alive >:(")
               stop("shut it down")
             }
+            log("browser process exited cleanly")
           },
           error = function(err) {
             log("timed out waiting for browser to close, escalating") # fmt: skip

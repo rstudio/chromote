@@ -63,6 +63,10 @@ Browser <- R6Class(
           {
             log("Waiting for process to exit")
             private$process$wait(timeout = wait * 1000)
+            if (private$process$is_alive()) {
+              log("browser process is STILL alive")
+              stop("shut it down")
+            }
             log("Process exited cleanly")
           },
           error = function(err) {
