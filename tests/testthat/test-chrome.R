@@ -28,7 +28,7 @@ test_that("chrome with remote hosts", {
     list(port = port, process = p)
   })
 
-  withr::defer(res$process$kill())
+  withr::defer(res$process$is_alive() || res$process$kill())
 
   remote <- ChromeRemote$new(host = "localhost", port = res$port)
 
@@ -53,5 +53,12 @@ test_that("chrome with remote hosts", {
   expect_true_eventually(chromote$is_active())
   expect_true_eventually(tab2$is_active())
 
-  # TODO: Close the connection gracefully and test
+  tab2$close()
+  expect_false(tab$is_active())
+  tab2$parent$close()
+  expect_true_eventually(!chromote$is_active())
+  expect_true(chromote$is_alive()) # still alive, we haven't killed the process yet
+
+  res$process$kill()
+  expect_true_eventually(!chromote$is_alive())
 })

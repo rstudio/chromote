@@ -140,7 +140,7 @@ local_chromote_chrome <- function(path, ..., .local_envir = parent.frame()) {
     {
       if (has_default_chromote_object()) {
         current <- default_chromote_object()
-        current$stop()
+        current$close()
       }
 
       if (is.null(old_default_chromote_object)) {

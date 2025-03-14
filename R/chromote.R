@@ -411,31 +411,43 @@ Chromote <- R6Class(
     },
 
     #' @description Close the [`Browser`] object
-    close = function() {
-      # Must be alive to be active so we cache value before closing process
-      is_active <- self$is_active()
+    #' @param wait If an integer, waits a number of seconds for the process to
+    #'   exit, killing the process if it takes longer than `wait` seconds to
+    #'   close. Use `wait = TRUE` to wait for 10 seconds, or `wait = FALSE` to
+    #'   close the connection without waiting for the process to exit. Only
+    #'   applies when Chromote is connected to a local process.
+    close = function(wait = TRUE) {
+      if (!isFALSE(wait)) {
+        if (isTRUE(wait)) wait <- 10
+        check_number_whole(wait, min = 0)
+      }
 
-      if (self$is_alive()) {
-        if (is_active) {
-          # send a message to the browser requesting that it close
-          self$Browser$close()
-        } else {
-          # terminate the process
-          private$browser$close()
+      is_local <- private$browser$is_local()
+
+      if (!is_local || !self$is_alive()) {
+        # For remote connections or cases where the process is already closed,
+        # we just close the websocket. Note that we skip $is_active() because it
+        # requires $is_alive().
+        if (private$ws$readyState() %in% c(0L, 1L)) {
+          private$ws$close()
         }
+        return(invisible())
       }
 
-      if (is_active) {
-        private$ws$close()
+      # close the browser nicely
+      self$Browser$close()
+
+      if (!isFALSE(wait) && wait > 0) {
+        # or close it forcefully if it takes too long
+        tryCatch(
+          private$browser$get_process()$wait(timeout = wait),
+          error = function(err) {
+            private$browser$close(wait = 1)
+          }
+        )
       }
 
-      invisible()
-    },
-
-    #' @description Forcefully stop the [`Browser`] process
-    stop = function() {
-      private$ws$close()
-      private$browser$close(wait = TRUE)
+      (private$ws$readyState() %in% c(0L, 1L)) || private$ws$close()
 
       invisible()
     },

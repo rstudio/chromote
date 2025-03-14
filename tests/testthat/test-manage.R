@@ -74,7 +74,7 @@ test_that("with_chrome_version() manages Chromote object", {
 
   # The global chromote 128 process is still running
   expect_true(chromote_128_global$is_alive())
-  chromote_128_global$stop()
+  chromote_128_global$close()
   expect_closed(chromote_128_global)
 })
 
