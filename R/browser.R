@@ -41,19 +41,14 @@ Browser <- R6Class(
       if (!self$is_local()) return(invisible())
       if (!private$process$is_alive()) return(invisible())
 
-      should_wait <- FALSE
-      if (isTRUE(wait)) {
-        should_wait <- TRUE
-        wait <- 10
-      }
       if (!isFALSE(wait)) {
+        if (isTRUE(wait)) wait <- 10
         check_number_whole(wait, min = 0)
-        should_wait <- TRUE
       }
 
       private$process$signal(tools::SIGTERM)
 
-      if (should_wait) {
+      if (!isFALSE(wait)) {
         tryCatch(
           private$process$wait(timeout = wait),
           error = function(err) {

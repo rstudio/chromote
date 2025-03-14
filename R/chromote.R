@@ -437,7 +437,7 @@ Chromote <- R6Class(
       # close the browser nicely
       self$Browser$close()
 
-      if (!isFALSE(wait) && wait > 0) {
+      if (!isFALSE(wait)) {
         # or close it forcefully if it takes too long
         tryCatch(
           private$browser$get_process()$wait(timeout = wait),
