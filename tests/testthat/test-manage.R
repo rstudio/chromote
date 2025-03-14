@@ -49,6 +49,12 @@ test_that("with_chrome_version() manages Chromote object", {
 
   with_chrome_version("128.0.6612.0", {
     expect_equal(find_chrome(), chrome_versions_path("128.0.6612.0"))
+    if (!has_chromote()) {
+      skip(sprintf(
+        "Skipping because Chrome failed to start (%s)",
+        find_chrome()
+      ))
+    }
     chromote_128 <- default_chromote_object()
     chromote_129 <- NULL
 
@@ -57,6 +63,12 @@ test_that("with_chrome_version() manages Chromote object", {
         find_chrome(),
         chrome_versions_path("129.0.6668.100", "chrome-headless-shell")
       )
+      if (!has_chromote()) {
+        skip(sprintf(
+          "Skipping because Chrome failed to start (%s)",
+          find_chrome()
+        ))
+      }
       chromote_129 <- default_chromote_object()
 
       expect_true(chromote_129$is_alive())
@@ -87,6 +99,13 @@ test_that("with_chrome_version() works", {
   )
 
   with_chrome_version("128.0.6612.0", {
+    if (!has_chromote()) {
+      skip(sprintf(
+        "Skipping because Chrome failed to start (%s)",
+        find_chrome()
+      ))
+    }
+
     b <- ChromoteSession$new()
 
     expect_match(
