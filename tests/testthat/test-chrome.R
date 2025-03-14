@@ -16,6 +16,8 @@ expect_true_eventually <- function(expr, max_tries = 50, delay = 0.1) {
 }
 
 test_that("chrome with remote hosts", {
+  skip_if_no_chromote()
+
   res <- with_random_port(function(port) {
     args <- c(
       get_chrome_args(),
