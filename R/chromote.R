@@ -443,9 +443,10 @@ Chromote <- R6Class(
         )
       }
 
-      # close the browser nicely
+      # close the browser nicely, immediately close websocket
       log("Sending `Browser.close` message")
       self$Browser$close()
+      try(private$ws$close(), silent = TRUE)
 
       if (!isFALSE(wait)) {
         # or close it forcefully if it takes too long
@@ -464,10 +465,6 @@ Chromote <- R6Class(
             private$browser$close(wait = 1)
           }
         )
-      }
-
-      if (private$ws$readyState() %in% c(0L, 1L)) {
-        try(private$ws$close(), silent = TRUE)
       }
 
       invisible()
