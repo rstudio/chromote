@@ -49,18 +49,20 @@ Browser <- R6Class(
       log <- function(...) {
         message(
           strftime(Sys.time(), "[%F %T] "),
+          private$process$get_pid(),
+          " | ",
           ...
         )
       }
 
-      log("Sending SIGTERM to PID ", private$process$get_pid())
+      log("Sending SIGTERM")
       private$process$signal(tools::SIGTERM)
 
       if (!isFALSE(wait)) {
         tryCatch(
           {
-            log("Waiting for PID ", private$process$get_pid(), " to exit")
-            private$process$wait(timeout = wait)
+            log("Waiting for process to exit")
+            private$process$wait(timeout = wait * 1000)
             log("Process exited cleanly")
           },
           error = function(err) {

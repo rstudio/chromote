@@ -434,31 +434,33 @@ Chromote <- R6Class(
         return(invisible())
       }
 
-      # close the browser nicely
-      self$Browser$close()
-
       log <- function(...) {
         message(
           strftime(Sys.time(), "[%F %T] "),
+          private$browser$get_process()$get_pid(),
+          " | ",
           ...
         )
       }
+
+      # close the browser nicely
+      log("Sending `Browser.close` message")
+      self$Browser$close()
 
       if (!isFALSE(wait)) {
         # or close it forcefully if it takes too long
         tryCatch(
           {
-            pid <- private$browser$get_process()$get_pid()
-            log("waiting for browser process ", pid, " to shut down")
-            private$browser$get_process()$wait(timeout = wait)
-            log("browser process ", pid, " exited")
+            log("waiting for browser process to shut down")
+            private$browser$get_process()$wait(timeout = wait * 1000)
+            log("$wait() exited")
             if (private$browser$get_process()$is_alive()) {
-              log("browser process ", pid, " is still alive >:(")
+              log("browser process is still alive >:(")
               stop("shut it down")
             }
           },
           error = function(err) {
-            log("timed out waiting for browser ", pid, " to close, escalating") # fmt: skip
+            log("timed out waiting for browser to close, escalating") # fmt: skip
             private$browser$close(wait = 1)
           }
         )
