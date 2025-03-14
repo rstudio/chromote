@@ -64,7 +64,7 @@ ChromeRemote <- R6Class(
       tryCatch(
         {
           # If we can read info from the remote host, then it's alive
-          fromJSON(url)
+          suppressWarnings(fromJSON(url))
           TRUE
         },
         error = function(err) FALSE
