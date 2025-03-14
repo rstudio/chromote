@@ -69,6 +69,14 @@ ChromeRemote <- R6Class(
         },
         error = function(err) FALSE
       )
+    },
+
+    #' @description chromote does not manage remote processes, so closing a
+    #'   remote Chrome browser does nothing. You can send a `Browser$close()`
+    #'   command if this is really something you want to do.
+    close = function() {
+      # chromote didn't start this process, so we won't kill it or close it.
+      invisible(TRUE)
     }
   )
 )
