@@ -447,7 +447,9 @@ Chromote <- R6Class(
         )
       }
 
-      (private$ws$readyState() %in% c(0L, 1L)) || private$ws$close()
+      if (private$ws$readyState() %in% c(0L, 1L)) {
+        try(private$ws$close(), silent = TRUE)
+      }
 
       invisible()
     },

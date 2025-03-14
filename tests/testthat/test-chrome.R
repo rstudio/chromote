@@ -28,7 +28,7 @@ test_that("chrome with remote hosts", {
     list(port = port, process = p)
   })
 
-  withr::defer(res$process$is_alive() || res$process$kill())
+  withr::defer(if (!res$process$is_alive()) res$process$kill())
 
   remote <- ChromeRemote$new(host = "localhost", port = res$port)
 
