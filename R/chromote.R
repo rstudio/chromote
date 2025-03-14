@@ -447,6 +447,7 @@ Chromote <- R6Class(
             message("browser process ", pid, " exited")
             if (private$browser$get_process()$is_alive()) {
               message("browser process ", pid, " is still alive >:(")
+              stop("shut it down")
             }
           },
           error = function(err) {
