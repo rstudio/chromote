@@ -46,14 +46,20 @@ Browser <- R6Class(
         check_number_whole(wait, min = 0)
       }
 
+      message("Sending SIGTERM to PID ", private$process$get_pid())
       private$process$signal(tools::SIGTERM)
 
       if (!isFALSE(wait)) {
         tryCatch(
-          private$process$wait(timeout = wait),
+          {
+            message("Waiting for PID ", private$process$get_pid(), " to exit")
+            private$process$wait(timeout = wait)
+            message("Process exited cleanly")
+          },
           error = function(err) {
             # Still alive after 10 seconds...
-            private$process$kill()
+            message("Process did not exit cleanly, now we're killing it")
+            try(private$process$kill(), silent = TRUE)
           }
         )
       }
