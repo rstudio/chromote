@@ -441,12 +441,16 @@ Chromote <- R6Class(
         # or close it forcefully if it takes too long
         tryCatch(
           {
-            message("waiting for browser process to shut down")
+            pid <- private$browser$get_process()$get_pid()
+            message("waiting for browser process ", pid, " to shut down")
             private$browser$get_process()$wait(timeout = wait)
-            message("browser process exited")
+            message("browser process ", pid, " exited")
+            if (private$browser$get_process()$is_alive()) {
+              message("browser process ", pid, " is still alive >:(")
+            }
           },
           error = function(err) {
-            message("timed out waiting for browser to close, escalating")
+            message("timed out waiting for browser ", pid, " to close, escalating") # fmt: skip
             private$browser$close(wait = 1)
           }
         )
