@@ -34,9 +34,30 @@ Browser <- R6Class(
     get_port = function() private$port,
 
     #' @description Close the browser
-    close = function() {
-      if (self$is_local() && private$process$is_alive()) {
-        private$process$signal(tools::SIGTERM)
+    close = function(wait = FALSE) {
+      if (!self$is_local()) return(invisible())
+      if (!private$process$is_alive()) return(invisible())
+
+      should_wait <- FALSE
+      if (isTRUE(wait)) {
+        should_wait <- TRUE
+        wait <- 10
+      }
+      if (!isFALSE(wait)) {
+        check_number_whole(wait, min = -1)
+        should_wait <- TRUE
+      }
+
+      private$process$signal(tools::SIGTERM)
+
+      if (should_wait) {
+        tryCatch(
+          private$process$wait(timeout = wait),
+          error = function() {
+            # Still alive after 10 seconds...
+            private$process$kill()
+          }
+        )
       }
     }
   ),

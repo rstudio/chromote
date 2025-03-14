@@ -435,13 +435,7 @@ Chromote <- R6Class(
     #' @description Forcefully stop the [`Browser`] process
     stop = function() {
       private$ws$close()
-      private$browser$close()
-      private$browser$get_process()$wait(timeout = 10)
-
-      if (private$browser$is_alive()) {
-        # Still alive after 10 seconds...
-        private$browser$get_process()$kill()
-      }
+      private$browser$close(wait = TRUE)
 
       invisible()
     },
