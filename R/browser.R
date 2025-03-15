@@ -46,32 +46,18 @@ Browser <- R6Class(
         check_number_whole(wait, min = 0)
       }
 
-      log <- function(...) {
-        message(
-          strftime(Sys.time(), "[%F %T] "),
-          private$process$get_pid(),
-          " | ",
-          ...
-        )
-      }
-
-      log("Sending SIGTERM")
       private$process$signal(tools::SIGTERM)
 
       if (!isFALSE(wait)) {
         tryCatch(
           {
-            log("Waiting for process to exit")
             private$process$wait(timeout = wait * 1000)
             if (private$process$is_alive()) {
-              log("browser process is STILL alive")
-              stop("shut it down")
+              stop("shut it down") # ignored, used to escalate
             }
-            log("Process exited cleanly")
           },
           error = function(err) {
-            # Still alive after 10 seconds...
-            log("Process did not exit cleanly, now we're killing it")
+            # Still alive after wait...
             try(private$process$kill(), silent = TRUE)
           }
         )

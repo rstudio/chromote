@@ -434,17 +434,7 @@ Chromote <- R6Class(
         return(invisible())
       }
 
-      log <- function(...) {
-        message(
-          strftime(Sys.time(), "[%F %T] "),
-          private$browser$get_process()$get_pid(),
-          " | ",
-          ...
-        )
-      }
-
       # close the browser nicely, immediately close websocket
-      log("Sending `Browser.close` message")
       self$Browser$close(wait_ = FALSE)
       try(private$ws$close(), silent = TRUE)
 
@@ -452,16 +442,12 @@ Chromote <- R6Class(
         # or close it forcefully if it takes too long
         tryCatch(
           {
-            log("waiting for browser process to shut down")
             private$browser$get_process()$wait(timeout = wait * 1000)
             if (private$browser$get_process()$is_alive()) {
-              log("browser process is still alive >:(")
-              stop("shut it down")
+              stop("shut it down") # ignored, used to escalate
             }
-            log("browser process exited cleanly")
           },
           error = function(err) {
-            log("timed out waiting for browser to close, escalating") # fmt: skip
             try(private$ws$close(), silent = TRUE)
             private$browser$close(wait = 1)
           }
