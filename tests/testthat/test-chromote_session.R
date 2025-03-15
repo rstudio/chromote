@@ -31,9 +31,12 @@ test_that("ChromoteSession gets and sets viewport size", {
   skip_if_offline()
 
   page <- ChromoteSession$new(width = 400, height = 800, mobile = TRUE)
-  # viewport requires an active page
-  page$Page$navigate("https://example.com")
   withr::defer(page$close())
+
+  # viewport requires an active page
+  p <- page$Page$loadEventFired(wait_ = FALSE)
+  page$Page$navigate("https://example.com", wait_ = TRUE)
+  page$wait_for(p)
 
   init_size <- list(
     width = 400,
@@ -164,9 +167,12 @@ test_that("ChromoteSession with deviceScaleFactor = 0", {
   skip_if_offline()
 
   page <- ChromoteSession$new(width = 400, height = 800, mobile = TRUE)
-  # viewport requires an active page
-  page$Page$navigate("https://example.com")
   withr::defer(page$close())
+
+  # viewport requires an active page
+  p <- page$Page$loadEventFired(wait_ = FALSE)
+  page$Page$navigate("https://example.com", wait_ = TRUE)
+  page$wait_for(p)
 
   init_size <- list(
     width = 400,

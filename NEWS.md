@@ -17,6 +17,8 @@
 
 * The `$view()` method of a `ChromoteSession` will now detect when `chrome-headless-shell` is being used and will use the system browser (via `utils::browseURL()`) rather than the Chrome instance attached to chromote. (#214)
 
+* `Chromote` and `ChromoteSession` once again corrrectly handles connections to remote Chrome browsers via `ChromeRemote`. Calling `$close()` on a `Chromote` object connected to a remote browser no longer attempts to close the browser, and will now simply close the websocket connection to the browser. For local process, the `Chromote$close()` gains a `wait` argument that sets the number of seconds to wait for Chrome to gracefully shut down before chromote closes the process. (#212)
+
 # chromote 0.4.0
 
 * Chrome v132 and later no longer support [old headless mode](https://developer.chrome.com/blog/removing-headless-old-from-chrome). As such, `chromote` no longer defaults to using `--headless=old` and now uses `--headless` when running Chrome. You can still use the `chromote.headless` option or `CHROMOTE_HEADLESS` environment variable to configure the `--headless` flag if you're using an older version of Chrome. (#187)

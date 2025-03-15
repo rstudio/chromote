@@ -36,6 +36,24 @@ google-chrome --headless --remote-debugging-address=0.0.0.0 --remote-debugging-p
   --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
 ```
 
+Or you can launch this process in R:
+
+```{r eval=FALSE}
+library(chromote)
+
+args <- c(
+  get_chrome_args(),
+  "--headless",
+  "--remote-debugging-address=0.0.0.0",
+  "--remote-debugging-port=9222"
+)
+
+p <- processx::process$new(find_chrome(), args)
+
+# To (abruptly) stop this process when you're finished with it:
+p$kill()
+```
+
 Then, in your local R session, create a Chromote object with the `host` and `port` (you will need to use the correct IP address).
 Once it's created, you can spawn a session off of it which you can control as normal:
 
