@@ -1,11 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 <!-- Do not run R chunks that print any session information.
      This produces unstable output.
      Instead, copy output from a local execution
      Still use README.Rmd to get special UTF-8 chars from pandoc -->
 
-# Chromote: Headless Chrome Remote Interface
+# chromote <a href="https://rstudio.github.io/chromote"><img src="man/figures/logo.png" align="right" height="138" alt="chromote website" /></a>
 
 <!-- badges: start -->
 
