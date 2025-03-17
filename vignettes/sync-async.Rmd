@@ -2,7 +2,7 @@
 title: "Synchronous vs. asynchronous usage"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Synchronous vs. Asynchronous Usage}
+  %\VignetteIndexEntry{Synchronous vs. asynchronous usage}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 

@@ -2,7 +2,7 @@
 title: "Commands and events"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Commands and Events}
+  %\VignetteIndexEntry{Commands and events}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 
