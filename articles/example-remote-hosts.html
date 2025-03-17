@@ -96,11 +96,26 @@ google-chrome --headless --remote-debugging-address=0.0.0.0 --remote-debugging-p
 # Windows
 "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"  --headless \
   --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222</code></pre>
+<p>Or you can launch this process in R:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">args</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/default_chrome_args.html">get_chrome_args</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="st">"--headless"</span>,</span>
+<span>  <span class="st">"--remote-debugging-address=0.0.0.0"</span>,</span>
+<span>  <span class="st">"--remote-debugging-port=9222"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">processx</span><span class="fu">::</span><span class="va"><a href="http://processx.r-lib.org/reference/process.html" class="external-link">process</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="../reference/find_chrome.html">find_chrome</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">args</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># To (abruptly) stop this process when you're finished with it:</span></span>
+<span><span class="va">p</span><span class="op">$</span><span class="fu">kill</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Then, in your local R session, create a Chromote object with the
 <code>host</code> and <code>port</code> (you will need to use the
 correct IP address). Once it’s created, you can spawn a session off of
 it which you can control as normal:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">r</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/Chromote.html">Chromote</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
@@ -127,7 +142,7 @@ navigating to the web site before the R process receives the response
 message for <code>$navigate()</code>, and therefore before R starts
 waiting for <code>Page.loadEventFired</code>. In order to avoid these
 timing problems, it is better to write code like this:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">{</span></span>
 <span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>

@@ -66,12 +66,12 @@
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
 <ul><li><p><a href="#method-ChromeRemote-new"><code>ChromeRemote$new()</code></a></p></li>
+<li><p><a href="#method-ChromeRemote-is_alive"><code>ChromeRemote$is_alive()</code></a></p></li>
+<li><p><a href="#method-ChromeRemote-close"><code>ChromeRemote$close()</code></a></p></li>
 <li><p><a href="#method-ChromeRemote-clone"><code>ChromeRemote$clone()</code></a></p></li>
-</ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="close"><a href="Browser.html#method-close"><code>chromote::Browser$close()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_host"><a href="Browser.html#method-get_host"><code>chromote::Browser$get_host()</code></a></span></li>
+</ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_host"><a href="Browser.html#method-get_host"><code>chromote::Browser$get_host()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_port"><a href="Browser.html#method-get_port"><code>chromote::Browser$get_port()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_process"><a href="Browser.html#method-get_process"><code>chromote::Browser$get_process()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_alive"><a href="Browser.html#method-is_alive"><code>chromote::Browser$is_alive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_local"><a href="Browser.html#method-is_local"><code>chromote::Browser$is_local()</code></a></span></li>
 </ul></details></p><hr><a id="method-ChromeRemote-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
@@ -94,10 +94,28 @@ represents all IPv4 addresses and <code>"::/0"</code> represents all IPv6 addres
 </dl><p></p></div>
 </div>
 
+</div><p></p><hr><a id="method-ChromeRemote-is_alive"></a><div class="section">
+<h3 id="method-is-alive-">Method <code>is_alive()</code><a class="anchor" aria-label="anchor" href="#method-is-alive-"></a></h3>
+<p>Is the remote service alive?</p><div class="section">
+<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromeRemote</span><span class="op">$</span><span class="fu">is_alive</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
+</div><p></p><hr><a id="method-ChromeRemote-close"></a><div class="section">
+<h3 id="method-close-">Method <code><a href="https://rdrr.io/r/base/connections.html" class="external-link">close()</a></code><a class="anchor" aria-label="anchor" href="#method-close-"></a></h3>
+<p>chromote does not manage remote processes, so closing a
+remote Chrome browser does nothing. You can send a <code>Browser$close()</code>
+command if this is really something you want to do.</p><div class="section">
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromeRemote</span><span class="op">$</span><span class="fu">close</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
 </div><p></p><hr><a id="method-ChromeRemote-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromeRemote</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
