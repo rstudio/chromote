@@ -24,3 +24,29 @@ has_chromote <- function() {
     }
   )
 }
+
+with_retries <- function(fn, max_tries = 3) {
+  trace <- trace_back()
+
+  retry <- function(tried = 0) {
+    tryCatch(
+      {
+        fn()
+      },
+      error = function(err) {
+        tried <- tried + 1
+        if (tried >= max_tries) {
+          rlang::abort(
+            sprintf("Failed after %s tries", tried),
+            parent = err,
+            trace = trace
+          )
+        } else {
+          retry(tried)
+        }
+      }
+    )
+  }
+
+  retry()
+}

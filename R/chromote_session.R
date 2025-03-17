@@ -792,11 +792,20 @@ ChromoteSession <- R6Class(
         cat_line("<ChromoteSession> (", state, ")")
         if (self$is_active()) cat_line("  Session ID: ", self$get_session_id())
         if (private$target_is_active)
-          cat_line("  Target ID:  ", self$get_target_id())
-        cat_line(
-          "  Parent PID: ",
-          self$parent$get_browser()$get_process()$get_pid()
-        )
+          cat_line("   Target ID: ", self$get_target_id())
+
+        browser <- self$parent$get_browser()
+        if (browser$is_local()) {
+          cat_line(
+            "  Parent PID: ",
+            self$parent$get_browser()$get_process()$get_pid()
+          )
+        } else {
+          cat_line(
+            " Remote Host: ",
+            sprintf("http://%s:%s", browser$get_host(), browser$get_port())
+          )
+        }
       }
       invisible(self)
     },

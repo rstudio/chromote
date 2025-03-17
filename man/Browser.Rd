@@ -82,9 +82,18 @@ Browser port
 \subsection{Method \code{close()}}{
 Close the browser
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Browser$close()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Browser$close(wait = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{wait}}{If an integer, waits a number of seconds for the process to
+exit, killing the process if it takes longer than \code{wait} seconds to
+close. Use \code{wait = TRUE} to wait for 10 seconds.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Browser-clone"></a>}}

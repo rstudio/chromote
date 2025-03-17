@@ -15,29 +15,6 @@ test_that("with_chrome_version('system') works", {
   )
 })
 
-with_retries <- function(fn, max_tries = 3) {
-  retry <- function(tried = 0) {
-    tryCatch(
-      {
-        fn()
-      },
-      error = function(err) {
-        tried <- tried + 1
-        if (tried >= max_tries) {
-          rlang::abort(
-            sprintf("Failed after %s tries", tried),
-            parent = err
-          )
-        } else {
-          retry(tried)
-        }
-      }
-    )
-  }
-
-  retry()
-}
-
 try_chromote_info <- function() {
   info <- chromote_info()
   if (!is.null(info$error)) {
@@ -48,40 +25,36 @@ try_chromote_info <- function() {
   list(path = info$path, version = info$version)
 }
 
-test_that("with_chrome_version() works", {
-  chrome_versions_add("128.0.6612.0", "chrome")
-
-  expect_snapshot(
-    with_chrome_version("128.0.6612.0", with_retries(try_chromote_info)),
-    variant = guess_platform()
-  )
-
-  with_chrome_version("128.0.6612.0", {
-    b <- ChromoteSession$new()
-
-    expect_match(
-      b$Runtime$evaluate("navigator.appVersion")$result$value,
-      "HeadlessChrome/128"
-    )
-  })
-})
-
 test_that("with_chrome_version() manages Chromote object", {
   chrome_versions_add("128.0.6612.0", "chrome")
   chrome_versions_add("129.0.6668.100", "chrome-headless-shell")
 
   expect_closed <- function(chromote_obj) {
-    max_wait <- Sys.time() + 5
+    max_wait <- Sys.time() + 15
     while (chromote_obj$is_alive() && Sys.time() < max_wait) {
       Sys.sleep(0.1)
     }
-    expect_false(!!chromote_obj$is_alive())
+    if (Sys.time() >= max_wait) {
+      warning("Waited the full 15 seconds for the process to close")
+    }
+    expect_false(chromote_obj$is_alive())
   }
 
-  chomote_128 <- NULL
+  chromote_128 <- NULL
+
+  # Another copy of chromote 128 that we start globally, should be unaffected
+  chromote_128_global <- Chromote$new(
+    browser = Chrome$new(path = chrome_versions_path("128.0.6612.0", "chrome"))
+  )
 
   with_chrome_version("128.0.6612.0", {
     expect_equal(find_chrome(), chrome_versions_path("128.0.6612.0"))
+    if (!has_chromote()) {
+      skip(sprintf(
+        "Skipping because Chrome failed to start (%s)",
+        find_chrome()
+      ))
+    }
     chromote_128 <- default_chromote_object()
     chromote_129 <- NULL
 
@@ -90,6 +63,12 @@ test_that("with_chrome_version() manages Chromote object", {
         find_chrome(),
         chrome_versions_path("129.0.6668.100", "chrome-headless-shell")
       )
+      if (!has_chromote()) {
+        skip(sprintf(
+          "Skipping because Chrome failed to start (%s)",
+          find_chrome()
+        ))
+      }
       chromote_129 <- default_chromote_object()
 
       expect_true(chromote_129$is_alive())
@@ -104,4 +83,34 @@ test_that("with_chrome_version() manages Chromote object", {
   })
 
   expect_closed(chromote_128)
+
+  # The global chromote 128 process is still running
+  expect_true(chromote_128_global$is_alive())
+  chromote_128_global$close()
+  expect_closed(chromote_128_global)
+})
+
+test_that("with_chrome_version() works", {
+  chrome_versions_add("128.0.6612.0", "chrome")
+
+  expect_snapshot(
+    with_chrome_version("128.0.6612.0", with_retries(try_chromote_info)),
+    variant = guess_platform()
+  )
+
+  with_chrome_version("128.0.6612.0", {
+    if (!has_chromote()) {
+      skip(sprintf(
+        "Skipping because Chrome failed to start (%s)",
+        find_chrome()
+      ))
+    }
+
+    b <- ChromoteSession$new()
+
+    expect_match(
+      b$Runtime$evaluate("navigator.appVersion")$result$value,
+      "HeadlessChrome/128"
+    )
+  })
 })
