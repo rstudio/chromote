@@ -1,5 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 <!-- Do not run R chunks that print any session information.
      This produces unstable output.
      Instead, copy output from a local execution
@@ -56,14 +57,31 @@ for node.js.
 - Powers many higher-level packages and functions, like `{shinytest2}`
   and `rvest::read_html_live()`.
 
+## Learn More
+
+Learn more about using and programming with chromote:
+
+- [Get started](https://rstudio.github.io/articles/chromote.html)
+- [Commands and
+  events](https://rstudio.github.io/articles/articles/commands-and-events.html)
+- [Synchronous vs. asynchronous
+  usage](https://rstudio.github.io/articles/articles/sync-async.html)
+- [Choosing which Chrome-based browser to
+  use](https://rstudio.github.io/articles/articles/which-chrome.html)
+
 ## Installation
 
-``` r
-# CRAN
-install.packages("chromote")
+Install the released version of chromote from CRAN:
 
-# Development
-remotes::install_github("rstudio/chromote")
+``` r
+install.packages("chromote")
+```
+
+Or install the development version from GitHub with:
+
+``` r
+# install.packages("pak")
+pak::pak("rstudio/chromote")
 ```
 
 ## Basic usage
@@ -136,18 +154,6 @@ alt="A screenshot of the sidebar of r-rproject.org, circa 2023." />
 <figcaption aria-hidden="true">A screenshot of the sidebar of
 r-rproject.org, circa 2023.</figcaption>
 </figure>
-
-## Learn More
-
-Learn more about using and programming with chromote:
-
-- [Get started](https://rstudio.github.io/articles/chromote.html)
-- [Commands and
-  events](https://rstudio.github.io/articles/articles/commands-and-events.html)
-- [Synchronous vs. asynchronous
-  usage](https://rstudio.github.io/articles/articles/sync-async.html)
-- [Choosing which Chrome-based browser to
-  use](https://rstudio.github.io/articles/articles/which-chrome.html)
 
 [^1]: This simple example works interactively, but if you’re using
     chromote to programmatically take screenshots you’ll want to read

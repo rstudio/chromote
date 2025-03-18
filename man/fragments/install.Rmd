@@ -1,0 +1,14 @@
+## Installation
+
+Install the released version of chromote from CRAN:
+
+```{r, eval = FALSE}
+install.packages("chromote")
+```
+
+Or install the development version from GitHub with:
+
+```{r, eval = FALSE}
+# install.packages("pak")
+pak::pak("rstudio/chromote")
+```

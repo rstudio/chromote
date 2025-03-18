@@ -19,8 +19,15 @@ knitr::opts_chunk$set(
 MAN_PATH <- "../man"
 ```
 
-```{r child="../man/fragments/chromote-intro.Rmd"}
+```{r child="../man/fragments/features.Rmd"}
 ```
+
+```{r child="man/fragments/install.Rmd"}
+```
+
+```{r child="man/fragments/basic-usage.Rmd"}
+```
+
 
 > **Technical Note**
 >

@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-```{r child="man/fragments/chromote-intro.Rmd"}
+```{r child="man/fragments/features.Rmd"}
 ```
 
 ## Learn More
@@ -36,3 +36,9 @@ Learn more about using and programming with chromote:
 * [Commands and events](https://rstudio.github.io/articles/articles/commands-and-events.html)
 * [Synchronous vs. asynchronous usage](https://rstudio.github.io/articles/articles/sync-async.html)
 * [Choosing which Chrome-based browser to use](https://rstudio.github.io/articles/articles/which-chrome.html)
+
+```{r child="man/fragments/install.Rmd"}
+```
+
+```{r child="man/fragments/basic-usage.Rmd"}
+```
