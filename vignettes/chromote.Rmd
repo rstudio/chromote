@@ -22,10 +22,10 @@ MAN_PATH <- "../man"
 ```{r child="../man/fragments/features.Rmd"}
 ```
 
-```{r child="man/fragments/install.Rmd"}
+```{r child="../man/fragments/install.Rmd"}
 ```
 
-```{r child="man/fragments/basic-usage.Rmd"}
+```{r child="../man/fragments/basic-usage.Rmd"}
 ```
 
 
