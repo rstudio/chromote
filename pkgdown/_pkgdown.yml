@@ -55,7 +55,7 @@ reference:
 - title: Manage and install Chrome for Testing
   desc: |
     Download and use any version of Chrome or `chrome-headless-shell` available
-    via the [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing)
+    via the [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing/)
     service.
   contents:
   - with_chrome_version

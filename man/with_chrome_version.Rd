@@ -86,7 +86,7 @@ returns the result of the \code{code} argument.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#Experimental}{\figure{lifecycle-Experimental.svg}{options: alt='[E]'}}}{\strong{[E]}}
 
 This function downloads and sets up a specific version of Chrome, using the
-\href{https://googlechromelabs.github.io/chrome-for-testing}{Google Chrome for Testing builds}
+\href{https://googlechromelabs.github.io/chrome-for-testing/}{Google Chrome for Testing builds}
 for \code{chrome}, \code{chrome-headless-shell} or \code{chromedriver} for use with
 chromote.
 
@@ -99,7 +99,7 @@ This function downloads the specified binary, if not already
 available and configures \code{\link[=find_chrome]{find_chrome()}} to use the specified binary while
 evaluating \code{code} or within the local scope. It uses the
 "known-good-versions" list from the Google Chrome for Testing versions at
-\url{https://googlechromelabs.github.io/chrome-for-testing}.
+\url{https://googlechromelabs.github.io/chrome-for-testing/}.
 }
 \section{Functions}{
 \itemize{

@@ -4,7 +4,7 @@
 #' `r lifecycle_badge("experimental")`
 #'
 #' This function downloads and sets up a specific version of Chrome, using the
-#' [Google Chrome for Testing builds](https://googlechromelabs.github.io/chrome-for-testing)
+#' [Google Chrome for Testing builds](https://googlechromelabs.github.io/chrome-for-testing/)
 #' for `chrome`, `chrome-headless-shell` or `chromedriver` for use with
 #' chromote.
 #'
@@ -23,7 +23,7 @@
 #'   available and configures [find_chrome()] to use the specified binary while
 #'   evaluating `code` or within the local scope. It uses the
 #'   "known-good-versions" list from the Google Chrome for Testing versions at
-#'   <https://googlechromelabs.github.io/chrome-for-testing>.
+#'   <https://googlechromelabs.github.io/chrome-for-testing/>.
 #'
 #' @param version A character string specifying the version to use. The default
 #'   value is `"latest-stable"` to follow the latest stable release of Chrome.
@@ -238,7 +238,7 @@ chrome_get_versions <- function(update_cached = TRUE) {
 #'
 #' By default lists the installed Chrome versions in the [chrome_versions_path_cache()],
 #' or list all Chrome versions available via Google's
-#' [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing)
+#' [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing/)
 #' service.
 #'
 #' Managed Chrome installations is an experimental feature introduced in
