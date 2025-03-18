@@ -2,7 +2,7 @@
 title: "Loading a page reliably"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{loading a page reliably}
+  %\VignetteIndexEntry{Loading a page reliably}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 

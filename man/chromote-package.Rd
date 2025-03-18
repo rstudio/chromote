@@ -6,6 +6,8 @@
 \alias{chromote-package}
 \title{chromote: Headless Chrome Web Browser Interface}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 An implementation of the 'Chrome DevTools Protocol', for controlling a headless Chrome web browser.
 }
 \seealso{

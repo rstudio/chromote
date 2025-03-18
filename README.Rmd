@@ -16,8 +16,8 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
-Chromote: Headless Chrome Remote Interface
-==========================================
+
+# chromote <a href="https://rstudio.github.io/chromote"><img src="man/figures/logo.png" align="right" height="138" alt="chromote website" /></a>
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/rstudio/chromote/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rstudio/chromote/actions)
