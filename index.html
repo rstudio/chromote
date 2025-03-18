@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Headless Chrome Web Browser Interface • chromote</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_Pro-0.4.9/font.css" rel="stylesheet">
@@ -15,6 +21,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Headless Chrome Web Browser Interface">
 <meta name="description" content="An implementation of the Chrome DevTools Protocol, for controlling a headless Chrome web browser.">
 <meta property="og:description" content="An implementation of the Chrome DevTools Protocol, for controlling a headless Chrome web browser.">
+<meta property="og:image" content="https://rstudio.github.io/chromote/logo.png">
 <!-- See https://stackoverflow.com/questions/1865837/whats-the-difference-between-window-location-and-window-location-replace — we use .replace() because we don't want the old url to appear in the browser history. --><script>
   if (!/(\/|html?)$/.test(window.location.href)){
     window.location.replace(window.location.href + '/');
@@ -73,8 +80,11 @@
 </nav><div class="container template-home" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="chromote-headless-chrome-remote-interface">Chromote: Headless Chrome Remote Interface<a class="anchor" aria-label="anchor" href="#chromote-headless-chrome-remote-interface"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="chromote-">chromote 
+<a class="anchor" aria-label="anchor" href="#chromote-"></a>
+</h1>
+</div>
 <!-- badges: start -->
 
 <p>Chromote is an R implementation of the <a href="https://chromedevtools.github.io/devtools-protocol/" class="external-link">Chrome DevTools Protocol</a>. It works with Chrome, Chromium, Opera, Vivaldi, and other browsers based on <a href="https://www.chromium.org/" class="external-link">Chromium</a>. By default it uses Google Chrome (which must already be installed on the system). To use a different browser, see <code><a href="articles/which-chrome.html">vignette("which-chrome")</a></code>.</p>
