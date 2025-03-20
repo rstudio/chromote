@@ -1,25 +1,31 @@
 # chromote 0.5.0
 
+## New features
+
 * chromote now includes experimental features to download versioned binaries of Chrome and `chrome-headless-shell` for Mac (x64 or arm64), Windows (32- or 64-bit) or Linux (x86-64) from the [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing/) service. (#198)
   * Use `with_chrome_version()` or `local_chrome_version()` to temporarily switch to a specific version of Chrome. The appropriate binary will be downloaded automatically if not yet available locally. 
   * Use `chrome_versions_list()` to list installed or available versions of Chrome. 
   * Or use `chrome_versions_add()` and `chrome_versions_remove()` to manually add or remove a specific version of Chrome from chromote's cache.
 
-* `ChromoteSession$new()` gains a `mobile` argument that can be used to set the device emulation in that session to emulate a mobile browser. The default is `mobile = FALSE`, which matches previous behavior. (#205)
-
-* `ChromoteSession$new()` now sets `width` and `height` using [Emulation.setDeviceMetricsOverride](https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#method-setDeviceMetricsOverride), which works for all Chrome binaries and versions. This fixes an issue with `width` and `height` being ignored for Chrome versions 128-133. (#205)
-
 * `ChromoteSession` gains two new helper methods: `$set_viewport_size()` and `$get_viewport_size()`. These methods allow you to change the viewport size – effectively the virtual window size for a page – or to get the current viewport size. If you previously relied on `$Emulation$setVisibleSize()` (now a deprecated method in the Chrome DevTools Protocol), `$set_viewport_size()` is a good replacement as it uses [Emulation.setDeviceMetricsOverride](https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#method-setDeviceMetricsOverride) instead. (#206)
 
-* Fixed a bug in `chromote_info()` on Windows with Powershell when no version info is returned. (#207)
+## Improvements
+
+* `ChromoteSession$new()` gains a `mobile` argument that can be used to set the device emulation in that session to emulate a mobile browser. The default is `mobile = FALSE`, which matches previous behavior. (#205)
 
 * `Chromote` and `ChromoteSesssion` gain an `$auto_events_enable_args()` method that sets that arguments used by chromote's auto-events feature when calling the `enable` command for a domain, e.g. `Fetch.enable`. (#208)
 
 * The `$view()` method of a `ChromoteSession` will now detect when `chrome-headless-shell` is being used and will use the system browser (via `utils::browseURL()`) rather than the Chrome instance attached to chromote. (#214)
 
-* `Chromote` and `ChromoteSession` once again corrrectly handles connections to remote Chrome browsers via `ChromeRemote`. Calling `$close()` on a `Chromote` object connected to a remote browser no longer attempts to close the browser, and will now simply close the websocket connection to the browser. For local process, the `Chromote$close()` gains a `wait` argument that sets the number of seconds to wait for Chrome to gracefully shut down before chromote closes the process. (#212)
-
 * chromote now has a hex sticker! Thank you to @davidrsch for the inspiration. (#216)
+
+## Bug fixes
+
+* `ChromoteSession$new()` now sets `width` and `height` using [Emulation.setDeviceMetricsOverride](https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#method-setDeviceMetricsOverride), which works for all Chrome binaries and versions. This fixes an issue with `width` and `height` being ignored for Chrome versions 128-133. (#205)
+
+* Fixed a bug in `chromote_info()` on Windows with Powershell when no version info is returned. (#207)
+
+* `Chromote` and `ChromoteSession` once again correctly handles connections to remote Chrome browsers via `ChromeRemote`. Calling `$close()` on a `Chromote` object connected to a remote browser no longer attempts to close the browser, and will now simply close the websocket connection to the browser. For local process, the `Chromote$close()` gains a `wait` argument that sets the number of seconds to wait for Chrome to gracefully shut down before chromote closes the process. (#212)
 
 # chromote 0.4.0
 
