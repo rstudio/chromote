@@ -86,6 +86,110 @@
     
     
 <div class="section level2">
+<h2 id="use-any-version-of-chrome-or-chrome-headless-shell-with-chromote">Use any version of Chrome or <code>chrome-headless-shell</code> with
+chromote<a class="anchor" aria-label="anchor" href="#use-any-version-of-chrome-or-chrome-headless-shell-with-chromote"></a>
+</h2>
+<p>By default, chromote uses the Chrome browser installed on your
+system. Modern browsers automatically and frequently update, which is
+convenient for you when you’re browsing the Internet but can easily
+introduce breaking and unexpected changes in your automations.</p>
+<p>The chromote package allows you to download and use any version of
+Chrome or <code>chrome-headless-shell</code> available via the <a href="https://googlechromelabs.github.io/chrome-for-testing/" class="external-link">Google
+Chrome for Testing</a> service.</p>
+<p>To get started, call <code><a href="../reference/with_chrome_version.html">local_chrome_version()</a></code> with a
+specific <code>version</code> and <code>binary</code> choice at the
+start of your script, before you create a new
+<code>ChromoteSession</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/with_chrome_version.html">local_chrome_version</a></span><span class="op">(</span><span class="st">"latest-stable"</span>, binary <span class="op">=</span> <span class="st">"chrome"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Downloading `chrome` version 134.0.6998.88 for mac-arm64</span></span>
+<span><span class="co">#&gt; trying URL 'https://storage.googleapis.com/chrome-for-testing-public/134.0.6998.88/mac-arm64/chrome-mac-arm64.zip'</span></span>
+<span><span class="co">#&gt; Content type 'application/zip' length 158060459 bytes (150.7 MB)</span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; downloaded 150.7 MB</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ Downloading `chrome` version 134.0.6998.88 for mac-arm64 [5.3s]</span></span>
+<span><span class="co">#&gt; chromote will now use version 134.0.6998.88 of `chrome` for mac-arm64.</span></span>
+<span></span>
+<span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>By default, if called without any arguments,
+<code><a href="../reference/with_chrome_version.html">local_chrome_version()</a></code> will use
+<code>version = "latest-stable"</code> — the latest stable version
+available — and <code>binary = "chrome"</code> — the standard Chrome
+browser binary. If you don’t already have a copy of the requested
+version of the binary, <code><a href="../reference/with_chrome_version.html">local_chrome_version()</a></code> will download
+it for you.</p>
+<p>For scripts with a longer life span, you may want to pin your script
+to a specific version of Chrome or
+<code>chrome-headless-shell</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/with_chrome_version.html">local_chrome_version</a></span><span class="op">(</span><span class="st">"134.0.6998.88"</span>, binary <span class="op">=</span> <span class="st">"chrome-headless-shell"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; chromote will now use version 134.0.6998.88 of `chrome-headless-shell` for mac-arm64.</span></span></code></pre></div>
+<blockquote>
+<p><strong>Technincal Note: chrome-headless-shell</strong></p>
+<p>chromote runs Chrome in “headless mode”, i.e. without a visual
+interface. Between versions 120 and 132 of Chrome, there were,
+essentially, two flavors of headless mode.</p>
+<p><code>chrome-headless-shell</code> is the version of Chrome’s
+headless mode that is designed and best suited for automated testing,
+screenshots and printing, typically referred to as “old headless”
+mode.</p>
+<p>In most uses of chromote, <code>chrome-headless-shell</code> is an
+appropriate choice. It will generally load faster and run more quickly
+than the alternative headless mode which uses the same version of Chrome
+you use when browsing, but without the UI. After v132, old headless mode
+is no longer included in the Chrome binary, but the
+<code>chrome-headless-shell</code> binary is available from v120+.</p>
+</blockquote>
+<p>chromote stores previously downloaded versions of Chrome so that,
+once downloaded, you won’t need to download the binary again. You can
+list all of the versions and binaries you’ve installed with
+<code><a href="../reference/chrome_versions_list.html">chrome_versions_list()</a></code>.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/chrome_versions_list.html">chrome_versions_list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span><span class="co">#&gt;   version       revision binary                platform  url                        path </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;    &lt;chr&gt;                 &lt;chr&gt;     &lt;chr&gt;                      &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1 134.0.6998.88 1415337  chrome                mac-arm64 https://storage.googleapi… /Use…</span></span>
+<span><span class="co">#&gt; 2 134.0.6998.88 1415337  chrome-headless-shell mac-arm64 https://storage.googleapi… /Use…</span></span></code></pre></div>
+<p>You can also request all available Chrome versions and binaries with
+<code>chrome_versions_list("all")</code>.</p>
+<p>For small tasks where you want to use a specific version of Chrome
+for a few lines of code, chromote provides a
+<code><a href="../reference/with_chrome_version.html">with_chrome_version()</a></code> variant:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/with_chrome_version.html">with_chrome_version</a></span><span class="op">(</span><span class="st">"132"</span>, <span class="op">{</span></span>
+<span>  <span class="co"># Take a screenshot with Chrome v132</span></span>
+<span>  <span class="fu">webshot2</span><span class="fu">::</span><span class="fu">webshot</span><span class="op">(</span><span class="st">"https://r-project.org"</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p>Finally, you can manage Chrome binaries directly with three helper
+functions:</p>
+<ol style="list-style-type: decimal">
+<li><p><code><a href="../reference/chrome_versions.html">chrome_versions_add()</a></code> can be used to add a new
+Chrome version to the cache, without explicitly configuring chromote to
+use that version.</p></li>
+<li><p><code><a href="../reference/chrome_versions.html">chrome_versions_path()</a></code> returns the path to the
+Chrome binary for a given version and binary type.</p></li>
+<li><p><code><a href="../reference/chrome_versions.html">chrome_versions_remove()</a></code> can be used to delete
+copies of Chrome from the local cache.</p></li>
+</ol>
+<blockquote>
+<p><strong>Note for Windows users</strong></p>
+<p>Chrome for Windows includes a <code>setup.exe</code> file that
+chromote runs when it extracts the Chrome zipfile. This file is provided
+by Chrome and is used to set the correct permissions on the
+<code>chrome.exe</code> executable file. Sometimes, running
+<code>setup.exe</code> returns an error, even if it works correctly.</p>
+<p>If you do encounter errors using a downloaded version of Chrome, use
+<code><a href="../reference/chrome_versions.html">chrome_versions_path()</a></code> to get the path to the problematic
+executable. Then, try running this executable yourself with the
+<strong>Run</strong> command (from the Start menu). This typically
+resolves any lingering permissions issues.</p>
+</blockquote>
+</div>
+<div class="section level2">
 <h2 id="using-a-chrome-based-browser-that-you-installed">Using a Chrome-based browser that you installed<a class="anchor" aria-label="anchor" href="#using-a-chrome-based-browser-that-you-installed"></a>
 </h2>
 <p>Chromote will look in specific places for the Chrome web browser,
@@ -94,7 +198,7 @@ depending on platform. This is done by the
 <p>If you wish to use a different browser from the default, you can set
 the <code>CHROMOTE_CHROME</code> environment variable, either with
 <code>Sys.setenv(CHROMOTE_CHROME="/path/to/browser")</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>CHROMOTE_CHROME <span class="op">=</span> <span class="st">"/Applications/Chromium.app/Contents/MacOS/Chromium"</span><span class="op">)</span></span>
 <span></span>
@@ -104,7 +208,7 @@ the <code>CHROMOTE_CHROME</code> environment variable, either with
 <p>Another way is create a <code>Chromote</code> object and explicitly
 specify the browser, then spawn <code>ChromoteSession</code>s from
 it.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/Chromote.html">Chromote</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  browser <span class="op">=</span> <span class="va"><a href="../reference/Chrome.html">Chrome</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>path <span class="op">=</span> <span class="st">"/Applications/Chromium.app/Contents/MacOS/Chromium"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -114,7 +218,7 @@ it.</p>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span></code></pre></div>
 <p>Yet another way is to create a <code>Chromote</code> object with a
 specified browser, then set it as the default Chromote object.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/Chromote.html">Chromote</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  browser <span class="op">=</span> <span class="va"><a href="../reference/Chrome.html">Chrome</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>path <span class="op">=</span> <span class="st">"/Applications/Chromium.app/Contents/MacOS/Chromium"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -125,9 +229,9 @@ specified browser, then set it as the default Chromote object.</p>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span></code></pre></div>
-<!-- TODO: Managed Chrome for Testing versions -->
 </div>
-  </main>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
@@ -135,7 +239,7 @@ specified browser, then set it as the default Chromote object.</p>
    </div>
   <footer><div class="container">
   <div class="pkgdown-footer-left">
-  <p>Developed by <a href="https://github.com/wch" class="external-link">Winston Chang</a>, <a href="http://schloerke.com" class="external-link">Barret Schloerke</a>, <a href="https://garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="https://www.posit.co" class="external-link"><img src="https://www.tidyverse.org/posit-logo.svg" alt="Posit" height="16" width="62" style="margin-bottom: 3px;"></a>.</p>
+  <p>Developed by <a href="https://garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="https://github.com/wch" class="external-link">Winston Chang</a>, <a href="http://schloerke.com" class="external-link">Barret Schloerke</a>, <a href="https://www.posit.co" class="external-link"><img src="https://www.tidyverse.org/posit-logo.svg" alt="Posit" height="16" width="62" style="margin-bottom: 3px;"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
