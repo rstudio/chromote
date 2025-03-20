@@ -43,14 +43,25 @@ local_chrome_version("latest-stable", binary = "chrome")
 b <- ChromoteSession$new()
 ```
 
-By default, if called without any arguments, `local_chrome_version()` will use `version = "latest-stable"` — the latest stable version available — and `binary = "chrome"` — the standard Chrome browser binary.
-If you don't already have a copy of the requested version of the binary, `local_chrome_version()` will download it for you.
+By default, `local_chrome_version()` uses the latest stable version of Chrome, matching the arguments shown in the code example above.
 
-For scripts with a longer life span, you may want to pin your script to a specific version of Chrome or `chrome-headless-shell`.
+For scripts with a longer life span and to ensure reproducibility, you can specify a specific version of Chrome or `chrome-headless-shell`:
 
 ```r
 local_chrome_version("134.0.6998.88", binary = "chrome-headless-shell")
 #> chromote will now use version 134.0.6998.88 of `chrome-headless-shell` for mac-arm64.
+```
+
+If you don't already have a copy of the requested version of the binary, `local_chrome_version()` will download it for you so you'll only need to download the binary once.
+You can list all of the versions and binaries you've installed with `chrome_versions_list()`, or all available versions and binaries with `chrome_versions_list("all")`.
+
+```r
+chrome_versions_list()
+#> # A tibble: 2 × 6
+#>   version       revision binary                platform  url                        path 
+#>   <chr>         <chr>    <chr>                 <chr>     <chr>                      <chr>
+#> 1 134.0.6998.88 1415337  chrome                mac-arm64 https://storage.googleapi… /Use…
+#> 2 134.0.6998.88 1415337  chrome-headless-shell mac-arm64 https://storage.googleapi… /Use…
 ```
 
 > **Technincal Note: chrome-headless-shell**
@@ -64,21 +75,9 @@ local_chrome_version("134.0.6998.88", binary = "chrome-headless-shell")
 > It will generally load faster and run more quickly than the alternative headless mode which uses the same version of Chrome you use when browsing, but without the UI.
 > After v132, old headless mode is no longer included in the Chrome binary, but the `chrome-headless-shell` binary is available from v120+.
 
-chromote stores previously downloaded versions of Chrome so that, once downloaded, you won't need to download the binary again.
-You can list all of the versions and binaries you've installed with `chrome_versions_list()`.
-
-```r
-chrome_versions_list()
-#> # A tibble: 2 × 6
-#>   version       revision binary                platform  url                        path 
-#>   <chr>         <chr>    <chr>                 <chr>     <chr>                      <chr>
-#> 1 134.0.6998.88 1415337  chrome                mac-arm64 https://storage.googleapi… /Use…
-#> 2 134.0.6998.88 1415337  chrome-headless-shell mac-arm64 https://storage.googleapi… /Use…
-```
-
-You can also request all available Chrome versions and binaries with `chrome_versions_list("all")`.
-
+`local_chrome_version()` sets the version of Chrome for the current session or within the context of a function.
 For small tasks where you want to use a specific version of Chrome for a few lines of code, chromote provides a `with_chrome_version()` variant:
+
 
 ```r
 with_chrome_version("132", {
