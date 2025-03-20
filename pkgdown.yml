@@ -6,6 +6,7 @@ articles:
   commands-and-events: commands-and-events.html
   example-attach-existing: example-attach-existing.html
   example-authentication: example-authentication.html
+  example-cran-tests: example-cran-tests.html
   example-custom-headers: example-custom-headers.html
   example-custom-user-agent: example-custom-user-agent.html
   example-extract-text: example-extract-text.html
@@ -14,7 +15,7 @@ articles:
   example-screenshot: example-screenshot.html
   sync-async: sync-async.html
   which-chrome: which-chrome.html
-last_built: 2025-03-20T14:39Z
+last_built: 2025-03-20T15:18Z
 urls:
   reference: https://rstudio.github.io/chromote/reference
   article: https://rstudio.github.io/chromote/articles
