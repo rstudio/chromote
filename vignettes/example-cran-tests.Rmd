@@ -30,11 +30,11 @@ There are a number of issues with testing package functionality based on chromot
 * There is no 100% reliable way to check or test which system-installed version of Chrome is used on CRAN.
   While `chromote_info()` can _generally_ provide this information, we use heuristics to gather the Chrome version that do not always work.
 
-* While chromote now provides features to download and use any version of Chrome, **do not use these on CRAN**.
-  For one, downloading Chrome is not a valuable or considerate use of CRAN's resources.
-  Furthermore, you gain little from such a test.
+* While chromote now provides features to download and use any version of Chrome, **these features should not be used on CRAN**.
+  For one, downloading Chrome unnecessarily consumes CRAN's limited resources.
+  Furthermore, testing against a pinned version of Chrome won't alert you to issues with the latest version.
 
-Instead we recommend:
+Given these challenges, we instead recommend:
 
 1. Using `testthat::skip_on_cran()` for tests that rely on the availability of Chrome.
 
