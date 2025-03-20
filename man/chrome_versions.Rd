@@ -36,7 +36,7 @@ remove.}
 A character vector of Chrome binary paths.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#Experimental}{\figure{lifecycle-Experimental.svg}{options: alt='[E]'}}}{\strong{[E]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#Experimental}{\figure{lifecycle-experimental.svg}{options: alt='[E]'}}}{\strong{[E]}}
 
 These functions help interact with the cache used by \pkg{chromote}'s for
 storing versioned Chrome for Testing binaries:

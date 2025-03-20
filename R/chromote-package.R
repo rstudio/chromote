@@ -50,7 +50,7 @@ lifecycle_badge <- function(stage) {
   html <- sprintf(
     "\\href{%s}{\\figure{%s}{options: alt='[%s]'}}",
     url,
-    file.path(sprintf("lifecycle-%s.svg", stage)),
+    file.path(tolower(sprintf("lifecycle-%s.svg", stage))),
     stage_name
   )
 

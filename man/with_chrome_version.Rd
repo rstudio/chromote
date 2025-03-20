@@ -83,7 +83,7 @@ Temporarily sets the \code{CHROMOTE_CHROME} environment variable and
 returns the result of the \code{code} argument.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#Experimental}{\figure{lifecycle-Experimental.svg}{options: alt='[E]'}}}{\strong{[E]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#Experimental}{\figure{lifecycle-experimental.svg}{options: alt='[E]'}}}{\strong{[E]}}
 
 This function downloads and sets up a specific version of Chrome, using the
 \href{https://googlechromelabs.github.io/chrome-for-testing/}{Google Chrome for Testing builds}
