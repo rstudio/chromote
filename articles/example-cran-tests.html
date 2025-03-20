@@ -108,11 +108,12 @@ system-installed version of Chrome is used on CRAN. While
 information, we use heuristics to gather the Chrome version that do not
 always work.</p></li>
 <li><p>While chromote now provides features to download and use any
-version of Chrome, <strong>do not use these on CRAN</strong>. For one,
-downloading Chrome is not a valuable or considerate use of CRAN’s
-resources. Furthermore, you gain little from such a test.</p></li>
+version of Chrome, <strong>these features should not be used on
+CRAN</strong>. For one, downloading Chrome unnecessarily consumes CRAN’s
+limited resources. Furthermore, testing against a pinned version of
+Chrome won’t alert you to issues with the latest version.</p></li>
 </ul>
-<p>Instead we recommend:</p>
+<p>Given these challenges, we instead recommend:</p>
 <ol style="list-style-type: decimal">
 <li><p>Using <code><a href="https://testthat.r-lib.org/reference/skip.html" class="external-link">testthat::skip_on_cran()</a></code> for tests that rely
 on the availability of Chrome.</p></li>
