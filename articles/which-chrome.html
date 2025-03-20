@@ -123,19 +123,28 @@ start of your script, before you create a new
 <span><span class="co">#&gt; chromote will now use version 134.0.6998.88 of `chrome` for mac-arm64.</span></span>
 <span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>By default, if called without any arguments,
-<code><a href="../reference/with_chrome_version.html">local_chrome_version()</a></code> will use
-<code>version = "latest-stable"</code> — the latest stable version
-available — and <code>binary = "chrome"</code> — the standard Chrome
-browser binary. If you don’t already have a copy of the requested
-version of the binary, <code><a href="../reference/with_chrome_version.html">local_chrome_version()</a></code> will download
-it for you.</p>
-<p>For scripts with a longer life span, you may want to pin your script
-to a specific version of Chrome or
-<code>chrome-headless-shell</code>.</p>
+<p>By default, <code><a href="../reference/with_chrome_version.html">local_chrome_version()</a></code> uses the latest
+stable version of Chrome, matching the arguments shown in the code
+example above.</p>
+<p>For scripts with a longer life span and to ensure reproducibility,
+you can specify a specific version of Chrome or
+<code>chrome-headless-shell</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/with_chrome_version.html">local_chrome_version</a></span><span class="op">(</span><span class="st">"134.0.6998.88"</span>, binary <span class="op">=</span> <span class="st">"chrome-headless-shell"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; chromote will now use version 134.0.6998.88 of `chrome-headless-shell` for mac-arm64.</span></span></code></pre></div>
+<p>If you don’t already have a copy of the requested version of the
+binary, <code><a href="../reference/with_chrome_version.html">local_chrome_version()</a></code> will download it for you so
+you’ll only need to download the binary once. You can list all of the
+versions and binaries you’ve installed with
+<code><a href="../reference/chrome_versions_list.html">chrome_versions_list()</a></code>, or all available versions and
+binaries with <code>chrome_versions_list("all")</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/chrome_versions_list.html">chrome_versions_list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span><span class="co">#&gt;   version       revision binary                platform  url                        path </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;    &lt;chr&gt;                 &lt;chr&gt;     &lt;chr&gt;                      &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1 134.0.6998.88 1415337  chrome                mac-arm64 https://storage.googleapi… /Use…</span></span>
+<span><span class="co">#&gt; 2 134.0.6998.88 1415337  chrome-headless-shell mac-arm64 https://storage.googleapi… /Use…</span></span></code></pre></div>
 <blockquote>
 <p><strong>Technincal Note: chrome-headless-shell</strong></p>
 <p>chromote runs Chrome in “headless mode”, i.e. without a visual
@@ -152,22 +161,11 @@ you use when browsing, but without the UI. After v132, old headless mode
 is no longer included in the Chrome binary, but the
 <code>chrome-headless-shell</code> binary is available from v120+.</p>
 </blockquote>
-<p>chromote stores previously downloaded versions of Chrome so that,
-once downloaded, you won’t need to download the binary again. You can
-list all of the versions and binaries you’ve installed with
-<code><a href="../reference/chrome_versions_list.html">chrome_versions_list()</a></code>.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/chrome_versions_list.html">chrome_versions_list</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 2 × 6</span></span>
-<span><span class="co">#&gt;   version       revision binary                platform  url                        path </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;    &lt;chr&gt;                 &lt;chr&gt;     &lt;chr&gt;                      &lt;chr&gt;</span></span>
-<span><span class="co">#&gt; 1 134.0.6998.88 1415337  chrome                mac-arm64 https://storage.googleapi… /Use…</span></span>
-<span><span class="co">#&gt; 2 134.0.6998.88 1415337  chrome-headless-shell mac-arm64 https://storage.googleapi… /Use…</span></span></code></pre></div>
-<p>You can also request all available Chrome versions and binaries with
-<code>chrome_versions_list("all")</code>.</p>
-<p>For small tasks where you want to use a specific version of Chrome
-for a few lines of code, chromote provides a
-<code><a href="../reference/with_chrome_version.html">with_chrome_version()</a></code> variant:</p>
+<p><code><a href="../reference/with_chrome_version.html">local_chrome_version()</a></code> sets the version of Chrome for
+the current session or within the context of a function. For small tasks
+where you want to use a specific version of Chrome for a few lines of
+code, chromote provides a <code><a href="../reference/with_chrome_version.html">with_chrome_version()</a></code>
+variant:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/with_chrome_version.html">with_chrome_version</a></span><span class="op">(</span><span class="st">"132"</span>, <span class="op">{</span></span>
 <span>  <span class="co"># Take a screenshot with Chrome v132</span></span>
