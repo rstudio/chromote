@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This document explains why you should use the convenience method `$navigate_to()`, instead of the lower-level Chrome Devtools Protocol command `Page$navigate()`.
+This document explains why you should use the convenience method `$navigate_to()` instead of the lower-level Chrome Devtools Protocol command `Page$navigate()`.
 
 
 ``` r
