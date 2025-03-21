@@ -71,11 +71,11 @@ This method of calling `Page$loadEventFired()` before `Page$navigate()` is essen
 
 ``` r
 # Synchronous API
-b$Page$navigate_to("https://www.r-project.org/")
+b$navigate_to("https://www.r-project.org/")
 b$screenshot("browser.png")
 
 # Asynchronous API
-b$Page$navigate_to("https://www.r-project.org/", wait_ = FALSE)$
+b$navigate_to("https://www.r-project.org/", wait_ = FALSE)$
 then(function(value) {
   b$screenshot("browser.png")
 })
