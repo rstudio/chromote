@@ -344,6 +344,68 @@ ChromoteSession <- R6Class(
       if (wait_) invisible(self$wait_for(p)) else p
     },
 
+    #' @description Navigate to a URL and wait for the page to load
+    #'
+    #' This method navigates to a specified URL and waits for the page load
+    #' event to complete. This is a more reliable alternative to directly
+    #' calling `Page$navigate()`, which can return before the page is actually
+    #' loaded. This method also allows for an optional delay after the load
+    #' event has fired, in case the page needs to load additional assets after
+    #' that event.
+    #'
+    #' @param url The URL to navigate to.
+    #' @param ... Additional parameters passed to `Page$navigate()`.
+    #' @param delay Number of seconds to wait after the page load event fires.
+    #' @param callback_ Function to call when the page load event fires.
+    #' @param error_ Function to call if an error occurs during navigation.
+    #' @param timeout_ Maximum time in seconds to wait for the page load event
+    #'   (defaults to session's `default_timeout``).
+    #' @param wait_ If `FALSE`, returns a promise that resolves when navigation
+    #'   is complete. If `TRUE` (default), blocks until navigation is complete.
+    #'
+    #' @return If `wait_` is TRUE, returns invisible(NULL). If wait_ is FALSE,
+    #'   returns a promise that resolves when navigation is complete. The
+    #'   promise resolves with the value from the Page.loadEventFired event.
+    #'
+    #' @examples \dontrun{
+    #' # Basic navigation
+    #' b$navigate_to("https://www.r-project.org")
+    #'
+    #' # Navigation with delay
+    #' b$navigate_to("https://www.r-project.org", delay = 2)
+    #'
+    #' # Asynchronous navigation
+    #' p <- b$navigate_to("https://www.r-project.org", wait_ = FALSE)
+    #' p$then(function(value) print("Navigation complete!"))
+    #'
+    navigate_to = function(
+      url,
+      ...,
+      delay = 0,
+      callback_ = NULL,
+      error_ = NULL,
+      timeout_ = self$default_timeout,
+      wait_ = TRUE
+    ) {
+      p <- self$Page$loadEventFired(
+        callback_ = callback_,
+        timeout_ = timeout_,
+        wait_ = FALSE
+      )
+      self$Page$navigate(url, ..., error_ = error_, wait_ = FALSE)
+
+      if (delay > 0) {
+        # After loadEventFired, wait `delay` seconds.
+        p <- p$then(function(value) {
+          promise(function(resolve, reject) {
+            later(function() resolve(value), delay)
+          })
+        })
+      }
+
+      if (wait_) invisible(self$wait_for(p)) else p
+    },
+
     #' @description Take a PNG screenshot
     #'
     #' ## Examples
