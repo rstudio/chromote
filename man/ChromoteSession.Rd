@@ -55,6 +55,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-close}{\code{ChromoteSession$close()}}
 \item \href{#method-ChromoteSession-get_viewport_size}{\code{ChromoteSession$get_viewport_size()}}
 \item \href{#method-ChromoteSession-set_viewport_size}{\code{ChromoteSession$set_viewport_size()}}
+\item \href{#method-ChromoteSession-navigate_to}{\code{ChromoteSession$navigate_to()}}
 \item \href{#method-ChromoteSession-screenshot}{\code{ChromoteSession$screenshot()}}
 \item \href{#method-ChromoteSession-screenshot_pdf}{\code{ChromoteSession$screenshot_pdf()}}
 \item \href{#method-ChromoteSession-new_session}{\code{ChromoteSession$new_session()}}
@@ -271,6 +272,57 @@ return a \code{ChromoteSession} object directly.}
 \subsection{Returns}{
 Invisibly returns the previous viewport dimensions so that you
 can restore the viewport size, if desired.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-navigate_to"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-navigate_to}{}}}
+\subsection{Method \code{navigate_to()}}{
+Navigate to a URL and wait for the page to load
+
+This method navigates to a specified URL and waits for the page load
+event to complete. This is a more reliable alternative to directly
+calling \code{Page$navigate()}, which can return before the page is actually
+loaded. This method also allows for an optional delay after the load
+event has fired, in case the page needs to load additional assets after
+that event.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$navigate_to(
+  url,
+  ...,
+  delay = 0,
+  callback_ = NULL,
+  error_ = NULL,
+  timeout_ = self$default_timeout,
+  wait_ = TRUE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{url}}{The URL to navigate to.}
+
+\item{\code{...}}{Additional parameters passed to \code{Page$navigate()}.}
+
+\item{\code{delay}}{Number of seconds to wait after the page load event fires.}
+
+\item{\code{callback_}}{Function to call when the page load event fires.}
+
+\item{\code{error_}}{Function to call if an error occurs during navigation.}
+
+\item{\code{timeout_}}{Maximum time in seconds to wait for the page load event
+(defaults to session's `default_timeout``).}
+
+\item{\code{wait_}}{If \code{FALSE}, returns a promise that resolves when navigation
+is complete. If \code{TRUE} (default), blocks until navigation is complete.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+If \code{wait_} is TRUE, returns invisible(NULL). If wait_ is FALSE,
+returns a promise that resolves when navigation is complete. The
+promise resolves with the value from the Page.loadEventFired event.
 }
 }
 \if{html}{\out{<hr>}}
