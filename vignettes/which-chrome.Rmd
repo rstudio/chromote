@@ -18,6 +18,93 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Use any version of Chrome or `chrome-headless-shell` with chromote
+
+By default, chromote uses the Chrome browser installed on your system.
+Modern browsers automatically and frequently update, which is convenient for you when you're browsing the Internet but can easily introduce breaking and unexpected changes in your automations.
+
+The chromote package allows you to download and use any version of Chrome or `chrome-headless-shell` available via the [Google Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing/) service.
+
+To get started, call `local_chrome_version()` with a specific `version` and `binary` choice at the start of your script, before you create a new `ChromoteSession`:
+
+```r
+library(chromote)
+
+local_chrome_version("latest-stable", binary = "chrome")
+#> ℹ Downloading `chrome` version 134.0.6998.88 for mac-arm64
+#> trying URL 'https://storage.googleapis.com/chrome-for-testing-public/134.0.6998.88/mac-arm64/chrome-mac-arm64.zip'
+#> Content type 'application/zip' length 158060459 bytes (150.7 MB)
+#> ==================================================
+#> downloaded 150.7 MB
+#> 
+#> ✔ Downloading `chrome` version 134.0.6998.88 for mac-arm64 [5.3s]
+#> chromote will now use version 134.0.6998.88 of `chrome` for mac-arm64.
+
+b <- ChromoteSession$new()
+```
+
+By default, `local_chrome_version()` uses the latest stable version of Chrome, matching the arguments shown in the code example above.
+
+For scripts with a longer life span and to ensure reproducibility, you can specify a specific version of Chrome or `chrome-headless-shell`:
+
+```r
+local_chrome_version("134.0.6998.88", binary = "chrome-headless-shell")
+#> chromote will now use version 134.0.6998.88 of `chrome-headless-shell` for mac-arm64.
+```
+
+If you don't already have a copy of the requested version of the binary, `local_chrome_version()` will download it for you so you'll only need to download the binary once.
+You can list all of the versions and binaries you've installed with `chrome_versions_list()`, or all available versions and binaries with `chrome_versions_list("all")`.
+
+```r
+chrome_versions_list()
+#> # A tibble: 2 × 6
+#>   version       revision binary                platform  url                        path 
+#>   <chr>         <chr>    <chr>                 <chr>     <chr>                      <chr>
+#> 1 134.0.6998.88 1415337  chrome                mac-arm64 https://storage.googleapi… /Use…
+#> 2 134.0.6998.88 1415337  chrome-headless-shell mac-arm64 https://storage.googleapi… /Use…
+```
+
+> **Technincal Note: chrome-headless-shell**
+>
+> chromote runs Chrome in "headless mode", i.e. without a visual interface.
+> Between versions 120 and 132 of Chrome, there were, essentially, two flavors of headless mode.
+>
+> `chrome-headless-shell` is the version of Chrome's headless mode that is designed and best suited for automated testing, screenshots and printing, typically referred to as "old headless" mode.
+>
+> In most uses of chromote, `chrome-headless-shell` is an appropriate choice.
+> It will generally load faster and run more quickly than the alternative headless mode which uses the same version of Chrome you use when browsing, but without the UI.
+> After v132, old headless mode is no longer included in the Chrome binary, but the `chrome-headless-shell` binary is available from v120+.
+
+`local_chrome_version()` sets the version of Chrome for the current session or within the context of a function.
+For small tasks where you want to use a specific version of Chrome for a few lines of code, chromote provides a `with_chrome_version()` variant:
+
+
+```r
+with_chrome_version("132", {
+  # Take a screenshot with Chrome v132
+  webshot2::webshot("https://r-project.org")
+})
+```
+
+Finally, you can manage Chrome binaries directly with three helper functions:
+
+1. `chrome_versions_add()` can be used to add a new Chrome version to the cache, without explicitly configuring chromote to use that version.
+
+2. `chrome_versions_path()` returns the path to the Chrome binary for a given version and binary type.
+
+3. `chrome_versions_remove()` can be used to delete copies of Chrome from the local cache.
+
+> **Note for Windows users**
+>
+> Chrome for Windows includes a `setup.exe` file that chromote runs when it extracts the Chrome zipfile.
+> This file is provided by Chrome and is used to set the correct permissions on the `chrome.exe` executable file.
+> Sometimes, running `setup.exe` returns an error, even if it works correctly.
+>
+> If you do encounter errors using a downloaded version of Chrome, use `chrome_versions_path()` to get the path to the problematic executable.
+> Then, try running this executable yourself with the **Run** command (from the Start menu).
+> This typically resolves any lingering permissions issues.
+
+
 ## Using a Chrome-based browser that you installed
 
 Chromote will look in specific places for the Chrome web browser, depending on platform.
@@ -60,5 +147,3 @@ b <- ChromoteSession$new()
 b$view()
 b$Page$navigate("https://www.whatismybrowser.com/")
 ```
-
-<!-- TODO: Managed Chrome for Testing versions -->

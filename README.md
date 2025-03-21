@@ -5,7 +5,7 @@
      Instead, copy output from a local execution
      Still use README.Rmd to get special UTF-8 chars from pandoc -->
 
-# chromote <a href="https://rstudio.github.io/chromote"><img src="man/figures/logo.png" align="right" height="138" alt="chromote website" /></a>
+# chromote <a href="https://rstudio.github.io/chromote/"><img src="man/figures/logo.png" align="right" height="138" alt="chromote website" /></a>
 
 <!-- badges: start -->
 
@@ -38,7 +38,7 @@ for node.js.
 ## Features
 
 - Install and use specific versions of Chrome from the [Chrome for
-  Testing](https://googlechromelabs.github.io/chrome-for-testing)
+  Testing](https://googlechromelabs.github.io/chrome-for-testing/)
   service.
 
 - Offers a synchronous API for ease of use and an asynchronous API for
@@ -60,13 +60,14 @@ for node.js.
 
 Learn more about using and programming with chromote:
 
-- [Get started](https://rstudio.github.io/articles/chromote.html)
+- [Get
+  started](https://rstudio.github.io/chromote/articles/chromote.html)
 - [Commands and
-  events](https://rstudio.github.io/articles/articles/commands-and-events.html)
+  events](https://rstudio.github.io/chromote/articles/commands-and-events.html)
 - [Synchronous vs. asynchronous
-  usage](https://rstudio.github.io/articles/articles/sync-async.html)
+  usage](https://rstudio.github.io/chromote/articles/sync-async.html)
 - [Choosing which Chrome-based browser to
-  use](https://rstudio.github.io/articles/articles/which-chrome.html)
+  use](https://rstudio.github.io/chromote/articles/which-chrome.html)
 
 ## Installation
 

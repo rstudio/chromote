@@ -1,0 +1,52 @@
+---
+title: "Using chromote in CRAN tests"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using chromote in CRAN tests}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+::: lead
+**We do not recommend using chromote in tests that you run on CRAN.**
+:::
+
+We **do recommend** that you test your package's integration with chromote, just not on CRAN.
+Instead, use a continuous testing service, like [GitHub Actions](https://usethis.r-lib.org/reference/github_actions.html), and include `testthat::skip_on_cran()` in tests that require Chrome or chromote.
+
+There are a number of issues with testing package functionality based on chromote on CRAN:
+
+* By default, chromote uses the system installation of Chrome, which can change frequently and without warning.
+
+* chromote's API depends entirely on Chrome, which may change or break between releases.
+
+* There is no 100% reliable way to check or test which system-installed version of Chrome is used on CRAN.
+  While `chromote_info()` can _generally_ provide this information, we use heuristics to gather the Chrome version that do not always work.
+
+* While chromote now provides features to download and use any version of Chrome, **these features should not be used on CRAN**.
+  For one, downloading Chrome unnecessarily consumes CRAN's limited resources.
+  Furthermore, testing against a pinned version of Chrome won't alert you to issues with the latest version.
+
+Given these challenges, we instead recommend:
+
+1. Using `testthat::skip_on_cran()` for tests that rely on the availability of Chrome.
+
+2. Run tests in a CI environment, ideally on a [weekly or monthly schedule](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule).
+
+3. Use the system version of Chrome provided by the CI environment, or use 
+   ```r
+   local_chrome_version("latest-stable")
+   ``` 
+   to ensure you're testing against the latest stable version of Chrome.
+   ```r
+   local_chrome_version("latest-stable", binary = "chrome-headless-shell")
+   ```
+   is another valid choice.
+   See `vignette("which-chrome")` for details.

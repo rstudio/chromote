@@ -29,11 +29,11 @@ binary can be downloaded), and--if \code{which = "installed"}--the local path to
 the binary in the \code{\link[=chrome_versions_path_cache]{chrome_versions_path_cache()}}.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#Experimental}{\figure{lifecycle-Experimental.svg}{options: alt='[E]'}}}{\strong{[E]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#Experimental}{\figure{lifecycle-experimental.svg}{options: alt='[E]'}}}{\strong{[E]}}
 
 By default lists the installed Chrome versions in the \code{\link[=chrome_versions_path_cache]{chrome_versions_path_cache()}},
 or list all Chrome versions available via Google's
-\href{https://googlechromelabs.github.io/chrome-for-testing}{Chrome for Testing}
+\href{https://googlechromelabs.github.io/chrome-for-testing/}{Chrome for Testing}
 service.
 
 Managed Chrome installations is an experimental feature introduced in

@@ -1,12 +1,12 @@
 Package: chromote
 Title: Headless Chrome Web Browser Interface
-Version: 0.4.0.9000
+Version: 0.5.0
 Authors@R: c(
-    person("Winston", "Chang", , "winston@posit.co", role = c("aut", "cre")),
+    person("Garrick", "Aden-Buie", , "garrick@posit.co", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-7111-0077")),
+    person("Winston", "Chang", , "winston@posit.co", role = "aut"),
     person("Barret", "Schloerke", , "barret@posit.co", role = "aut",
            comment = c(ORCID = "0000-0001-9986-114X")),
-    person("Garrick", "Aden-Buie", , "garrick@posit.co", role = "aut",
-           comment = c(ORCID = "0000-0002-7111-0077")),
     person("Posit Software, PBC", role = c("cph", "fnd"))
   )
 Description: An implementation of the 'Chrome DevTools Protocol', for
@@ -35,6 +35,8 @@ Suggests:
     rmarkdown,
     showimage,
     testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
 Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
 Config/testthat/parallel: FALSE
@@ -45,4 +47,3 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 SystemRequirements: Google Chrome or other Chromium-based browser.
     chromium: chromium (rpm) or chromium-browser (deb)
-VignetteBuilder: knitr

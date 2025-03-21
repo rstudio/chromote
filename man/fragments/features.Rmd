@@ -10,7 +10,7 @@ The interface to Chromote is similar to [chrome-remote-interface](https://github
 
 ## Features
 
-* Install and use specific versions of Chrome from the [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing) service.
+* Install and use specific versions of Chrome from the [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing/) service.
 
 * Offers a synchronous API for ease of use and an asynchronous API for more sophisticated tasks.
 
