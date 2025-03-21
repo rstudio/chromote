@@ -90,7 +90,7 @@ b <- ChromoteSession$new()
 b <- ChromoteSession$new(height = 1080, width = 1920)
 
 # Navigate to page
-b$Page$navigate("http://www.r-project.org/")
+b$navigate_to("http://www.r-project.org/")
 
 # View current chromote session
 if (interactive()) b$view()
@@ -158,7 +158,7 @@ using your \code{\link{Chrome}} browser. When not using a \code{\link{Chrome}} b
 b <- ChromoteSession$new()
 
 # Navigate to page
-b$Page$navigate("http://www.r-project.org/")
+b$navigate_to("http://www.r-project.org/")
 
 # View current chromote session
 if (interactive()) b$view()
@@ -180,7 +180,7 @@ Close the Chromote session.
 b <- ChromoteSession$new()
 
 # Navigate to page
-b$Page$navigate("http://www.r-project.org/")
+b$navigate_to("http://www.r-project.org/")
 
 # Close current chromote session
 b$close()
@@ -322,7 +322,7 @@ is complete. If \code{TRUE} (default), blocks until navigation is complete.}
 \subsection{Returns}{
 If \code{wait_} is TRUE, returns invisible(NULL). If wait_ is FALSE,
 returns a promise that resolves when navigation is complete. The
-promise resolves with the value from the Page.loadEventFired event.
+promise resolves with the value from the navigate command.
 }
 }
 \if{html}{\out{<hr>}}
@@ -336,7 +336,7 @@ Take a PNG screenshot
 b <- ChromoteSession$new()
 
 # Navigate to page
-b$Page$navigate("http://www.r-project.org/")
+b$navigate_to("http://www.r-project.org/")
 
 # Take screenshot
 tmppngfile <- tempfile(fileext = ".png")
@@ -375,8 +375,7 @@ screenshot_p <- function(url, filename = NULL) \{
   \}
 
   b2 <- b$new_session()
-  b2$Page$navigate(url, wait_ = FALSE)
-  b2$Page$loadEventFired(wait_ = FALSE)$
+  b2$navigate_to(url, wait_ = FALSE)$
     then(function(value) \{
       b2$screenshot(filename, wait_ = FALSE)
     \})$
@@ -469,7 +468,7 @@ Take a PDF screenshot
 b <- ChromoteSession$new()
 
 # Navigate to page
-b$Page$navigate("http://www.r-project.org/")
+b$navigate_to("http://www.r-project.org/")
 
 # Take screenshot
 tmppdffile <- tempfile(fileext = ".pdf")
@@ -531,9 +530,9 @@ Create a new tab / window
 \subsection{Examples}{
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{b1 <- ChromoteSession$new()
-b1$Page$navigate("http://www.google.com")
+b1$navigate_to("http://www.google.com")
 b2 <- b1$new_session()
-b2$Page$navigate("http://www.r-project.org/")
+b2$navigate_to("http://www.r-project.org/")
 b1$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
 #> [1] "https://www.google.com/"
 b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
@@ -640,7 +639,7 @@ Send a debug log message to the parent \link{Chromote} object
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{b <- ChromoteSession$new()
 b$parent$debug_messages(TRUE)
-b$Page$navigate("https://www.r-project.org/")
+b$navigate_to("https://www.r-project.org/")
 #> SEND \{"method":"Page.navigate","params":\{"url":"https://www.r-project.org/"\}| __truncated__\}
 # Turn off debug messages
 b$parent$debug_messages(FALSE)

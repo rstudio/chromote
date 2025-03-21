@@ -32,7 +32,7 @@ ChromoteSession <- R6Class(
     #' b <- ChromoteSession$new(height = 1080, width = 1920)
     #'
     #' # Navigate to page
-    #' b$Page$navigate("http://www.r-project.org/")
+    #' b$navigate_to("http://www.r-project.org/")
     #'
     #' # View current chromote session
     #' if (interactive()) b$view()
@@ -195,7 +195,7 @@ ChromoteSession <- R6Class(
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
-    #' b$Page$navigate("http://www.r-project.org/")
+    #' b$navigate_to("http://www.r-project.org/")
     #'
     #' # View current chromote session
     #' if (interactive()) b$view()
@@ -220,7 +220,7 @@ ChromoteSession <- R6Class(
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
-    #' b$Page$navigate("http://www.r-project.org/")
+    #' b$navigate_to("http://www.r-project.org/")
     #'
     #' # Close current chromote session
     #' b$close()
@@ -365,7 +365,7 @@ ChromoteSession <- R6Class(
     #'
     #' @return If `wait_` is TRUE, returns invisible(NULL). If wait_ is FALSE,
     #'   returns a promise that resolves when navigation is complete. The
-    #'   promise resolves with the value from the Page.loadEventFired event.
+    #'   promise resolves with the value from the navigate command.
     #'
     #' @examples \dontrun{
     #' # Basic navigation
@@ -392,13 +392,13 @@ ChromoteSession <- R6Class(
         timeout_ = timeout_,
         wait_ = FALSE
       )
-      self$Page$navigate(url, ..., error_ = error_, wait_ = FALSE)
+      result <- self$Page$navigate(url, ..., error_ = error_, wait_ = FALSE)
 
       if (delay > 0) {
         # After loadEventFired, wait `delay` seconds.
         p <- p$then(function(value) {
           promise(function(resolve, reject) {
-            later(function() resolve(value), delay)
+            later(function() resolve(result), delay)
           })
         })
       }
@@ -415,7 +415,7 @@ ChromoteSession <- R6Class(
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
-    #' b$Page$navigate("http://www.r-project.org/")
+    #' b$navigate_to("http://www.r-project.org/")
     #'
     #' # Take screenshot
     #' tmppngfile <- tempfile(fileext = ".png")
@@ -454,8 +454,7 @@ ChromoteSession <- R6Class(
     #'   }
     #'
     #'   b2 <- b$new_session()
-    #'   b2$Page$navigate(url, wait_ = FALSE)
-    #'   b2$Page$loadEventFired(wait_ = FALSE)$
+    #'   b2$navigate_to(url, wait_ = FALSE)$
     #'     then(function(value) {
     #'       b2$screenshot(filename, wait_ = FALSE)
     #'     })$
@@ -543,7 +542,7 @@ ChromoteSession <- R6Class(
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
-    #' b$Page$navigate("http://www.r-project.org/")
+    #' b$navigate_to("http://www.r-project.org/")
     #'
     #' # Take screenshot
     #' tmppdffile <- tempfile(fileext = ".pdf")
@@ -600,9 +599,9 @@ ChromoteSession <- R6Class(
     #'
     #' ```r
     #' b1 <- ChromoteSession$new()
-    #' b1$Page$navigate("http://www.google.com")
+    #' b1$navigate_to("http://www.google.com")
     #' b2 <- b1$new_session()
-    #' b2$Page$navigate("http://www.r-project.org/")
+    #' b2$navigate_to("http://www.r-project.org/")
     #' b1$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
     #' #> [1] "https://www.google.com/"
     #' b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
@@ -688,7 +687,7 @@ ChromoteSession <- R6Class(
     #' ```r
     #' b <- ChromoteSession$new()
     #' b$parent$debug_messages(TRUE)
-    #' b$Page$navigate("https://www.r-project.org/")
+    #' b$navigate_to("https://www.r-project.org/")
     #' #> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
     #' # Turn off debug messages
     #' b$parent$debug_messages(FALSE)
