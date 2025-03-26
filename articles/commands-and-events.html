@@ -140,9 +140,9 @@ value, which looks like this:</p>
 <p><strong>Note:</strong> This sequence of commands, with
 <code>Page$navigate()</code> and then <code>Page$loadEventFired()</code>
 works interactively when you run the commands slowly, but it will not
-work 100% of the time. See <code><a href="../articles/example-loading-page.html">vignette("example-loading-page")</a></code>
-for a reliable approach to page loading that works in all
-situations.</p>
+work 100% of the time. In practice you should use <code>$go_to()</code>
+instead for reliable loading. See
+<code><a href="../articles/example-loading-page.html">vignette("example-loading-page")</a></code> for more information.</p>
 </blockquote>
 <div class="section level3">
 <h3 id="automatic-events">Automatic Events<a class="anchor" aria-label="anchor" href="#automatic-events"></a>

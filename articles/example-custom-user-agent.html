@@ -113,7 +113,7 @@ of other user agents strings, by using a site like <a href="https://UserAgentStr
 <span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Network</span><span class="op">$</span><span class="fu">setUserAgentOverride</span><span class="op">(</span>userAgent <span class="op">=</span> <span class="st">"My fake browser"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://scooterlabs.com/echo"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"http://scooterlabs.com/echo"</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span>show <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -125,7 +125,7 @@ of other user agents strings, by using a site like <a href="https://UserAgentStr
 <span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Network</span><span class="op">$</span><span class="fu">setUserAgentOverride</span><span class="op">(</span>userAgent <span class="op">=</span> <span class="st">"My fake browser"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://scooterlabs.com/echo"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"http://scooterlabs.com/echo"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">p</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span>show <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>

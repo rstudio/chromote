@@ -211,7 +211,7 @@ the <code>CHROMOTE_CHROME</code> environment variable, either with
 <span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span></code></pre></div>
 <p>Another way is create a <code>Chromote</code> object and explicitly
 specify the browser, then spawn <code>ChromoteSession</code>s from
 it.</p>
@@ -222,7 +222,7 @@ it.</p>
 <span></span>
 <span><span class="co"># Spawn a ChromoteSession from the Chromote object</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">$</span><span class="fu">new_session</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span></code></pre></div>
 <p>Yet another way is to create a <code>Chromote</code> object with a
 specified browser, then set it as the default Chromote object.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">

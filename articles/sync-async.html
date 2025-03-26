@@ -569,6 +569,9 @@ use <code>wait_for()</code>. For example:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 1</span></span>
 <span><span class="co">#&gt;  $ timestamp: num 683</span></span></code></pre></div>
+<p><code>b$go_to()</code> is a convenience method that does things in
+this order, and in most cases you should use it instead of calling
+<code>Page$navigate()</code> directly.</p>
 <blockquote>
 <p><strong>Technical note</strong></p>
 <p>The Chrome DevTools Protocol itself does not automatically enable

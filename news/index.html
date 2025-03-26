@@ -57,9 +57,14 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="chromote-development-version">chromote (development version)<a class="anchor" aria-label="anchor" href="#chromote-development-version"></a></h2>
+<div class="section level3">
+<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<ul><li>
+<code>ChromoteSession</code> gets a new helper method, <code>$go_to()</code>. This is an easier way of reliably waiting for a page load, instead of using <code>Page$loadEventFired()</code> and <code>Page$navigate()</code> together. (<a href="https://github.com/rstudio/chromote/issues/221" class="external-link">#221</a>)</li>
+</ul></div>
 </div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.5.0" id="chromote-050">chromote 0.5.0<a class="anchor" aria-label="anchor" href="#chromote-050"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.0" id="chromote-050">chromote 0.5.0<a class="anchor" aria-label="anchor" href="#chromote-050"></a></h2><p class="text-muted">CRAN release: 2025-03-21</p>
 <div class="section level3">
 <h3 id="new-features-0-5-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-5-0"></a></h3>
 <ul><li>chromote now includes experimental features to download versioned binaries of Chrome and <code>chrome-headless-shell</code> for Mac (x64 or arm64), Windows (32- or 64-bit) or Linux (x86-64) from the <a href="https://googlechromelabs.github.io/chrome-for-testing/" class="external-link">Chrome for Testing</a> service. (<a href="https://github.com/rstudio/chromote/issues/198" class="external-link">#198</a>)

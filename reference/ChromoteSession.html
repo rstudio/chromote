@@ -101,6 +101,7 @@ wait for a Chrome DevTools Protocol response.</p></dd>
 <li><p><a href="#method-ChromoteSession-close"><code>ChromoteSession$close()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-get_viewport_size"><code>ChromoteSession$get_viewport_size()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-set_viewport_size"><code>ChromoteSession$set_viewport_size()</code></a></p></li>
+<li><p><a href="#method-ChromoteSession-go_to"><code>ChromoteSession$go_to()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-screenshot"><code>ChromoteSession$screenshot()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-screenshot_pdf"><code>ChromoteSession$screenshot_pdf()</code></a></p></li>
 <li><p><a href="#method-ChromoteSession-new_session"><code>ChromoteSession$new_session()</code></a></p></li>
@@ -132,7 +133,7 @@ wait for a Chrome DevTools Protocol response.</p></dd>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>height <span class="op">=</span> <span class="fl">1080</span>, width <span class="op">=</span> <span class="fl">1920</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Navigate to page</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># View current chromote session</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
@@ -210,7 +211,7 @@ using your <code><a href="Chrome.html">Chrome</a></code> browser. When not using
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Navigate to page</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># View current chromote session</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
@@ -231,7 +232,7 @@ using your <code><a href="Chrome.html">Chrome</a></code> browser. When not using
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Navigate to page</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Close current chromote session</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">close</span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
@@ -330,17 +331,95 @@ return a <code>ChromoteSession</code> object directly.</p></dd>
 can restore the viewport size, if desired.</p>
 </div>
 
+</div><p></p><hr><a id="method-ChromoteSession-go_to"></a><div class="section">
+<h3 id="method-go-to-">Method <code>go_to()</code><a class="anchor" aria-label="anchor" href="#method-go-to-"></a></h3>
+<p>Navigate to a URL and wait for the page to load</p>
+<p>This method navigates to a specified URL and waits for the page load
+event to complete. This is a more reliable alternative to directly
+calling <code>Page$navigate()</code>, which can return before the page is actually
+loaded. This method also allows for an optional delay after the load
+event has fired, in case the page needs to load additional assets after
+that event.</p><div class="section">
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span></span>
+<span>  <span class="va">url</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  delay <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  callback_ <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  error_ <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  timeout_ <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="va">default_timeout</span>,</span>
+<span>  wait_ <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>url</code></dt>
+<dd><p>The URL to navigate to.</p></dd>
+
+
+<dt><code>...</code></dt>
+<dd><p>Additional parameters passed to <code>Page$navigate()</code>.</p></dd>
+
+
+<dt><code>delay</code></dt>
+<dd><p>Number of seconds to wait after the page load event fires.</p></dd>
+
+
+<dt><code>callback_</code></dt>
+<dd><p>Function to call when the page load event fires.</p></dd>
+
+
+<dt><code>error_</code></dt>
+<dd><p>Function to call if an error occurs during navigation.</p></dd>
+
+
+<dt><code>timeout_</code></dt>
+<dd><p>Maximum time in seconds to wait for the page load event
+(defaults to session's `default_timeout“).</p></dd>
+
+
+<dt><code>wait_</code></dt>
+<dd><p>If <code>FALSE</code>, returns a promise that resolves when navigation
+is complete. If <code>TRUE</code> (default), blocks until navigation is complete.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
+<p>If <code>wait_</code> is TRUE, returns invisible(NULL). If wait_ is FALSE,
+returns a promise that resolves when navigation is complete. The
+promise resolves with the value from the navigate command.</p>
+</div>
+<div class="section">
+<h4 id="examples-3">Examples<a class="anchor" aria-label="anchor" href="#examples-3"></a></h4>
+<p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
+# Basic navigation
+b$go_to("https://www.r-project.org")
+
+# Navigation with delay
+b$go_to("https://www.r-project.org", delay = 2)
+
+# Asynchronous navigation
+p &lt;- b$go_to("https://www.r-project.org", wait_ = FALSE)
+p$then(function(value) print("Navigation complete!"))
+}
+</code></pre></div><p></p></div>
+</div>
+
+
 </div><p></p><hr><a id="method-ChromoteSession-screenshot"></a><div class="section">
 <h3 id="method-screenshot-">Method <code>screenshot()</code><a class="anchor" aria-label="anchor" href="#method-screenshot-"></a></h3>
 <p>Take a PNG screenshot</p><div class="section">
-<h4 id="examples-3">Examples<a class="anchor" aria-label="anchor" href="#examples-3"></a></h4>
+<h4 id="examples-4">Examples<a class="anchor" aria-label="anchor" href="#examples-4"></a></h4>
 
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="co"># Create a new `ChromoteSession` object.</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Navigate to page</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Take screenshot</span></span>
 <span><span class="va">tmppngfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".png"</span><span class="op">)</span></span>
@@ -379,8 +458,7 @@ can restore the viewport size, if desired.</p>
 <span>  <span class="op">}</span></span>
 <span></span>
 <span>  <span class="va">b2</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="fu">new_session</span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="va">b2</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="va">url</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>  <span class="va">b2</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span></span>
+<span>  <span class="va">b2</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="va">url</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span></span>
 <span>    <span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="va">b2</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="va">filename</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>    <span class="op">}</span><span class="op">)</span><span class="op">$</span></span>
@@ -406,7 +484,7 @@ can restore the viewport size, if desired.</p>
 <span><span class="co">#&gt; Done!</span></span></code></pre><p></p></div>
 </div>
 <div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span></span>
 <span>  filename <span class="op">=</span> <span class="st">"screenshot.png"</span>,</span>
 <span>  selector <span class="op">=</span> <span class="st">"html"</span>,</span>
@@ -422,7 +500,7 @@ can restore the viewport size, if desired.</p>
 </div>
 
 <div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>filename</code></dt>
 <dd><p>File path of where to save the screenshot. The format of
 the screenshot is inferred from the file extension; use
@@ -484,14 +562,14 @@ until the <code>ChromoteSession</code> has saved the screenshot.</p></dd>
 </div><p></p><hr><a id="method-ChromoteSession-screenshot_pdf"></a><div class="section">
 <h3 id="method-screenshot-pdf-">Method <code>screenshot_pdf()</code><a class="anchor" aria-label="anchor" href="#method-screenshot-pdf-"></a></h3>
 <p>Take a PDF screenshot</p><div class="section">
-<h4 id="examples-4">Examples<a class="anchor" aria-label="anchor" href="#examples-4"></a></h4>
+<h4 id="examples-5">Examples<a class="anchor" aria-label="anchor" href="#examples-5"></a></h4>
 
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="co"># Create a new `ChromoteSession` object.</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Navigate to page</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Take screenshot</span></span>
 <span><span class="va">tmppdffile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".pdf"</span><span class="op">)</span></span>
@@ -501,7 +579,7 @@ until the <code>ChromoteSession</code> has saved the screenshot.</p></dd>
 <span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.info</a></span><span class="op">(</span><span class="va">tmppdffile</span><span class="op">)</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 <div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">screenshot_pdf</span><span class="op">(</span></span>
 <span>  filename <span class="op">=</span> <span class="st">"screenshot.pdf"</span>,</span>
 <span>  pagesize <span class="op">=</span> <span class="st">"letter"</span>,</span>
@@ -516,7 +594,7 @@ until the <code>ChromoteSession</code> has saved the screenshot.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>filename</code></dt>
 <dd><p>File path of where to save the screenshot.</p></dd>
 
@@ -565,20 +643,20 @@ until the <code>ChromoteSession</code> has saved the screnshot.</p></dd>
 </div><p></p><hr><a id="method-ChromoteSession-new_session"></a><div class="section">
 <h3 id="method-new-session-">Method <code>new_session()</code><a class="anchor" aria-label="anchor" href="#method-new-session-"></a></h3>
 <p>Create a new tab / window</p><div class="section">
-<h4 id="examples-5">Examples<a class="anchor" aria-label="anchor" href="#examples-5"></a></h4>
+<h4 id="examples-6">Examples<a class="anchor" aria-label="anchor" href="#examples-6"></a></h4>
 
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">b1</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">b1</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://www.google.com"</span><span class="op">)</span></span>
+<span><span class="va">b1</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"http://www.google.com"</span><span class="op">)</span></span>
 <span><span class="va">b2</span> <span class="op">&lt;-</span> <span class="va">b1</span><span class="op">$</span><span class="fu">new_session</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">b2</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
+<span><span class="va">b2</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"http://www.r-project.org/"</span><span class="op">)</span></span>
 <span><span class="va">b1</span><span class="op">$</span><span class="va">Runtime</span><span class="op">$</span><span class="fu">evaluate</span><span class="op">(</span><span class="st">"window.location"</span>, returnByValue <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">result</span><span class="op">$</span><span class="va">value</span><span class="op">$</span><span class="va">href</span></span>
 <span><span class="co">#&gt; [1] "https://www.google.com/"</span></span>
 <span><span class="va">b2</span><span class="op">$</span><span class="va">Runtime</span><span class="op">$</span><span class="fu">evaluate</span><span class="op">(</span><span class="st">"window.location"</span>, returnByValue <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">result</span><span class="op">$</span><span class="va">value</span><span class="op">$</span><span class="va">href</span></span>
 <span><span class="co">#&gt; [1] "https://www.r-project.org/"</span></span></code></pre><p></p></div>
 </div>
 <div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">new_session</span><span class="op">(</span></span>
 <span>  width <span class="op">=</span> <span class="fl">992</span>,</span>
 <span>  height <span class="op">=</span> <span class="fl">1323</span>,</span>
@@ -588,7 +666,7 @@ until the <code>ChromoteSession</code> has saved the screnshot.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>width, height</code></dt>
 <dd><p>Width and height of the new window.</p></dd>
 
@@ -613,7 +691,7 @@ until the <code>ChromoteSession</code> has created a new session.</p></dd>
 </div><p></p><hr><a id="method-ChromoteSession-get_session_id"></a><div class="section">
 <h3 id="method-get-session-id-">Method <code>get_session_id()</code><a class="anchor" aria-label="anchor" href="#method-get-session-id-"></a></h3>
 <p>Retrieve the session id</p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_session_id</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -623,7 +701,7 @@ until the <code>ChromoteSession</code> has created a new session.</p></dd>
 <p>Create a new session that connects to the same target (i.e. page)
 as this session. This is useful if the session has been closed but the target still
 exists.</p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">respawn</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -631,7 +709,7 @@ exists.</p><div class="section">
 </div><p></p><hr><a id="method-ChromoteSession-get_target_id"></a><div class="section">
 <h3 id="method-get-target-id-">Method <code>get_target_id()</code><a class="anchor" aria-label="anchor" href="#method-get-target-id-"></a></h3>
 <p>Retrieve the target id</p><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_target_id</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -642,7 +720,7 @@ exists.</p><div class="section">
 session until the provided promise resolves. The loop from
 <code>$get_child_loop()</code> will only advance just far enough for the promise to
 resolve.</p><div class="section">
-<h4 id="examples-6">Examples<a class="anchor" aria-label="anchor" href="#examples-6"></a></h4>
+<h4 id="examples-7">Examples<a class="anchor" aria-label="anchor" href="#examples-7"></a></h4>
 
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
@@ -655,12 +733,12 @@ resolve.</p><div class="section">
 <span><span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span>, callback_ <span class="op">=</span> <span class="va">str</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 <div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
+<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>p</code></dt>
 <dd><p>A promise to resolve.</p></dd>
 
@@ -671,23 +749,23 @@ resolve.</p><div class="section">
 </div><p></p><hr><a id="method-ChromoteSession-debug_log"></a><div class="section">
 <h3 id="method-debug-log-">Method <code>debug_log()</code><a class="anchor" aria-label="anchor" href="#method-debug-log-"></a></h3>
 <p>Send a debug log message to the parent <a href="Chromote.html">Chromote</a> object</p><div class="section">
-<h4 id="examples-7">Examples<a class="anchor" aria-label="anchor" href="#examples-7"></a></h4>
+<h4 id="examples-8">Examples<a class="anchor" aria-label="anchor" href="#examples-8"></a></h4>
 
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">debug_messages</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}</span></span>
 <span><span class="co"># Turn off debug messages</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">parent</span><span class="op">$</span><span class="fu">debug_messages</span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 <div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">debug_log</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
+<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Arguments pasted together with <code>paste0(..., collapse = "")</code>.</p></dd>
 
@@ -699,7 +777,7 @@ resolve.</p><div class="section">
 <h3 id="method-get-child-loop-">Method <code>get_child_loop()</code><a class="anchor" aria-label="anchor" href="#method-get-child-loop-"></a></h3>
 <p><span class="pkg">later</span> loop.</p>
 <p>For expert async usage only.</p><div class="section">
-<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_child_loop</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -708,7 +786,7 @@ resolve.</p><div class="section">
 <h3 id="method-send-command-">Method <code>send_command()</code><a class="anchor" aria-label="anchor" href="#method-send-command-"></a></h3>
 <p>Send command through Chrome DevTools Protocol.</p>
 <p>For expert use only.</p><div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
+<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">send_command</span><span class="op">(</span></span>
 <span>  <span class="va">msg</span>,</span>
 <span>  callback <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -718,7 +796,7 @@ resolve.</p><div class="section">
 </div>
 
 <div class="section">
-<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
+<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>msg</code></dt>
 <dd><p>A JSON-serializable list containing <code>method</code>, and <code>params</code>.</p></dd>
 
@@ -743,7 +821,7 @@ execute a method.</p></dd>
 <h3 id="method-get-auto-events-">Method <code>get_auto_events()</code><a class="anchor" aria-label="anchor" href="#method-get-auto-events-"></a></h3>
 <p>Resolved <code>auto_events</code> value.</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_auto_events</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -753,12 +831,12 @@ execute a method.</p></dd>
 <p>Set or retrieve the <code>enable</code> command arguments for a domain. These
 arguments are used for the <code>enable</code> command that is called for a domain,
 e.g. <code>Fetch$enable()</code>, when accessing an event method.</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">auto_events_enable_args</span><span class="op">(</span><span class="va">domain</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
+<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>domain</code></dt>
 <dd><p>A command domain, e.g. <code>"Fetch"</code>.</p></dd>
 
@@ -772,7 +850,7 @@ domain. Use <code>NULL</code> to clear the enable arguments for a domain.</p></d
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="examples-8">Examples<a class="anchor" aria-label="anchor" href="#examples-8"></a></h4>
+<h4 id="examples-9">Examples<a class="anchor" aria-label="anchor" href="#examples-9"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>    auto_events_enable_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -797,12 +875,12 @@ domain. Use <code>NULL</code> to clear the enable arguments for a domain.</p></d
 <h3 id="method-invoke-event-callbacks-">Method <code>invoke_event_callbacks()</code><a class="anchor" aria-label="anchor" href="#method-invoke-event-callbacks-"></a></h3>
 <p>Immediately call all event callback methods.</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">invoke_event_callbacks</span><span class="op">(</span><span class="va">event</span>, <span class="va">params</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
+<h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>event</code></dt>
 <dd><p>A single event string</p></dd>
 
@@ -818,12 +896,12 @@ domain. Use <code>NULL</code> to clear the enable arguments for a domain.</p></d
 <h3 id="method-mark-closed-">Method <code>mark_closed()</code><a class="anchor" aria-label="anchor" href="#method-mark-closed-"></a></h3>
 <p>Mark a session, and optionally, the underlying target,
 as closed. For internal use only.</p><div class="section">
-<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
+<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">mark_closed</span><span class="op">(</span><span class="va">target_closed</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
+<h4 id="arguments-13">Arguments<a class="anchor" aria-label="anchor" href="#arguments-13"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>target_closed</code></dt>
 <dd><p>Has the underlying target been closed as well as the
 active debugging session?</p></dd>
@@ -837,7 +915,7 @@ active debugging session?</p></dd>
 <p>Retrieve active status
 Once initialized, the value returned is <code>TRUE</code>. If <code>$close()</code> has been
 called, this value will be <code>FALSE</code>.</p><div class="section">
-<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
+<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">is_active</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -845,7 +923,7 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 </div><p></p><hr><a id="method-ChromoteSession-check_active"></a><div class="section">
 <h3 id="method-check-active-">Method <code>check_active()</code><a class="anchor" aria-label="anchor" href="#method-check-active-"></a></h3>
 <p>Check that a session is active, erroring if not.</p><div class="section">
-<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
+<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">check_active</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -854,7 +932,7 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 <h3 id="method-get-init-promise-">Method <code>get_init_promise()</code><a class="anchor" aria-label="anchor" href="#method-get-init-promise-"></a></h3>
 <p>Initial promise</p>
 <p>For internal use only.</p><div class="section">
-<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
+<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">get_init_promise</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -862,12 +940,12 @@ called, this value will be <code>FALSE</code>.</p><div class="section">
 </div><p></p><hr><a id="method-ChromoteSession-print"></a><div class="section">
 <h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
 <p>Summarise the current state of the object.</p><div class="section">
-<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
+<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChromoteSession</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="va">...</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-13">Arguments<a class="anchor" aria-label="anchor" href="#arguments-13"></a></h4>
+<h4 id="arguments-14">Arguments<a class="anchor" aria-label="anchor" href="#arguments-14"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Passed on to <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code> when <code>verbose</code> = TRUE</p></dd>
 
@@ -888,6 +966,22 @@ see the complex R6 object.</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
+<span class="r-in"><span><span class="co">## Method `ChromoteSession$go_to`</span></span></span>
+<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Basic navigation</span></span></span>
+<span class="r-in"><span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://www.r-project.org"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Navigation with delay</span></span></span>
+<span class="r-in"><span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://www.r-project.org"</span>, delay <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Asynchronous navigation</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://www.r-project.org"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"Navigation complete!"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co">## Method `ChromoteSession$auto_events_enable_args`</span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>

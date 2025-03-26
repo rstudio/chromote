@@ -140,8 +140,7 @@ it which you can control as normal:</p>
 <span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Browser</span><span class="op">$</span><span class="fu">getVersion</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"browser.png"</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"browser_string.png"</span>, selector <span class="op">=</span> <span class="st">".string-major"</span><span class="op">)</span></span></code></pre></div>
 <p>When you use <code>$view()</code> on the remote browser, your local
@@ -150,22 +149,6 @@ won’t be able to view the remote browser. If your local browser is
 Chrome, there will be a shield-shaped icon in the location bar that you
 can click in order to enable loading the scripts. (Note: Some browsers
 don’t seem to work at all with the viewer.)</p>
-<p><strong>Technical note:</strong> There seem to be some timing issues
-with remote browsers. In the example above, the browser may finish
-navigating to the web site before the R process receives the response
-message for <code>$navigate()</code>, and therefore before R starts
-waiting for <code>Page.loadEventFired</code>. In order to avoid these
-timing problems, it is better to write code like this:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">{</span></span>
-<span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>  <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>  <span class="va">b</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"browser.png"</span><span class="op">)</span></span></code></pre></div>
-<p>This tells it to fire off the <code>Page.navigate</code> command and
-<em>not</em> wait for it, and then immediately start waiting for
-<code>Page.loadEventFired</code> event.</p>
   </main>
 </div>
 

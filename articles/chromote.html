@@ -185,14 +185,11 @@ using chromote to programmatically take screenshots you’ll want to read
 &lt;code&gt;&lt;a href="../articles/example-loading-page.html"&gt;vignette("example-loading-page")&lt;/a&gt;&lt;/code&gt; for a consistent and
 reliable approach.&lt;/p&gt;'><sup>1</sup></a>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span></span></code></pre></div>
-<p>In the official Chrome DevTools Protocol (CDP) documentation, this is
-the <a href="https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-navigate" class="external-link"><code>Page.navigate</code></a>
-command.</p>
-<p>In addition to full support of the CDP, <code>ChromoteSession</code>
-objects also some convenience methods, like <code>$screenshot()</code>.
-(See the Examples section below for more information about
-screenshots.)</p>
+<code class="sourceCode R"><span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://www.r-project.org/"</span><span class="op">)</span></span></code></pre></div>
+<p>In addition to full support of the Chrome Devtools Protocol,
+<code>ChromoteSession</code> objects also have some convenience methods,
+like <code>$go_to()</code> and <code>$screenshot()</code>. (See the
+Examples section below for more information about screenshots.)</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Saves to screenshot.png</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="op">)</span></span>

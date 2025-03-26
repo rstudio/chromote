@@ -114,7 +114,7 @@ automatically.</p>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Visit a web page that prints out the request headers</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://scooterlabs.com/echo"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"http://scooterlabs.com/echo"</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span>show <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span></span>
@@ -124,7 +124,7 @@ automatically.</p>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Network</span><span class="op">$</span><span class="fu">setExtraHTTPHeaders</span><span class="op">(</span>headers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">[</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Request again</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"http://scooterlabs.com/echo"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"http://scooterlabs.com/echo"</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span>show <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span></span>

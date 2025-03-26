@@ -115,7 +115,7 @@ process, even if you have already logged in with a normal browser.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">view</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://beta.rstudioconnect.com/content/123456/"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://beta.rstudioconnect.com/content/123456/"</span><span class="op">)</span></span></code></pre></div>
 <p>Next, log in interactively via the viewer. Once that’s done, use
 Chromote to capture the cookies.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -131,7 +131,7 @@ using the cookies.</p>
 <span><span class="va">cookies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"cookies.rds"</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Network</span><span class="op">$</span><span class="fu">setCookies</span><span class="op">(</span>cookies <span class="op">=</span> <span class="va">cookies</span><span class="op">$</span><span class="va">cookies</span><span class="op">)</span></span>
 <span><span class="co"># Navigate to the app that requires a login</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://beta.rstudioconnect.com/content/123456/"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://beta.rstudioconnect.com/content/123456/"</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -166,7 +166,7 @@ screenshot.</p>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">Network</span><span class="op">$</span><span class="fu">setCookies</span><span class="op">(</span>cookies <span class="op">=</span> <span class="va">cookies</span><span class="op">$</span><span class="va">cookies</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://beta.rstudioconnect.com/content/123456/"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://beta.rstudioconnect.com/content/123456/"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>

@@ -106,7 +106,7 @@ JavaScript code that does it.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Run JavaScript to extract text from the page</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Runtime</span><span class="op">$</span><span class="fu">evaluate</span><span class="op">(</span><span class="st">'document.querySelector(".corset .string-major a").innerText'</span><span class="op">)</span></span>
@@ -121,7 +121,7 @@ JavaScript code that does it.</p>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">p</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">b</span><span class="op">$</span><span class="va">Runtime</span><span class="op">$</span><span class="fu">evaluate</span><span class="op">(</span></span>
 <span>    <span class="st">'document.querySelector(".corset .string-major a").innerText'</span></span>
@@ -133,7 +133,7 @@ JavaScript code that does it.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="using-chrome-devtools-procotol-commands">Using Chrome DevTools Procotol commands<a class="anchor" aria-label="anchor" href="#using-chrome-devtools-procotol-commands"></a>
+<h2 id="using-chrome-devtools-protocol-commands">Using Chrome DevTools Protocol commands<a class="anchor" aria-label="anchor" href="#using-chrome-devtools-protocol-commands"></a>
 </h2>
 <p>Another way is to use CDP commands to extract content from the DOM.
 This does not require executing JavaScript in the browser’s context, but
@@ -145,7 +145,7 @@ it is also not as flexible as JavaScript.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">getDocument</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">querySelector</span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">root</span><span class="op">$</span><span class="va">nodeId</span>, <span class="st">".corset .string-major a"</span><span class="op">)</span></span>
 <span><span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">getOuterHTML</span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">nodeId</span><span class="op">)</span></span>
@@ -159,9 +159,8 @@ it is also not as flexible as JavaScript.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/chromote/">chromote</a></span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ChromoteSession.html">ChromoteSession</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">loadEventFired</span><span class="op">(</span>wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">$</span><span class="va">Page</span><span class="op">$</span><span class="fu">navigate</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">p</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">b</span><span class="op">$</span><span class="fu">go_to</span><span class="op">(</span><span class="st">"https://www.whatismybrowser.com/"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span></span>
+<span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">b</span><span class="op">$</span><span class="va">DOM</span><span class="op">$</span><span class="fu">getDocument</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span><span class="op">$</span></span>
 <span><span class="fu">then</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
