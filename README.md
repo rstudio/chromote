@@ -128,17 +128,13 @@ If you have the viewer open and run the following, you’ll see the web
 page load in the viewer[^1]:
 
 ``` r
-b$Page$navigate("https://www.r-project.org/")
+b$go_to("https://www.r-project.org/")
 ```
 
-In the official Chrome DevTools Protocol (CDP) documentation, this is
-the
-[`Page.navigate`](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-navigate)
-command.
-
-In addition to full support of the CDP, `ChromoteSession` objects also
-some convenience methods, like `$screenshot()`. (See the Examples
-section below for more information about screenshots.)
+In addition to full support of the Chrome Devtools Protocol,
+`ChromoteSession` objects also have some convenience methods, like
+`$go_to()` and `$screenshot()`. (See the Examples section below for more
+information about screenshots.)
 
 ``` r
 # Saves to screenshot.png

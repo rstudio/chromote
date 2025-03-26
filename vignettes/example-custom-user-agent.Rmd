@@ -33,7 +33,7 @@ b <- ChromoteSession$new()
 
 b$Network$setUserAgentOverride(userAgent = "My fake browser")
 
-b$Page$navigate("http://scooterlabs.com/echo")
+b$go_to("http://scooterlabs.com/echo")
 b$screenshot(show = TRUE)
 ```
 
@@ -45,7 +45,7 @@ b <- ChromoteSession$new()
 
 b$Network$setUserAgentOverride(userAgent = "My fake browser", wait_ = FALSE)
 p <- b$Page$loadEventFired(wait_ = FALSE)
-b$Page$navigate("http://scooterlabs.com/echo", wait_ = FALSE)
+b$go_to("http://scooterlabs.com/echo", wait_ = FALSE)
 p$then(function(value) {
   b$screenshot(show = TRUE)
 })

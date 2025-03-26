@@ -65,7 +65,8 @@ $timestamp
 ```
 
 > **Note:** This sequence of commands, with `Page$navigate()` and then `Page$loadEventFired()` works interactively when you run the commands slowly, but it will not work 100% of the time.
-> See `vignette("example-loading-page")` for a reliable approach to page loading that works in all situations.
+> In practice you should use `$go_to()` instead for reliable loading.
+> See `vignette("example-loading-page")` for more information.
 
 ## Automatic Events
 

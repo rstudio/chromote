@@ -18,6 +18,9 @@ knitr::opts_chunk$set(
 )
 ```
 
+This document explains why you should use the convenience method `$go_to()` instead of the lower-level Chrome Devtools Protocol command `Page$navigate()`.
+
+
 ``` r
 library(chromote)
 b <- ChromoteSession$new()
@@ -64,4 +67,19 @@ p$then(function(value) {
 })
 ```
 
-This is explained in more detail in `vignette("sync-async")`.
+This method of calling `Page$loadEventFired()` before `Page$navigate()` is essentially what the `$go_to()` convenience method does. It can also operate in synchronous and asynchronous modes.
+
+``` r
+# Synchronous API
+b$go_to("https://www.r-project.org/")
+b$screenshot("browser.png")
+
+# Asynchronous API
+b$go_to("https://www.r-project.org/", wait_ = FALSE)$
+then(function(value) {
+  b$screenshot("browser.png")
+})
+```
+
+
+The synchronous and asynchronous APIs are explained in more detail in `vignette("sync-async")`.

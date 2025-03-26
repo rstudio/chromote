@@ -14,6 +14,22 @@ but this is not currently supported by chromote.
 \examples{
 
 ## ------------------------------------------------
+## Method `ChromoteSession$go_to`
+## ------------------------------------------------
+
+\dontrun{
+# Basic navigation
+b$go_to("https://www.r-project.org")
+
+# Navigation with delay
+b$go_to("https://www.r-project.org", delay = 2)
+
+# Asynchronous navigation
+p <- b$go_to("https://www.r-project.org", wait_ = FALSE)
+p$then(function(value) print("Navigation complete!"))
+}
+
+## ------------------------------------------------
 ## Method `ChromoteSession$auto_events_enable_args`
 ## ------------------------------------------------
 
@@ -55,6 +71,7 @@ wait for a Chrome DevTools Protocol response.}
 \item \href{#method-ChromoteSession-close}{\code{ChromoteSession$close()}}
 \item \href{#method-ChromoteSession-get_viewport_size}{\code{ChromoteSession$get_viewport_size()}}
 \item \href{#method-ChromoteSession-set_viewport_size}{\code{ChromoteSession$set_viewport_size()}}
+\item \href{#method-ChromoteSession-go_to}{\code{ChromoteSession$go_to()}}
 \item \href{#method-ChromoteSession-screenshot}{\code{ChromoteSession$screenshot()}}
 \item \href{#method-ChromoteSession-screenshot_pdf}{\code{ChromoteSession$screenshot_pdf()}}
 \item \href{#method-ChromoteSession-new_session}{\code{ChromoteSession$new_session()}}
@@ -89,7 +106,7 @@ b <- ChromoteSession$new()
 b <- ChromoteSession$new(height = 1080, width = 1920)
 
 # Navigate to page
-b$Page$navigate("http://www.r-project.org/")
+b$go_to("http://www.r-project.org/")
 
 # View current chromote session
 if (interactive()) b$view()
@@ -157,7 +174,7 @@ using your \code{\link{Chrome}} browser. When not using a \code{\link{Chrome}} b
 b <- ChromoteSession$new()
 
 # Navigate to page
-b$Page$navigate("http://www.r-project.org/")
+b$go_to("http://www.r-project.org/")
 
 # View current chromote session
 if (interactive()) b$view()
@@ -179,7 +196,7 @@ Close the Chromote session.
 b <- ChromoteSession$new()
 
 # Navigate to page
-b$Page$navigate("http://www.r-project.org/")
+b$go_to("http://www.r-project.org/")
 
 # Close current chromote session
 b$close()
@@ -274,6 +291,75 @@ can restore the viewport size, if desired.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChromoteSession-go_to"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-go_to}{}}}
+\subsection{Method \code{go_to()}}{
+Navigate to a URL and wait for the page to load
+
+This method navigates to a specified URL and waits for the page load
+event to complete. This is a more reliable alternative to directly
+calling \code{Page$navigate()}, which can return before the page is actually
+loaded. This method also allows for an optional delay after the load
+event has fired, in case the page needs to load additional assets after
+that event.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$go_to(
+  url,
+  ...,
+  delay = 0,
+  callback_ = NULL,
+  error_ = NULL,
+  timeout_ = self$default_timeout,
+  wait_ = TRUE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{url}}{The URL to navigate to.}
+
+\item{\code{...}}{Additional parameters passed to \code{Page$navigate()}.}
+
+\item{\code{delay}}{Number of seconds to wait after the page load event fires.}
+
+\item{\code{callback_}}{Function to call when the page load event fires.}
+
+\item{\code{error_}}{Function to call if an error occurs during navigation.}
+
+\item{\code{timeout_}}{Maximum time in seconds to wait for the page load event
+(defaults to session's `default_timeout``).}
+
+\item{\code{wait_}}{If \code{FALSE}, returns a promise that resolves when navigation
+is complete. If \code{TRUE} (default), blocks until navigation is complete.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+If \code{wait_} is TRUE, returns invisible(NULL). If wait_ is FALSE,
+returns a promise that resolves when navigation is complete. The
+promise resolves with the value from the navigate command.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+# Basic navigation
+b$go_to("https://www.r-project.org")
+
+# Navigation with delay
+b$go_to("https://www.r-project.org", delay = 2)
+
+# Asynchronous navigation
+p <- b$go_to("https://www.r-project.org", wait_ = FALSE)
+p$then(function(value) print("Navigation complete!"))
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-screenshot"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-screenshot}{}}}
 \subsection{Method \code{screenshot()}}{
@@ -284,7 +370,7 @@ Take a PNG screenshot
 b <- ChromoteSession$new()
 
 # Navigate to page
-b$Page$navigate("http://www.r-project.org/")
+b$go_to("http://www.r-project.org/")
 
 # Take screenshot
 tmppngfile <- tempfile(fileext = ".png")
@@ -323,8 +409,7 @@ screenshot_p <- function(url, filename = NULL) \{
   \}
 
   b2 <- b$new_session()
-  b2$Page$navigate(url, wait_ = FALSE)
-  b2$Page$loadEventFired(wait_ = FALSE)$
+  b2$go_to(url, wait_ = FALSE)$
     then(function(value) \{
       b2$screenshot(filename, wait_ = FALSE)
     \})$
@@ -417,7 +502,7 @@ Take a PDF screenshot
 b <- ChromoteSession$new()
 
 # Navigate to page
-b$Page$navigate("http://www.r-project.org/")
+b$go_to("http://www.r-project.org/")
 
 # Take screenshot
 tmppdffile <- tempfile(fileext = ".pdf")
@@ -479,9 +564,9 @@ Create a new tab / window
 \subsection{Examples}{
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{b1 <- ChromoteSession$new()
-b1$Page$navigate("http://www.google.com")
+b1$go_to("http://www.google.com")
 b2 <- b1$new_session()
-b2$Page$navigate("http://www.r-project.org/")
+b2$go_to("http://www.r-project.org/")
 b1$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
 #> [1] "https://www.google.com/"
 b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
@@ -588,7 +673,7 @@ Send a debug log message to the parent \link{Chromote} object
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{b <- ChromoteSession$new()
 b$parent$debug_messages(TRUE)
-b$Page$navigate("https://www.r-project.org/")
+b$go_to("https://www.r-project.org/")
 #> SEND \{"method":"Page.navigate","params":\{"url":"https://www.r-project.org/"\}| __truncated__\}
 # Turn off debug messages
 b$parent$debug_messages(FALSE)

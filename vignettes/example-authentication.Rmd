@@ -39,7 +39,7 @@ First navigate to the page:
 library(chromote)
 b <- ChromoteSession$new()
 b$view()
-b$Page$navigate("https://beta.rstudioconnect.com/content/123456/")
+b$go_to("https://beta.rstudioconnect.com/content/123456/")
 ```
 
 Next, log in interactively via the viewer.
@@ -60,7 +60,7 @@ b$view()
 cookies <- readRDS("cookies.rds")
 b$Network$setCookies(cookies = cookies$cookies)
 # Navigate to the app that requires a login
-b$Page$navigate("https://beta.rstudioconnect.com/content/123456/")
+b$go_to("https://beta.rstudioconnect.com/content/123456/")
 b$screenshot()
 ```
 
@@ -108,7 +108,7 @@ library(chromote)
 b <- ChromoteSession$new()
 
 b$Network$setCookies(cookies = cookies$cookies)
-b$Page$navigate("https://beta.rstudioconnect.com/content/123456/")
+b$go_to("https://beta.rstudioconnect.com/content/123456/")
 
 b$screenshot()
 ```

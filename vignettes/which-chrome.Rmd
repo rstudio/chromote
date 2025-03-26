@@ -118,7 +118,7 @@ Sys.setenv(CHROMOTE_CHROME = "/Applications/Chromium.app/Contents/MacOS/Chromium
 
 b <- ChromoteSession$new()
 b$view()
-b$Page$navigate("https://www.whatismybrowser.com/")
+b$go_to("https://www.whatismybrowser.com/")
 ```
 
 Another way is create a `Chromote` object and explicitly specify the browser, then spawn `ChromoteSession`s from it.
@@ -130,7 +130,7 @@ m <- Chromote$new(
 
 # Spawn a ChromoteSession from the Chromote object
 b <- m$new_session()
-b$Page$navigate("https://www.whatismybrowser.com/")
+b$go_to("https://www.whatismybrowser.com/")
 ```
 
 Yet another way is to create a `Chromote` object with a specified browser, then set it as the default Chromote object.

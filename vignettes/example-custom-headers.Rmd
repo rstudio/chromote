@@ -37,7 +37,7 @@ b$Network$setExtraHTTPHeaders(headers = list(
 ))
 
 # Visit a web page that prints out the request headers
-b$Page$navigate("http://scooterlabs.com/echo")
+b$go_to("http://scooterlabs.com/echo")
 b$screenshot(show = TRUE)
 
 
@@ -47,7 +47,7 @@ b$screenshot(show = TRUE)
 b$Network$setExtraHTTPHeaders(headers = list(a=1)[0])
 
 # Request again
-b$Page$navigate("http://scooterlabs.com/echo")
+b$go_to("http://scooterlabs.com/echo")
 b$screenshot(show = TRUE)
 
 

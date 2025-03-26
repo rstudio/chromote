@@ -28,7 +28,7 @@ One way to extract text from a page is to tell the browser to run JavaScript cod
 library(chromote)
 b <- ChromoteSession$new()
 
-b$Page$navigate("https://www.whatismybrowser.com/")
+b$go_to("https://www.whatismybrowser.com/")
 
 # Run JavaScript to extract text from the page
 x <- b$Runtime$evaluate('document.querySelector(".corset .string-major a").innerText')
@@ -43,7 +43,7 @@ library(chromote)
 b <- ChromoteSession$new()
 
 p <- b$Page$loadEventFired(wait_ = FALSE)
-b$Page$navigate("https://www.whatismybrowser.com/", wait_ = FALSE)
+b$go_to("https://www.whatismybrowser.com/", wait_ = FALSE)
 p$then(function(value) {
   b$Runtime$evaluate(
     'document.querySelector(".corset .string-major a").innerText'
@@ -54,7 +54,7 @@ then(function(value) {
 })
 ```
 
-## Using Chrome DevTools Procotol commands
+## Using Chrome DevTools Protocol commands
 
 Another way is to use CDP commands to extract content from the DOM.
 This does not require executing JavaScript in the browser's context, but it is also not as flexible as JavaScript.
@@ -65,7 +65,7 @@ This does not require executing JavaScript in the browser's context, but it is a
 library(chromote)
 b <- ChromoteSession$new()
 
-b$Page$navigate("https://www.whatismybrowser.com/")
+b$go_to("https://www.whatismybrowser.com/")
 x <- b$DOM$getDocument()
 x <- b$DOM$querySelector(x$root$nodeId, ".corset .string-major a")
 b$DOM$getOuterHTML(x$nodeId)
@@ -79,9 +79,8 @@ b$DOM$getOuterHTML(x$nodeId)
 library(chromote)
 b <- ChromoteSession$new()
 
-p <- b$Page$loadEventFired(wait_ = FALSE)
-b$Page$navigate("https://www.whatismybrowser.com/", wait_ = FALSE)
-p$then(function(value) {
+b$go_to("https://www.whatismybrowser.com/", wait_ = FALSE)$
+then(function(value) {
   b$DOM$getDocument()
 })$
 then(function(value) {
