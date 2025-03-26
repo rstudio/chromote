@@ -32,11 +32,11 @@ b <- ChromoteSession$new()
 
 # ==== Synchronous version ====
 # Run the next two lines together, without any delay in between.
-b$navigate_to("https://www.r-project.org/")
+b$go_to("https://www.r-project.org/")
 b$screenshot(show = TRUE)  # Saves to screenshot.png and displays in viewer
 
 # ==== Async version ====
-b$navigate_to("https://www.r-project.org/", wait_ = FALSE)$
+b$go_to("https://www.r-project.org/", wait_ = FALSE)$
   then(function(value) {
     b$screenshot(show = TRUE)
   })
@@ -62,7 +62,7 @@ You can set the width and height when it is created:
 ``` r
 b <- ChromoteSession$new(width = 390, height = 844)
 
-b$navigate_to("https://www.r-project.org/")
+b$go_to("https://www.r-project.org/")
 b$screenshot("narrow.png")
 ```
 
@@ -88,7 +88,7 @@ The ChromoteSession's `$view()` method opens a regular browser and navigates to 
 b <- ChromoteSession$new()
 
 b$view()
-b$navigate_to("https://www.google.com") # Or just type the URL in the navigation bar
+b$go_to("https://www.google.com") # Or just type the URL in the navigation bar
 ```
 
 At this point, you can interact with the web page by typing in text and clicking on things.
@@ -122,7 +122,7 @@ screenshot_p <- function(url, filename = NULL) {
   }
 
   b <- ChromoteSession$new()
-  b$navigate_to(url, wait_ = FALSE)$
+  b$go_to(url, wait_ = FALSE)$
     then(function(value) {
       b$screenshot(filename, wait_ = FALSE)
     })$

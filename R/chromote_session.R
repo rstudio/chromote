@@ -32,7 +32,7 @@ ChromoteSession <- R6Class(
     #' b <- ChromoteSession$new(height = 1080, width = 1920)
     #'
     #' # Navigate to page
-    #' b$navigate_to("http://www.r-project.org/")
+    #' b$go_to("http://www.r-project.org/")
     #'
     #' # View current chromote session
     #' if (interactive()) b$view()
@@ -195,7 +195,7 @@ ChromoteSession <- R6Class(
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
-    #' b$navigate_to("http://www.r-project.org/")
+    #' b$go_to("http://www.r-project.org/")
     #'
     #' # View current chromote session
     #' if (interactive()) b$view()
@@ -220,7 +220,7 @@ ChromoteSession <- R6Class(
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
-    #' b$navigate_to("http://www.r-project.org/")
+    #' b$go_to("http://www.r-project.org/")
     #'
     #' # Close current chromote session
     #' b$close()
@@ -369,16 +369,16 @@ ChromoteSession <- R6Class(
     #'
     #' @examples \dontrun{
     #' # Basic navigation
-    #' b$navigate_to("https://www.r-project.org")
+    #' b$go_to("https://www.r-project.org")
     #'
     #' # Navigation with delay
-    #' b$navigate_to("https://www.r-project.org", delay = 2)
+    #' b$go_to("https://www.r-project.org", delay = 2)
     #'
     #' # Asynchronous navigation
-    #' p <- b$navigate_to("https://www.r-project.org", wait_ = FALSE)
+    #' p <- b$go_to("https://www.r-project.org", wait_ = FALSE)
     #' p$then(function(value) print("Navigation complete!"))
     #'
-    navigate_to = function(
+    go_to = function(
       url,
       ...,
       delay = 0,
@@ -415,7 +415,7 @@ ChromoteSession <- R6Class(
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
-    #' b$navigate_to("http://www.r-project.org/")
+    #' b$go_to("http://www.r-project.org/")
     #'
     #' # Take screenshot
     #' tmppngfile <- tempfile(fileext = ".png")
@@ -454,7 +454,7 @@ ChromoteSession <- R6Class(
     #'   }
     #'
     #'   b2 <- b$new_session()
-    #'   b2$navigate_to(url, wait_ = FALSE)$
+    #'   b2$go_to(url, wait_ = FALSE)$
     #'     then(function(value) {
     #'       b2$screenshot(filename, wait_ = FALSE)
     #'     })$
@@ -542,7 +542,7 @@ ChromoteSession <- R6Class(
     #' b <- ChromoteSession$new()
     #'
     #' # Navigate to page
-    #' b$navigate_to("http://www.r-project.org/")
+    #' b$go_to("http://www.r-project.org/")
     #'
     #' # Take screenshot
     #' tmppdffile <- tempfile(fileext = ".pdf")
@@ -599,9 +599,9 @@ ChromoteSession <- R6Class(
     #'
     #' ```r
     #' b1 <- ChromoteSession$new()
-    #' b1$navigate_to("http://www.google.com")
+    #' b1$go_to("http://www.google.com")
     #' b2 <- b1$new_session()
-    #' b2$navigate_to("http://www.r-project.org/")
+    #' b2$go_to("http://www.r-project.org/")
     #' b1$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
     #' #> [1] "https://www.google.com/"
     #' b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
@@ -687,7 +687,7 @@ ChromoteSession <- R6Class(
     #' ```r
     #' b <- ChromoteSession$new()
     #' b$parent$debug_messages(TRUE)
-    #' b$navigate_to("https://www.r-project.org/")
+    #' b$go_to("https://www.r-project.org/")
     #' #> SEND {"method":"Page.navigate","params":{"url":"https://www.r-project.org/"}| __truncated__}
     #' # Turn off debug messages
     #' b$parent$debug_messages(FALSE)

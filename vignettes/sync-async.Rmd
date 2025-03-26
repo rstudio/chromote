@@ -457,7 +457,7 @@ str(b$wait_for(p))
 #>  $ timestamp: num 683
 ```
 
-`b$navigate_to()` is a convenience method that does things in this order, and in most cases you should use it instead of calling `Page$navigate()` directly.
+`b$go_to()` is a convenience method that does things in this order, and in most cases you should use it instead of calling `Page$navigate()` directly.
 
 > **Technical note**
 >

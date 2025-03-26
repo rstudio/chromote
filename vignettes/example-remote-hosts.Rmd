@@ -68,7 +68,7 @@ b <- r$new_session()
 
 b$Browser$getVersion()
 b$view()
-b$navigate_to("https://www.whatismybrowser.com/")
+b$go_to("https://www.whatismybrowser.com/")
 b$screenshot("browser.png")
 b$screenshot("browser_string.png", selector = ".string-major")
 ```
