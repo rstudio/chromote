@@ -128,12 +128,12 @@ If you have the viewer open and run the following, you’ll see the web
 page load in the viewer[^1]:
 
 ``` r
-b$go_to("https://www.r-project.org/")
+b$navigate_to("https://www.r-project.org/")
 ```
 
 In addition to full support of the Chrome Devtools Protocol,
 `ChromoteSession` objects also have some convenience methods, like
-`$go_to()` and `$screenshot()`. (See the Examples section below
+`$navigate_to()` and `$screenshot()`. (See the Examples section below
 for more information about screenshots.)
 
 ``` r
