@@ -1,5 +1,9 @@
 # chromote (development version)
 
+## New features
+
+* `ChromoteSession` gets a new helper method, `$go_to()`. This is an easier way of reliably waiting for a page load, instead of using `Page$loadEventFired()` and `Page$navigate()` together. (#221)
+
 # chromote 0.5.0
 
 ## New features
