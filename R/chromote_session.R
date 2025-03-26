@@ -377,7 +377,7 @@ ChromoteSession <- R6Class(
     #' # Asynchronous navigation
     #' p <- b$go_to("https://www.r-project.org", wait_ = FALSE)
     #' p$then(function(value) print("Navigation complete!"))
-    #'
+    #' }
     go_to = function(
       url,
       ...,

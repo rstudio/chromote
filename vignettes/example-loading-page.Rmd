@@ -82,4 +82,4 @@ then(function(value) {
 ```
 
 
-The synchronous and asynchronous APIS are explained in more detail in `vignette("sync-async")`.
+The synchronous and asynchronous APIs are explained in more detail in `vignette("sync-async")`.

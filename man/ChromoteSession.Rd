@@ -14,6 +14,22 @@ but this is not currently supported by chromote.
 \examples{
 
 ## ------------------------------------------------
+## Method `ChromoteSession$go_to`
+## ------------------------------------------------
+
+\dontrun{
+# Basic navigation
+b$go_to("https://www.r-project.org")
+
+# Navigation with delay
+b$go_to("https://www.r-project.org", delay = 2)
+
+# Asynchronous navigation
+p <- b$go_to("https://www.r-project.org", wait_ = FALSE)
+p$then(function(value) print("Navigation complete!"))
+}
+
+## ------------------------------------------------
 ## Method `ChromoteSession$auto_events_enable_args`
 ## ------------------------------------------------
 
@@ -324,6 +340,24 @@ If \code{wait_} is TRUE, returns invisible(NULL). If wait_ is FALSE,
 returns a promise that resolves when navigation is complete. The
 promise resolves with the value from the navigate command.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+# Basic navigation
+b$go_to("https://www.r-project.org")
+
+# Navigation with delay
+b$go_to("https://www.r-project.org", delay = 2)
+
+# Asynchronous navigation
+p <- b$go_to("https://www.r-project.org", wait_ = FALSE)
+p$then(function(value) print("Navigation complete!"))
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-screenshot"></a>}}
