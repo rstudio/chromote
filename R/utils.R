@@ -79,7 +79,12 @@ find_domain <- function(event) {
 
 # Force url to be opened by Chromium browser
 browse_url <- function(path, chromote) {
-  url <- chromote$url(path)
+  if (grepl("^[a-zA-Z][a-zA-Z0-9+.-]*://", path)) {
+    # `path` is already a full URL
+    url <- path
+  } else {
+    url <- chromote$url(path)
+  }
 
   browser <- chromote$get_browser()
   if (inherits(browser, "Chrome")) {
