@@ -93,7 +93,11 @@ browse_url <- function(path, chromote) {
     product <- chromote$Browser$getVersion(wait_ = TRUE)$product
 
     # And if not chrome-headless-shell (which doesn't have a UI we can use)
-    if (!grepl("HeadlessChrome", product, fixed = TRUE)) {
+    if (grepl("HeadlessChrome", product, fixed = TRUE)) {
+      cli::cli_warn(
+        "Cannot open a browser window with {.field chrome-headless-shell}, using your default browser instead."
+      )
+    } else {
       # Quote the path if using a non-windows machine
       if (!is_windows()) browser_path <- shQuote(browser_path)
       utils::browseURL(url, browser_path)
