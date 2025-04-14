@@ -224,8 +224,7 @@ ChromoteSession <- R6Class(
         if (length(inspector_contents) > 0) {
           ws_url <- info$webSocketDebuggerUrl[info$id == private$target_id]
           ws_url <- sub("ws://", "ws=", ws_url)
-          inspector_url <- paste0(inspector_path, "?", ws_url)
-          return(browse_url(inspector_url, self$parent))
+          path <- paste0(inspector_path, "?", ws_url)
         }
       }
 
