@@ -204,8 +204,28 @@ ChromoteSession <- R6Class(
       # A data frame of targets, one row per target.
       info <- fromJSON(self$parent$url("/json"))
       path <- info$devtoolsFrontendUrl[info$id == private$target_id]
+
       if (length(path) == 0) {
         stop("Target info not found.")
+      }
+
+      if (grepl("^https://chrome-devtools-frontend\\.appspot\\.com", path)) {
+        # Chrome v135+ uses a fully-qualified appspot.com URL because some
+        # flavors of Chrome do not ship with the devtools inspector (iOS,
+        # Android). Using this URL requires also setting
+        # `--remote-allow-origins=https://chrome-devtools-frontend.appspot.com`.
+        # This is cumbersome and not required for desktop Chrome, so we instead
+        # use the legacy path, while trying to guard against future changes.
+        inspector_path <- "/devtools/inspector.html"
+        inspector_contents <- tryCatch(
+          readLines(self$parent$url(inspector_path)),
+          error = function(err) character(0)
+        )
+        if (length(inspector_contents) > 0) {
+          ws_url <- info$webSocketDebuggerUrl[info$id == private$target_id]
+          ws_url <- sub("ws://", "ws=", ws_url)
+          path <- paste0(inspector_path, "?", ws_url)
+        }
       }
 
       browse_url(path, self$parent)
