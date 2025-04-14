@@ -209,11 +209,11 @@ ChromoteSession <- R6Class(
         stop("Target info not found.")
       }
 
-      if (!grepl("^/", path)) {
+      if (grepl("^https://chrome-devtools-frontend\\.appspot\\.com", path)) {
         # Chrome v135+ uses a fully-qualified appspot.com URL because some
         # flavors of Chrome do not ship with the devtools inspector (iOS,
         # Android). Using this URL requires also setting
-        # ` -remote-allow-origins=https://chrome-devtools-frontend.appspot.com`.
+        # `--remote-allow-origins=https://chrome-devtools-frontend.appspot.com`.
         # This is cumbersome and not required for desktop Chrome, so we instead
         # use the legacy path, while trying to guard against future changes.
         inspector_path <- "/devtools/inspector.html"
