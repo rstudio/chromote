@@ -9,9 +9,9 @@ used by various browser implementations. It can represent a local browser
 process or one running remotely.
 }
 \details{
-The \code{initialize()} method of an implementation should set private$host
-and private$port. If the process is local, the \code{initialize()} method
-should also set private$process.
+The \code{initialize()} method of an implementation should set \code{private$host}
+and \code{private$port}. If the process is local, the \code{initialize()} method
+should also set \code{private$process}.
 }
 \section{Methods}{
 \subsection{Public methods}{

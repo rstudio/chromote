@@ -8,9 +8,9 @@ globals <- new.env()
 #' process or one running remotely.
 #'
 #' @details
-#' The \code{initialize()} method of an implementation should set private$host
-#' and private$port. If the process is local, the \code{initialize()} method
-#' should also set private$process.
+#' The `initialize()` method of an implementation should set `private$host`
+#' and `private$port`. If the process is local, the `initialize()` method
+#' should also set `private$process`.
 #'
 #' @export
 Browser <- R6Class(
