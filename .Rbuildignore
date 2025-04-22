@@ -14,3 +14,4 @@
 ^_dev$
 ^\.vscode$
 ^[\.]?air\.toml$
+^LICENSE\.md$
