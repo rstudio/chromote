@@ -1,6 +1,6 @@
 Package: chromote
 Title: Headless Chrome Web Browser Interface
-Version: 0.5.0.9000
+Version: 0.5.1
 Authors@R: c(
     person("Garrick", "Aden-Buie", , "garrick@posit.co", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7111-0077")),
