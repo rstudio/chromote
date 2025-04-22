@@ -13,3 +13,4 @@
 ^CRAN-SUBMISSION$
 ^_dev$
 ^\.vscode$
+^[\.]?air\.toml$
