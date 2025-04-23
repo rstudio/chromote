@@ -45,13 +45,3 @@ defaults:
     defaults:
       navbar-bg: $brand-blue
       code-color-dark: "#fa88d4"
-    rules: |
-      html[data-bs-theme="dark"] code {
-        background-color: transparent;
-      }
-      .navbar-brand + .nav-text {
-        color: var(--bs-navbar-color) !important;
-      }
-      code a:any-link {
-        text-decoration-color: currentColor;
-      }
