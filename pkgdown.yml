@@ -1,6 +1,6 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
-pkgdown_sha: ~
+pkgdown: 2.1.1.9000
+pkgdown_sha: 62d5c5a0fc12899aae97f6ce14018d2784bf308b
 articles:
   chromote: chromote.html
   commands-and-events: commands-and-events.html
@@ -15,7 +15,7 @@ articles:
   example-screenshot: example-screenshot.html
   sync-async: sync-async.html
   which-chrome: which-chrome.html
-last_built: 2025-04-22T18:32Z
+last_built: 2025-04-23T19:23Z
 urls:
   reference: https://rstudio.github.io/chromote/reference
   article: https://rstudio.github.io/chromote/articles
