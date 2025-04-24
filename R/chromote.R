@@ -606,14 +606,14 @@ globals$default_chromote <- NULL
 
 #' Default Chromote object
 #'
-#' Returns the Chromote package's default \code{\link{Chromote}} object. If
-#' there is not currently a default \code{Chromote} object that is active, then
+#' Returns the Chromote package's default [Chromote] object. If
+#' there is not currently a default `Chromote` object that is active, then
 #' one will be created and set as the default.
 #'
-#' \code{\link{ChromoteSession}$new()} calls this function by default, if the
-#' \code{parent} is not specified. That means that when
-#' \code{\link{ChromoteSession}$new()} is called and there is not currently an
-#' active default \code{Chromote} object, then a new \code{Chromote} object will
+#' `ChromoteSession$new()` calls this function by default, if the
+#' `parent` is not specified. That means that when
+#' `ChromoteSession$new()` is called and there is not currently an
+#' active default `Chromote` object, then a new `Chromote` object will
 #' be created and set as the default.
 #' @export
 default_chromote_object <- function() {
@@ -632,7 +632,7 @@ has_default_chromote_object <- function() {
   !is.null(globals$default_chromote) && globals$default_chromote$is_alive()
 }
 
-#' @param x A \code{\link{Chromote}} object.
+#' @param x A [Chromote] object.
 #' @rdname default_chromote_object
 #' @export
 set_default_chromote_object <- function(x) {

@@ -1,17 +1,17 @@
 Package: chromote
 Title: Headless Chrome Web Browser Interface
-Version: 0.5.0.9000
+Version: 0.5.1
 Authors@R: c(
     person("Garrick", "Aden-Buie", , "garrick@posit.co", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7111-0077")),
     person("Winston", "Chang", , "winston@posit.co", role = "aut"),
     person("Barret", "Schloerke", , "barret@posit.co", role = "aut",
            comment = c(ORCID = "0000-0001-9986-114X")),
-    person("Posit Software, PBC", role = c("cph", "fnd"))
+    person("Posit Software, PBC", role = c("cph", "fnd"), comment = c(ROR = "03wc8by49"))
   )
 Description: An implementation of the 'Chrome DevTools Protocol', for
     controlling a headless Chrome web browser.
-License: GPL-2
+License: MIT + file LICENSE
 URL: https://rstudio.github.io/chromote/,
     https://github.com/rstudio/chromote
 BugReports: https://github.com/rstudio/chromote/issues
@@ -37,7 +37,7 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: 
     knitr
-Config/Needs/website: tidyverse/tidytemplate
+Config/Needs/website: r-lib/pkgdown, rstudio/bslib
 Config/testthat/edition: 3
 Config/testthat/parallel: FALSE
 Config/testthat/start-first: chromote_session

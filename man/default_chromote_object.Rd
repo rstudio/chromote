@@ -13,17 +13,17 @@ has_default_chromote_object()
 set_default_chromote_object(x)
 }
 \arguments{
-\item{x}{A \code{\link{Chromote}} object.}
+\item{x}{A \link{Chromote} object.}
 }
 \description{
-Returns the Chromote package's default \code{\link{Chromote}} object. If
+Returns the Chromote package's default \link{Chromote} object. If
 there is not currently a default \code{Chromote} object that is active, then
 one will be created and set as the default.
 }
 \details{
-\code{\link{ChromoteSession}$new()} calls this function by default, if the
+\code{ChromoteSession$new()} calls this function by default, if the
 \code{parent} is not specified. That means that when
-\code{\link{ChromoteSession}$new()} is called and there is not currently an
+\code{ChromoteSession$new()} is called and there is not currently an
 active default \code{Chromote} object, then a new \code{Chromote} object will
 be created and set as the default.
 }

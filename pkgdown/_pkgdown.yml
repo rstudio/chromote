@@ -1,17 +1,27 @@
 url: https://rstudio.github.io/chromote
 
 authors:
+  Posit Software, PBC:
+    href: https://www.posit.co
+    html: >-
+      <img src='https://www.tidyverse.org/posit-logo.svg' alt='Posit' height='16' width='62' style="margin-bottom: 3px;" />
+  Barret Schloerke:
+    href: http://schloerke.com
   Garrick Aden-Buie:
     href: https://garrickadenbuie.com
+  Winston Chang:
+    href: https://github.com/wch
 
 template:
-  package: tidytemplate
   bootstrap: 5
+  light-switch: true
+  theme: github-light
+  theme-dark: github-dark
+  bslib:
+    brand: pkgdown/_brand.yml
 
-  # bslib:
-  #   primary: "#096B72"
-  #   navbar-background: "#e6f3fc"
-  trailing_slash_redirect: true
+development:
+  mode: auto
 
 articles:
   - title: Learn chromote

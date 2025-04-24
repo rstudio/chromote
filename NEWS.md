@@ -1,4 +1,4 @@
-# chromote (development version)
+# chromote 0.5.1
 
 ## New features
 
