@@ -8,7 +8,9 @@ push_interrupt_domain <- function(domain) {
 
 pop_interrupt_domain <- function() {
   n_domains <- length(promise_globals$interrupt_domains)
-  if (length(n_domains) == 0) return(NULL)
+  if (length(n_domains) == 0) {
+    return(NULL)
+  }
 
   domain <- promise_globals$interrupt_domains[[n_domains]]
   promise_globals$interrupt_domains[[n_domains]] <- NULL
@@ -159,8 +161,7 @@ later_with_interrupt <- function(
   func,
   delay = 0,
   loop = current_loop(),
-  on_interrupt = function() {
-  },
+  on_interrupt = function() {},
   interrupt_domain = current_interrupt_domain(),
   poll_interval = 0.1
 ) {

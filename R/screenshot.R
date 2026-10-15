@@ -21,7 +21,7 @@ chromote_session_screenshot <- function(
   force(show)
   force(wait_)
 
-  region = match.arg(region)
+  region <- match.arg(region)
   if (length(filename) == 0 && !show) {
     stop("Cannot have empty filename and show=FALSE")
   }
@@ -180,7 +180,9 @@ chromote_session_screenshot <- function(
 
 screenshot_format <- function(filename) {
   ext <- strsplit(filename, ".", fixed = TRUE)[[1]]
-  if (length(ext) < 2) ext <- "no_ext"
+  if (length(ext) < 2) {
+    ext <- "no_ext"
+  }
   ext <- ext[length(ext)]
 
   switch(

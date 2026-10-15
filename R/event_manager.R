@@ -64,7 +64,9 @@ EventManager <- R6Class(
 
     invoke_event_callbacks = function(event, params) {
       callbacks <- private$event_callbacks$get(event)
-      if (is.null(callbacks) || callbacks$size() == 0) return()
+      if (is.null(callbacks) || callbacks$size() == 0) {
+        return()
+      }
 
       callbacks$invoke(params)
     },
@@ -116,7 +118,9 @@ EventManager <- R6Class(
       deregister_and_dec <- function() {
         # Make sure that if this is called multiple times that it doesn't keep
         # having effects.
-        if (deregister_called) return()
+        if (deregister_called) {
+          return()
+        }
         deregister_called <<- TRUE
 
         deregister_callback()

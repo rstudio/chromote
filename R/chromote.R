@@ -317,10 +317,13 @@ Chromote <- R6Class(
     # method will print out the current debugging state.
     #' @param value If `TRUE`, enable debugging. If `FALSE`, disable debugging.
     debug_messages = function(value = NULL) {
-      if (is.null(value)) return(private$debug_messages_)
+      if (is.null(value)) {
+        return(private$debug_messages_)
+      }
 
-      if (!(identical(value, TRUE) || identical(value, FALSE)))
+      if (!(identical(value, TRUE) || identical(value, FALSE))) {
         stop("value must be TRUE or FALSE")
+      }
 
       private$debug_messages_ <- value
     },
@@ -418,7 +421,9 @@ Chromote <- R6Class(
     #'   applies when Chromote is connected to a local process.
     close = function(wait = TRUE) {
       if (!isFALSE(wait)) {
-        if (isTRUE(wait)) wait <- 10
+        if (isTRUE(wait)) {
+          wait <- 10
+        }
         check_number_whole(wait, min = 0)
       }
 
@@ -518,7 +523,9 @@ Chromote <- R6Class(
     invoke_command_callback = function(id, value, error) {
       id <- as.character(id)
 
-      if (!private$command_callbacks$has(id)) return()
+      if (!private$command_callbacks$has(id)) {
+        return()
+      }
 
       handlers <- private$command_callbacks$get(id)
 
@@ -549,7 +556,9 @@ Chromote <- R6Class(
       self$protocol$Target$detachedFromTarget(function(msg) {
         sid <- msg$sessionId
         session <- private$sessions[[sid]]
-        if (is.null(session)) return()
+        if (is.null(session)) {
+          return()
+        }
 
         private$sessions[[sid]] <- NULL
         session$mark_closed(TRUE)
