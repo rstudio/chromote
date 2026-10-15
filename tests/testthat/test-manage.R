@@ -1,7 +1,9 @@
 skip_on_cran()
 
 test_that("with_chrome_version('system') works", {
-  system_path <- find_chrome()
+  withr::with_envvar(list(CHROMOTE_CHROME = ""), {
+    system_path <- find_chrome()
+  })
   skip_if_not(nzchar(system_path), "Chrome is not installed on this system.")
 
   fake_chromote_path <- tempfile("chrome")
