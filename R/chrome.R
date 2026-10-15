@@ -374,7 +374,8 @@ find_chrome_linux <- function() {
   for (path in possible_names) {
     path <- Sys.which(path)
     if (nzchar(path)) {
-      return(path)
+      # `Sys.which()` names the result after the binary
+      return(unname(path))
     }
   }
 
