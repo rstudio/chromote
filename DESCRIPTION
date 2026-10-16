@@ -38,7 +38,7 @@ Suggests:
     testthat (>= 3.2.1)
 VignetteBuilder: 
     knitr
-Config/Needs/website: r-lib/pkgdown, rstudio/bslib
+Config/Needs/website: r-lib/pkgdown, rstudio/bslib, brand.yml
 Config/roxygen2/version: 8.1.1
 Config/testthat/edition: 3
 Config/testthat/parallel: FALSE
