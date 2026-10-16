@@ -100,10 +100,11 @@ local_chrome_version <- function(
   rlang::check_dots_empty()
 
   if (identical(version, "system")) {
-    if (!quiet)
+    if (!quiet) {
       cli::cli_inform(
         "chromote will now use {.strong the system-wide installation} of Chrome."
       )
+    }
     return(local_chromote_chrome("", .local_envir = .local_envir))
   }
 

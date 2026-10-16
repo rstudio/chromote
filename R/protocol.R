@@ -98,8 +98,9 @@ gen_command_body <- function(method_name, params) {
   check_missing_exprs <- lapply(required_params, function(param) {
     name <- as.symbol(param$name)
     check_missing <- expr(
-      if (missing(!!name))
+      if (missing(!!name)) {
         stop("Missing required argument ", !!(expr_text(name)))
+      }
     )
   })
 
@@ -117,8 +118,7 @@ gen_command_body <- function(method_name, params) {
         }
       })
     } else {
-      expr({
-      })
+      expr({})
     }
 
   # As of 2025-02-07, it's not possible to query CDP to determine if the value
@@ -145,18 +145,22 @@ gen_command_body <- function(method_name, params) {
   names(param_list) <- fetch_key_c(params, "name")
 
   expr({
-    if (!is.null(callback_) && !is.function(callback_))
+    if (!is.null(callback_) && !is.function(callback_)) {
       stop("`callback_` must be a function or NULL.")
+    }
 
-    if (!is.null(error_) && !is.function(error_))
+    if (!is.null(error_) && !is.function(error_)) {
       stop("`error_` must be a function or NULL.")
+    }
 
     !!!timeout_default_expr
-    if (!is.null(timeout_) && !is.numeric(timeout_))
+    if (!is.null(timeout_) && !is.numeric(timeout_)) {
       stop("`timeout_` must be a number or NULL.")
+    }
 
-    if (!identical(wait_, TRUE) && !identical(wait_, FALSE))
+    if (!identical(wait_, TRUE) && !identical(wait_, FALSE)) {
       stop("`wait_` must be TRUE or FALSE.")
+    }
 
     # Check for missing non-optional args
     !!!check_missing_exprs
@@ -198,14 +202,17 @@ event_to_function <- function(event, domain_name, env) {
 # method_name is something like "Page.loadEventFired".
 gen_event_body <- function(method_name) {
   expr({
-    if (!is.null(callback_) && !is.function(callback_))
+    if (!is.null(callback_) && !is.function(callback_)) {
       stop("`callback_` must be a function or NULL.")
+    }
 
-    if (!is.null(timeout_) && !is.numeric(timeout_))
+    if (!is.null(timeout_) && !is.numeric(timeout_)) {
       stop("`timeout_` must be a number or NULL.")
+    }
 
-    if (!identical(wait_, TRUE) && !identical(wait_, FALSE))
+    if (!identical(wait_, TRUE) && !identical(wait_, FALSE)) {
       stop("`wait_` must be TRUE or FALSE.")
+    }
 
     p <- private$register_event_listener(!!method_name, callback_, timeout_)
 

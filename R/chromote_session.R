@@ -871,9 +871,12 @@ ChromoteSession <- R6Class(
         }
 
         cat_line("<ChromoteSession> (", state, ")")
-        if (self$is_active()) cat_line("  Session ID: ", self$get_session_id())
-        if (private$target_is_active)
+        if (self$is_active()) {
+          cat_line("  Session ID: ", self$get_session_id())
+        }
+        if (private$target_is_active) {
           cat_line("   Target ID: ", self$get_target_id())
+        }
 
         browser <- self$parent$get_browser()
         if (browser$is_local()) {

@@ -99,7 +99,9 @@ browse_url <- function(path, chromote) {
       )
     } else {
       # Quote the path if using a non-windows machine
-      if (!is_windows()) browser_path <- shQuote(browser_path)
+      if (!is_windows()) {
+        browser_path <- shQuote(browser_path)
+      }
       utils::browseURL(url, browser_path)
       return(invisible(url))
     }

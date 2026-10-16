@@ -38,11 +38,17 @@ Browser <- R6Class(
     #'   exit, killing the process if it takes longer than `wait` seconds to
     #'   close. Use `wait = TRUE` to wait for 10 seconds.
     close = function(wait = FALSE) {
-      if (!self$is_local()) return(invisible())
-      if (!private$process$is_alive()) return(invisible())
+      if (!self$is_local()) {
+        return(invisible())
+      }
+      if (!private$process$is_alive()) {
+        return(invisible())
+      }
 
       if (!isFALSE(wait)) {
-        if (isTRUE(wait)) wait <- 10
+        if (isTRUE(wait)) {
+          wait <- 10
+        }
         check_number_whole(wait, min = 0)
       }
 

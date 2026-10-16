@@ -374,7 +374,8 @@ find_chrome_linux <- function() {
   for (path in possible_names) {
     path <- Sys.which(path)
     if (nzchar(path)) {
-      return(path)
+      # `Sys.which()` names the result after the binary
+      return(unname(path))
     }
   }
 
@@ -386,7 +387,9 @@ inform_if_chrome_not_found <- function(
   searched_for = "Google Chrome was",
   extra_advice = ""
 ) {
-  if (!is.null(path)) return(invisible(path))
+  if (!is.null(path)) {
+    return(invisible(path))
+  }
 
   message(
     searched_for,
@@ -497,7 +500,9 @@ launch_chrome_impl <- function(path, args, port) {
         # Find port number from output
         output <- readLines(p$get_error_file())
         output <- output[grepl("^DevTools listening on ws://", output)]
-        if (length(output) != 1) stop() # Just break out of the tryCatch
+        if (length(output) != 1) {
+          stop()
+        } # Just break out of the tryCatch
 
         output_port <- sub(
           "^DevTools listening on ws://[0-9\\.]+:(\\d+)/.*",
@@ -505,18 +510,20 @@ launch_chrome_impl <- function(path, args, port) {
           output
         )
         output_port <- as.integer(output_port)
-        if (is.na(output_port) || output_port != port) stop()
+        if (is.na(output_port) || output_port != port) {
+          stop()
+        }
 
         con <- url(paste0("http://127.0.0.1:", port, "/json/protocol"), "rb")
-        if (!isOpen(con)) break # Failed to connect
+        if (!isOpen(con)) {
+          break
+        } # Failed to connect
 
         connected <- TRUE
         close(con)
       },
-      warning = function(e) {
-      },
-      error = function(e) {
-      }
+      warning = function(e) {},
+      error = function(e) {}
     )
 
     Sys.sleep(0.1)
