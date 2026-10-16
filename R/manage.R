@@ -1050,23 +1050,17 @@ chrome_abort_invalid_binary <- function(reason, resolved, dir) {
   # encodeString() escapes backslashes and quotes so the printed command is
   # valid R for Windows and quoted paths
   q <- function(x) encodeString(x, quote = "\"")
-  remove_cmd <- paste0(
-    "chromote::chrome_versions_remove(",
+  remove_cmd <- sprintf(
+    "chromote::chrome_versions_remove(%s, %s, %s, ask = FALSE)",
     q(version),
-    ", ",
     q(binary),
-    ", ",
-    q(platform),
-    ", ask = FALSE)"
+    q(platform)
   )
-  add_cmd <- paste0(
-    "chromote::chrome_versions_add(",
+  add_cmd <- sprintf(
+    "chromote::chrome_versions_add(%s, %s, %s)",
     q(version),
-    ", ",
     q(binary),
-    ", ",
-    q(platform),
-    ")"
+    q(platform)
   )
   unlink_cmd <- paste0("unlink(", q(dir), ", recursive = TRUE)")
 

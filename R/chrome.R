@@ -460,14 +460,8 @@ launch_chrome_impl <- function(path, args, port) {
       echo_cmd = getOption("chromote.launch.echo_cmd", FALSE)
     ),
     error = function(cnd) {
-      rlang::abort(
-        paste0(
-          "Failed to start Chrome. The operating system could not launch ",
-          "the executable at `",
-          path,
-          "`. Check that the path exists and is executable, or run ",
-          "`chromote_info()` to check your settings."
-        ),
+      cli::cli_abort(
+        "Failed to start Chrome. The operating system could not launch the executable at {.path {path}}. Check that the path exists and is executable, or run {.code chromote_info()} to check your settings.",
         class = "error_stop_port_search",
         parent = cnd
       )
