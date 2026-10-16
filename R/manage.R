@@ -989,6 +989,10 @@ chrome_is_broken_symlink <- function(path) {
 # is not a directory (including broken symlinks), so that a conflicting file
 # is reported instead of being silently overwritten.
 chrome_path_conflict <- function(path, root) {
+  # dirname() returns `/` separators on Windows, so normalize `root` the same way
+  # before comparing. Otherwise the walk never stops at `root` and can report a
+  # file above the cache as the blocker.
+  root <- dirname(file.path(root, "."))
   repeat {
     if (chrome_path_exists(path) && !dir.exists(path)) {
       kind <- if (chrome_is_broken_symlink(path)) {

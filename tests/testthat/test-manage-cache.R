@@ -26,6 +26,10 @@ install_chrome <- function(binary = "chrome", platform = "linux64") {
   chrome_versions_ensure(test_version, binary = binary, platform = platform)
 }
 
+# `chrome_path_conflict()` reports paths from dirname(), which uses `/`
+# separators on Windows, so expected paths are built the same way
+walked_path <- function(path) dirname(file.path(path, "."))
+
 write_fake_file <- function(path, content = "fake", exec = TRUE) {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   writeBin(charToRaw(content), path)
@@ -194,7 +198,7 @@ test_that("a file where the platform directory should be is a blocking conflict"
   write_fake_file(dir)
 
   expect_cache_invalid(
-    sprintf("expected directory %s is a file", dir),
+    sprintf("expected directory %s is a file", walked_path(dir)),
     dir = dir
   )
 })
@@ -208,7 +212,7 @@ test_that("a file where a bundle directory should be recovers the whole bundle",
   write_fake_file(app)
 
   expect_cache_invalid(
-    sprintf("expected directory %s is a file", app),
+    sprintf("expected directory %s is a file", walked_path(app)),
     dir = bundle,
     platform = "mac-arm64"
   )
@@ -225,10 +229,34 @@ test_that("a file replacing a nested Contents directory recovers the whole bundl
   write_fake_file(contents)
 
   expect_cache_invalid(
-    sprintf("expected directory %s is a file", contents),
+    sprintf("expected directory %s is a file", walked_path(contents)),
     dir = bundle,
     platform = "mac-arm64"
   )
+})
+
+test_that("the blocker walk stops at the cache root, not above it", {
+  root <- withr::local_tempdir()
+  blocker <- file.path(root, "blocker")
+  write_fake_file(blocker, exec = FALSE)
+
+  # `blocker` is a file above the cache root, so it must never be reported
+  cache <- file.path(blocker, "cache")
+  path <- file.path(cache, "chrome", test_version, "chrome-linux64", "chrome")
+  expect_null(chrome_path_conflict(path, paste0(cache, "/")))
+  expect_null(chrome_path_conflict(path, cache))
+})
+
+test_that("a Windows cache root with backslashes stops the blocker walk", {
+  skip_on_os(c("mac", "linux", "solaris"))
+
+  root <- withr::local_tempdir()
+  blocker <- file.path(root, "blocker")
+  write_fake_file(blocker, exec = FALSE)
+
+  cache <- gsub("/", "\\\\", file.path(blocker, "cache"))
+  path <- file.path(cache, "chrome", test_version, "chrome-linux64", "chrome")
+  expect_null(chrome_path_conflict(path, cache))
 })
 
 test_that("a broken symlink nested in the bundle recovers the whole bundle", {
