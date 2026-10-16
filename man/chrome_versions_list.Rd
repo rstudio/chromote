@@ -41,7 +41,7 @@ chromote v0.5.0 and was inspired by similar features in
 \href{https://playwright.dev/}{playwright}.
 }
 \examples{
-\dontshow{if (rlang::is_interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_interactive()) withAutoprint(\{ # examplesIf}
 chrome_versions_list()
 \dontshow{\}) # examplesIf}
 }

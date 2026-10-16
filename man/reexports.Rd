@@ -20,8 +20,8 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{magrittr}{\code{\link[magrittr:pipe]{\%>\%}}, \code{\link[magrittr:tee]{\%T>\%}}}
+  \item{magrittr}{\code{\link[magrittr:\%>\%]{\%>\%}}, \code{\link[magrittr:\%T>\%]{\%T>\%}}}
 
-  \item{promises}{\code{\link[promises:pipes]{\%...!\%}}, \code{\link[promises:pipes]{\%...>\%}}, \code{\link[promises:pipes]{\%...T!\%}}, \code{\link[promises:pipes]{\%...T>\%}}, \code{\link[promises:then]{catch}}, \code{\link[promises:then]{finally}}, \code{\link[promises]{promise}}, \code{\link[promises]{then}}}
+  \item{promises}{\code{\link[promises:\%...!\%]{\%...!\%}}, \code{\link[promises:\%...>\%]{\%...>\%}}, \code{\link[promises:\%...T!\%]{\%...T!\%}}, \code{\link[promises:\%...T>\%]{\%...T>\%}}, \code{\link[promises:catch]{catch()}}, \code{\link[promises:finally]{finally()}}, \code{\link[promises:promise]{promise()}}, \code{\link[promises:then]{then()}}}
 }}
 

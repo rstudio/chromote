@@ -38,17 +38,23 @@ import(promises)
 import(rlang)
 importFrom(R6,R6Class)
 importFrom(fastmap,fastmap)
-importFrom(jsonlite,fromJSON)
-importFrom(jsonlite,toJSON)
-importFrom(magrittr,"%>%")
-importFrom(magrittr,"%T>%")
+importFrom(jsonlite,
+  fromJSON,
+  toJSON
+)
+importFrom(magrittr,
+  "%>%",
+  "%T>%"
+)
 importFrom(processx,process)
-importFrom(promises,"%...!%")
-importFrom(promises,"%...>%")
-importFrom(promises,"%...T!%")
-importFrom(promises,"%...T>%")
-importFrom(promises,catch)
-importFrom(promises,finally)
-importFrom(promises,promise)
-importFrom(promises,then)
+importFrom(promises,
+  "%...!%",
+  "%...>%",
+  "%...T!%",
+  "%...T>%",
+  catch,
+  finally,
+  promise,
+  then
+)
 importFrom(websocket,WebSocket)

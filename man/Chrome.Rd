@@ -12,81 +12,84 @@ the browser's system process.
 \code{\link[=get_chrome_args]{get_chrome_args()}}
 }
 \section{Super class}{
-\code{\link[chromote:Browser]{chromote::Browser}} -> \code{Chrome}
+\code{\link[chromote:Browser]{Browser}} -> \code{Chrome}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-Chrome-new}{\code{Chrome$new()}}
-\item \href{#method-Chrome-get_path}{\code{Chrome$get_path()}}
-\item \href{#method-Chrome-clone}{\code{Chrome$clone()}}
+  \itemize{
+    \item \href{#method-Chrome-initialize}{\code{Chrome$new()}}
+    \item \href{#method-Chrome-get_path}{\code{Chrome$get_path()}}
+    \item \href{#method-Chrome-clone}{\code{Chrome$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details><summary>Inherited methods</summary>
+\if{html}{\out{<details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="close"><a href='../../chromote/html/Browser.html#method-Browser-close'><code>chromote::Browser$close()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_host"><a href='../../chromote/html/Browser.html#method-Browser-get_host'><code>chromote::Browser$get_host()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_port"><a href='../../chromote/html/Browser.html#method-Browser-get_port'><code>chromote::Browser$get_port()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_process"><a href='../../chromote/html/Browser.html#method-Browser-get_process'><code>chromote::Browser$get_process()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_alive"><a href='../../chromote/html/Browser.html#method-Browser-is_alive'><code>chromote::Browser$is_alive()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_local"><a href='../../chromote/html/Browser.html#method-Browser-is_local'><code>chromote::Browser$is_local()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="close"><a href='../../chromote/html/Browser.html#method-Browser-close'><code>Browser$close()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_host"><a href='../../chromote/html/Browser.html#method-Browser-get_host'><code>Browser$get_host()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_port"><a href='../../chromote/html/Browser.html#method-Browser-get_port'><code>Browser$get_port()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_process"><a href='../../chromote/html/Browser.html#method-Browser-get_process'><code>Browser$get_process()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_alive"><a href='../../chromote/html/Browser.html#method-Browser-is_alive'><code>Browser$is_alive()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_local"><a href='../../chromote/html/Browser.html#method-Browser-is_local'><code>Browser$is_local()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Chrome-new"></a>}}
-\if{latex}{\out{\hypertarget{method-Chrome-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new Chrome object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Chrome$new(path = find_chrome(), args = get_chrome_args())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{path}}{Location of chrome installation}
-
-\item{\code{args}}{A character vector of command-line arguments passed when
+\if{html}{\out{<a id="method-Chrome-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-Chrome-initialize}{}}}
+\subsection{\code{Chrome$new()}}{
+  Create a new Chrome object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Chrome$new(path = find_chrome(), args = get_chrome_args())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{path}}{Location of chrome installation}
+      \item{\code{args}}{A character vector of command-line arguments passed when
 initializing Chrome. Single on-off arguments are passed as single
 values (e.g.\code{"--disable-gpu"}), arguments with a value are given with a
 nested character vector (e.g. \code{c("--force-color-profile", "srgb")}).
 See
 \href{https://peter.sh/experiments/chromium-command-line-switches/}{here}
 for a list of possible arguments. Defaults to \code{\link[=get_chrome_args]{get_chrome_args()}}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A new \code{Chrome} object.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A new \code{Chrome} object.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Chrome-get_path"></a>}}
 \if{latex}{\out{\hypertarget{method-Chrome-get_path}{}}}
-\subsection{Method \code{get_path()}}{
-Browser application path
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Chrome$get_path()}\if{html}{\out{</div>}}
+\subsection{\code{Chrome$get_path()}}{
+  Browser application path
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Chrome$get_path()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Chrome-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-Chrome-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Chrome$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{Chrome$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Chrome$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

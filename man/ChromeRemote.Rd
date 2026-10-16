@@ -7,84 +7,89 @@
 Remote Chrome process
 }
 \section{Super class}{
-\code{\link[chromote:Browser]{chromote::Browser}} -> \code{ChromeRemote}
+\code{\link[chromote:Browser]{Browser}} -> \code{ChromeRemote}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-ChromeRemote-new}{\code{ChromeRemote$new()}}
-\item \href{#method-ChromeRemote-is_alive}{\code{ChromeRemote$is_alive()}}
-\item \href{#method-ChromeRemote-close}{\code{ChromeRemote$close()}}
-\item \href{#method-ChromeRemote-clone}{\code{ChromeRemote$clone()}}
+  \itemize{
+    \item \href{#method-ChromeRemote-initialize}{\code{ChromeRemote$new()}}
+    \item \href{#method-ChromeRemote-is_alive}{\code{ChromeRemote$is_alive()}}
+    \item \href{#method-ChromeRemote-close}{\code{ChromeRemote$close()}}
+    \item \href{#method-ChromeRemote-clone}{\code{ChromeRemote$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_host"><a href='../../chromote/html/Browser.html#method-Browser-get_host'><code>chromote::Browser$get_host()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_port"><a href='../../chromote/html/Browser.html#method-Browser-get_port'><code>chromote::Browser$get_port()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_process"><a href='../../chromote/html/Browser.html#method-Browser-get_process'><code>chromote::Browser$get_process()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_local"><a href='../../chromote/html/Browser.html#method-Browser-is_local'><code>chromote::Browser$is_local()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_host"><a href='../../chromote/html/Browser.html#method-Browser-get_host'><code>Browser$get_host()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_port"><a href='../../chromote/html/Browser.html#method-Browser-get_port'><code>Browser$get_port()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="get_process"><a href='../../chromote/html/Browser.html#method-Browser-get_process'><code>Browser$get_process()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="chromote" data-topic="Browser" data-id="is_local"><a href='../../chromote/html/Browser.html#method-Browser-is_local'><code>Browser$is_local()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ChromeRemote-new"></a>}}
-\if{latex}{\out{\hypertarget{method-ChromeRemote-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new ChromeRemote object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromeRemote$new(host, port)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{host}}{A string that is a valid IPv4 or IPv6 address. \code{"0.0.0.0"}
+\if{html}{\out{<a id="method-ChromeRemote-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromeRemote-initialize}{}}}
+\subsection{\code{ChromeRemote$new()}}{
+  Create a new ChromeRemote object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromeRemote$new(host, port)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{host}}{A string that is a valid IPv4 or IPv6 address. \code{"0.0.0.0"}
 represents all IPv4 addresses and \code{"::/0"} represents all IPv6 addresses.}
+      \item{\code{port}}{A number or integer that indicates the server port.}
+    }
+    \if{html}{\out{</div>}}
+  }
+}
 
-\item{\code{port}}{A number or integer that indicates the server port.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromeRemote-is_alive"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromeRemote-is_alive}{}}}
-\subsection{Method \code{is_alive()}}{
-Is the remote service alive?
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromeRemote$is_alive()}\if{html}{\out{</div>}}
+\subsection{\code{ChromeRemote$is_alive()}}{
+  Is the remote service alive?
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromeRemote$is_alive()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromeRemote-close"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromeRemote-close}{}}}
-\subsection{Method \code{close()}}{
-chromote does not manage remote processes, so closing a
+\subsection{\code{ChromeRemote$close()}}{
+  chromote does not manage remote processes, so closing a
 remote Chrome browser does nothing. You can send a \code{Browser$close()}
 command if this is really something you want to do.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromeRemote$close()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromeRemote$close()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromeRemote-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromeRemote-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromeRemote$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{ChromeRemote$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromeRemote$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

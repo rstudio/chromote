@@ -14,7 +14,7 @@ but this is not currently supported by chromote.
 \examples{
 
 ## ------------------------------------------------
-## Method `ChromoteSession$go_to`
+## Method `ChromoteSession$go_to()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -30,7 +30,7 @@ p$then(function(value) print("Navigation complete!"))
 }
 
 ## ------------------------------------------------
-## Method `ChromoteSession$auto_events_enable_args`
+## Method `ChromoteSession$auto_events_enable_args()`
 ## ------------------------------------------------
 
 if (interactive()) {
@@ -52,51 +52,51 @@ if (interactive()) {
 
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{parent}}{\code{\link{Chromote}} object}
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{parent}}{\code{\link{Chromote}} object}
 
-\item{\code{default_timeout}}{Default timeout in seconds for \pkg{chromote} to
+    \item{\code{default_timeout}}{Default timeout in seconds for \pkg{chromote} to
 wait for a Chrome DevTools Protocol response.}
 
-\item{\code{protocol}}{Dynamic protocol implementation. For expert use only!}
-}
-\if{html}{\out{</div>}}
+    \item{\code{protocol}}{Dynamic protocol implementation. For expert use only!}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-ChromoteSession-new}{\code{ChromoteSession$new()}}
-\item \href{#method-ChromoteSession-view}{\code{ChromoteSession$view()}}
-\item \href{#method-ChromoteSession-close}{\code{ChromoteSession$close()}}
-\item \href{#method-ChromoteSession-get_viewport_size}{\code{ChromoteSession$get_viewport_size()}}
-\item \href{#method-ChromoteSession-set_viewport_size}{\code{ChromoteSession$set_viewport_size()}}
-\item \href{#method-ChromoteSession-go_to}{\code{ChromoteSession$go_to()}}
-\item \href{#method-ChromoteSession-screenshot}{\code{ChromoteSession$screenshot()}}
-\item \href{#method-ChromoteSession-screenshot_pdf}{\code{ChromoteSession$screenshot_pdf()}}
-\item \href{#method-ChromoteSession-new_session}{\code{ChromoteSession$new_session()}}
-\item \href{#method-ChromoteSession-get_session_id}{\code{ChromoteSession$get_session_id()}}
-\item \href{#method-ChromoteSession-respawn}{\code{ChromoteSession$respawn()}}
-\item \href{#method-ChromoteSession-get_target_id}{\code{ChromoteSession$get_target_id()}}
-\item \href{#method-ChromoteSession-wait_for}{\code{ChromoteSession$wait_for()}}
-\item \href{#method-ChromoteSession-debug_log}{\code{ChromoteSession$debug_log()}}
-\item \href{#method-ChromoteSession-get_child_loop}{\code{ChromoteSession$get_child_loop()}}
-\item \href{#method-ChromoteSession-send_command}{\code{ChromoteSession$send_command()}}
-\item \href{#method-ChromoteSession-get_auto_events}{\code{ChromoteSession$get_auto_events()}}
-\item \href{#method-ChromoteSession-auto_events_enable_args}{\code{ChromoteSession$auto_events_enable_args()}}
-\item \href{#method-ChromoteSession-invoke_event_callbacks}{\code{ChromoteSession$invoke_event_callbacks()}}
-\item \href{#method-ChromoteSession-mark_closed}{\code{ChromoteSession$mark_closed()}}
-\item \href{#method-ChromoteSession-is_active}{\code{ChromoteSession$is_active()}}
-\item \href{#method-ChromoteSession-check_active}{\code{ChromoteSession$check_active()}}
-\item \href{#method-ChromoteSession-get_init_promise}{\code{ChromoteSession$get_init_promise()}}
-\item \href{#method-ChromoteSession-print}{\code{ChromoteSession$print()}}
-}
+  \itemize{
+    \item \href{#method-ChromoteSession-initialize}{\code{ChromoteSession$new()}}
+    \item \href{#method-ChromoteSession-view}{\code{ChromoteSession$view()}}
+    \item \href{#method-ChromoteSession-close}{\code{ChromoteSession$close()}}
+    \item \href{#method-ChromoteSession-get_viewport_size}{\code{ChromoteSession$get_viewport_size()}}
+    \item \href{#method-ChromoteSession-set_viewport_size}{\code{ChromoteSession$set_viewport_size()}}
+    \item \href{#method-ChromoteSession-go_to}{\code{ChromoteSession$go_to()}}
+    \item \href{#method-ChromoteSession-screenshot}{\code{ChromoteSession$screenshot()}}
+    \item \href{#method-ChromoteSession-screenshot_pdf}{\code{ChromoteSession$screenshot_pdf()}}
+    \item \href{#method-ChromoteSession-new_session}{\code{ChromoteSession$new_session()}}
+    \item \href{#method-ChromoteSession-get_session_id}{\code{ChromoteSession$get_session_id()}}
+    \item \href{#method-ChromoteSession-respawn}{\code{ChromoteSession$respawn()}}
+    \item \href{#method-ChromoteSession-get_target_id}{\code{ChromoteSession$get_target_id()}}
+    \item \href{#method-ChromoteSession-wait_for}{\code{ChromoteSession$wait_for()}}
+    \item \href{#method-ChromoteSession-debug_log}{\code{ChromoteSession$debug_log()}}
+    \item \href{#method-ChromoteSession-get_child_loop}{\code{ChromoteSession$get_child_loop()}}
+    \item \href{#method-ChromoteSession-send_command}{\code{ChromoteSession$send_command()}}
+    \item \href{#method-ChromoteSession-get_auto_events}{\code{ChromoteSession$get_auto_events()}}
+    \item \href{#method-ChromoteSession-auto_events_enable_args}{\code{ChromoteSession$auto_events_enable_args()}}
+    \item \href{#method-ChromoteSession-invoke_event_callbacks}{\code{ChromoteSession$invoke_event_callbacks()}}
+    \item \href{#method-ChromoteSession-mark_closed}{\code{ChromoteSession$mark_closed()}}
+    \item \href{#method-ChromoteSession-is_active}{\code{ChromoteSession$is_active()}}
+    \item \href{#method-ChromoteSession-check_active}{\code{ChromoteSession$check_active()}}
+    \item \href{#method-ChromoteSession-get_init_promise}{\code{ChromoteSession$get_init_promise()}}
+    \item \href{#method-ChromoteSession-print}{\code{ChromoteSession$print()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ChromoteSession-new"></a>}}
-\if{latex}{\out{\hypertarget{method-ChromoteSession-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new \code{ChromoteSession} object.
+\if{html}{\out{<a id="method-ChromoteSession-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-ChromoteSession-initialize}{}}}
+\subsection{\code{ChromoteSession$new()}}{
+  Create a new \code{ChromoteSession} object.
 \subsection{Examples}{
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{# Create a new `ChromoteSession` object.
@@ -112,8 +112,9 @@ b$go_to("http://www.r-project.org/")
 if (interactive()) b$view()
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$new(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$new(
   parent = default_chromote_object(),
   width = 992,
   height = 1323,
@@ -121,49 +122,45 @@ if (interactive()) b$view()
   wait_ = TRUE,
   auto_events = NULL,
   mobile = FALSE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{parent}}{\code{\link{Chromote}} object to use; defaults to
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{parent}}{\code{\link{Chromote}} object to use; defaults to
 \code{\link[=default_chromote_object]{default_chromote_object()}}}
-
-\item{\code{width, height}}{Width and height of the new window in integer pixel
+      \item{\code{width, height}}{Width and height of the new window in integer pixel
 values.}
-
-\item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target/}{Target}
+      \item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target/}{Target}
 ID of an existing target to attach to. When a \code{targetId} is provided, the
 \code{width} and \code{height} arguments are ignored. If NULL (the default) a new
 target is created and attached to, and the \code{width} and \code{height}
 arguments determine its viewport size.}
-
-\item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} of a new
+      \item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} of a new
 \code{ChromoteSession} object. Otherwise, block during initialization, and
 return a \code{ChromoteSession} object directly.}
-
-\item{\code{auto_events}}{If \code{NULL} (the default), use the \code{auto_events} setting
+      \item{\code{auto_events}}{If \code{NULL} (the default), use the \code{auto_events} setting
 from the parent \code{Chromote} object. If \code{TRUE}, enable automatic
 event enabling/disabling; if \code{FALSE}, disable automatic event
 enabling/disabling.}
-
-\item{\code{mobile}}{Whether to emulate mobile device. When \code{TRUE}, Chrome
+      \item{\code{mobile}}{Whether to emulate mobile device. When \code{TRUE}, Chrome
 updates settings to emulate browsing on a mobile phone; this includes
 viewport meta tag, overlay scrollbars, text autosizing and more. The
 default is \code{FALSE}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A new \code{ChromoteSession} object.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A new \code{ChromoteSession} object.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-view"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-view}{}}}
-\subsection{Method \code{view()}}{
-Display the current session in the \code{\link{Chromote}} browser.
+\subsection{\code{ChromoteSession$view()}}{
+  Display the current session in the \code{\link{Chromote}} browser.
 
 If a \code{\link{Chrome}} browser is being used, this method will open a new tab
 using your \code{\link{Chrome}} browser. When not using a \code{\link{Chrome}} browser, set
@@ -180,16 +177,18 @@ b$go_to("http://www.r-project.org/")
 if (interactive()) b$view()
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$view()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$view()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-close"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-close}{}}}
-\subsection{Method \code{close()}}{
-Close the Chromote session.
+\subsection{\code{ChromoteSession$close()}}{
+  Close the Chromote session.
 \subsection{Examples}{
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{# Create a new `ChromoteSession` object.
@@ -202,48 +201,52 @@ b$go_to("http://www.r-project.org/")
 b$close()
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$close(wait_ = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} that will resolve
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$close(wait_ = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} that will resolve
 when the \code{ChromoteSession} is closed. Otherwise, block until the
 \code{ChromoteSession} has closed.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-get_viewport_size"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-get_viewport_size}{}}}
-\subsection{Method \code{get_viewport_size()}}{
-Get the viewport size
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_viewport_size(wait_ = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} of a new
+\subsection{\code{ChromoteSession$get_viewport_size()}}{
+  Get the viewport size
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$get_viewport_size(wait_ = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} of a new
 \code{ChromoteSession} object. Otherwise, block during initialization, and
 return a \code{ChromoteSession} object directly.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Returns a list with values \code{width}, \code{height}, \code{zoom}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Returns a list with values \code{width}, \code{height}, \code{zoom}
 and \code{mobile}. See \verb{$set_viewport_size()} for more details.
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-set_viewport_size"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-set_viewport_size}{}}}
-\subsection{Method \code{set_viewport_size()}}{
-Set the viewport size
+\subsection{\code{ChromoteSession$set_viewport_size()}}{
+  Set the viewport size
 
 Each ChromoteSession is associated with a page that may be one page open
 in a browser window among many. Each page can have its own viewport size,
@@ -254,47 +257,46 @@ This function uses the
 command to set the viewport size. If you need more granular control or
 access to additional settings, use
 \verb{$Emulation$setDeviceMetricsOverride()}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$set_viewport_size(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$set_viewport_size(
   width,
   height,
   zoom = NULL,
   mobile = NULL,
   wait_ = TRUE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{width, height}}{Width and height of the new window in integer pixel
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{width, height}}{Width and height of the new window in integer pixel
 values.}
-
-\item{\code{zoom}}{The zoom level of displayed content on a device, where a
+      \item{\code{zoom}}{The zoom level of displayed content on a device, where a
 value of 1 indicates normal size, greater than 1 indicates zoomed in,
 and less than 1 indicates zoomed out.}
-
-\item{\code{mobile}}{Whether to emulate mobile device. When \code{TRUE}, Chrome
+      \item{\code{mobile}}{Whether to emulate mobile device. When \code{TRUE}, Chrome
 updates settings to emulate browsing on a mobile phone; this includes
 viewport meta tag, overlay scrollbars, text autosizing and more. The
 default is \code{FALSE}.}
-
-\item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} of a new
+      \item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} of a new
 \code{ChromoteSession} object. Otherwise, block during initialization, and
 return a \code{ChromoteSession} object directly.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Invisibly returns the previous viewport dimensions so that you
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Invisibly returns the previous viewport dimensions so that you
 can restore the viewport size, if desired.
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-go_to"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-go_to}{}}}
-\subsection{Method \code{go_to()}}{
-Navigate to a URL and wait for the page to load
+\subsection{\code{ChromoteSession$go_to()}}{
+  Navigate to a URL and wait for the page to load
 
 This method navigates to a specified URL and waits for the page load
 event to complete. This is a more reliable alternative to directly
@@ -302,8 +304,9 @@ calling \code{Page$navigate()}, which can return before the page is actually
 loaded. This method also allows for an optional delay after the load
 event has fired, in case the page needs to load additional assets after
 that event.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$go_to(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$go_to(
   url,
   ...,
   delay = 0,
@@ -311,39 +314,32 @@ that event.
   error_ = NULL,
   timeout_ = self$default_timeout,
   wait_ = TRUE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{url}}{The URL to navigate to.}
-
-\item{\code{...}}{Additional parameters passed to \code{Page$navigate()}.}
-
-\item{\code{delay}}{Number of seconds to wait after the page load event fires.}
-
-\item{\code{callback_}}{Function to call when the page load event fires.}
-
-\item{\code{error_}}{Function to call if an error occurs during navigation.}
-
-\item{\code{timeout_}}{Maximum time in seconds to wait for the page load event
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{url}}{The URL to navigate to.}
+      \item{\code{...}}{Additional parameters passed to \code{Page$navigate()}.}
+      \item{\code{delay}}{Number of seconds to wait after the page load event fires.}
+      \item{\code{callback_}}{Function to call when the page load event fires.}
+      \item{\code{error_}}{Function to call if an error occurs during navigation.}
+      \item{\code{timeout_}}{Maximum time in seconds to wait for the page load event
 (defaults to session's `default_timeout``).}
-
-\item{\code{wait_}}{If \code{FALSE}, returns a promise that resolves when navigation
+      \item{\code{wait_}}{If \code{FALSE}, returns a promise that resolves when navigation
 is complete. If \code{TRUE} (default), blocks until navigation is complete.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-If \code{wait_} is TRUE, returns invisible(NULL). If wait_ is FALSE,
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    If \code{wait_} is TRUE, returns invisible(NULL). If wait_ is FALSE,
 returns a promise that resolves when navigation is complete. The
 promise resolves with the value from the navigate command.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-# Basic navigation
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{# Basic navigation
 b$go_to("https://www.r-project.org")
 
 # Navigation with delay
@@ -353,17 +349,15 @@ b$go_to("https://www.r-project.org", delay = 2)
 p <- b$go_to("https://www.r-project.org", wait_ = FALSE)
 p$then(function(value) print("Navigation complete!"))
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-screenshot"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-screenshot}{}}}
-\subsection{Method \code{screenshot()}}{
-Take a PNG screenshot
+\subsection{\code{ChromoteSession$screenshot()}}{
+  Take a PNG screenshot
 \subsection{Examples}{
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{# Create a new `ChromoteSession` object.
@@ -435,8 +429,9 @@ b$wait_for(pa)
 #> Done!
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$screenshot(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$screenshot(
   filename = "screenshot.png",
   selector = "html",
   cliprect = NULL,
@@ -447,55 +442,47 @@ b$wait_for(pa)
   delay = 0.5,
   options = list(),
   wait_ = TRUE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filename}}{File path of where to save the screenshot. The format of
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{filename}}{File path of where to save the screenshot. The format of
 the screenshot is inferred from the file extension; use
 \code{options = list(format = "jpeg")} to manually choose the format. See
 \href{https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot}{\code{Page.captureScreenshot}}
 for supported formats; at the time of this release the format options
 were \code{"png"} (default), \code{"jpeg"}, or \code{"webp"}.}
-
-\item{\code{selector}}{CSS selector to use for the screenshot.}
-
-\item{\code{cliprect}}{An unnamed vector or list containing values for \code{top},
+      \item{\code{selector}}{CSS selector to use for the screenshot.}
+      \item{\code{cliprect}}{An unnamed vector or list containing values for \code{top},
 \code{left}, \code{width}, and \code{height}, in that order. See
 \href{https://chromedevtools.github.io/devtools-protocol/tot/Page/#type-Viewport}{\code{Page.Viewport}}
 for more information. If provided, \code{selector} and \code{expand} will be
 ignored. To provide a scale, use the \code{scale} parameter.}
-
-\item{\code{region}}{CSS region to use for the screenshot.}
-
-\item{\code{expand}}{Extra pixels to expand the screenshot. May be a single
+      \item{\code{region}}{CSS region to use for the screenshot.}
+      \item{\code{expand}}{Extra pixels to expand the screenshot. May be a single
 value or a numeric vector of top, right, bottom, left values.}
-
-\item{\code{scale}}{Page scale factor}
-
-\item{\code{show}}{If \code{TRUE}, the screenshot will be displayed in the viewer.}
-
-\item{\code{delay}}{The number of seconds to wait before taking the screenshot
+      \item{\code{scale}}{Page scale factor}
+      \item{\code{show}}{If \code{TRUE}, the screenshot will be displayed in the viewer.}
+      \item{\code{delay}}{The number of seconds to wait before taking the screenshot
 after resizing the page. For complicated pages, this may need to be
 increased.}
-
-\item{\code{options}}{Additional options passed to
+      \item{\code{options}}{Additional options passed to
 \href{https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot}{\code{Page.captureScreenshot}}.}
-
-\item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} that will resolve
+      \item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} that will resolve
 when the \code{ChromoteSession} has saved the screenshot. Otherwise, block
 until the \code{ChromoteSession} has saved the screenshot.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-screenshot_pdf"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-screenshot_pdf}{}}}
-\subsection{Method \code{screenshot_pdf()}}{
-Take a PDF screenshot
+\subsection{\code{ChromoteSession$screenshot_pdf()}}{
+  Take a PDF screenshot
 \subsection{Examples}{
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{# Create a new `ChromoteSession` object.
@@ -512,8 +499,9 @@ b$screenshot_pdf(tmppdffile)
 unlist(file.info(tmppdffile))
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$screenshot_pdf(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$screenshot_pdf(
   filename = "screenshot.pdf",
   pagesize = "letter",
   margins = 0.5,
@@ -523,44 +511,37 @@ unlist(file.info(tmppdffile))
   print_background = FALSE,
   scale = 1,
   wait_ = TRUE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filename}}{File path of where to save the screenshot.}
-
-\item{\code{pagesize}}{A single character value in the set \code{"letter"},
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{filename}}{File path of where to save the screenshot.}
+      \item{\code{pagesize}}{A single character value in the set \code{"letter"},
 \code{"legal"}, \code{"tabloid"}, \code{"ledger"} and \code{"a0"} through \code{"a1"}. Or a
 numeric vector \code{c(width, height)} specifying the page size.}
-
-\item{\code{margins}}{A numeric vector \code{c(top, right, bottom, left)} specifying
+      \item{\code{margins}}{A numeric vector \code{c(top, right, bottom, left)} specifying
 the page margins.}
-
-\item{\code{units}}{Page and margin size units. Either \code{"in"} or \code{"cm"} for
+      \item{\code{units}}{Page and margin size units. Either \code{"in"} or \code{"cm"} for
 inches and centimeters respectively.}
-
-\item{\code{landscape}}{Paper orientation.}
-
-\item{\code{display_header_footer}}{Display header and footer.}
-
-\item{\code{print_background}}{Print background graphics.}
-
-\item{\code{scale}}{Page scale factor.}
-
-\item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} that will resolve
+      \item{\code{landscape}}{Paper orientation.}
+      \item{\code{display_header_footer}}{Display header and footer.}
+      \item{\code{print_background}}{Print background graphics.}
+      \item{\code{scale}}{Page scale factor.}
+      \item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} that will resolve
 when the \code{ChromoteSession} has saved the screenshot. Otherwise, block
 until the \code{ChromoteSession} has saved the screnshot.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-new_session"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-new_session}{}}}
-\subsection{Method \code{new_session()}}{
-Create a new tab / window
+\subsection{\code{ChromoteSession$new_session()}}{
+  Create a new tab / window
 \subsection{Examples}{
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{b1 <- ChromoteSession$new()
@@ -573,70 +554,76 @@ b2$Runtime$evaluate("window.location", returnByValue = TRUE)$result$value$href
 #> [1] "https://www.r-project.org/"
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$new_session(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$new_session(
   width = 992,
   height = 1323,
   targetId = NULL,
   wait_ = TRUE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{width, height}}{Width and height of the new window.}
-
-\item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target/}{Target}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{width, height}}{Width and height of the new window.}
+      \item{\code{targetId}}{\href{https://chromedevtools.github.io/devtools-protocol/tot/Target/}{Target}
 ID of an existing target to attach to. When a \code{targetId} is provided, the
 \code{width} and \code{height} arguments are ignored. If NULL (the default) a new
 target is created and attached to, and the \code{width} and \code{height}
 arguments determine its viewport size.}
-
-\item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} that will resolve
+      \item{\code{wait_}}{If \code{FALSE}, return a \code{\link[promises:promise]{promises::promise()}} that will resolve
 when the \code{ChromoteSession} has created a new session. Otherwise, block
 until the \code{ChromoteSession} has created a new session.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-get_session_id"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-get_session_id}{}}}
-\subsection{Method \code{get_session_id()}}{
-Retrieve the session id
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_session_id()}\if{html}{\out{</div>}}
+\subsection{\code{ChromoteSession$get_session_id()}}{
+  Retrieve the session id
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$get_session_id()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-respawn"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-respawn}{}}}
-\subsection{Method \code{respawn()}}{
-Create a new session that connects to the same target (i.e. page)
+\subsection{\code{ChromoteSession$respawn()}}{
+  Create a new session that connects to the same target (i.e. page)
 as this session. This is useful if the session has been closed but the target still
 exists.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$respawn()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$respawn()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-get_target_id"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-get_target_id}{}}}
-\subsection{Method \code{get_target_id()}}{
-Retrieve the target id
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_target_id()}\if{html}{\out{</div>}}
+\subsection{\code{ChromoteSession$get_target_id()}}{
+  Retrieve the target id
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$get_target_id()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-wait_for"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-wait_for}{}}}
-\subsection{Method \code{wait_for()}}{
-Wait for a Chromote Session to finish. This method will block the R
+\subsection{\code{ChromoteSession$wait_for()}}{
+  Wait for a Chromote Session to finish. This method will block the R
 session until the provided promise resolves. The loop from
 \verb{$get_child_loop()} will only advance just far enough for the promise to
 resolve.
@@ -652,23 +639,25 @@ p$then(str)
 b$Browser$getVersion(wait_ = FALSE, callback_ = str)
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$wait_for(p)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$wait_for(p)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{p}}{A promise to resolve.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{p}}{A promise to resolve.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-debug_log"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-debug_log}{}}}
-\subsection{Method \code{debug_log()}}{
-Send a debug log message to the parent \link{Chromote} object
+\subsection{\code{ChromoteSession$debug_log()}}{
+  Send a debug log message to the parent \link{Chromote} object
 \subsection{Examples}{
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{b <- ChromoteSession$new()
@@ -679,98 +668,103 @@ b$go_to("https://www.r-project.org/")
 b$parent$debug_messages(FALSE)
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$debug_log(...)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$debug_log(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{Arguments pasted together with \code{paste0(..., collapse = "")}.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Arguments pasted together with \code{paste0(..., collapse = "")}.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-get_child_loop"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-get_child_loop}{}}}
-\subsection{Method \code{get_child_loop()}}{
-\pkg{later} loop.
+\subsection{\code{ChromoteSession$get_child_loop()}}{
+  \pkg{later} loop.
 
 For expert async usage only.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_child_loop()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$get_child_loop()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-send_command"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-send_command}{}}}
-\subsection{Method \code{send_command()}}{
-Send command through Chrome DevTools Protocol.
+\subsection{\code{ChromoteSession$send_command()}}{
+  Send command through Chrome DevTools Protocol.
 
 For expert use only.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$send_command(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$send_command(
   msg,
   callback = NULL,
   error = NULL,
   timeout = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{msg}}{A JSON-serializable list containing \code{method}, and \code{params}.}
-
-\item{\code{callback}}{Method to run when the command finishes successfully.}
-
-\item{\code{error}}{Method to run if an error occurs.}
-
-\item{\code{timeout}}{Number of milliseconds for Chrome DevTools Protocol
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{msg}}{A JSON-serializable list containing \code{method}, and \code{params}.}
+      \item{\code{callback}}{Method to run when the command finishes successfully.}
+      \item{\code{error}}{Method to run if an error occurs.}
+      \item{\code{timeout}}{Number of milliseconds for Chrome DevTools Protocol
 execute a method.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-get_auto_events"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-get_auto_events}{}}}
-\subsection{Method \code{get_auto_events()}}{
-Resolved \code{auto_events} value.
+\subsection{\code{ChromoteSession$get_auto_events()}}{
+  Resolved \code{auto_events} value.
 
 For internal use only.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_auto_events()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$get_auto_events()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-auto_events_enable_args"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-auto_events_enable_args}{}}}
-\subsection{Method \code{auto_events_enable_args()}}{
-Set or retrieve the \code{enable} command arguments for a domain. These
+\subsection{\code{ChromoteSession$auto_events_enable_args()}}{
+  Set or retrieve the \code{enable} command arguments for a domain. These
 arguments are used for the \code{enable} command that is called for a domain,
 e.g. \code{Fetch$enable()}, when accessing an event method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$auto_events_enable_args(domain, ...)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{domain}}{A command domain, e.g. \code{"Fetch"}.}
-
-\item{\code{...}}{Arguments to use for auto-events for the domain. If not
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$auto_events_enable_args(domain, ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{domain}}{A command domain, e.g. \code{"Fetch"}.}
+      \item{\code{...}}{Arguments to use for auto-events for the domain. If not
 provided, returns the argument values currently in place for the
 domain. Use \code{NULL} to clear the enable arguments for a domain.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{if (interactive()) {
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{if (interactive()) {
   b <- ChromoteSession$new(
     auto_events_enable_args = list(
       Fetch = list(handleAuthRequests = TRUE)
@@ -786,106 +780,114 @@ domain. Use \code{NULL} to clear the enable arguments for a domain.}
   # Reset `Fetch.enable` args
   b$auto_events_enable_args("Fetch", NULL)
 }
-
 }
-\if{html}{\out{</div>}}
-
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-invoke_event_callbacks"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-invoke_event_callbacks}{}}}
-\subsection{Method \code{invoke_event_callbacks()}}{
-Immediately call all event callback methods.
+\subsection{\code{ChromoteSession$invoke_event_callbacks()}}{
+  Immediately call all event callback methods.
 
 For internal use only.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$invoke_event_callbacks(event, params)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$invoke_event_callbacks(event, params)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{event}}{A single event string}
+      \item{\code{params}}{A list of parameters to pass to the event callback methods.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{event}}{A single event string}
-
-\item{\code{params}}{A list of parameters to pass to the event callback methods.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-mark_closed"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-mark_closed}{}}}
-\subsection{Method \code{mark_closed()}}{
-Mark a session, and optionally, the underlying target,
+\subsection{\code{ChromoteSession$mark_closed()}}{
+  Mark a session, and optionally, the underlying target,
 as closed. For internal use only.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$mark_closed(target_closed)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$mark_closed(target_closed)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{target_closed}}{Has the underlying target been closed as well as the
+active debugging session?}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{target_closed}}{Has the underlying target been closed as well as the
-active debugging session?}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-is_active"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-is_active}{}}}
-\subsection{Method \code{is_active()}}{
-Retrieve active status
+\subsection{\code{ChromoteSession$is_active()}}{
+  Retrieve active status
 Once initialized, the value returned is \code{TRUE}. If \verb{$close()} has been
 called, this value will be \code{FALSE}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$is_active()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$is_active()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-check_active"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-check_active}{}}}
-\subsection{Method \code{check_active()}}{
-Check that a session is active, erroring if not.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$check_active()}\if{html}{\out{</div>}}
+\subsection{\code{ChromoteSession$check_active()}}{
+  Check that a session is active, erroring if not.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$check_active()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-get_init_promise"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-get_init_promise}{}}}
-\subsection{Method \code{get_init_promise()}}{
-Initial promise
+\subsection{\code{ChromoteSession$get_init_promise()}}{
+  Initial promise
 
 For internal use only.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$get_init_promise()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$get_init_promise()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChromoteSession-print"></a>}}
 \if{latex}{\out{\hypertarget{method-ChromoteSession-print}{}}}
-\subsection{Method \code{print()}}{
-Summarise the current state of the object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChromoteSession$print(..., verbose = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Passed on to \code{format()} when \code{verbose} = TRUE}
-
-\item{\code{verbose}}{The print method defaults to a brief summary
+\subsection{\code{ChromoteSession$print()}}{
+  Summarise the current state of the object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ChromoteSession$print(..., verbose = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{Passed on to \code{format()} when \code{verbose} = TRUE}
+      \item{\code{verbose}}{The print method defaults to a brief summary
 of the most important debugging info; use \code{verbose = TRUE} tp
 see the complex R6 object.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 }
