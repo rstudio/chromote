@@ -117,7 +117,7 @@ path, for the evaluation of \code{code}.
 
 }}
 \examples{
-\dontshow{if (rlang::is_interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_interactive()) withAutoprint(\{ # examplesIf}
 # Use the latest version of Chrome
 local_chrome_version()
 
