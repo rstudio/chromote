@@ -528,6 +528,7 @@ chrome_versions_ensure <- function(
 
   cache_path <- chrome_versions_path_cache(version)
   binary_path <- file.path(cache_path, chrome_relative_exe(binary, platform))
+  final_dir <- file.path(cache_path, chrome_platform_dir(binary, platform))
 
   resolved <- list(
     path = binary_path,
@@ -536,7 +537,7 @@ chrome_versions_ensure <- function(
     platform = platform
   )
 
-  if (file.exists(binary_path)) {
+  if (chrome_cache_check(resolved, cache_path, final_dir)) {
     return(resolved)
   }
 
@@ -547,42 +548,71 @@ chrome_versions_ensure <- function(
     "Downloading {.code {binary}} version {.field {version}} for {platform}"
   )
 
+  # The archive and staging directory live inside the cache so that the final
+  # publish is a rename on the same filesystem. Both are removed on every exit.
   dir.create(cache_path, recursive = TRUE, showWarnings = FALSE)
-  zip_path <- chrome_versions_path_cache("chrome.zip")
+  zip_path <- tempfile(
+    pattern = ".download-",
+    tmpdir = cache_path,
+    fileext = ".zip"
+  )
+  stage_dir <- tempfile(pattern = ".staging-", tmpdir = cache_path)
+  on.exit(unlink(c(zip_path, stage_dir), recursive = TRUE), add = TRUE)
+  dir.create(stage_dir)
+
   withr::with_options(list(timeout = max(20 * 60, getOption("timeout"))), {
-    utils::download.file(url, zip_path, mode = "wb")
+    chrome_download_file(url, zip_path)
   })
 
-  zip::unzip(zip_path, exdir = cache_path)
+  zip::unzip(zip_path, exdir = stage_dir)
 
   cli::cli_progress_done()
 
-  if (!file.exists(binary_path)) {
+  stage_binary <- file.path(stage_dir, chrome_relative_exe(binary, platform))
+  problem <- chrome_binary_problem(stage_binary)
+  if (!is.null(problem)) {
     cli::cli_abort(
       c(
-        "The Chrome binary was not found at the expected path.",
-        "x" = "Expected {.path {binary_path}}",
-        "i" = "The downloaded zip was not deleted: {.path {zip_path}}",
-        "i" = "If the problem persists, please report this issue to {.href [rstudio/chromote](https://github.com/rstudio/chromote/issues/new)}."
-      )
-    )
-  }
-
-  if (!ensure_user_exec(binary_path)) {
-    cli::cli_abort(
-      c(
-        "Extracted {.code {binary}} binary does not have execution permissions.",
-        "i" = "You may need to manually adjust the permissions of {.path {binary_path}}."
-      )
+        "Downloaded {.code {binary}} version {.field {version}} for {platform} is invalid: {problem}.",
+        "x" = "Expected {.path {stage_binary}}",
+        "i" = "Nothing was installed. Please try again. If the problem persists, please report this issue to {.href [rstudio/chromote](https://github.com/rstudio/chromote/issues/new)}."
+      ),
+      class = "error_chrome_invalid_binary",
+      version = as.character(version),
+      binary = binary,
+      platform = platform,
+      path = stage_binary,
+      reason = problem
     )
   }
 
   if (binary == "chrome" && platform %in% c("win32", "win64")) {
-    chrome_install_windows_run_setup(binary_path)
+    chrome_install_windows_run_setup(stage_binary)
   }
 
-  unlink(zip_path)
-  resolved
+  # Publish only the platform subtree. Sibling binaries in the version directory
+  # are left untouched.
+  stage_platform <- file.path(stage_dir, chrome_platform_dir(binary, platform))
+  if (
+    !chrome_path_exists(final_dir) &&
+      chrome_rename_dir(stage_platform, final_dir)
+  ) {
+    return(resolved)
+  }
+
+  # The rename was refused, or another process published first. Reuse a valid
+  # completed installation without overwriting it.
+  if (chrome_cache_check(resolved, cache_path, final_dir)) {
+    return(resolved)
+  }
+
+  cli::cli_abort(
+    c(
+      "Could not install {.code {binary}} version {.field {version}} for {platform}.",
+      "x" = "Could not move the extracted files to {.path {final_dir}}.",
+      "i" = "Nothing was overwritten. Please try again."
+    )
+  )
 }
 
 chrome_relative_exe <- function(binary, platform) {
@@ -900,12 +930,159 @@ download_json_cached <- function(url, update_cached = TRUE, filename = NULL) {
   path_local
 }
 
-ensure_user_exec <- function(path) {
-  current_mode <- file.info(path)$mode
-  user_perm <- as.numeric(as.character(current_mode))
+chrome_platform_dir <- function(binary, platform) {
+  sub("/.*$", "", chrome_relative_exe(binary, platform))
+}
 
-  # If user permissions is even, the file is not executable
-  !((user_perm %/% 100) %% 2 == 0)
+chrome_download_file <- function(url, path) {
+  utils::download.file(url, path, mode = "wb")
+}
+
+chrome_rename_dir <- function(from, to) {
+  suppressWarnings(file.rename(from, to))
+}
+
+# Shared by cache hits and freshly extracted binaries. Returns NULL when the
+# binary is usable, otherwise a short reason.
+chrome_binary_problem <- function(path) {
+  if (!utils::file_test("-f", path)) {
+    if (chrome_is_broken_symlink(path)) {
+      return("broken symlink")
+    }
+    if (dir.exists(path)) {
+      return("a directory, not a file")
+    }
+    return("missing")
+  }
+
+  size <- file.info(path)$size
+  if (is.na(size)) {
+    return("inaccessible (it may have disappeared during validation)")
+  }
+  if (size == 0) {
+    return("empty")
+  }
+
+  # Unix execute bits don't apply on Windows, where Chrome is found by extension
+  if (chrome_binary_checks_exec() && file.access(path, 1) != 0) {
+    return("not executable")
+  }
+
+  NULL
+}
+
+chrome_binary_checks_exec <- function() {
+  identical(.Platform$OS.type, "unix")
+}
+
+chrome_path_exists <- function(path) {
+  file.exists(path) || chrome_is_broken_symlink(path)
+}
+
+chrome_is_broken_symlink <- function(path) {
+  # Sys.readlink() returns NA for absent paths, and nzchar(NA) is TRUE
+  target <- Sys.readlink(path)
+  !is.na(target) && nzchar(target) && !file.exists(path)
+}
+
+# Walks from `path` up to `root`, returning the first ancestor that exists but
+# is not a directory (including broken symlinks), so that a conflicting file
+# is reported instead of being silently overwritten.
+chrome_path_conflict <- function(path, root) {
+  repeat {
+    if (chrome_path_exists(path) && !dir.exists(path)) {
+      kind <- if (chrome_is_broken_symlink(path)) {
+        "a broken symlink"
+      } else {
+        "a file"
+      }
+      return(list(path = path, kind = kind))
+    }
+    if (identical(path, root) || identical(dirname(path), path)) {
+      return(NULL)
+    }
+    path <- dirname(path)
+  }
+}
+
+# Returns TRUE when a valid installation exists, FALSE when nothing is installed
+# at `final_dir`, and aborts (without repairing or downloading) when the cache
+# entry is present but invalid.
+chrome_cache_check <- function(resolved, cache_path, final_dir) {
+  blocked <- chrome_path_conflict(dirname(resolved$path), cache_path)
+  if (!is.null(blocked)) {
+    # A blocker nested in the bundle is only cleared by removing the whole bundle,
+    # otherwise the retry finds the same incomplete directory again
+    chrome_abort_invalid_binary(
+      sprintf("expected directory %s is %s", blocked$path, blocked$kind),
+      resolved,
+      dir = if (chrome_path_exists(final_dir)) final_dir else blocked$path
+    )
+  }
+
+  if (!chrome_path_exists(final_dir)) {
+    return(FALSE)
+  }
+
+  problem <- chrome_binary_problem(resolved$path)
+  if (is.null(problem)) {
+    return(TRUE)
+  }
+
+  if (identical(problem, "missing")) {
+    problem <- "incomplete (executable missing from existing directory)"
+  }
+  chrome_abort_invalid_binary(problem, resolved, dir = final_dir)
+}
+
+# `chrome_versions_remove()` only lists installs whose executable exists, so it
+# can't clear an incomplete bundle. Always offer an exact `unlink()` as well.
+chrome_abort_invalid_binary <- function(reason, resolved, dir) {
+  version <- as.character(resolved$version)
+  binary <- resolved$binary
+  platform <- resolved$platform
+  path <- resolved$path
+
+  # encodeString() escapes backslashes and quotes so the printed command is
+  # valid R for Windows and quoted paths
+  q <- function(x) encodeString(x, quote = "\"")
+  remove_cmd <- paste0(
+    "chromote::chrome_versions_remove(",
+    q(version),
+    ", ",
+    q(binary),
+    ", ",
+    q(platform),
+    ", ask = FALSE)"
+  )
+  add_cmd <- paste0(
+    "chromote::chrome_versions_add(",
+    q(version),
+    ", ",
+    q(binary),
+    ", ",
+    q(platform),
+    ")"
+  )
+  unlink_cmd <- paste0("unlink(", q(dir), ", recursive = TRUE)")
+
+  cli::cli_abort(
+    c(
+      "Cached {.code {binary}} version {.field {version}} for {platform} is invalid: {reason}.",
+      "x" = "Path: {.path {path}}",
+      "i" = "Remove it with {.code {remove_cmd}}, then reinstall with {.code {add_cmd}}.",
+      "i" = "If the remove command reports nothing to remove, delete the exact path with {.code {unlink_cmd}}, then reinstall."
+    ),
+    class = "error_chrome_invalid_binary",
+    version = version,
+    binary = binary,
+    platform = platform,
+    path = path,
+    reason = reason,
+    remove_cmd = remove_cmd,
+    add_cmd = add_cmd,
+    unlink_cmd = unlink_cmd
+  )
 }
 
 chrome_install_windows_run_setup <- function(path) {

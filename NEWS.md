@@ -2,6 +2,10 @@
 
 ## Bug fixes
 
+* Cached Chrome binaries are now validated before use. A cache entry that is empty, missing its executable, not executable on Unix, or blocked by a file where a directory is expected now fails with an error of class `error_chrome_invalid_binary`. The error gives the exact commands to remove and reinstall the binary. Invalid cache entries are not modified or automatically re-downloaded.
+
+* Freshly downloaded Chrome binaries are extracted to a staging directory and validated before anything is installed. Only the binary's platform directory is published into the cache, so sibling binaries are left untouched. Temporary archives and staging directories are removed on every exit path.
+
 * Chrome process-creation failures now stop immediately and preserve the original error, instead of being reported as unavailable ports. Existing generic startup retries are unchanged.
 
 # chromote 0.5.1
