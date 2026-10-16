@@ -34,7 +34,7 @@ Suggests:
     knitr,
     rmarkdown,
     showimage,
-    testthat (>= 3.0.0)
+    testthat (>= 3.2.1)
 VignetteBuilder: 
     knitr
 Config/Needs/website: r-lib/pkgdown, rstudio/bslib

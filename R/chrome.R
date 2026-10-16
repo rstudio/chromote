@@ -443,19 +443,35 @@ launch_chrome_impl <- function(path, args, port) {
   path_stdout <- sprintf(tmp_session, "-stdout.log")
   path_stderr <- sprintf(tmp_session, "-stderr.log")
 
-  p <- process$new(
-    command = path,
-    args = c(
-      chrome_headless_mode(),
-      paste0("--remote-debugging-port=", port),
-      paste0("--remote-allow-origins=http://127.0.0.1:", port),
-      paste0("--crash-dumps-dir=", path_dir_crash),
-      args
+  # A spawn failure does not depend on the port, so stop the port search here.
+  p <- tryCatch(
+    process$new(
+      command = path,
+      args = c(
+        chrome_headless_mode(),
+        paste0("--remote-debugging-port=", port),
+        paste0("--remote-allow-origins=http://127.0.0.1:", port),
+        paste0("--crash-dumps-dir=", path_dir_crash),
+        args
+      ),
+      supervise = TRUE,
+      stdout = path_stdout,
+      stderr = path_stderr,
+      echo_cmd = getOption("chromote.launch.echo_cmd", FALSE)
     ),
-    supervise = TRUE,
-    stdout = path_stdout,
-    stderr = path_stderr,
-    echo_cmd = getOption("chromote.launch.echo_cmd", FALSE)
+    error = function(cnd) {
+      rlang::abort(
+        paste0(
+          "Failed to start Chrome. The operating system could not launch ",
+          "the executable at `",
+          path,
+          "`. Check that the path exists and is executable, or run ",
+          "`chromote_info()` to check your settings."
+        ),
+        class = "error_stop_port_search",
+        parent = cnd
+      )
+    }
   )
 
   connected <- FALSE

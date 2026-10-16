@@ -1,5 +1,9 @@
 # chromote (development version)
 
+## Bug fixes
+
+* Chrome process-creation failures now stop immediately and preserve the original error, instead of being reported as unavailable ports. Existing generic startup retries are unchanged.
+
 # chromote 0.5.1
 
 ## New features
