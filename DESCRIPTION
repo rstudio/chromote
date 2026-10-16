@@ -39,6 +39,7 @@ Suggests:
 VignetteBuilder: 
     knitr
 Config/Needs/website: r-lib/pkgdown, rstudio/bslib
+Config/roxygen2/version: 8.1.1
 Config/testthat/edition: 3
 Config/testthat/parallel: FALSE
 Config/testthat/start-first: chromote_session
@@ -47,4 +48,3 @@ Language: en-US
 Roxygen: list(markdown = TRUE)
 SystemRequirements: Google Chrome or other Chromium-based browser.
     chromium: chromium (rpm) or chromium-browser (deb)
-Config/roxygen2/version: 8.1.1
