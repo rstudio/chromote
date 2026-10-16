@@ -463,7 +463,9 @@ launch_chrome_impl <- function(path, args, port) {
       cli::cli_abort(
         "Failed to start Chrome. The operating system could not launch the executable at {.path {path}}. Check that the path exists and is executable, or run {.code chromote_info()} to check your settings.",
         class = "error_stop_port_search",
-        parent = cnd
+        # processx wraps the informative OS error in an uninformative "Native
+        # call to processx_exec failed" layer; keep only the leaf.
+        parent = cnd$parent %||% cnd
       )
     }
   )
