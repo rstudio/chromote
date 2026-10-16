@@ -37,7 +37,8 @@ Suggests:
     showimage,
     testthat (>= 3.2.1)
 VignetteBuilder: 
-    knitr
+    knitr,
+    rmarkdown
 Config/Needs/website: r-lib/pkgdown, rstudio/bslib, brand.yml
 Config/roxygen2/version: 8.1.1
 Config/testthat/edition: 3
