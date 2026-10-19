@@ -1,0 +1,43 @@
+# Setting custom user agent
+
+A user agent is a string of text that a browser sends to a web server to
+identify itself, including details about the browser type, operating
+system, and device.
+
+In ⁠chromote, setting the user agent allows you to simulate requests from
+different browsers or devices. This is useful for testing how websites
+behave in various environments, scraping data by mimicking real user
+behavior, accessing mobile versions of sites, or bypassing restrictions
+some websites place on certain browsers.
+
+You can see the user agent string provided by your browser, or a list of
+other user agents strings, by using a site like
+<https://UserAgentString.com>.
+
+## Synchronous version
+
+``` r
+
+library(chromote)
+b <- ChromoteSession$new()
+
+b$Network$setUserAgentOverride(userAgent = "My fake browser")
+
+b$go_to("http://scooterlabs.com/echo")
+b$screenshot(show = TRUE)
+```
+
+## Asynchronous version
+
+``` r
+
+library(chromote)
+b <- ChromoteSession$new()
+
+b$Network$setUserAgentOverride(userAgent = "My fake browser", wait_ = FALSE)
+p <- b$Page$loadEventFired(wait_ = FALSE)
+b$go_to("http://scooterlabs.com/echo", wait_ = FALSE)
+p$then(function(value) {
+  b$screenshot(show = TRUE)
+})
+```

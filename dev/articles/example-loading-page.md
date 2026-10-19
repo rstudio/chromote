@@ -1,0 +1,81 @@
+# Loading a page reliably
+
+This document explains why you should use the convenience method
+`$go_to()` instead of the lower-level Chrome Devtools Protocol command
+`Page$navigate()`.
+
+``` r
+
+library(chromote)
+b <- ChromoteSession$new()
+```
+
+In many cases, the commands `Page$navigate()` and then
+`$Page$loadEventFired()` will not reliably block until the page loads.
+For example:
+
+``` r
+
+# Not reliable
+b$Page$navigate("https://www.r-project.org/")
+b$Page$loadEventFired()  # Block until page has loaded
+```
+
+This is because the browser might successfully navigate to the page
+before it receives the `loadEventFired` command from R.
+
+In order to navigate to a page reliably, you must issue the
+`loadEventFired` command first in async mode, then issue the `navigate`
+command, and then wait for the `loadEventFired` promise to resolve. (If
+it has already resolved at this point, then the code will continue.)
+
+``` r
+
+# Reliable method 1: for use with synchronous API
+p <- b$Page$loadEventFired(wait_ = FALSE)  # Get the promise for the loadEventFired
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
+
+# Block until p resolves
+b$wait_for(p)
+
+# Add more synchronous commands here
+b$screenshot("browser.png")
+```
+
+The above code uses the async API to do the waiting, but then assumes
+that you want to write subsequent code with the synchronous API.
+
+If you want to go fully async, then instead of calling `wait_for(p)`,
+you would simply chain more promises from `p`, using `$then()`.
+
+``` r
+
+# Reliable method 2: for use with asynchronous API
+p <- b$Page$loadEventFired(wait_ = FALSE)  # Get the promise for the loadEventFired
+b$Page$navigate("https://www.r-project.org/", wait_ = FALSE)
+
+# Chain more async commands after the page has loaded
+p$then(function(value) {
+  b$screenshot("browser.png", wait_ = FALSE)
+})
+```
+
+This method of calling `Page$loadEventFired()` before `Page$navigate()`
+is essentially what the `$go_to()` convenience method does. It can also
+operate in synchronous and asynchronous modes.
+
+``` r
+
+# Synchronous API
+b$go_to("https://www.r-project.org/")
+b$screenshot("browser.png")
+
+# Asynchronous API
+b$go_to("https://www.r-project.org/", wait_ = FALSE)$
+then(function(value) {
+  b$screenshot("browser.png")
+})
+```
+
+The synchronous and asynchronous APIs are explained in more detail in
+[`vignette("sync-async")`](https://rstudio.github.io/chromote/dev/articles/sync-async.md).

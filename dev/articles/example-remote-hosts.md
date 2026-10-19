@@ -1,0 +1,68 @@
+# Chrome on remote hosts
+
+Chromote can control a browser running on a remote host. To start the
+browser, open a terminal on the remote host and run one of the
+following, depending on your platform:
+
+**Warning: Depending on how the remote machine is configured, the Chrome
+debug server might be accessible to anyone on the Internet. Proceed with
+caution.**
+
+    # Mac
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless \
+      --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
+
+    # Linux
+    google-chrome --headless --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
+
+    # Windows
+    "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"  --headless \
+      --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
+
+Or you can launch this process in R:
+
+``` r
+
+library(chromote)
+
+args <- c(
+  get_chrome_args(),
+  "--headless",
+  "--remote-debugging-address=0.0.0.0",
+  "--remote-debugging-port=9222"
+)
+
+p <- processx::process$new(find_chrome(), args)
+
+# To (abruptly) stop this process when you're finished with it:
+p$kill()
+```
+
+Then, in your local R session, create a Chromote object with the `host`
+and `port` (you will need to use the correct IP address). Once it’s
+created, you can spawn a session off of it which you can control as
+normal:
+
+``` r
+
+library(chromote)
+
+r <- Chromote$new(
+  browser = ChromeRemote$new(host = "10.0.0.5", port = 9222)
+)
+
+b <- r$new_session()
+
+b$Browser$getVersion()
+b$view()
+b$go_to("https://www.whatismybrowser.com/")
+b$screenshot("browser.png")
+b$screenshot("browser_string.png", selector = ".string-major")
+```
+
+When you use `$view()` on the remote browser, your local browser may
+block scripts for security reasons, which means that you won’t be able
+to view the remote browser. If your local browser is Chrome, there will
+be a shield-shaped icon in the location bar that you can click in order
+to enable loading the scripts. (Note: Some browsers don’t seem to work
+at all with the viewer.)

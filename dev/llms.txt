@@ -1,0 +1,237 @@
+# chromote
+
+Chromote is an R implementation of the [Chrome DevTools
+Protocol](https://chromedevtools.github.io/devtools-protocol/). It works
+with Chrome, Chromium, Opera, Vivaldi, and other browsers based on
+[Chromium](https://www.chromium.org/). By default it uses Google Chrome
+(which must already be installed on the system). To use a different
+browser, see
+[`vignette("which-chrome")`](https://rstudio.github.io/chromote/dev/articles/which-chrome.md).
+
+Chromote is not the only R package that implements the Chrome DevTools
+Protocol. Here are some others:
+
+- [crrri](https://github.com/RLesur/crrri) by Romain Lesur and
+  Christophe Dervieux
+- [decapitated](https://github.com/hrbrmstr/decapitated/) by Bob Rudis
+- [chradle](https://github.com/milesmcbain/chradle) by Miles McBain
+
+The interface to Chromote is similar to
+[chrome-remote-interface](https://github.com/cyrus-and/chrome-remote-interface)
+for node.js.
+
+## Features
+
+- Install and use specific versions of Chrome from the [Chrome for
+  Testing](https://googlechromelabs.github.io/chrome-for-testing/)
+  service.
+
+- Offers a synchronous API for ease of use and an asynchronous API for
+  more sophisticated tasks.
+
+- Full support for the Chrome DevTools Protocol for any version of
+  Chrome or any Chrome-based browser.
+
+- Includes convenience methods, like `$screenshot()` and
+  `$set_viewport_size()`, for common tasks.
+
+- Automatically reconnects to previous sessions if the connection from R
+  to Chrome is lost, for example when restarting from sleep state.
+
+- Powers many higher-level packages and functions, like
+  [shinytest2](https://rstudio.github.io/shinytest2/) and
+  `rvest::read_html_live()`.
+
+## Learn More
+
+Learn more about using and programming with chromote:
+
+- [Get
+  started](https://rstudio.github.io/chromote/articles/chromote.html)
+- [Commands and
+  events](https://rstudio.github.io/chromote/articles/commands-and-events.html)
+- [Synchronous vs. asynchronous
+  usage](https://rstudio.github.io/chromote/articles/sync-async.html)
+- [Choosing which Chrome-based browser to
+  use](https://rstudio.github.io/chromote/articles/which-chrome.html)
+
+## Installation
+
+Install the released version of chromote from CRAN:
+
+``` r
+
+install.packages("chromote")
+```
+
+Or install the development version from GitHub with:
+
+``` r
+
+# install.packages("pak")
+pak::pak("rstudio/chromote")
+```
+
+## Basic usage
+
+This will start a headless browser and open an interactive viewer for it
+in a normal browser, so that you can see what the headless browser is
+doing.
+
+``` r
+
+library(chromote)
+
+b <- ChromoteSession$new()
+
+# In a web browser, open a viewer for the headless browser. Works best with
+# Chromium-based browsers.
+b$view()
+```
+
+The browser can be given *commands*, as specified by the [Chrome
+DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/).
+For example, `$Browser$getVersion()` (which corresponds to the
+[Browser.getVersion](https://chromedevtools.github.io/devtools-protocol/tot/Browser/#method-getVersion)
+in the API docs) will query the browser for version information:
+
+``` r
+
+b$Browser$getVersion()
+#> $protocolVersion
+#> [1] "1.3"
+#>
+#> $product
+#> [1] "HeadlessChrome/98.0.4758.102"
+#>
+#> $revision
+#> [1] "@273bf7ac8c909cde36982d27f66f3c70846a3718"
+#>
+#> $userAgent
+#> [1] "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/98.0.4758.102 Safari/537.36"
+#>
+#> $jsVersion
+#> [1] "9.8.177.11"
+```
+
+If you have the viewer open and run the following, you’ll see the web
+page load in the viewer[^1]:
+
+``` r
+
+b$go_to("https://www.r-project.org/")
+```
+
+In addition to full support of the Chrome Devtools Protocol,
+`ChromoteSession` objects also have some convenience methods, like
+`$go_to()` and `$screenshot()`. (See the Examples section below for more
+information about screenshots.)
+
+``` r
+
+# Saves to screenshot.png
+b$screenshot()
+
+# Takes a screenshot of elements picked out by CSS selector
+b$screenshot("sidebar.png", selector = ".sidebar")
+```
+
+![A screenshot of the sidebar of r-rproject.org, circa
+2023.](reference/figures/sidebar.png)
+
+A screenshot of the sidebar of r-rproject.org, circa 2023.
+
+[^1]: This simple example works interactively, but if you’re using
+    chromote to programmatically take screenshots you’ll want to read
+    [`vignette("example-loading-page")`](https://rstudio.github.io/chromote/dev/articles/example-loading-page.md)
+    for a consistent and reliable approach.
+
+# Package index
+
+## Chromote Sessions
+
+- [`ChromoteSession`](https://rstudio.github.io/chromote/dev/reference/ChromoteSession.md)
+  : ChromoteSession class
+- [`Chromote`](https://rstudio.github.io/chromote/dev/reference/Chromote.md)
+  : Chromote class
+
+## Default settings
+
+- [`chromote-options`](https://rstudio.github.io/chromote/dev/reference/chromote-options.md)
+  : chromote Options
+- [`chromote_info()`](https://rstudio.github.io/chromote/dev/reference/chromote_info.md)
+  : Show information about the chromote package and Chrome browser
+- [`default_chrome_args()`](https://rstudio.github.io/chromote/dev/reference/default_chrome_args.md)
+  [`get_chrome_args()`](https://rstudio.github.io/chromote/dev/reference/default_chrome_args.md)
+  [`set_chrome_args()`](https://rstudio.github.io/chromote/dev/reference/default_chrome_args.md)
+  : Default Chrome arguments
+- [`default_chromote_object()`](https://rstudio.github.io/chromote/dev/reference/default_chromote_object.md)
+  [`has_default_chromote_object()`](https://rstudio.github.io/chromote/dev/reference/default_chromote_object.md)
+  [`set_default_chromote_object()`](https://rstudio.github.io/chromote/dev/reference/default_chromote_object.md)
+  : Default Chromote object
+
+## Browsers
+
+- [`find_chrome()`](https://rstudio.github.io/chromote/dev/reference/find_chrome.md)
+  : Find path to Chrome or Chromium browser
+- [`Browser`](https://rstudio.github.io/chromote/dev/reference/Browser.md)
+  : Browser base class
+- [`Chrome`](https://rstudio.github.io/chromote/dev/reference/Chrome.md)
+  : Local Chrome process
+- [`ChromeRemote`](https://rstudio.github.io/chromote/dev/reference/ChromeRemote.md)
+  : Remote Chrome process
+
+## Manage and install Chrome for Testing
+
+Download and use any version of Chrome or `chrome-headless-shell`
+available via the [Chrome for
+Testing](https://googlechromelabs.github.io/chrome-for-testing/)
+service.
+
+- [`with_chrome_version()`](https://rstudio.github.io/chromote/dev/reference/with_chrome_version.md)
+  [`local_chrome_version()`](https://rstudio.github.io/chromote/dev/reference/with_chrome_version.md)
+  [`local_chromote_chrome()`](https://rstudio.github.io/chromote/dev/reference/with_chrome_version.md)
+  [`with_chromote_chrome()`](https://rstudio.github.io/chromote/dev/reference/with_chrome_version.md)
+  **\[experimental\]** : Use a specific version of Chrome or related
+  binaries
+- [`chrome_versions_list()`](https://rstudio.github.io/chromote/dev/reference/chrome_versions_list.md)
+  **\[experimental\]** : List installed or available Chrome binary
+  versions
+- [`chrome_versions_path_cache()`](https://rstudio.github.io/chromote/dev/reference/chrome_versions.md)
+  [`chrome_versions_path()`](https://rstudio.github.io/chromote/dev/reference/chrome_versions.md)
+  [`chrome_versions_add()`](https://rstudio.github.io/chromote/dev/reference/chrome_versions.md)
+  [`chrome_versions_remove()`](https://rstudio.github.io/chromote/dev/reference/chrome_versions.md)
+  **\[experimental\]** : Chrome versions cache helpers
+
+# Articles
+
+### Learn chromote
+
+- [chromote](https://rstudio.github.io/chromote/dev/articles/chromote.md):
+- [Commands and
+  events](https://rstudio.github.io/chromote/dev/articles/commands-and-events.md):
+- [Synchronous vs. asynchronous
+  usage](https://rstudio.github.io/chromote/dev/articles/sync-async.md):
+- [Choosing which Chrome-based browser to
+  use](https://rstudio.github.io/chromote/dev/articles/which-chrome.md):
+
+### Examples
+
+- [Loading a page
+  reliably](https://rstudio.github.io/chromote/dev/articles/example-loading-page.md):
+- [Taking a screenshot of a web
+  page](https://rstudio.github.io/chromote/dev/articles/example-screenshot.md):
+- [Extracting text from a web
+  page](https://rstudio.github.io/chromote/dev/articles/example-extract-text.md):
+- [Attaching to existing
+  tabs](https://rstudio.github.io/chromote/dev/articles/example-attach-existing.md):
+- [Websites that require
+  authentication](https://rstudio.github.io/chromote/dev/articles/example-authentication.md):
+- [Using chromote in CRAN
+  tests](https://rstudio.github.io/chromote/dev/articles/example-cran-tests.md):
+- [Setting custom
+  headers](https://rstudio.github.io/chromote/dev/articles/example-custom-headers.md):
+- [Setting custom user
+  agent](https://rstudio.github.io/chromote/dev/articles/example-custom-user-agent.md):
+- [Chrome on remote
+  hosts](https://rstudio.github.io/chromote/dev/articles/example-remote-hosts.md):
