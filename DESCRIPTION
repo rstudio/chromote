@@ -7,7 +7,8 @@ Authors@R: c(
     person("Winston", "Chang", , "winston@posit.co", role = "aut"),
     person("Barret", "Schloerke", , "barret@posit.co", role = "aut",
            comment = c(ORCID = "0000-0001-9986-114X")),
-    person("Posit Software, PBC", role = c("cph", "fnd"), comment = c(ROR = "03wc8by49"))
+    person("Posit Software, PBC", role = c("cph", "fnd"),
+           comment = c(ROR = "03wc8by49"))
   )
 Description: An implementation of the 'Chrome DevTools Protocol', for
     controlling a headless Chrome web browser.
@@ -34,16 +35,17 @@ Suggests:
     knitr,
     rmarkdown,
     showimage,
-    testthat (>= 3.0.0)
+    testthat (>= 3.2.1)
 VignetteBuilder: 
-    knitr
-Config/Needs/website: r-lib/pkgdown, rstudio/bslib
+    knitr,
+    rmarkdown
+Config/Needs/website: r-lib/pkgdown, rstudio/bslib, brand.yml
+Config/roxygen2/version: 8.1.1
 Config/testthat/edition: 3
 Config/testthat/parallel: FALSE
 Config/testthat/start-first: chromote_session
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
 SystemRequirements: Google Chrome or other Chromium-based browser.
     chromium: chromium (rpm) or chromium-browser (deb)
