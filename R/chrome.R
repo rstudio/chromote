@@ -427,6 +427,55 @@ chrome_headless_mode <- function() {
   sprintf("--headless=%s", mode)
 }
 
+# A DevTools response is required so that an unrelated service holding the
+# port doesn't count.
+chrome_debug_port_open <- function(port) {
+  handle <- curl::new_handle(timeout = 1000, connecttimeout = 1000)
+  tryCatch(
+    {
+      response <- curl::curl_fetch_memory(
+        sprintf("http://127.0.0.1:%d/json/version", port),
+        handle = handle
+      )
+      identical(response$status_code, 200L) &&
+        grepl('"Browser"', rawToChar(response$content), fixed = TRUE)
+    },
+    error = function(e) FALSE
+  )
+}
+
+# The relaunched child needs a moment to start serving the port.
+chrome_wait_for_debug_port <- function(port, timeout = 3) {
+  end <- Sys.time() + timeout
+  repeat {
+    if (chrome_debug_port_open(port)) {
+      return(TRUE)
+    }
+    if (Sys.time() >= end) {
+      return(FALSE)
+    }
+    Sys.sleep(0.1)
+  }
+}
+
+# Browser-specific advice for launch failures, keyed by executable name.
+browser_launch_advice <- function(path) {
+  if (is.null(path)) {
+    return(NULL)
+  }
+
+  name <- tolower(basename(path))
+  name <- sub("\\.exe$", "", name)
+  name <- switch(name, "microsoft edge" = "msedge", name)
+
+  switch(
+    name,
+    msedge = c(
+      "Microsoft Edge can relaunch itself on startup. Try adding {.code --edge-skip-compat-layer-relaunch} to the browser arguments with {.fn chromote::set_chrome_args}."
+    )
+  )
+}
+
 launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
   if (is.null(path)) {
     stop("Invalid path to Chrome")
@@ -478,6 +527,27 @@ launch_chrome_impl <- function(path, args, port) {
       error_logs_path <- p$get_error_file()
       error_logs <- paste(readLines(error_logs_path), collapse = "\n")
       stdout_file <- p$get_output_file()
+
+      # If the debugging port is open, the browser relaunched itself and a
+      # child process holds the port; retrying would orphan more browsers
+      # (#243). A "bind() returned an error" message means a genuine port
+      # conflict, which should still be retried.
+      if (
+        !grepl("bind() returned an error", error_logs, fixed = TRUE) &&
+          chrome_wait_for_debug_port(port)
+      ) {
+        rlang::abort(
+          c(
+            sprintf(
+              "The browser process exited before chromote could connect to it, but the debugging port at 127.0.0.1:%d is open. The browser probably relaunched itself and the port is now served by a child process that chromote did not launch and cannot supervise.",
+              port
+            ),
+            browser_launch_advice(path),
+            sprintf("Browser log file: %s", error_logs_path)
+          ),
+          class = c("error_browser_relaunch", "error_stop_port_search")
+        )
+      }
 
       verify <- chrome_verify()
 
