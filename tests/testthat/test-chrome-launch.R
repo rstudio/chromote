@@ -112,7 +112,10 @@ test_that("launch_chrome() stops the port search when the browser relaunched its
   skip_on_cran()
   # The fake relauncher below is a shell script
   skip_on_os("windows")
-  skip_if(!exists("serverSocket", "package:base"), "serverSocket() not available")
+  skip_if(
+    !exists("serverSocket", "package:base"),
+    "serverSocket() not available"
+  )
 
   rscript <- file.path(R.home("bin"), "Rscript")
   skip_if(!file.exists(rscript), "Rscript not found")
