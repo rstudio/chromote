@@ -57,12 +57,12 @@ A list containing the following elements:
 chromote_info()
 #> ---- {chromote} ----
 #>    System: x86_64-pc-linux-gnu
-#> R version: R version 4.6.1 (2026-06-24)
+#> R version: R version 4.6.2 (2026-10-29)
 #>  chromote: 0.5.1.9000 (local::.)
 #> 
 #> ---- Chrome ----
 #>    Path: /usr/bin/google-chrome
-#> Version: Google Chrome 155.0.8059.39
+#> Version: Google Chrome 157.0.8103.50
 #>    Args: --headless --no-sandbox --disable-dev-shm-usage
 #>          --force-color-profile=srgb --disable-extensions --mute-audio
 ```

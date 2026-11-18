@@ -166,7 +166,7 @@ it to this code, surrounded by single-quotes:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cookie_json</span> <span class="op">&lt;-</span> <span class="st">'[{"cookies":[{"name":"AWSALB","value":"T3dNdcdnMasdf/cNn0j+JHMVkZ3RI8mitnAggd9AlPsaWJdsfoaje/OowIh0qe3dDPiHc0mSafe5jNH+1Aeinfalsd30AejBZDYwE","domain":"beta.rstudioconnect.com","path":"/","expires":1594632233.96943,"size":130,"httpOnly":false,"secure":false,"session":false}]}]'</span></span>
 <span></span>
-<span><span class="va">cookies</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">cookie_json</span>, simplifyVector <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<span><span class="va">cookies</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">cookie_json</span>, simplifyVector <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>Then you can use Chromote to navigate to the page and take a
 screenshot.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
