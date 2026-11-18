@@ -430,7 +430,7 @@ chrome_headless_mode <- function() {
 # A DevTools response is required so that an unrelated service holding the
 # port doesn't count.
 chrome_debug_port_open <- function(port) {
-  handle <- curl::new_handle(timeout = 1000, connecttimeout = 1000)
+  handle <- curl::new_handle(timeout_ms = 1000, connecttimeout_ms = 1000)
   tryCatch(
     {
       response <- curl::curl_fetch_memory(
