@@ -21,7 +21,10 @@ test_that("launch_chrome() uses a unique profile under tempdir() for each launch
   expect_identical(lengths(profile_args), c(1L, 1L))
   if (all(lengths(profile_args) == 1L)) {
     profiles <- sub("^--user-data-dir=", "", unlist(profile_args))
-    expect_identical(dirname(profiles), rep(tempdir(), 2))
+    expect_identical(
+      normalizePath(dirname(profiles), winslash = "/"),
+      rep(normalizePath(tempdir(), winslash = "/"), 2)
+    )
     expect_length(unique(profiles), 2)
   }
 })
@@ -85,7 +88,10 @@ test_that("Chrome creates its default profile under tempdir()", {
   if (length(profile_arg) == 1L) {
     profile <- sub("^--user-data-dir=", "", profile_arg)
     withr::defer(unlink(profile, recursive = TRUE), priority = "last")
-    expect_identical(dirname(profile), tempdir())
+    expect_identical(
+      normalizePath(dirname(profile), winslash = "/"),
+      normalizePath(tempdir(), winslash = "/")
+    )
     expect_true(dir.exists(profile))
 
     p$kill()
