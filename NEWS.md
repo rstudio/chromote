@@ -2,6 +2,8 @@
 
 ## Bug fixes
 
+* Chrome now uses a unique profile directory under R's `tempdir()` unless `--user-data-dir` is supplied. This ensures that R removes these profiles on normal session exit, even if Chrome was forcibly stopped, instead of leaving them in Chrome's headless profile directory. (#239)
+
 * Launching a browser that relaunched itself, e.g. Microsoft Edge on Windows, now stops immediately with a clear error suggesting `--edge-skip-compat-layer-relaunch` for Edge, instead of retrying every port and reporting "Cannot find an available port" (#243).
 
 * Cached Chrome binaries are now validated before use. A cache entry that is empty, missing its executable, not executable on Unix, or blocked by a file where a directory is expected now fails with an error of class `error_chrome_invalid_binary`. The error gives the exact commands to remove and reinstall the binary. Invalid cache entries are not modified or automatically re-downloaded. (#242)
