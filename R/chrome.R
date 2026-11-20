@@ -18,6 +18,8 @@ Chrome <- R6Class(
     #'   See
     #'   [here](https://peter.sh/experiments/chromium-command-line-switches/)
     #'   for a list of possible arguments. Defaults to [`get_chrome_args()`].
+    #'   Unless `--user-data-dir` is supplied, Chrome uses a unique profile
+    #'   directory under `tempdir()`, which R removes on normal R session exit.
     #' @return A new `Chrome` object.
     #' @seealso [`get_chrome_args()`]
     initialize = function(path = find_chrome(), args = get_chrome_args()) {
@@ -486,11 +488,19 @@ launch_chrome <- function(path = find_chrome(), args = get_chrome_args()) {
 }
 
 launch_chrome_impl <- function(path, args, port) {
-  # Create temp locations for logs and crashes, grouped by chromote session
+  # Create temp locations for logs, crashes, and profiles, grouped by launch
   tmp_session <- tempfile("chrome-", fileext = "%s")
   path_dir_crash <- sprintf(tmp_session, "-crashpad")
   path_stdout <- sprintf(tmp_session, "-stdout.log")
   path_stderr <- sprintf(tmp_session, "-stderr.log")
+
+  # Chrome's implicit profile survives forced shutdowns; R cleans up tempdir().
+  if (!any(grepl("^--user-data-dir($|=)", args))) {
+    args <- c(
+      paste0("--user-data-dir=", sprintf(tmp_session, "-profile")),
+      args
+    )
+  }
 
   # A spawn failure does not depend on the port, so stop the port search here.
   p <- tryCatch(

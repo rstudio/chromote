@@ -52,7 +52,9 @@ values (e.g.\code{"--disable-gpu"}), arguments with a value are given with a
 nested character vector (e.g. \code{c("--force-color-profile", "srgb")}).
 See
 \href{https://peter.sh/experiments/chromium-command-line-switches/}{here}
-for a list of possible arguments. Defaults to \code{\link[=get_chrome_args]{get_chrome_args()}}.}
+for a list of possible arguments. Defaults to \code{\link[=get_chrome_args]{get_chrome_args()}}.
+Unless \code{--user-data-dir} is supplied, Chrome uses a unique profile
+directory under \code{tempdir()}, which R removes on normal R session exit.}
     }
     \if{html}{\out{</div>}}
   }

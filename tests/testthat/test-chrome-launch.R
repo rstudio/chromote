@@ -1,3 +1,101 @@
+test_that("launch_chrome() uses a unique profile under tempdir() for each launch", {
+  launches <- list()
+  fake_process <- list(
+    new = function(args, ...) {
+      launches[[length(launches) + 1L]] <<- args
+      stop("spawn failed")
+    }
+  )
+  local_mocked_bindings(process = fake_process, .package = "chromote")
+
+  for (i in seq_len(2)) {
+    expect_error(
+      launch_chrome("/path/to/chrome", args = character()),
+      class = "error_stop_port_search"
+    )
+  }
+
+  profile_args <- lapply(launches, function(args) {
+    grep("^--user-data-dir=", args, value = TRUE)
+  })
+  expect_identical(lengths(profile_args), c(1L, 1L))
+  if (all(lengths(profile_args) == 1L)) {
+    profiles <- sub("^--user-data-dir=", "", unlist(profile_args))
+    expect_identical(dirname(profiles), rep(tempdir(), 2))
+    expect_length(unique(profiles), 2)
+  }
+})
+
+test_that("launch_chrome() preserves explicit user data directories", {
+  launch_args <- NULL
+  fake_process <- list(
+    new = function(args, ...) {
+      launch_args <<- args
+      stop("spawn failed")
+    }
+  )
+  local_mocked_bindings(process = fake_process, .package = "chromote")
+
+  profile <- file.path(withr::local_tempdir(), "my profile")
+  for (profile_args in list(
+    paste0("--user-data-dir=", profile),
+    c("--user-data-dir", profile)
+  )) {
+    args <- c("--disable-gpu", profile_args, "--no-first-run")
+    expect_error(
+      launch_chrome("/path/to/chrome", args = args),
+      class = "error_stop_port_search"
+    )
+    expect_identical(setdiff(args, launch_args), character())
+    expect_identical(
+      grep("^--user-data-dir($|=)", launch_args, value = TRUE),
+      profile_args[[1]]
+    )
+  }
+})
+
+test_that("only the user-data-dir switch suppresses the temporary profile", {
+  launch_args <- NULL
+  fake_process <- list(
+    new = function(args, ...) {
+      launch_args <<- args
+      stop("spawn failed")
+    }
+  )
+  local_mocked_bindings(process = fake_process, .package = "chromote")
+
+  args <- c("--user-data-directory=other", "--other=--user-data-dir=other")
+  expect_error(
+    launch_chrome("/path/to/chrome", args = args),
+    class = "error_stop_port_search"
+  )
+  expect_length(grep("^--user-data-dir=", launch_args), 1)
+  expect_identical(setdiff(args, launch_args), character())
+})
+
+test_that("Chrome creates its default profile under tempdir()", {
+  skip_if_no_chromote()
+
+  browser <- Chrome$new()
+  p <- browser$get_process()
+  withr::defer(browser$close(wait = TRUE))
+
+  profile_arg <- grep("^--user-data-dir=", p$get_cmdline(), value = TRUE)
+  expect_length(profile_arg, 1)
+  if (length(profile_arg) == 1L) {
+    profile <- sub("^--user-data-dir=", "", profile_arg)
+    withr::defer(unlink(profile, recursive = TRUE), priority = "last")
+    expect_identical(dirname(profile), tempdir())
+    expect_true(dir.exists(profile))
+
+    p$kill()
+    p$wait(10000)
+    expect_false(p$is_alive())
+    # A forced Chrome shutdown leaves the profile for R's tempdir() cleanup.
+    expect_true(dir.exists(profile))
+  }
+})
+
 test_that("launch_chrome() stops port search when the OS cannot spawn Chrome", {
   attempts <- 0
   original <- rlang::catch_cnd(
